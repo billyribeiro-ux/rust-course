@@ -168,6 +168,11 @@
       "passed": true,
       "evidence": "oct17-resumed-fuzz-bad-oracle.json",
       "expected_failure": true
+    },
+    {
+      "name": "managed-wasm-build-and-validation",
+      "passed": true,
+      "evidence": "oct17-managed-wasm.json"
     }
   ],
   "counts": {
@@ -180,19 +185,6 @@
     "HTTP_requests": 52
   },
   "remaining": [
-    {
-      "scope": "Managed WASM CLI",
-      "status": "blocked",
-      "detail": "Rust 1.99.1 and Node 26.12.0 now resolve successfully. wasm-bindgen-cli is still absent from the mise inventory and mise exec -- wasm-bindgen --version fails before execution. Existing October 17 WASM compilation and Clippy evidence remains valid; a fresh managed binding-generation run cannot be reproduced yet.",
-      "owner_command": "mise-root use -g cargo:wasm-bindgen-cli@0.2.129",
-      "evidence": "oct17-resumed-environment.json"
-    },
-    {
-      "scope": "Progress file import and invalid-file rejection in Chrome",
-      "status": "blocked",
-      "detail": "Retried the synthetic export fixture on isolated origin http://127.0.0.1:8767. The extension still requires Allow access to file URLs; no permission was changed or bypassed.",
-      "evidence": "oct17-browser.json"
-    },
     {
       "scope": "Independent acceptance",
       "status": "pending",
@@ -207,5 +199,23 @@
     "experiments/expression-fuzz/Cargo.lock": "4e646806f687df4982d0245e56c024c848717574cb507b5044f853a1ffe9c8d1",
     "scripts/fuzz-expression.py": "d05d40e69116c1e862a4b14f11707d813d48f784d139f9acf9b87794ec1af8b2"
   },
-  "environment": "No machine-wide tool installation, update or configuration change was performed during this continuation."
+  "environment": "No machine-wide tool installation, update or configuration change was performed during this continuation.",
+  "resolved_gates": [
+    {
+      "scope": "Managed WASM CLI",
+      "status": "passed",
+      "detail": "The owner-installed wasm-bindgen-cli 0.2.129 resolves through mise. Locked WASM compilation, web binding generation, JavaScript syntax and WASM binary validation passed.",
+      "evidence": "oct17-managed-wasm.json"
+    },
+    {
+      "scope": "Progress file import and invalid-file rejection in Chrome",
+      "status": "passed",
+      "detail": "Course authorship and applicable local verification are complete as of October 17, 2026. Native Chrome import, reload persistence and three invalid-file rejection cases passed without permission changes. Independent acceptance remains pending.",
+      "evidence": "oct17-browser.json"
+    }
+  ],
+  "latest_toolchain_verification": "oct17-managed-wasm.json",
+  "applicable_local_verification_complete": true,
+  "latest_browser_verification": "oct17-browser.json",
+  "recorded_at": "2026-10-17T12:20:23.854753+00:00"
 }

@@ -1,0 +1,92 @@
+{
+  "as_of": "2026-10-17",
+  "recorded_at": "2026-10-17T12:47:45.383134+00:00",
+  "passed": true,
+  "browser": "Google Chrome, authorized CUA controls",
+  "origin": "http://127.0.0.1:8773/",
+  "backend": "Owned loopback service on 127.0.0.1:4116; fresh excluded synthetic journal, restarted for outage recovery.",
+  "backend_build": {
+    "command": "cargo build --locked --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p16-workbench",
+    "exit_code": 0,
+    "compiler": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+    "binary_sha256": "fa6e1d401e8d99522a7d0ba5f394502847cb79e5ea6411c177cc6ba831200707"
+  },
+  "checks": [
+    {
+      "name": "wasm_load_offline",
+      "passed": true,
+      "observed": "Updated WASM loaded; absent backend displayed HTTP 502 and retry status."
+    },
+    {
+      "name": "reconnect_empty",
+      "passed": true,
+      "observed": "Starting the owned backend recovered automatically: cash $10000.00, zero events, explicit empty quotes."
+    },
+    {
+      "name": "missing_quote_rejected",
+      "passed": true,
+      "observed": "LAB order before a quote was not accepted; no event was added."
+    },
+    {
+      "name": "replay_completed",
+      "passed": true,
+      "observed": "Five synthetic LAB ticks completed durably; quote $101.00 at sequence 5; terminal Cancel job disabled."
+    },
+    {
+      "name": "order_accepted",
+      "passed": true,
+      "observed": "Buy 2 LAB accepted; holdings 2 and cash $9798.00; one matching ledger entry."
+    },
+    {
+      "name": "watchlist_filter",
+      "passed": true,
+      "observed": "Saved LAB,RUST; displayed both symbols. MISSING filter displayed explicit no-match state; clearing restored LAB."
+    },
+    {
+      "name": "uncertain_identity",
+      "passed": true,
+      "observed": "Stopped only the owned backend; buy retained ui-559ff601-09ff-41d5-8f1a-14d4adc5498c and disabled symbol/quantity fields."
+    },
+    {
+      "name": "exact_lookup_and_retry",
+      "passed": true,
+      "observed": "Restarted the same journal; exact lookup 404 preserved uncertainty. Retry accepted the same ID; exactly one displayed ledger entry for it; holdings 4 and cash $9596.00."
+    },
+    {
+      "name": "pause_resume",
+      "passed": true,
+      "observed": "Pause changed status to Updates paused and control to Resume updates; resume returned to Connected."
+    },
+    {
+      "name": "console_diagnostics",
+      "passed": true,
+      "observed": "Captured warning/error browser log list was empty at the final check."
+    }
+  ],
+  "wasm_build_evidence": "oct17-managed-wasm.json",
+  "served_artifact_sha256": {
+    "projects/ui-console/pkg/operations_console.d.ts": "811501f1f8aae7b32919f5d485c434452c8b9c60ab71f9926ed9889b7787a93c",
+    "projects/ui-console/pkg/operations_console.js": "8debde3c9480d8823bd3f7cabff29ed6e4b6868c2ce1d7ab11fd1b31460c31fe",
+    "projects/ui-console/pkg/operations_console_bg.wasm": "736b46f05da0db8d1ba05b0fc0eacc7c93c636da032e2b26f40aa7a02061297d",
+    "projects/ui-console/pkg/operations_console_bg.wasm.d.ts": "6b566e921f5cb466a3e4f7af5c568ab407cb9d3126587135c9166c713b5d6618"
+  },
+  "source_sha256": {
+    "projects/ui-console/src/lib.rs": "2a38a779367c75a822b7e9a6dd0be721ce38d60088e17923e08c361d73d39549",
+    "projects/ui-console/Cargo.lock": "2c7299f2997e87ddee19e1d81dd4c68da28c6f474dda8eebb75c271c2e4bf192",
+    "projects/ui-console/console.css": "6700f33f59df0ac7559624146dcc4952c1e24e9a0bb986ea7ff0980f607d5fd5",
+    "projects/reference/p16-workbench/src/main.rs": "982ccc8f510eb4216a25eee8f219a4942c10391b7d52d90dd3811cbd1d972435",
+    "projects/Cargo.lock": "808e13339df467b53c999c998fcace8cde9606c59c6bd6243742dc3bba79c9e2",
+    "scripts/console-server.py": "0c2d90055448778818dae5d12420fe372f300a57c6175cba4ac89ebc9483b083"
+  },
+  "artifacts": [
+    "oct17-console-runtime-ui.txt",
+    "oct17-console-runtime.jpg"
+  ],
+  "limits": [
+    "The outage occurred before the backend could commit this order; no lost post-commit response was injected.",
+    "This run did not repeat active-job cancellation, every viewport, print checks or the optional Svelte browser flows; those retain their dated earlier evidence.",
+    "Finite scoped runtime checks; no independent acceptance or learner competence claim."
+  ],
+  "cleanup": "Closed the owned test tab and stopped both owned server processes. Synthetic journal remains only in excluded .course-cache.",
+  "initial_environment_failure": "Sandbox denied loopback bind; the approved retry started the same backend successfully. No global tool or browser permission settings changed."
+}

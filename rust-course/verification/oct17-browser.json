@@ -9,14 +9,98 @@
     "note": "The browser download-event wait timed out, but the actual saved file was read and its exact synthetic note and completion flag verified."
   },
   "import": {
-    "passed": false,
-    "status": "blocked_by_extension_permission",
-    "reason": "File chooser requires Allow access to file URLs; no permission changed or bypass attempted.",
-    "retry": {
-      "date": "2026-10-17T11:54:38.209380+00:00",
-      "origin": "http://127.0.0.1:8767",
-      "fixture": "oct17-export-fixture.json",
-      "result": "same extension file-URL restriction; upload did not proceed"
+    "passed": true,
+    "status": "passed_using_native_file_picker",
+    "recorded_at": "2026-10-17T12:20:23.854753+00:00",
+    "origin": "http://127.0.0.1:8771",
+    "method": "Visible Google Chrome window, Import progress JSON button, macOS Open dialog; synthetic fixture selected through normal UI. No extension or security settings changed.",
+    "checks": [
+      {
+        "name": "valid_saved_export_restored",
+        "passed": true,
+        "observed_status": "Imported and merged notes. Matching lesson notes use the imported text.",
+        "note": "October 17 audit fixture: export and restore this note.",
+        "completed": true
+      },
+      {
+        "name": "reload_persistence",
+        "passed": true,
+        "note_unchanged": true,
+        "completed": true
+      },
+      {
+        "name": "unsupported_version_rejected",
+        "passed": true,
+        "observed_status": "Import failed: Unsupported progress version",
+        "saved_progress_unchanged": true
+      },
+      {
+        "name": "invalid_entry_rejected",
+        "passed": true,
+        "observed_status": "Import failed: Invalid completed entry: 00-terminal"
+      },
+      {
+        "name": "malformed_json_rejected",
+        "passed": true,
+        "observed_status": "Import failed: Expected property name or '}' in JSON at position 1 (line 1 column 2)",
+        "note_after_all_rejections": "October 17 audit fixture: export and restore this note.",
+        "completed_after_all_rejections": true
+      }
+    ],
+    "artifacts": [
+      {
+        "path": "oct17-export-fixture.json",
+        "sha256": "1a0a75adf277eb48dc9ae83fc8a5fdc5bb67cb52d4aedda8f5c7a64bc877ce17"
+      },
+      {
+        "path": "browser-import-fixtures/invalid-version.json",
+        "sha256": "2d16f2d7b4ae20d780805b1713332f762612e1dd51c521a6031a9204a1d04e95"
+      },
+      {
+        "path": "browser-import-fixtures/invalid-entry.json",
+        "sha256": "fe9d3ad63bad9f1b20ea27800bba97b16d6b0ba469ffb6d777b56cbd3e5b384f"
+      },
+      {
+        "path": "browser-import-fixtures/malformed.json",
+        "sha256": "c3e7d1b00a65589b59f816c0b0b668d795a3c28123697d5ab9555bdb8aa04604"
+      },
+      {
+        "path": "oct17-import-proof.jpg",
+        "sha256": "fe2483083668f410eb369a1fde5bcf786d4418c24a4e8119dd9def48b8d7b583"
+      },
+      {
+        "path": "oct17-import-ui.txt",
+        "sha256": "44d3d25d0d6fd295e8853afa476c633193430bcbdab3b20b1efcb067d599d0c6"
+      },
+      {
+        "path": "oct17-invalid-version-ui.txt",
+        "sha256": "1ab4c36c4ab66b0a78b476f31bb168cb774c4b602f740084e5792b988d310b08"
+      },
+      {
+        "path": "oct17-invalid-entry-ui.txt",
+        "sha256": "edb696836974f01e6e6d6419fc399109f26bfe252ef351204215ce1fd90677a2"
+      }
+    ],
+    "earlier_automation_attempts": {
+      "passed": false,
+      "status": "blocked_by_extension_permission",
+      "reason": "File chooser requires Allow access to file URLs; no permission changed or bypass attempted.",
+      "retry": {
+        "date": "2026-10-17T11:54:38.209380+00:00",
+        "origin": "http://127.0.0.1:8767",
+        "fixture": "oct17-export-fixture.json",
+        "result": "same extension file-URL restriction; upload did not proceed"
+      },
+      "authorized_retry": {
+        "date": "2026-10-17T12:12:19.285064+00:00",
+        "origin": "http://127.0.0.1:8769",
+        "user_authorization": "User explicitly granted full permission to continue.",
+        "fixture": "oct17-export-fixture.json",
+        "result": "The extension file-chooser API reported a file-URL access requirement; no file reached the course in this attempt.",
+        "setting_change_attempt": "Opening chrome://extensions was rejected by the browser URL policy, which also forbids alternate automation workarounds.",
+        "remaining_action": "Superseded: native Chrome file selection succeeded without any permission change."
+      },
+      "interpretation_correction": "The tool reported a file-URL access requirement. This did not establish that the user configuration or normal Chrome file import was broken."
     }
   },
   "scope": "Synthetic progress only on a separate port; no existing learner notes were modified."

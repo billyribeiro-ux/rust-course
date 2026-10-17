@@ -1,0 +1,212 @@
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 10
+~			8 text Connected · 2-second pause between completed refresh cycles
+~		13 text $10000.00
+~		16 text 0
+~		19 text Paper only
++		77 text No quotes. Run the synthetic feed; this is an empty state, not a $0 quote.
+~		50 text Watching: RUST
+The focused UI element is 0 AXWebArea Rust Operations Console · Simulation, URL: 127.0.0.1:8773/
+
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~			44 text field (settable) Symbol, Value: LAB, ID: symbol
+~			46 stepper (settable, integer) Whole units to buy, Value: 2, ID: quantity
++		78 text Order ui-c50ef2a1-b5fc-4b01-b91f-27da8c6dd980 was not accepted. Inspect validation, authorization and current state.
+The focused UI element is 0 AXWebArea Rust Operations Console · Simulation, URL: 127.0.0.1:8773/
+
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
++		79 text Replay accepted. The next refresh shows its durable status.
+The focused UI element is 0 AXWebArea Rust Operations Console · Simulation, URL: 127.0.0.1:8773/
+
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~		78 text Simulated order ui-4c9ee172-5d06-42c3-a6fd-aabd3138945f accepted. The next snapshot updates holdings.
+The focused UI element is 0 AXWebArea Rust Operations Console · Simulation, URL: 127.0.0.1:8773/
+
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 80-86
+~		13 text $9798.00
+~		16 text 7
+~		23 search text field (settable) Filter symbols, Value: MISSING, ID: quote-filter
++		92 text No symbols match this filter. Clear or change the filter.
++		93 content list
++			94 container
++				95 AXListMarker • 
++				96 text LAB :  2  units
+~			55 text field (settable) Comma-separated symbols, Value: LAB,RUST, ID: watchlist
+~		79 text Accepted. The next refresh confirms persistent state.
++			97 row
++				98 cell
++					99 text ui-4c9ee172-5d06-42c3-a6fd-aabd3138945f
++				100 cell
++					101 text LAB
++				102 cell
++					103 text buy
++				104 cell
++					105 text 2
++				106 cell
++					107 text $101.00
+The focused UI element is 23 search text field (settable) Filter symbols, Value: MISSING, ID: quote-filter
+
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 92
+~			8 text Disconnected · retrying after the next interval
++		108 text API returned HTTP 502
+~		16 text 8
+~		23 search text field (settable) Filter symbols, ID: quote-filter
++			109 row
++				110 cell
++					111 text LAB
++				112 cell
++					113 text $101.00
++				114 cell
++					115 text 5
+~			44 text field (disabled) Symbol, Value: LAB, ID: symbol
+~			46 stepper (disabled, settable, integer) Whole units to buy, Value: 2, ID: quantity
+~			47 button Retry retained instruction
++		116 button Check exact ledger entry
++		117 text Retained instruction: ui-559ff601-09ff-41d5-8f1a-14d4adc5498c · buy 2 LAB. Record this ID before leaving the page.
+~		78 text Unknown outcome for ui-559ff601-09ff-41d5-8f1a-14d4adc5498c. Check its exact ledger entry or retry this same instruction. Keep this page open; new orders stay disabled until reconciliation.
+~		50 text Watching: LAB, RUST
+The focused UI element is 0 AXWebArea Rust Operations Console · Simulation, URL: 127.0.0.1:8773/
+
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 108
+~			8 text Connected · 2-second pause between completed refresh cycles
+~		78 text Still unresolved: API returned HTTP 404. Even a missing entry may race an in-flight write. Retry only the retained instruction.
+The focused UI element is 0 AXWebArea Rust Operations Console · Simulation, URL: 127.0.0.1:8773/
+
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 116-117
+~			44 text field (settable) Symbol, Value: LAB, ID: symbol
+~			46 stepper (settable, integer) Whole units to buy, Value: 2, ID: quantity
+~			47 button Submit simulated buy
+~		78 text Simulated order ui-559ff601-09ff-41d5-8f1a-14d4adc5498c accepted. The next snapshot updates holdings.
+The focused UI element is 0 AXWebArea Rust Operations Console · Simulation, URL: 127.0.0.1:8773/
+
+Browser tab: 370002158, Title: "Rust Operations Console · Simulation", URL: "http://127.0.0.1:8773/".
+0 AXWebArea Rust Operations Console · Simulation, URL: 127.0.0.1:8773/
+	1 container
+		2 text LOCAL LAB · SIMULATION ONLY
+		3 heading Operations console, Value: 1
+			4 text Operations console
+		5 text Observe a service, trace a state change, and explain its failure boundary.
+	6 container
+		7 container Connection controls
+			8 text Updates paused
+			9 button Resume updates
+		11 heading Simulated cash, Value: 2
+			12 text Simulated cash
+		13 text $9596.00
+		14 heading Recorded events, Value: 2
+			15 text Recorded events
+		16 text 9
+		17 heading Mode, Value: 2
+			18 text Mode
+		19 text Paper only
+		20 heading Latest quotes, Value: 2
+			21 text Latest quotes
+		22 text Filter symbols
+		23 search text field (settable) Filter symbols, ID: quote-filter
+		24 table Integer cents; sequence orders events within a symbol
+			25 text Integer cents; sequence orders events within a symbol
+			26 row
+				27 cell
+					28 text Symbol
+				29 cell
+					30 text Price
+				31 cell
+					32 text Sequence
+			109 row
+				110 cell
+					111 text LAB
+				112 cell
+					113 text $101.00
+				114 cell
+					115 text 5
+		33 heading Recorded LAB price history, Value: 2
+			34 text Recorded LAB price history
+		35 text Up to 60 recent event positions; unlike browser samples, points come from the persistent journal. The bounded history can expire older points.
+		36 image Recorded LAB price trend, with equivalent values below
+		37 button (collapsed) History values and retention boundary, Secondary Actions: Expand
+			38 text History values and retention boundary
+		39 heading Simulated order, Value: 2
+			40 text Simulated order
+		41 text Local operator fixture. No broker, real funds or external account is connected.
+		42 container
+			43 text Symbol
+			44 text field (settable) Symbol, Value: LAB, ID: symbol
+			45 text Whole units to buy
+			46 stepper (settable, integer) Whole units to buy, Value: 2, ID: quantity
+			47 button Submit simulated buy
+		78 text Simulated order ui-559ff601-09ff-41d5-8f1a-14d4adc5498c accepted. The next snapshot updates holdings.
+		48 heading Positions and watchlist, Value: 2
+			49 text Positions and watchlist
+		93 content list
+			94 container
+				95 AXListMarker • 
+				96 text LAB :  4  units
+		50 text Watching: LAB, RUST
+		51 heading Edit watchlist, Value: 2
+			52 text Edit watchlist
+		53 container
+			54 text Comma-separated symbols
+			55 text field (settable) Comma-separated symbols, Value: LAB,RUST, ID: watchlist
+			56 button Save watchlist
+		57 heading Durable replay jobs, Value: 2
+			58 text Durable replay jobs
+		59 text Queue five synthetic LAB ticks. The single worker persists its cursor. Cancellation is cooperative; completed ticks remain committed.
+		60 button Queue synthetic replay
+		79 text Accepted. The next refresh confirms persistent state.
+		87 content list
+			88 container
+				89 AXListMarker • 
+				90 text ui-418c72b9-748e-46bb-83e7-23e43676fe1a · 5/5 · completed 
+				91 button (disabled) Cancel job
+		61 heading Recent simulated order ledger, Value: 2
+			62 text Recent simulated order ledger
+		63 text Inspect IDs after an ambiguous outcome before submitting another instruction. The snapshot retains at most 100 recent orders; exact lookup works beyond that window. Unresolved identity is retained in this open page, not across a reload. Copy its ID before leaving.
+		64 table
+			65 row
+				66 cell
+					67 text Order ID
+				68 cell
+					69 text Symbol
+				70 cell
+					71 text Side
+				72 cell
+					73 text Units
+				74 cell
+					75 text Fill price
+			97 row
+				98 cell
+					99 text ui-559ff601-09ff-41d5-8f1a-14d4adc5498c
+				100 cell
+					101 text LAB
+				102 cell
+					103 text buy
+				104 cell
+					105 text 2
+				106 cell
+					107 text $101.00
+			116 row
+				117 cell
+					118 text ui-4c9ee172-5d06-42c3-a6fd-aabd3138945f
+				119 cell
+					120 text LAB
+				121 cell
+					122 text buy
+				123 cell
+					124 text 2
+				125 cell
+					126 text $101.00
+	76 text This dashboard is a teaching client. Its fixture identities are public. Bind services to localhost.
+
+The focused UI element is 9 button Resume updates

@@ -1,0 +1,19 @@
+$ mise exec -- wasm-bindgen --version
+wasm-bindgen 0.2.129
+
+exit=0
+$ mise exec -- rustc --version
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+
+exit=0
+$ mise exec -- node --version
+v26.12.0
+
+exit=0
+$ mise exec -- node --check /Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console/pkg/operations_console.js
+
+exit=0
+$ mise exec -- node --input-type=module -e "import {readFileSync} from 'node:fs'; const bytes=readFileSync(process.argv[1]); const module=await WebAssembly.compile(bytes); console.log(JSON.stringify({validated:true,bytes:bytes.length,imports:WebAssembly.Module.imports(module).length,exports:WebAssembly.Module.exports(module).length}));" /Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console/pkg/operations_console_bg.wasm
+{"validated":true,"bytes":5115313,"imports":108,"exports":34}
+
+exit=0
