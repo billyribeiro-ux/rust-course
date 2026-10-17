@@ -1,0 +1,139 @@
+{
+  "as_of": "2026-10-17",
+  "recorded_at": "2026-10-17T12:31:52.443123+00:00",
+  "reviewer": "Codex author self-review",
+  "independent_acceptance": false,
+  "scope": "Current documentation and status consistency against retained evidence; no new browser or compiler run claimed.",
+  "official_sources_reopened": [
+    "https://blog.rust-lang.org/2026/10/15/Rust-1.99.1/",
+    "https://rust-lang.github.io/api-guidelines/checklist.html"
+  ],
+  "lesson_corrections": [
+    {
+      "lesson": "06-browser",
+      "before_body_sha256": "82f1581d18e1f30a90de113f85466c237f31aa4ad08b3f2139ba399be97945dd",
+      "after_body_sha256": "dc2d78fde00315d988ae45f6c64ec71bf324bf4489cc5aad2c9254cc98d9c68a",
+      "change": "Replaced obsolete browser blocker with dated runtime and updated-build evidence; code examples unchanged."
+    },
+    {
+      "lesson": "06-state",
+      "before_body_sha256": "326357089dff7067c346f2ef3b5331cc4bb424b570cd1dfe7dc327a6cd507ff0",
+      "after_body_sha256": "3b89e268c0e2a476feb7da0b3a4be965d77e2ff70a41eeae6f8b6d29f2ed1adf",
+      "change": "Replaced obsolete browser blocker with dated runtime and updated-build evidence; code examples unchanged."
+    },
+    {
+      "lesson": "06-console",
+      "before_body_sha256": "c5575313eab98e84548a78df7cf622c0ef9998c6d7d244eb7a3bdaed7cb5c763",
+      "after_body_sha256": "4de945860e6bcdb4426d0b162988168db5f3c35015490facd7265a57795bbe99",
+      "change": "Replaced obsolete browser blocker with dated runtime and updated-build evidence; code examples unchanged."
+    },
+    {
+      "lesson": "06-boundaries",
+      "before_body_sha256": "6b8e863a48bca90875dc08c8b56440a281461e36f55dee9f616c92232fa66934",
+      "after_body_sha256": "5a84ec53adc302eebe38d76301283b7bcfbc904598166997b6e5fe8ac3e89275",
+      "change": "Replaced obsolete browser blocker with dated runtime and updated-build evidence; code examples unchanged."
+    }
+  ],
+  "coverage_corrections": [
+    {
+      "objective": "HTML, CSS, DOM, events, semantic controls, forms and responsive accessibility",
+      "previous_scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool.",
+      "current_scope": "Rust/WASM compilation and binding generation passed on October 17. Live Chrome behavior was exercised on October 9 for the specific flows in browser-status.json; source hashes still match, but that run does not exercise every later dependency update."
+    },
+    {
+      "objective": "WASM constraints, network boundaries, rendering modes and hydration",
+      "previous_scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool.",
+      "current_scope": "Rust/WASM compilation and binding generation passed on October 17. Live Chrome behavior was exercised on October 9 for the specific flows in browser-status.json; source hashes still match, but that run does not exercise every later dependency update."
+    },
+    {
+      "objective": "Leptos ownership/state model and compatible stable framework choice",
+      "previous_scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool.",
+      "current_scope": "Rust/WASM compilation and binding generation passed on October 17. Live Chrome behavior was exercised on October 9 for the specific flows in browser-status.json; source hashes still match, but that run does not exercise every later dependency update."
+    },
+    {
+      "objective": "Loading/error/empty states, filters, keyboard interaction and status updates",
+      "previous_scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool.",
+      "current_scope": "Rust/WASM compilation and binding generation passed on October 17. Live Chrome behavior was exercised on October 9 for the specific flows in browser-status.json; source hashes still match, but that run does not exercise every later dependency update."
+    },
+    {
+      "objective": "Uncertain mutations, stable IDs, reconciliation and browser lifecycle limits",
+      "previous_scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool.",
+      "current_scope": "Rust/WASM compilation and binding generation passed on October 17. Live Chrome behavior was exercised on October 9 for the specific flows in browser-status.json; source hashes still match, but that run does not exercise every later dependency update."
+    },
+    {
+      "objective": "Optional framework-neutral Svelte 5 bridge",
+      "previous_scope": "Optional runnable Svelte 5.57.2 client with exact integer decoding and bounded read requests; compatible Vite build and nine Node tests executed. Leptos is the main path. No SvelteKit is used. Browser interaction remains unverified.",
+      "current_scope": "Optional runnable Svelte 5.57.2 client with exact integer decoding and bounded read requests; compatible Vite build and nine Node tests executed. Leptos is the main path. No SvelteKit is used. Live Chrome layout, filtering, offline recovery and request cancellation were exercised on October 9; October 17 unit/compiler/build and HTTP checks are recorded separately."
+    },
+    {
+      "objective": "Modular full-stack application, watchlists, charts and synthetic streams",
+      "previous_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance.",
+      "current_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the dated live browser checks and pending independent acceptance."
+    },
+    {
+      "objective": "Simulated order invariants, position ledger, cents, timestamps and event IDs",
+      "previous_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance.",
+      "current_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the dated live browser checks and pending independent acceptance."
+    },
+    {
+      "objective": "Duplicate/out-of-order events, history, replay and persistent jobs",
+      "previous_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance.",
+      "current_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the dated live browser checks and pending independent acceptance."
+    },
+    {
+      "objective": "Authorization, failed transactions, migrations and restart recovery",
+      "previous_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance.",
+      "current_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the dated live browser checks and pending independent acceptance."
+    },
+    {
+      "objective": "Reconnects, slow clients, overload, cancellation and observability",
+      "previous_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance.",
+      "current_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the dated live browser checks and pending independent acceptance."
+    },
+    {
+      "objective": "Architecture alternatives, reproducible load, measured performance and runbook",
+      "previous_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance.",
+      "current_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the dated live browser checks and pending independent acceptance."
+    },
+    {
+      "objective": "Independent specification change, incident, design review and performance investigation",
+      "previous_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance.",
+      "current_scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the dated live browser checks and pending independent acceptance."
+    }
+  ],
+  "browser_source_hashes_match_oct09_record": {
+    "assets/course.js": "b52aff837d0a32c8bd1623700f43805e31b61f126e3846d9c57791a73c22c8ff",
+    "assets/course.css": "a54f6c2766fa64c0c4df8f2906ec7a80c8e2f8fe6139632a9a10dd98cf473a61",
+    "assets/progress-data.js": "6552072dd9c9f53e74d0980c026d2638abed4d952cfb65f077a13c624332940b",
+    "projects/ui-console/src/lib.rs": "2a38a779367c75a822b7e9a6dd0be721ce38d60088e17923e08c361d73d39549",
+    "projects/ui-console/console.css": "6700f33f59df0ac7559624146dcc4952c1e24e9a0bb986ea7ff0980f607d5fd5"
+  },
+  "evidence": [
+    "browser-status.json",
+    "browser-live.html",
+    "oct17-browser.json",
+    "oct17-managed-wasm.json",
+    "oct17-audit.json"
+  ],
+  "historical_records": "Original October 9 browser-status and final-review-summary records preserved unchanged.",
+  "remaining_acceptance": "A named, authorized independent reviewer must assess the curriculum/design and record a decision; author self-review does not grant acceptance.",
+  "validation": {
+    "static_check": {
+      "kind": "static checks only; not rendered browser QA",
+      "pages": 150,
+      "local_links_checked": 6862,
+      "source_inclusions_checked": 83,
+      "lessons_checked": 57,
+      "issues": []
+    },
+    "obsolete_browser_blocker_claims_in_corrected_current_pages": [],
+    "all_lesson_and_project_author_reviews_preserved": true,
+    "changed_lesson_ids": [
+      "06-boundaries",
+      "06-browser",
+      "06-console",
+      "06-state"
+    ],
+    "runtime_source_changed": false
+  }
+}

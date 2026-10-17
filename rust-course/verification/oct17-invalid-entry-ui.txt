@@ -1,0 +1,5 @@
+Browser tab: 370002140, Title: "A reproducible first run and a method for getting unstuck · Rust Workshop", URL: "http://127.0.0.1:8771/lessons/stage-0/00-terminal.html".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 100
++		107 text Import failed: Invalid completed entry: 00-terminal
+The focused UI element is 8 button Import progress JSON, ID: import-open

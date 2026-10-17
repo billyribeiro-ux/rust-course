@@ -1,7 +1,7 @@
 {
   "as_of": "2026-10-17",
-  "recorded_at": "2026-10-17T11:44:29.847558+00:00",
-  "overall": "Course content and stable Rust baseline updated; the resumed fuzz and Svelte checks passed. Managed WASM CLI availability and browser file import remain open.",
+  "recorded_at": "2026-10-17T12:20:23.854753+00:00",
+  "overall": "Course authorship and applicable local verification are complete as of October 17, 2026. Native Chrome import, reload persistence and three invalid-file rejection cases passed without permission changes. Independent acceptance remains pending.",
   "inventory": {
     "authored_lessons": 57,
     "main_projects": 16,
@@ -99,11 +99,17 @@
     {
       "scope": "Resumed fuzz, intentional false oracle, Svelte tests/compiler/build/advisory scan, official component review and real HTTP checks",
       "evidence": "oct17-resumed-final.json"
+    },
+    {
+      "scope": "Owner-managed wasm-bindgen CLI, locked WASM build, generated web bindings, loader syntax and WASM binary validation",
+      "evidence": "oct17-managed-wasm.json"
+    },
+    {
+      "scope": "Updated WASM console runtime in Chrome with fresh backend and exact-identity outage recovery",
+      "evidence": "oct17-console-runtime.json"
     }
   ],
-  "observed_without_new_durable_command_logs": [
-    "The Leptos WASM package was rebuilt during the initial update; the dated durable UI Clippy and checkpoint compilation records provide separate evidence."
-  ],
+  "observed_without_new_durable_command_logs": [],
   "changes": [
     "Updated manifests, lockfiles, dated tool pins, versioned documentation links and current PostgreSQL labels. Historical measurement versions and dates are retained.",
     "Added a runnable let-chain example with explicit Option-versus-Result tradeoffs; updated C variadic FFI and Box ownership-transfer guidance from Rust release documentation.",
@@ -131,19 +137,6 @@
   ],
   "remaining": [
     {
-      "scope": "Managed WASM CLI",
-      "status": "blocked",
-      "detail": "Rust 1.99.1 and Node 26.12.0 now resolve successfully. wasm-bindgen-cli is still absent from the mise inventory and mise exec -- wasm-bindgen --version fails before execution. Existing October 17 WASM compilation and Clippy evidence remains valid; a fresh managed binding-generation run cannot be reproduced yet.",
-      "owner_command": "mise-root use -g cargo:wasm-bindgen-cli@0.2.129",
-      "evidence": "oct17-resumed-environment.json"
-    },
-    {
-      "scope": "Progress file import and invalid-file rejection in Chrome",
-      "status": "blocked",
-      "detail": "Retried the synthetic export fixture on isolated origin http://127.0.0.1:8767. The extension still requires Allow access to file URLs; no permission was changed or bypassed.",
-      "evidence": "oct17-browser.json"
-    },
-    {
       "scope": "Independent acceptance",
       "status": "pending",
       "detail": "Author review and executable checks do not establish independent acceptance or learner competence."
@@ -151,5 +144,23 @@
   ],
   "historical_evidence": "Older benchmark, browser, fuzz and advisory records retain their dates and dependency graphs. The earlier Svelte HTTP report was restored byte-for-byte from the prior archive; the October 17 failed attempt is retained separately in oct17-svelte-http.json and .log.",
   "all_requested_verification_complete": false,
-  "latest_followup": "oct17-resumed-final.json"
+  "latest_followup": "oct17-resumed-final.json",
+  "resolved_gates": [
+    {
+      "scope": "Managed WASM CLI",
+      "status": "passed",
+      "detail": "The owner-installed wasm-bindgen-cli 0.2.129 resolves through mise. Locked WASM compilation, web binding generation, JavaScript syntax and WASM binary validation passed.",
+      "evidence": "oct17-managed-wasm.json"
+    },
+    {
+      "scope": "Progress file import and invalid-file rejection in Chrome",
+      "status": "passed",
+      "detail": "Course authorship and applicable local verification are complete as of October 17, 2026. Native Chrome import, reload persistence and three invalid-file rejection cases passed without permission changes. Independent acceptance remains pending.",
+      "evidence": "oct17-browser.json"
+    }
+  ],
+  "latest_toolchain_verification": "oct17-managed-wasm.json",
+  "applicable_local_verification_complete": true,
+  "latest_browser_verification": "oct17-browser.json",
+  "latest_console_runtime_verification": "oct17-console-runtime.json"
 }

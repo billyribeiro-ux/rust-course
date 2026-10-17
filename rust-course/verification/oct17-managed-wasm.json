@@ -1,0 +1,126 @@
+{
+  "date": "2026-10-17T12:05:36.425198+00:00",
+  "as_of": "2026-10-17",
+  "passed": true,
+  "cli_version": "0.2.129",
+  "managed_installation": [
+    {
+      "version": "0.2.129",
+      "requested_version": "0.2.129",
+      "install_path": "/Users/billyribeiro/.local/share/mise/installs/cargo-wasm-bindgen-cli/0.2.129",
+      "source": {
+        "type": "mise.toml",
+        "path": "/Users/billyribeiro/.config/mise/config.toml"
+      },
+      "installed": true,
+      "active": true
+    }
+  ],
+  "build": {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "python3",
+      "scripts/build-ui.py",
+      "--target-dir",
+      "../.course-cache/wasm"
+    ],
+    "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+    "exit_code": 0,
+    "passed": true,
+    "log": "oct17-managed-wasm-build.log"
+  },
+  "checks": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "wasm-bindgen",
+        "--version"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stdout": "wasm-bindgen 0.2.129"
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stdout": "rustc 1.99.1 (58cf8f9c3 2026-10-13)"
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--version"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stdout": "v26.12.0"
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--check",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console/pkg/operations_console.js"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stdout": ""
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import {readFileSync} from 'node:fs'; const bytes=readFileSync(process.argv[1]); const module=await WebAssembly.compile(bytes); console.log(JSON.stringify({validated:true,bytes:bytes.length,imports:WebAssembly.Module.imports(module).length,exports:WebAssembly.Module.exports(module).length}));",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console/pkg/operations_console_bg.wasm"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "stdout": "{\"validated\":true,\"bytes\":5115313,\"imports\":108,\"exports\":34}"
+    }
+  ],
+  "validation_log": "oct17-managed-wasm-validation.log",
+  "artifacts": {
+    "projects/ui-console/pkg/operations_console.d.ts": {
+      "bytes": 4864,
+      "sha256": "811501f1f8aae7b32919f5d485c434452c8b9c60ab71f9926ed9889b7787a93c"
+    },
+    "projects/ui-console/pkg/operations_console.js": {
+      "bytes": 39181,
+      "sha256": "8debde3c9480d8823bd3f7cabff29ed6e4b6868c2ce1d7ab11fd1b31460c31fe"
+    },
+    "projects/ui-console/pkg/operations_console_bg.wasm": {
+      "bytes": 5115313,
+      "sha256": "736b46f05da0db8d1ba05b0fc0eacc7c93c636da032e2b26f40aa7a02061297d"
+    },
+    "projects/ui-console/pkg/operations_console_bg.wasm.d.ts": {
+      "bytes": 2906,
+      "sha256": "6b566e921f5cb466a3e4f7af5c568ab407cb9d3126587135c9166c713b5d6618"
+    }
+  },
+  "source_fingerprints": {
+    "projects/ui-console/Cargo.toml": "b29a9cf75cfbcac58243aaa9e79296574a3b635d4a9d0024be07af4e6e622613",
+    "projects/ui-console/Cargo.lock": "2c7299f2997e87ddee19e1d81dd4c68da28c6f474dda8eebb75c271c2e4bf192",
+    "scripts/build-ui.py": "37a12d6212c81efdc5346accc96a02598f9572442d990fe079634d25c4836e81"
+  },
+  "scope": "Managed CLI version, locked Rust/WASM build, generated web bindings, JavaScript syntax and binary WASM compilation/validation. No new browser rendering or progress-file import is claimed. Generated pkg files remain excluded from the portable archive.",
+  "environment": "Owner installed the CLI; the agent made no machine-wide tool changes."
+}

@@ -1,0 +1,184 @@
+Browser tab: 370002140, Title: "A reproducible first run and a method for getting unstuck · Rust Workshop", URL: "http://127.0.0.1:8771/lessons/stage-0/00-terminal.html".
+0 AXWebArea A reproducible first run and a method for getting unstuck · Rust Workshop, URL: 127.0.0.1:8771/lessons/stage-0/00-terminal.html
+	1 link Description: Skip to content, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#main
+	2 container
+		3 button (collapsed) Description: Toggle navigation, ID: menu, Secondary Actions: Expand
+		4 text Search lessons and projects
+		5 search text field (settable) Search lessons and projects, ID: search
+		6 button Dark theme, ID: theme
+		7 button Export, ID: export
+		8 button Import progress JSON, ID: import-open
+			9 text Import
+			10 text progress JSON
+	11 container main
+		12 container
+			13 link Description: Workshop, Value: 127.0.0.1:8771/index.html
+			14 text  / A reproducible first run and a method for getting unstuck
+		15 container
+			16 text STAGE 00 / TOOL FOUNDATIONS
+			17 heading A reproducible first run and a method for getting unstuck, Value: 1
+				18 text A reproducible first run and a method for getting unstuck
+			19 text Use mise, Cargo, and a nine-step investigation to distinguish shell, compiler, and program failures. Read with a terminal open. Predict before revealing. Verified source versions: 
+			20 link Description: version ledger, Value: 127.0.0.1:8771/sources.html
+			21 text .
+			22 button (collapsed) Prerequisites and learning objectives, Secondary Actions: Expand
+				23 text Prerequisites and learning objectives
+			24 text Key terms: 
+			25 link Description: future, Value: 127.0.0.1:8771/glossary.html#future
+			26 text  · 
+			27 link Description: mise, Value: 127.0.0.1:8771/glossary.html#mise
+			28 text Keep the 
+			29 link Description: problem-solving playbook, Value: 127.0.0.1:8771/playbook.html
+			30 text  open. Record observations before explanations, and save the experiment that changed your mind.
+			31 link Description: Reconstruct this project’s runnable checkpoints, Value: 127.0.0.1:8771/projects/checkpoints/index.html#p01
+			32 text . Each milestone states its own scope; learner scaffolds are separate assignments.
+			33 heading Purpose and the first useful model, Value: 2, ID: purpose-and-the-first-useful-model
+				34 text Purpose and the first useful model
+			35 text Your first deliverable is a reproducible calculator run, accompanied by an investigation that another learner can repeat. A terminal command is a request to several programs. The shell first divides text into arguments. mise chooses tools from project configuration. Cargo selects a package, builds it if necessary, and starts a binary. The binary parses the arguments that survive those earlier steps. A failure at one boundary can resemble a failure somewhere else. Learning the boundaries gives you a way to solve unfamiliar problems without memorizing every diagnostic. This course uses mise. The course mise.toml pins Rust 1.99.1, the stable point release announced on October 15, 2026. Begin in the course root, the folder containing index.html, mise.toml, scripts and projects; its folder name may differ from rust-course. The 
+			36 link Description: launch guide, Value: 127.0.0.1:8771/README.html
+			37 text  lists the mise, Python 3.11+, Git and native development-tool prerequisites. Open and inspect mise.toml before trusting it: it selects the pinned Rust version, a shared local build directory, and local Python tasks. Then run the setup and version commands below. rustup may be the underlying mechanism used to manage the Rust toolchain; it is not a reason to change your global default. The matching rust-toolchain.toml records the same version for Rust-aware tools. If these disagree, stop to inspect configuration instead of updating dependencies until the error disappears. Example · use the stated working directory
+			38 button Copy code
+			39 text pwd
+ls
+mise trust
+mise install
+mise exec -- rustc --version
+mise exec -- cargo --version
+cd projects
+mise exec -- cargo run -p workshop-calculator -- 12m + 3m
+			40 text The final line should print 15m. Cargo may also print compilation messages to standard error. The double dash ends Cargo's arguments; the following three arguments belong to the calculator. A successful command is evidence that this package builds and this case works. It does not establish that every project, every boundary case, or an arbitrary future Rust version works. Keep that distinction visible in your notes from the beginning.
+			41 heading Prediction before running, Value: 2, ID: prediction-before-running
+				42 text Prediction before running
+			43 text Predict what happens if the command omits Cargo's double dash: mise exec -- cargo run -p workshop-calculator 12m + 3m. Does the calculator receive three operands, report an unknown operator, or fail to start? Write both your answer and which program you think produces the error. Then run the command. Expected result: Cargo rejects the unexpected arguments before the calculator starts. The operand text never reaches our program. This is why a calculator patch cannot fix this particular reproduction. Now predict the result of the correctly separated command with 12m + 3s. Expected result: the binary starts, prints a units error to standard error, and exits unsuccessfully. Cargo did its job. Our domain deliberately rejects adding a length and a time. A nonzero exit is sometimes the correct implementation of the requested behavior. The first question is always what behavior the contract requires.
+			44 heading The problem-solving playbook: a worked investigation, Value: 2, ID: the-problem-solving-playbook-a-worked-investigation
+				45 text The problem-solving playbook: a worked investigation
+			46 text Keep the 
+			47 link Description: playbook reference, Value: 127.0.0.1:8771/playbook.html
+			48 text  beside your terminal. The following investigation models its complete loop; later lessons remove some of the prompts so you choose the next experiment yourself. Step 1 — state expected and actual behavior precisely. Expected: three calculator arguments produce 15m. Actual for the missing-separator command: Cargo reports an unexpected argument; no quantity is printed. Avoid writing only “Rust is broken.” That phrase hides both the action and the observable difference. Step 2 — reproduce with exact context. Record the working directory rust-course/projects, the full command, the output, and the output of mise exec -- rustc --version. The intended version begins with rustc 1.99.1. If yours differs, that is an observation, not permission to assume it caused the argument error. Record the active Cargo version too. Reproduction is a controlled description, not a collection of screenshots with missing context. Step 3 — locate the boundary. The message names Cargo's command syntax, so investigate Cargo-to-binary argument forwarding. Step 4 — read evidence rather than only the last line. Cargo help describes the separator before executable arguments. The reference binary expects exactly three arguments after its own executable name. These facts narrow the search before any source edit. Step 5 — separate competing hypotheses. Hypothesis A: the toolchain cannot compile the project. Hypothesis B: arguments are being interpreted by Cargo. A remains plausible until a normal run builds; B predicts that inserting one separator will change which program responds. We have not yet proved either hypothesis merely by naming it. Step 6 — make one distinguishing experiment. Add only the double dash and keep package, directory, operands, and tool version constant. Expected experimental result: the normal command builds or reuses its build and prints 15m. This disproves A as the explanation for this reproduction, while supporting B. It does not prove that the installation can never fail for another package. Step 7 — apply the smallest sound fix. Correct the documented invocation; do not rewrite argument parsing to accommodate an argument list that never arrived. Step 8 — regress and state limits. Run the good addition, an incompatible-unit case, and the package tests. These checks cover routing into the binary and some calculator contracts, not arbitrary shell quoting or operating-system behavior. Step 9 — capture the result. Write a short note: “Missing Cargo separator; observed Cargo argument rejection; changed only --; calculator then produced 15m; recorded Rust 1.99.1; package tests still need to be run or their actual result attached.” Distinguish an expected example from a command you actually executed. This habit makes your later debugging notes usable evidence.
+			49 heading Guided checkpoint, Value: 2, ID: guided-checkpoint
+				50 text Guided checkpoint
+			51 text Read the small entry point below. Identify where argument count becomes a usage error, where calculation errors become exit code 1, and where success becomes exit code 0. Trace 12m + 3m through those branches on paper before running the test command. The library is responsible for quantities; the entry point is responsible for interaction with a process. Keeping those responsibilities separate allows unit tests without launching a terminal.
+			52 link Description: projects/reference/p01-calculator/src/main.rs, Value: 127.0.0.1:8771/projects/reference/p01-calculator/src/main.rs
+			53 button Copy code
+			54 text use std::{
+    io::{self, Write},
+    process::ExitCode,
+};
+fn run() -> io::Result<ExitCode> {
+    let args = std::env::args_os()
+        .skip(1)
+        .map(|value| value.into_string())
+        .collect::<Result<Vec<_>, _>>();
+    let mut stdout = io::stdout().lock();
+    let mut stderr = io::stderr().lock();
+    let Ok(args) = args else {
+        writeln!(stderr, "calculator: arguments must be valid UTF-8 text")?;
+        return Ok(ExitCode::from(2));
+    };
+    let [left, op, right] = args.as_slice() else {
+        writeln!(
+            stderr,
+            "usage: workshop-calculator <integer[m|s]> <+|-|*|/> <integer[m|s]>"
+        )?;
+        writeln!(
+            stderr,
+            "       workshop-calculator convert <finite-number><mm|cm|m|km> <mm|cm|m|km>"
+        )?;
+        return Ok(ExitCode::from(2));
+    };
+    if left == "convert" {
+        return match workshop_calculator::conversion::convert(op, right) {
+            Ok(length) => {
+                writeln!(
+                    stdout,
+                    "approximately {}{}",
+                    length.value(),
+                    length.unit().symbol()
+                )?;
+                stdout.flush()?;
+                Ok(ExitCode::SUCCESS)
+            }
+            Err(error) => {
+                writeln!(stderr, "conversion: {error}")?;
+                Ok(ExitCode::FAILURE)
+            }
+        };
+    }
+    match workshop_calculator::calculate(left, op, right) {
+        Ok(value) => {
+            writeln!(stdout, "{value}")?;
+            stdout.flush()?;
+            Ok(ExitCode::SUCCESS)
+        }
+        Err(error) => {
+            writeln!(stderr, "calculator: {error}")?;
+            Ok(ExitCode::FAILURE)
+        }
+    }
+}
+fn main() -> ExitCode {
+    match run() {
+        Ok(code) => code,
+        Err(error) => {
+            // Diagnostic output is best effort; its failure cannot restore stdout.
+            let _ = writeln!(io::stderr().lock(), "calculator output: {error}");
+            ExitCode::FAILURE
+        }
+    }
+}
+
+			55 text Example · use the stated working directory
+			56 button Copy code
+			57 text mise exec -- cargo test -p workshop-calculator
+mise exec -- cargo run -p workshop-calculator -- 12m + 3s
+			58 heading When you get stuck: independent work and tiered help, Value: 2, ID: when-you-get-stuck-independent-work-and-tiered-help
+				59 text When you get stuck: independent work and tiered help
+			60 text Make a three-row evidence table for a good invocation, missing operand, and division by zero. Record producing component, expected exit status, actual status, and output stream. Quote multiplication as '*' so the shell does not expand it into filenames. A review request should include the exact command and a single disputed conclusion: “I think the shell expanded the star before Cargo; what experiment would distinguish that from a parser error?”
+			61 button (collapsed) Hint 1: choose the next observation, Secondary Actions: Expand
+				62 text Hint 1: choose the next observation
+			63 button (collapsed) Hint 2: narrow the experiment, Secondary Actions: Expand
+				64 text Hint 2: narrow the experiment
+			65 button (collapsed) Worked solution, Secondary Actions: Expand
+				66 text Worked solution
+			67 heading Review and mastery evidence, Value: 2, ID: review-and-mastery-evidence
+				68 text Review and mastery evidence
+			69 text The recommended workflow records the responsible program, the changed factor, and the reason the corrected invocation works. Reading Cargo help is the right abstraction for argument forwarding; an argument-parsing dependency would solve a different problem inside the binary. An alternative is to run the already-built executable directly when isolating Cargo from process behavior, while remembering to rebuild after source changes. Choose that experiment when the build/launch boundary is uncertain.
+			70 heading Primary references, Value: 2, ID: primary-references
+				71 text Primary references
+			72 content list
+				73 container
+					74 AXListMarker • 
+					75 link Description: Rust 1.99.1 release, Value: blog.rust-lang.org/2026/10/15/Rust-1.99.1/
+				76 container
+					77 AXListMarker • 
+					78 link Description: Cargo run reference, Value: doc.rust-lang.org/cargo/commands/cargo-run.html
+				79 container
+					80 AXListMarker • 
+					81 link Description: mise Rust tools, Value: mise.jdx.dev/lang/rust.html
+			82 heading Your evidence and notes, Value: 2, ID: your-evidence-and-notes
+				83 text Your evidence and notes
+			84 checkbox (settable, integer) Description: I have completed this lesson’s independent work, Value: 1, ID: complete
+			85 text This is a self-report. Record evidence; checking the box does not demonstrate competence.
+			86 text Prediction, experiment, result, remaining uncertainty
+			87 text entry area (settable) Prediction, experiment, result, remaining uncertainty, Value: October 17 audit fixture: export and restore this note., ID: lesson-notes
+			88 container Lesson navigation
+				89 link Description: Next: Files, terminal navigation, and a reviewed Git snapshot, Value: 127.0.0.1:8771/lessons/stage-0/00-workspace.html
+		90 container On this page
+			91 text IN THIS LESSON
+			92 link Description: Purpose and the first useful model, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#purpose-and-the-first-useful-model
+			93 link Description: Prediction before running, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#prediction-before-running
+			94 link Description: The problem-solving playbook: a worked investigation, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#the-problem-solving-playbook-a-worked-investigation
+			95 link Description: Guided checkpoint, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#guided-checkpoint
+			96 link Description: When you get stuck: independent work and tiered help, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#when-you-get-stuck-independent-work-and-tiered-help
+			97 link Description: Review and mastery evidence, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#review-and-mastery-evidence
+			98 link Description: Primary references, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#primary-references
+			99 link Description: Your evidence and notes, Value: 127.0.0.1:8771/lessons/stage-0/00-terminal.html#your-evidence-and-notes
+		107 text Import failed: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+		101 container
+			102 text Rust Workshop · Local review draft · Independent review pending. 
+			103 link Description: Investigate with evidence, Value: 127.0.0.1:8771/playbook.html
+			104 text  · 
+			105 link Description: Review this course, Value: 127.0.0.1:8771/review.html
+			106 text . Progress and notes stay in this browser unless you export them.
+
+The focused UI element is 8 button Import progress JSON, ID: import-open
