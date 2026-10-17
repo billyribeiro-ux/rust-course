@@ -1,21 +1,21 @@
 {
-  "verified_at_utc": "2026-10-17T11:55:20.544869+00:00",
+  "verified_at_utc": "2026-10-17T11:56:07.793526+00:00",
   "command": [
     "/Users/billyribeiro/.local/share/mise/installs/python/3.14.8/bin/python3",
     "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/verify-archive.py",
     "/Users/billyribeiro/Desktop/rust-course/rust-course-review.zip"
   ],
   "archive": "/Users/billyribeiro/Desktop/rust-course/rust-course-review.zip",
-  "archive_bytes": 17769193,
-  "sha256": "7a15c31ab1c9170bbe978a339c7a14c960df79c3aff3be7f2dad0ff3acea3fc7",
-  "files": 1087,
+  "archive_bytes": 17777782,
+  "sha256": "4f019ece72579f359be643ffc41906b8896b3e7a0f8665715c816661f47151d3",
+  "files": 1089,
   "all_members_equal_current_portable_files": true,
   "zip_integrity": "passed",
   "forbidden_entries": [],
   "fresh_extraction_static_check": {
     "kind": "static checks only; not rendered browser QA",
-    "pages": 149,
-    "local_links_checked": 6726,
+    "pages": 150,
+    "local_links_checked": 6781,
     "source_inclusions_checked": 83,
     "lessons_checked": 57,
     "issues": [],
