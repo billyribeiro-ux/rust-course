@@ -1,0 +1,207 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Pinning and preserving progress across await · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="04-pinning" data-lesson="04-pinning"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Pinning and preserving progress across await</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 04 / Concurrency and async</div><h1>Pinning and preserving progress across await</h1><p class="lead">Keep one future alive across repeated polls, and distinguish a total deadline from an idle timeout.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-4/04-futures.html">Futures, waiting and cancellation</a></li><li><a href="../../lessons/stage-4/04-atomics.html">Atomic operations, application races, and publication</a></li></ul><ul><li>Explain Pin and Unpin through a timer that actually requires pinning</li><li>Distinguish a future owner from a temporary pinned reborrow</li><li>Preserve one absolute deadline while processing bounded input</li><li>Test cancellation and temporal behavior with a controlled Tokio clock</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#async">async</a> · <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#closure">closure</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#edition">edition</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p08">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-a-busy-input-must-not-postpone-its-deadline-forever">Purpose: a busy input must not postpone its deadline forever</h2>
+<p>A service operation should collect messages for at most ten milliseconds of runtime time. Messages arrive every four milliseconds. If receiving a message starts a fresh ten-millisecond timer, the operation can continue indefinitely under steady input. That program implements an idle timeout rather than the promised total deadline. This lesson gives the operation one timer whose state survives each trip through the selection loop, then uses that concrete need to explain pinning.</p>
+<h2 id="plain-english-model-a-paused-computation-is-a-value">Plain-English model: a paused computation is a value</h2>
+<p>Calling an async function creates a future: a value that represents work and its progress. An executor polls that future. Poll can return Ready with its result, or Pending after arranging for useful progress to cause a wakeup. A wakeup asks the executor to poll again; it does not promise immediate execution. State needed after await is retained in the future. Some such states can contain relationships that would become invalid if the stored value moved after polling began.</p>
+<p><code>Pin</code> is an API contract for a pointer to a value whose location must remain stable when that type requires it. It does not freeze every field, select a physical stack address in advance, or automatically make a program faster. <code>Unpin</code> marks types that do not need this restriction. Most ordinary types are Unpin; a particular future, such as Tokio's Sleep, may not be. Moving a pinned owning pointer is different from moving the value it points to. A <code>Pin&lt;Box&lt;T&gt;&gt;</code> can move its handle while retaining the allocation holding T.</p>
+<p>The standard Future polling interface receives a pinned mutable reference. That lets an executor honor the future's contract while the future advances its internal state. This lesson does not implement raw-pointer projection or unsafe pinning. We use the runtime's documented pinning macro and the safe APIs of an existing future. Knowing when not to implement a custom Future is useful engineering judgment.</p>
+<h2 id="prediction-total-time-versus-silence-between-messages">Prediction: total time versus silence between messages</h2>
+<p>At virtual time zero, collection begins with a deadline at 10. Input arrives at 4,8,12 and16. Predict the accepted items if the timer is created once at the beginning. Then predict the deadline if a fresh ten-unit sleep is created after each input. State whether these are two implementations of the same contract or two different contracts.</p>
+<details><summary>Prediction explained</summary><p>The absolute-deadline implementation collects the first two items and stops at 10. Recreating a relative sleep after each item postpones expiration; with an open channel and no more input, it can stop at 26. That can be a valid inactivity policy when explicitly required. It is a defect when the specification promises a total operation budget. Do not call every simple timer reset unprofessional; name the requirement that makes it wrong here.</p></details>
+<h2 id="small-runnable-checkpoint">Small runnable checkpoint</h2>
+<p>Working directory: <code>projects/</code>. These are complete reference files in the shared native workspace. The example sends two bounded fixture values, closes the sender and prints <code>items=[7, 8] stop=Closed</code>. Its main returns Result so channel and collection failures have an explicit process boundary.</p>
+<pre><code>mise exec -- cargo run -p concurrency-labs --example deadline
+mise exec -- cargo test -p concurrency-labs deadlines
+mise exec -- cargo clippy -p concurrency-labs --all-targets -- -D warnings</code></pre>
+<div class="code-wrap" data-source="projects/reference/p19-concurrency-labs/src/deadlines.rs" data-sha256="3e7f57b78406d718ea02465b753b5cd37a2f69a12d12d4de68f9901ee3008da6"><div class="code-label"><a href="../../projects/reference/p19-concurrency-labs/src/deadlines.rs">projects/reference/p19-concurrency-labs/src/deadlines.rs</a></div><pre><code>use tokio::{
+    sync::{mpsc, watch},
+    time::{Instant, sleep_until},
+};
+
+pub const MAX_ITEMS: usize = 1024;
+#[derive(Debug, PartialEq, Eq)]
+pub enum Stop {
+    Deadline,
+    Cancelled,
+    Closed,
+    Limit,
+}
+#[derive(Debug, PartialEq, Eq)]
+pub struct Report {
+    pub items: Vec&lt;u8&gt;,
+    pub stop: Stop,
+}
+#[derive(Debug, PartialEq, Eq)]
+pub struct InvalidBudget;
+impl std::fmt::Display for InvalidBudget {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter&lt;&#x27;_&gt;) -&gt; std::fmt::Result {
+        f.write_str(&quot;maximum item count exceeds 1024&quot;)
+    }
+}
+impl std::error::Error for InvalidBudget {}
+
+/// Reuse one pinned timer for the entire collection operation.
+/// An observed true shutdown wins; a ready deadline is checked before data or
+/// false-valued watch updates. A dropped shutdown owner also ends collection.
+/// The caller retains receiver ownership and any unread queued items.
+pub async fn collect_until(
+    receiver: &amp;mut mpsc::Receiver&lt;u8&gt;,
+    deadline: Instant,
+    shutdown: &amp;mut watch::Receiver&lt;bool&gt;,
+    maximum: usize,
+) -&gt; Result&lt;Report, InvalidBudget&gt; {
+    if maximum &gt; MAX_ITEMS {
+        return Err(InvalidBudget);
+    }
+    let mut items = Vec::with_capacity(maximum);
+    let timer = sleep_until(deadline);
+    tokio::pin!(timer);
+    loop {
+        if *shutdown.borrow() {
+            return Ok(Report {
+                items,
+                stop: Stop::Cancelled,
+            });
+        }
+        if items.len() == maximum {
+            return Ok(Report {
+                items,
+                stop: Stop::Limit,
+            });
+        }
+        tokio::select! {
+            biased;
+            _ = &amp;mut timer =&gt; {
+                let stop = if *shutdown.borrow() { Stop::Cancelled } else { Stop::Deadline };
+                return Ok(Report { items, stop });
+            }
+            changed = shutdown.changed() =&gt; {
+                if changed.is_err() || *shutdown.borrow() { return Ok(Report { items, stop: Stop::Cancelled }); }
+            }
+            next = receiver.recv() =&gt; match next {
+                Some(value) =&gt; items.push(value),
+                None =&gt; return Ok(Report { items, stop: Stop::Closed }),
+            }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::Duration;
+    #[tokio::test(start_paused = true)]
+    async fn steady_arrivals_do_not_restart_the_absolute_deadline() {
+        let (sender, mut receiver) = mpsc::channel(4);
+        let (shutdown_owner, mut shutdown) = watch::channel(false);
+        let producer = tokio::spawn(async move {
+            for value in 1..=4 {
+                tokio::time::sleep(Duration::from_millis(4)).await;
+                if sender.send(value).await.is_err() {
+                    return;
+                }
+            }
+        });
+        let start = Instant::now();
+        let report = collect_until(
+            &amp;mut receiver,
+            start + Duration::from_millis(10),
+            &amp;mut shutdown,
+            10,
+        )
+        .await
+        .unwrap();
+        assert_eq!(
+            report,
+            Report {
+                items: vec![1, 2],
+                stop: Stop::Deadline
+            }
+        );
+        assert_eq!(Instant::now() - start, Duration::from_millis(10));
+        producer.abort();
+        assert!(producer.await.unwrap_err().is_cancelled());
+        drop(shutdown_owner);
+    }
+    #[tokio::test(start_paused = true)]
+    async fn limit_preserves_unread_channel_items() {
+        let (sender, mut receiver) = mpsc::channel(2);
+        sender.send(7).await.unwrap();
+        sender.send(8).await.unwrap();
+        let (owner, mut shutdown) = watch::channel(false);
+        let report = collect_until(
+            &amp;mut receiver,
+            Instant::now() + Duration::from_secs(1),
+            &amp;mut shutdown,
+            1,
+        )
+        .await
+        .unwrap();
+        assert_eq!(
+            report,
+            Report {
+                items: vec![7],
+                stop: Stop::Limit
+            }
+        );
+        assert_eq!(receiver.recv().await, Some(8));
+        drop(owner);
+    }
+    #[tokio::test(start_paused = true)]
+    async fn closed_cancelled_and_invalid_are_distinct() {
+        let (sender, mut receiver) = mpsc::channel(1);
+        drop(sender);
+        let (owner, mut shutdown) = watch::channel(false);
+        assert_eq!(
+            collect_until(
+                &amp;mut receiver,
+                Instant::now() + Duration::from_secs(1),
+                &amp;mut shutdown,
+                2
+            )
+            .await
+            .unwrap()
+            .stop,
+            Stop::Closed
+        );
+        owner.send(true).unwrap();
+        assert_eq!(
+            collect_until(&amp;mut receiver, Instant::now(), &amp;mut shutdown, 2)
+                .await
+                .unwrap()
+                .stop,
+            Stop::Cancelled
+        );
+        assert_eq!(
+            collect_until(&amp;mut receiver, Instant::now(), &amp;mut shutdown, MAX_ITEMS + 1).await,
+            Err(InvalidBudget)
+        );
+    }
+}
+</code></pre></div>
+<h2 id="explain-the-retained-future">Explain the retained future</h2>
+<p><code>sleep_until(deadline)</code> creates one Sleep future outside the loop. <code>tokio::pin!(timer)</code> pins that local value safely. Each select call borrows it again with <code>&amp;mut timer</code>; it does not create another timer or take ownership away from the operation. The selected temporary reborrow can end while the original timer and its registration remain alive. Dropping the whole operation ends the owner's lifetime and drops its timer.</p>
+<p>Compare this with <code>Box::pin</code>. Boxing would create an owned pinned allocation that can be returned or stored beyond a local scope. It is unnecessary for this local operation. Pinning does not inherently require a heap allocation. Neither a browser animation nor the presence of a Box proves a type's safety obligations; the Rust types and the implementation's invariants establish what callers may do.</p>
+<p>The collection function borrows the receiver and shutdown watcher. The caller still owns the channel endpoints. Successfully received items move into the report, while unread queued values remain in the receiver when the operation returns. Capacity is at most 1,024, validated before allocation. A zero maximum completes immediately with Limit unless shutdown was already observed. A future deadline, a closed data channel, a reached item limit and cancellation have distinct result variants. Distinguishing them makes a caller's retry or shutdown decision reviewable.</p>
+<p>The selection uses an explicit priority. A shutdown value already observed as true stops collection. Otherwise a ready deadline is checked before ordinary watch updates or data; its branch rechecks the shutdown value. This avoids letting repeated false-valued watch updates postpone an expired deadline. Closing the shutdown sender also ends collection when that event is selected. No synchronous mutex guard crosses await. The example holds its shutdown sender until collection ends: dropping it early would be a real control message, not an irrelevant local cleanup.</p>
+<h2 id="cancellation-safety-is-about-retained-progress">Cancellation safety is about retained progress</h2>
+<p>Tokio documents receiving from its bounded mpsc receiver as cancellation safe for use in select: canceling an uncompleted receive does not remove a message from the channel. That property is specific to the operation. A composite future that has already consumed half a network frame may retain progress only inside itself. If a loop drops and recreates that future whenever another branch wins, consumed bytes do not reappear on the socket. The chat project's persistent reader future exists for that reason.</p>
+<p>Keeping the future alive preserves its state; pinning satisfies the constraints required to poll that value in place. These are connected ideas, not synonyms. A type can be Unpin while still holding important progress that must not be thrown away. Conversely, pinning a future does not make its externally visible effects reversible. If cancellation follows a database commit, dropping the client future cannot uncommit the transaction.</p>
+<h2 id="deliberate-mistake-demanding-an-unrestricted-mutable-reference">Deliberate mistake: demanding an unrestricted mutable reference</h2>
+<p>The intentionally failing file <code>exercises/concurrency/pinned_get_mut.rs</code> creates a value containing PhantomPinned, pins it in a Box and then calls get_mut on the pinned reference. From the course folder run <code>mise exec -- rustc --edition 2024 exercises/concurrency/pinned_get_mut.rs</code>. Expected result: E0277 because the type does not satisfy Unpin. This fixture demonstrates a type boundary; it is not a sound self-referential container implementation.</p>
+<p>Do not repair the error by adding unsafe pointer code you cannot justify or by declaring Unpin without understanding the type. For an ordinary value that does not require address stability, choose an ordinary mutable reference from the start. For Sleep, use its documented pinned methods, such as reset when intentionally implementing a new deadline policy. The safe reference collector needs no raw pointers.</p>
+<h2 id="playbook-investigation-the-deadline-keeps-moving">Playbook investigation: the deadline keeps moving</h2>
+<p>Observation: a monitor under steady input does not stop at the promised total budget. Hypothesis A says runtime scheduling is occasionally late. Hypothesis B says the program recreates a relative timer whenever another branch completes. Instrument creation and expiry instants with synthetic timestamps; reduce to one receiver and four planned messages. Under Tokio's paused test clock, the reference stops exactly at virtual10 with two items. A recreated relative timer has a different expected timeline. That controlled experiment weakens scheduling delay as the explanation for this minimal reproduction.</p>
+<p>The tests enable Tokio's test-util feature only for development. Paused time controls Tokio's clock in the test runtime; it does not virtualize arbitrary OS threads, blocking filesystem calls or remote servers. An exact virtual-time assertion checks our timer ownership and selection logic, not a promise about ten-millisecond wall-clock latency on a loaded machine. The producer task is explicitly aborted and awaited after the deadline test, so it cannot silently keep running in the background.</p>
+<h2 id="guided-project-increment">Guided project increment</h2>
+<p>Trace the health monitor's endpoint deadline from argument validation to each retry attempt. Write which instant bounds the whole operation and which duration bounds one attempt. In a learner copy, extract a small bounded receiver collection step using this reference's signature. Begin with the closed-channel example; then add the already-cancelled case and the steady-arrival timeline before connecting real network I/O. Use a separately retained timer or a fixed absolute instant whenever the budget belongs to the entire operation.</p>
+<p>Do not introduce spawning merely to call select. Its branches are polled concurrently on the current task; they do not automatically execute on different OS threads. Blocking CPU work inside a branch can prevent the timer from being polled at all. Move genuinely blocking work to an appropriate bounded worker design and explain what cancellation can interrupt. A deadline future is cooperative scheduling, not an operating-system kill switch.</p>
+<h2 id="independent-practice-and-tiered-hints">Independent practice and tiered hints</h2>
+<p>Implement an explicitly named idle-timeout variant, and test how its timeline differs. Specify the result when cancellation, channel closure, a full item limit and deadline all become observable together. Add a test proving that unread values remain available after Limit. Finally, explain how a partially decoded frame could be lost even though each individual socket read is memory safe.</p>
+<details><summary>Hint 1</summary><p>Write an event timeline before editing. Decide whether a successfully received item is supposed to extend the allowed time.</p></details>
+<details><summary>Hint 2</summary><p>For idle time, retain one pinned Sleep and reset it through its documented pinned API after accepting a message. Keep a separate absolute deadline if both limits are required.</p></details>
+<details><summary>Reference approach</summary><p>An idle variant can reset its timer to now plus the idle interval after each accepted value. Its contract must name that extension. A combined policy keeps a fixed total deadline and uses the earlier of that instant and the current idle deadline. Tests need a steady stream, a long silent interval and simultaneous stop conditions. For framed I/O, retain the parser future or move partially consumed bytes into a persistent decoder buffer rather than discarding them whenever another branch wins.</p></details>
+<h2 id="engineering-decisions-evidence-and-mastery">Engineering decisions, evidence and mastery</h2>
+<p>The implementation uses a borrowed bounded receiver, one locally pinned timer, a bounded output vector and an explicit stop enum. Pinning is justified by an actual !Unpin timer; heap pinning and unsafe projection are omitted because they add no capability this operation needs. Seven laboratory tests cover atomic and temporal contracts, including the controlled deadline, unread items and cancellation distinctions. The intentional compiler fixture separately confirms the expected trait restriction. These checks do not establish browser timing, remote service behavior or every scheduler interleaving.</p>
+<p>When you get stuck, identify which value owns the progress and which value is dropped when a branch loses. Share the smallest timer/channel program, predicted timeline, observed stop reason and pinned API documentation. You are ready to move on when you can explain why the timer survives each selection, change the deadline policy without accidental resets, and debug a lost-progress example without treating Pin as a magic performance annotation.</p>
+<h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/pin/index.html">Rust1.99 Pin</a></li><li><a href="https://docs.rs/tokio/1.53.3/tokio/macro.select.html">Tokio1.53.3 select and cancellation safety</a></li><li><a href="https://docs.rs/tokio/1.53.3/tokio/time/struct.Sleep.html">Tokio Sleep and reset</a></li><li><a href="https://docs.rs/tokio/1.53.3/tokio/time/fn.pause.html">Tokio paused-clock tests</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-4/04-futures.html">Previous: Futures, waiting and cancellation</a><a href="../../lessons/stage-4/04-monitor.html">Next: A bounded local health monitor</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-a-busy-input-must-not-postpone-its-deadline-forever">Purpose: a busy input must not postpone its deadline forever</a><a href="#plain-english-model-a-paused-computation-is-a-value">Plain-English model: a paused computation is a value</a><a href="#prediction-total-time-versus-silence-between-messages">Prediction: total time versus silence between messages</a><a href="#small-runnable-checkpoint">Small runnable checkpoint</a><a href="#explain-the-retained-future">Explain the retained future</a><a href="#cancellation-safety-is-about-retained-progress">Cancellation safety is about retained progress</a><a href="#deliberate-mistake-demanding-an-unrestricted-mutable-reference">Deliberate mistake: demanding an unrestricted mutable reference</a><a href="#playbook-investigation-the-deadline-keeps-moving">Playbook investigation: the deadline keeps moving</a><a href="#guided-project-increment">Guided project increment</a><a href="#independent-practice-and-tiered-hints">Independent practice and tiered hints</a><a href="#engineering-decisions-evidence-and-mastery">Engineering decisions, evidence and mastery</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,419 @@
+{
+  "verified_at": "2026-10-09T19:15:18.584289+00:00",
+  "toolchain": "Rust 1.99.0 via mise",
+  "scope": [
+    "P06 CLI validation before storage open",
+    "P08 bounded complete native-argument parsing before work",
+    "P12 exact arity and checked text conversion",
+    "Fallible stdout output and best-effort final stderr diagnostics in all three CLIs; P06 recovery warning cannot undo prior repair."
+  ],
+  "authored": true,
+  "author_self_review_complete": true,
+  "code_verified": true,
+  "independent_review": "pending",
+  "before_fix": {
+    "command_result": 101,
+    "failed_cli_tests": 6,
+    "observations": [
+      "args() panics for non-UTF-8 argument on each binary",
+      "P06 typo creates data file",
+      "P12 ignores extra argument"
+    ]
+  },
+  "after_fix": {
+    "all_targets_tests_passed": 53,
+    "new_cli_tests_passed": 11,
+    "clippy": "passed -D warnings",
+    "format": "passed",
+    "filesystem_discovery": "Author macOS filesystem rejects invalid UTF-8 directory name with EILSEQ; corrected test distinguishes normal I/O error and validates successful Unicode native paths.",
+    "tick_followup_tests_included": 11,
+    "reconstructed_p12_tests_passed": 26,
+    "pipe_boundary": "Actual closed-read-end stdout/stderr pipe tests: ordinary I/O exit; P06 recovery warning best effort after repair."
+  },
+  "commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--all-targets"
+      ],
+      "exit_code": 101
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--all-targets"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--all-targets"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-checkpoint.py",
+        "p12",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12/Cargo.toml",
+        "--all-targets"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "run",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12/Cargo.toml",
+        "--bin",
+        "tick_replay",
+        "--",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12/fixtures/ticks.csv",
+        "2"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "run",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12/Cargo.toml",
+        "--",
+        "3"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/env/fn.args_os.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/env/fn.args_os.html",
+      "sha256": "f7bb2094c260f1c556acf430125fde0b5aeac213f7c29c9149e53839e59d258d",
+      "verification": "read installed Rust 1.99.0 rust-docs; public versioned web retrieval unavailable"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/env/fn.args.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/env/fn.args.html",
+      "sha256": "99e23ca1238c4fb2e11ff1327769aee5dd3457c0a66edd6f338a4be178295787",
+      "verification": "read installed Rust 1.99.0 rust-docs; public versioned web retrieval unavailable"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/ffi/struct.OsStr.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/ffi/struct.OsStr.html",
+      "sha256": "d33aaa6498c28efd4404e7276b2593595ce840868f22f80c056c2088ac49be81",
+      "verification": "read installed Rust 1.99.0 rust-docs; public versioned web retrieval unavailable"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/fn.pipe.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/io/fn.pipe.html",
+      "sha256": "340a41ca5d3fa181808fd0fd513ed02cc8cfa03cff35a33b518116673ac3f683",
+      "verification": "Read installed Rust 1.99.0 rust-docs component."
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/trait.Write.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/io/trait.Write.html",
+      "sha256": "94483f38e85993952298cef6ca2d5bffc59cc4ad361889926d2ba03a53fda470",
+      "verification": "Read installed Rust 1.99.0 rust-docs component."
+    }
+  ],
+  "affected_lessons": [
+    "03-recovery",
+    "04-monitor",
+    "07-replay"
+  ],
+  "checkpoint_handling": "Early static demos have no CLI input and are unchanged. Final checkpoints reconstruct current references, including tests. No generated checkpoint copy exists to sync.",
+  "changed_files": [
+    {
+      "path": "projects/reference/p06-kv/src/main.rs",
+      "sha256": "8788ca23666a19032b8a6b33ba2a715d61e099854849866e9da5d0b5131dcbb0"
+    },
+    {
+      "path": "projects/reference/p06-kv/tests/cli.rs",
+      "sha256": "0539b10231ad64d1276a639f9fca72155fb3e1c7f53e502bd3529de086b61fc9"
+    },
+    {
+      "path": "projects/reference/p06-kv/decisions.html",
+      "sha256": "2539d9636257ab2c918b69816211bb9cd5a8377c2d59078ea4daa0d779382ff1"
+    },
+    {
+      "path": "projects/reference/p08-monitor/src/main.rs",
+      "sha256": "caace43e2605702947bb32184d9373bb2f82aa6156f5ee435b7ddea686da1d50"
+    },
+    {
+      "path": "projects/reference/p08-monitor/tests/cli.rs",
+      "sha256": "941650f5c1ef0998e9dee94f2f1f06b5268c5749eeb9efc52eaff579bcc89703"
+    },
+    {
+      "path": "projects/reference/p08-monitor/decisions.html",
+      "sha256": "253b68348913ef8fddbd318610279887a4c6f2eb600486f8de4c0fc0f9cdfc9d"
+    },
+    {
+      "path": "projects/reference/p12-replay/src/main.rs",
+      "sha256": "a386dc6ee3763a2e53a402aceb1238be2ab452e2b25a6d99672db3faa5c07eb6"
+    },
+    {
+      "path": "projects/reference/p12-replay/tests/cli.rs",
+      "sha256": "988b2d769708a814e741b41b8e52f61a30f291412720dfc5416a889141a744f3"
+    },
+    {
+      "path": "projects/reference/p12-replay/decisions.html",
+      "sha256": "8aee12557a7ea61221f23ae947c27b5fcbe5aba8540e219fb9b6ef083a0b15ab"
+    },
+    {
+      "path": "authoring/systems.json",
+      "sha256": "371a74ae05cd9f2a88105e21031531fcba9dc02c1f45ce714218300641a998e5"
+    }
+  ],
+  "limitations": [
+    "Unix non-UTF-8 argument tests are cfg(unix); Windows not executed.",
+    "Arbitrary-byte native path successful I/O is conditional on filesystem support and was not observed on this macOS filesystem.",
+    "No browser verification performed by this CLI audit.",
+    "Displayed source requires normal coordinated build-course.py render and source-link check.",
+    "No timing, durability or universal correctness claims."
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "phase": "before",
+  "fixture": "/tmp/course-svc-k3xko2e7",
+  "unix_socket_only": true,
+  "existing_database_touched": false,
+  "commands": [
+    {
+      "argv": [
+        "initdb",
+        "-D",
+        "/tmp/course-svc-k3xko2e7/data",
+        "--auth=trust",
+        "--no-locale",
+        "-E",
+        "UTF8"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "pg_ctl",
+        "-D",
+        "/tmp/course-svc-k3xko2e7/data",
+        "-l",
+        "/tmp/course-svc-k3xko2e7/server.log",
+        "-o",
+        "-c listen_addresses= -c unix_socket_directories=/tmp/course-svc-k3xko2e7/socket -p 65432",
+        "-w",
+        "start"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "createdb",
+        "-h",
+        "/tmp/course-svc-k3xko2e7/socket",
+        "-p",
+        "65432",
+        "rust_course_test_scheduler"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "p14-scheduler",
+        "--test",
+        "postgres",
+        "lease_fields_cannot_rewrite_durable_payload_or_retry_count",
+        "--",
+        "--ignored",
+        "--nocapture"
+      ],
+      "exit_code": 101
+    },
+    {
+      "argv": [
+        "pg_ctl",
+        "-D",
+        "/tmp/course-svc-k3xko2e7/data",
+        "-m",
+        "fast",
+        "-w",
+        "stop"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "test_exit_code": 101,
+  "stop_exit_code": 0,
+  "owned_fixture_removed": true
+}

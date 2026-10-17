@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-17",
+  "tool": "Official Svelte MCP svelte_autofixer",
+  "filename": "experiments/svelte-bridge/src/App.svelte",
+  "desired_svelte_version": 5,
+  "result": {
+    "issues": [],
+    "suggestions": [],
+    "require_another_tool_call_after_fixing": false
+  },
+  "scope": "Static component review; no source changes were needed. The installed MCP capability was used without installing a CLI.",
+  "source_sha256": "9a53ea2797df1f39907426d910e9d59017aecd57c60c1139d142f1791015194d"
+}

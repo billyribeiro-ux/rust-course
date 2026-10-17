@@ -1,0 +1,1125 @@
+{
+  "date": "2026-10-17T11:29:32.165257+00:00",
+  "toolchain": "1.99.1",
+  "mode": "checkpoints",
+  "refreshed_locks": false,
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p01-calculator",
+        "01-checked-add",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p01-calculator/01-checked-add"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p01-calculator/01-checked-add/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p01-calculator",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p01-calculator/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p01-calculator/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p02-journal",
+        "01-domain",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p02-journal/01-domain"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p02-journal/01-domain/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p02-journal",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p02-journal/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p02-journal/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p03-logs",
+        "01-bounded-lines",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p03-logs/01-bounded-lines"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p03-logs/01-bounded-lines/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p03-logs",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p03-logs/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p03-logs/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p04-config",
+        "01-effective-port",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p04-config/01-effective-port"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p04-config/01-effective-port/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p04-config",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p04-config/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p04-config/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p05-expressions",
+        "01-token-spans",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p05-expressions/01-token-spans"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p05-expressions/01-token-spans/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p05-expressions",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p05-expressions/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p05-expressions/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p06-kv",
+        "01-prefix-replay",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p06-kv/01-prefix-replay"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p06-kv/01-prefix-replay/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p06-kv",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p06-kv/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p06-kv/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "01-streaming",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p07-indexer/01-streaming"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p07-indexer/01-streaming/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p07-indexer/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p07-indexer/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "01-budget",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p08-monitor/01-budget"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p08-monitor/01-budget/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p08-monitor/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p08-monitor/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p09-chat/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p09-chat/00-scaffold/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "01-framing",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p09-chat/01-framing"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p09-chat/01-framing/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p09-chat/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p09-chat/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p10-issues/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p10-issues/00-scaffold/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "01-http-validation",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p10-issues/01-http-validation"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p10-issues/01-http-validation/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p10-issues/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p10-issues/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p11-console",
+        "01-local-state",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p11-console/01-local-state"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p11-console/01-local-state/Cargo.toml",
+        "--locked",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-wasm"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p11-console",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p11-console/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p11-console/final/Cargo.toml",
+        "--locked",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-wasm"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "01-price",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p12-replay/01-price"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p12-replay/01-price/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p12-replay/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p12-replay/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "01-safe-slots",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p13-unsafe/01-safe-slots"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p13-unsafe/01-safe-slots/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p13-unsafe/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p13-unsafe/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p14-scheduler/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p14-scheduler/00-scaffold/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "01-lease-model",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p14-scheduler/01-lease-model"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p14-scheduler/01-lease-model/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p14-scheduler/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p14-scheduler/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p15-replication/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p15-replication/00-scaffold/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "01-append-transport",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p15-replication/01-append-transport"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p15-replication/01-append-transport/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p15-replication/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p15-replication/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p16-workbench/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p16-workbench/00-scaffold/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "01-order-domain",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p16-workbench/01-order-domain"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p16-workbench/01-order-domain/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p16-workbench/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-sources/p16-workbench/final/Cargo.toml",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-checkpoint-native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    }
+  ],
+  "log": "oct17-checkpoints.log",
+  "passed": true,
+  "limits": "Scaffolds are learner assignments: compilation is checked, TODO acceptance tests are intentionally unsolved. Database and browser execution are separate."
+}

@@ -1,0 +1,55 @@
+{
+  "measured_at_utc": "2026-10-09T05:22:20.224650+00:00",
+  "results": [
+    {
+      "case": {
+        "id": "orphan",
+        "file": "orphan.rs",
+        "expected_codes": [
+          "E0117"
+        ],
+        "lesson": "07-traits"
+      },
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/auxiliary-diagnostics",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/orphan.rs"
+      ],
+      "exit_code": 1,
+      "expected_codes_found": true,
+      "stdout": "",
+      "stderr": "error[E0117]: only traits defined in the current crate can be implemented for types defined outside of the crate\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/orphan.rs:2:1\n  |\n2 | impl std::fmt::Display for Vec<u8> {\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^-------\n  |                            |\n  |                            `Vec` is not defined in the current crate\n  |\n  = note: impl doesn't have any local type before any uncovered type parameters\n  = note: for more information see https://doc.rust-lang.org/reference/items/implementations.html#orphan-rules\n  = note: define and implement a trait or new type instead\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0117`.\n"
+    },
+    {
+      "case": {
+        "id": "dyn",
+        "file": "dyn.rs",
+        "expected_codes": [
+          "E0038"
+        ],
+        "lesson": "07-traits"
+      },
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/auxiliary-diagnostics",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/dyn.rs"
+      ],
+      "exit_code": 1,
+      "expected_codes_found": true,
+      "stdout": "",
+      "stderr": "error[E0038]: the trait `Encode` is not dyn compatible\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/dyn.rs:3:20\n  |\n3 | fn use_encoder(_: &dyn Encode){}\n  |                    ^^^^^^^^^^ `Encode` is not dyn compatible\n  |\nnote: for a trait to be dyn compatible it needs to allow building a vtable\n      for more information, visit <https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility>\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/dyn.rs:2:17\n  |\n2 | trait Encode{fn encode<T>(&self,value:T);}\n  |       ------    ^^^^^^ ...because method `encode` has generic type parameters\n  |       |\n  |       this trait is not dyn compatible...\n  = help: consider moving `encode` to another trait\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0038`.\n"
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "verified_at": "2026-10-09T06:52:00.138078+00:00",
+  "scope": "Optional read-only Svelte client for exact Rust snapshot contract; not the main course UI framework",
+  "node": "24.21.0",
+  "npm": "12.2.0",
+  "package_versions": {
+    "svelte": "5.57.2",
+    "lossless-json": "4.3.1",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "vite": "8.3.4",
+    "svelte-check": "4.7.6",
+    "typescript": "6.0.3"
+  },
+  "primary_package_published_utc": {
+    "svelte5.57.2": "2026-10-06T14:24:31.209Z",
+    "vite8.3.4": "2026-10-08T12:07:04.441Z",
+    "@sveltejs/vite-plugin-svelte7.3.1": "2026-09-23T10:38:42.922Z",
+    "svelte-check4.7.6": "2026-08-13T05:47:23.067Z",
+    "typescript6.0.3": "2026-04-16T23:38:27.905Z",
+    "lossless-json4.3.1": "2026-07-31T14:05:45.536Z"
+  },
+  "compatibility": "Official plugin peer ranges: vite^8.0.0-beta.7||^8.0.0 and svelte^5.46.4. svelte-check peers allow TypeScript5 or6, so6.0.3 chosen instead of current7.0.2. Exact package-lock included.",
+  "checks": [
+    {
+      "command": "mise exec -- npm ci --prefix rust-course/experiments/svelte-bridge --ignore-scripts --no-audit --no-fund",
+      "working_directory": "workspace outer root",
+      "log": "svelte-install.log",
+      "result": "passed"
+    },
+    {
+      "command": "mise exec -- npm run check --prefix rust-course/experiments/svelte-bridge",
+      "working_directory": "workspace outer root",
+      "log": "svelte-check.log",
+      "result": "passed; zero errors and zero warnings"
+    },
+    {
+      "command": "mise exec -- npm test --prefix rust-course/experiments/svelte-bridge",
+      "working_directory": "workspace outer root",
+      "log": "svelte-tests.log",
+      "result": "passed; nine tests"
+    },
+    {
+      "command": "mise exec -- npm run build --prefix rust-course/experiments/svelte-bridge",
+      "working_directory": "workspace outer root",
+      "log": "svelte-build.log",
+      "result": "passed"
+    },
+    {
+      "command": "npx --yes @sveltejs/mcp@0.1.26 svelte-autofixer rust-course/experiments/svelte-bridge/src/App.svelte --svelte-version 5",
+      "working_directory": "workspace outer root",
+      "log": "svelte-autofixer.log",
+      "result": "passed; zero issues/suggestions"
+    },
+    {
+      "command": "mise exec -- npm audit --json --prefix rust-course/experiments/svelte-bridge",
+      "working_directory": "workspace outer root",
+      "log": "svelte-dependency-audit.json",
+      "result": "passed; zero known advisories at verification"
+    },
+    {
+      "command": "python3 rust-course/verification/svelte-http-audit.py --binary /Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/p16-workbench",
+      "working_directory": "workspace outer root",
+      "log": "svelte-http-audit.log",
+      "details": "svelte-http-audit.json",
+      "result": "passed;8 real HTTP acceptance groups across52 requests, plus actual Node client decoding and timeout"
+    }
+  ],
+  "source_sha256": {
+    "experiments/svelte-bridge/jsconfig.json": "d38923738f55b3dd6851835b44a183ffb3ddc1cb55135217a954776a33a0d08f",
+    "experiments/svelte-bridge/svelte.config.js": "d618c11eef1b3289dd407ea13dcffe5da93d17338663473f4c192bf068efced5",
+    "experiments/svelte-bridge/index.html": "2bb87a51a23d17f5a99835a269bf65e59439cb63d62e44d9e41ea69c1fe58184",
+    "experiments/svelte-bridge/vite.config.js": "7085d3c79e10e9b78a8bc7176ddc182e81bcd473269bff68cb0727dabd430f19",
+    "experiments/svelte-bridge/README.html": "e93b914069f082a8fdf5c094fc483cb7310f7f0723684989fd4c17bd3f71b700",
+    "experiments/svelte-bridge/mise.toml": "c95260d6f97e9028c24a54711032c719ce80364a521420e06141df86af0b05a2",
+    "experiments/svelte-bridge/.gitignore": "790e3169bc19b046fe55ba1da6d13b976c28363c8c00462a2195fe5faf260910",
+    "experiments/svelte-bridge/package-lock.json": "be524c4a765a67ca3007a4933aead97aea2f626686c6a24f3b4cd6cd93e27c90",
+    "experiments/svelte-bridge/package.json": "33f22d349768768f45d0e6136dbd860c43c32c2cd994a4c1ff820b537d997d5f",
+    "experiments/svelte-bridge/tests/proxy.test.js": "0062584ec754d94cf8db2ec8f5ce26bea13d340873a8ffad56ad5916e217f772",
+    "experiments/svelte-bridge/tests/client.test.js": "3e06ec107f3ae6d7e826b9a9e6bc28d13cfc17cbac0bdf9f750519c233c14721",
+    "experiments/svelte-bridge/src/client.js": "6d6f594c618959825fea2c77c3dc9bdde4d45b5a35a5f4745c14af0f8c34d9da",
+    "experiments/svelte-bridge/src/App.svelte": "9a53ea2797df1f39907426d910e9d59017aecd57c60c1139d142f1791015194d",
+    "experiments/svelte-bridge/src/main.js": "aeb2e65363b0d4e6616bc3c90f36a6f03c82d5335e584c32cd8960eb9ff92936"
+  },
+  "bytes": {
+    "portable_experiment_source_and_lock": 59336,
+    "node_modules_excluded_cache": 73724403,
+    "dist_excluded_generated_assets": 51079
+  },
+  "audit_counts": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "review": {
+    "authored": true,
+    "author_self_review": "complete",
+    "code_verified": true,
+    "browser_verified": false,
+    "independent_review": "pending",
+    "http_proxy_verified": true
+  },
+  "initial_failures": [
+    {
+      "logs": [
+        "svelte-check-initial-failure.log",
+        "svelte-tests-initial-failure.log"
+      ],
+      "cause": "README bigint snippet used numberParser but installed4.3.1 type/API uses parseNumber; initial null flow narrowing also rejected inline derived expression.",
+      "fix": "Use installed parseNumber API and derived.by closure; exact u64 test and component diagnostics now pass."
+    }
+  ],
+  "limits": [
+    "Browser permission was declined; no browser rendering, keyboard/screen-reader, or Svelte DOM lifecycle was verified.",
+    "Node tests use synthetic Responses and mocked proxy request/response events; they establish these contracts, not browser or production behavior.",
+    "All displayed values are simulated. Public fixture credentials, loopback development proxy, and HTTP are not a production authentication/TLS design.",
+    "node_modules and dist are excluded from portable archive and counted separately; no claim is made that moving/deleting unrelated caches reclaimed disk space.",
+    "Real HTTP Vite/Rust integration and the actual JavaScript client module were verified separately using only owned processes and a disposable synthetic journal; this does not verify rendered Svelte component behavior."
+  ],
+  "sources": [
+    "https://svelte.dev/docs/svelte/$state",
+    "https://svelte.dev/docs/svelte/$derived",
+    "https://svelte.dev/docs/svelte/lifecycle-hooks",
+    "https://vite.dev/config/server-options#server-proxy",
+    "https://github.com/josdejong/lossless-json",
+    "https://registry.npmjs.org/svelte",
+    "https://registry.npmjs.org/vite",
+    "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte",
+    "https://registry.npmjs.org/svelte-check",
+    "https://registry.npmjs.org/typescript",
+    "https://registry.npmjs.org/lossless-json"
+  ]
+}

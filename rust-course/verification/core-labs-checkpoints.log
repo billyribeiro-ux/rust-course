@@ -1,0 +1,257 @@
+$ mise exec -- rustfmt --edition 2024 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/collections.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/conversions.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/interior.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/collections.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/conversions.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/interior.rs
+cwd: /Users/billyribeiro/Desktop/rust-course
+
+exit: 0
+
+$ mise exec -- cargo clippy --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml -p core-rust-labs --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked --all-targets -- -D warnings
+cwd: /Users/billyribeiro/Desktop/rust-course
+    Checking core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s
+
+exit: 0
+
+$ mise exec -- cargo run --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml -p core-rust-labs --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked --example collections
+cwd: /Users/billyribeiro/Desktop/rust-course
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.06s
+     Running `.course-cache/native/debug/examples/collections`
+same length: true; marker UTF-8 bytes: 2
+array bounds: Some((-8, 15))
+vector bounds: Some((-8, 15))
+api: 2
+worker: 1
+
+exit: 0
+
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py collections --name author-check-collections-0c3068a8
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Created complete collections checkpoint: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-collections-0c3068a8
+From that directory: mise exec -- cargo run --example collections
+Then: mise exec -- cargo test
+
+exit: 0
+
+$ mise exec -- cargo test --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-collections-0c3068a8
+   Compiling core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-collections-0c3068a8)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.39s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/core_rust_labs-548e751d9805f4c9)
+
+running 4 tests
+test collections::tests::arrays_and_vectors_share_a_slice_contract ... ok
+test collections::tests::result_owns_its_labels_after_input_is_gone ... ok
+test collections::tests::repeated_labels_are_counted_and_rows_are_deterministic ... ok
+test collections::tests::item_distinct_and_text_boundaries_are_independent ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests core_rust_labs
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit: 0
+
+$ mise exec -- cargo run --example collections --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-collections-0c3068a8
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/examples/collections`
+same length: true; marker UTF-8 bytes: 2
+array bounds: Some((-8, 15))
+vector bounds: Some((-8, 15))
+api: 2
+worker: 1
+
+exit: 0
+
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py collections --name author-check-collections-0c3068a8
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-collections-0c3068a8; choose another --name
+
+exit: 1
+
+$ mise exec -- cargo run --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml -p core-rust-labs --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked --example conversions
+cwd: /Users/billyribeiro/Desktop/rust-course
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running `.course-cache/native/debug/examples/conversions`
+threshold percent: 25
+selected basis points: [2500, 10000]
+lossless numeric conversion: 25
+
+exit: 0
+
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py conversions --name author-check-conversions-aad5549a
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Created complete conversions checkpoint: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a
+From that directory: mise exec -- cargo run --example conversions
+Then: mise exec -- cargo test
+
+exit: 0
+
+$ mise exec -- cargo test --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a
+   Compiling core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.32s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/core_rust_labs-548e751d9805f4c9)
+
+running 4 tests
+test conversions::tests::collection_reports_first_failure_instead_of_dropping_it ... ok
+test conversions::tests::conversions_preserve_the_declared_range ... ok
+test conversions::tests::filter_is_inclusive_and_preserves_order_and_duplicates ... ok
+test conversions::tests::parsing_and_display_have_explicit_normalization ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests core_rust_labs
+
+running 1 test
+test src/conversions.rs - conversions::Percent (line 6) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test src/conversions.rs - conversions::Percent (line 14) - compile fail ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+all doctests ran in 0.49s; merged doctests compilation took 0.24s
+
+exit: 0
+
+$ mise exec -- cargo run --example conversions --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/examples/conversions`
+threshold percent: 25
+selected basis points: [2500, 10000]
+lossless numeric conversion: 25
+
+exit: 0
+
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py conversions --name author-check-conversions-aad5549a
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a; choose another --name
+
+exit: 1
+
+$ mise exec -- cargo test conversions_preserve_the_declared_range --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a
+   Compiling core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/core_rust_labs-548e751d9805f4c9)
+
+running 1 test
+test conversions::tests::conversions_preserve_the_declared_range ... FAILED
+
+failures:
+
+---- conversions::tests::conversions_preserve_the_declared_range stdout ----
+
+thread 'conversions::tests::conversions_preserve_the_declared_range' (940602) panicked at src/conversions.rs:95:13:
+assertion `left == right` failed
+  left: Ok(Percent(44))
+ right: Err(OutOfRange(300))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    conversions::tests::conversions_preserve_the_declared_range
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+
+exit: 101
+
+$ mise exec -- cargo run --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml -p core-rust-labs --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked --example interior
+cwd: /Users/billyribeiro/Desktop/rust-course
+   Compiling core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.18s
+     Running `.course-cache/native/debug/examples/interior`
+observed messages: 2
+reentrant write: Err(Borrowed)
+recorded while disabled: false
+snapshot: ["first callback", "second callback"]
+observer can still upgrade: false
+
+exit: 0
+
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py interior --name author-check-interior-d78ff526
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Created complete interior checkpoint: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526
+From that directory: mise exec -- cargo run --example interior
+Then: mise exec -- cargo test
+
+exit: 0
+
+$ mise exec -- cargo test --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526
+   Compiling core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/core_rust_labs-548e751d9805f4c9)
+
+running 5 tests
+test interior::tests::reentrant_write_is_an_error_then_guard_release_allows_progress ... ok
+test interior::tests::handles_share_state_and_disabled_is_distinct_from_invalid ... ok
+test interior::tests::full_or_invalid_input_preserves_messages ... ok
+test interior::tests::weak_observer_does_not_keep_the_buffer_alive ... ok
+test interior::tests::unwinding_releases_the_observer_guard ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests core_rust_labs
+
+running 1 test
+test src/interior.rs - interior::SharedAudit (line 34) - compile fail ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+
+exit: 0
+
+$ mise exec -- cargo run --example interior --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/examples/interior`
+observed messages: 2
+reentrant write: Err(Borrowed)
+recorded while disabled: false
+snapshot: ["first callback", "second callback"]
+observer can still upgrade: false
+
+exit: 0
+
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py interior --name author-check-interior-d78ff526
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526; choose another --name
+
+exit: 1
+
+$ mise exec -- cargo test reentrant_write_is_an_error_then_guard_release_allows_progress --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526
+   Compiling core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/core_rust_labs-548e751d9805f4c9)
+
+running 1 test
+test interior::tests::reentrant_write_is_an_error_then_guard_release_allows_progress ... FAILED
+
+failures:
+
+---- interior::tests::reentrant_write_is_an_error_then_guard_release_allows_progress stdout ----
+
+thread 'interior::tests::reentrant_write_is_an_error_then_guard_release_allows_progress' (941511) panicked at src/interior.rs:87:48:
+RefCell already borrowed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    interior::tests::reentrant_write_is_an_error_then_guard_release_allows_progress
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`
+
+exit: 101

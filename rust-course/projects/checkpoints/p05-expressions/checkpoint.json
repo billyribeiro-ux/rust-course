@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p05-expressions",
+  "checkpoints": [
+    {
+      "id": "01-token-spans",
+      "title": "Bounded tokenization before precedence parsing",
+      "source": "projects/checkpoints/p05-expressions/01-token-spans",
+      "contract": "Tokenize at most 1024 UTF-8 source bytes into at most 64 tokens: nonnegative decimal i64 literals, plus, star and ASCII whitespace. Keep byte spans; reject unknown symbols and out-of-range literals. This stage does not parse precedence, unary signs or parentheses, or evaluate expressions.",
+      "commands": [
+        "cargo test",
+        "cargo run"
+      ],
+      "lockfile": "projects/checkpoints/p05-expressions/locks/01-token-spans.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete current reference",
+      "source": "projects/reference/p05-expressions",
+      "contract": "The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p05-expressions/locks/final.Cargo.lock"
+    }
+  ]
+}

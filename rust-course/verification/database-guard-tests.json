@@ -1,0 +1,25 @@
+{
+  "time_utc": "2026-10-09T19:02:53.145603+00:00",
+  "command": [
+    "mise",
+    "exec",
+    "--",
+    "cargo",
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "projects/Cargo.toml",
+    "--target-dir",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+    "-p",
+    "p10-issues",
+    "-p",
+    "p14-scheduler",
+    "--test",
+    "postgres"
+  ],
+  "build_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+  "exit_code": 0,
+  "scope": "six pure URL guard test entries; destructive integration tests remain opt-in"
+}

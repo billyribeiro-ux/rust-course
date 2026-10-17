@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-09",
+  "commands": [
+    [
+      "python3",
+      "rust-course/scripts/console-server.py",
+      "--project",
+      "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-learner-dr4eg9ud/p11-console",
+      "--port",
+      "0"
+    ],
+    [
+      "python3",
+      "rust-course/scripts/console-server.py",
+      "--project",
+      "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console",
+      "--port",
+      "0"
+    ]
+  ],
+  "checks": [
+    {
+      "project": "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-learner-dr4eg9ud/p11-console",
+      "served_module": "console_learner",
+      "http_assets": "passed",
+      "wasm_magic": "passed",
+      "mime": "application/wasm",
+      "loader_js_syntax": "passed"
+    },
+    {
+      "project": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console",
+      "served_module": "operations_console",
+      "http_assets": "passed",
+      "wasm_magic": "passed",
+      "mime": "application/wasm",
+      "loader_js_syntax": "passed"
+    }
+  ],
+  "scope": "HTTP source/asset serving and JavaScript parse checks only. No rendering, DOM interaction or browser-policy verification; browser permission remains blocked."
+}

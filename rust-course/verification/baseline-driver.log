@@ -1,0 +1,21 @@
+RUN toolchain
+toolchain 0
+RUN mise
+mise 0
+RUN format
+format 0
+RUN tests
+tests 0
+RUN check
+check 0
+RUN clippy
+clippy 0
+RUN docs
+docs 0
+RUN tree
+tree 0
+RUN javascript
+javascript 0
+RUN site
+site 0
+Baseline finished; database, WASM, Miri and browser checks have separate evidence records.

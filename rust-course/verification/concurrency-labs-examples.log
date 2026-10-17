@@ -1,0 +1,49 @@
+$ ['mise', 'exec', '--', 'cargo', 'clippy', '--manifest-path', '/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml', '-p', 'concurrency-labs', '--all-targets', '--locked', '--target-dir', '/Users/billyribeiro/Desktop/rust-course/.course-cache/native', '--', '-D', 'warnings']
+    Checking tokio v1.53.2
+    Checking concurrency-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.65s
+
+$ ['mise', 'exec', '--', 'cargo', 'run', '--manifest-path', '/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml', '-p', 'concurrency-labs', '--example', 'publication', '--locked', '--target-dir', '/Users/billyribeiro/Desktop/rust-course/.course-cache/native']
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/examples/publication`
+take2=true take1=false remaining=0
+before=None
+after=Some((3, 120))
+
+$ ['mise', 'exec', '--', 'cargo', 'run', '--manifest-path', '/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml', '-p', 'concurrency-labs', '--example', 'deadline', '--locked', '--target-dir', '/Users/billyribeiro/Desktop/rust-course/.course-cache/native']
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/examples/deadline`
+items=[7, 8] stop=Closed
+
+$ ['mise', 'exec', '--', 'rustc', '--edition', '2024', '/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/concurrency/racy_reservation.rs', '-o', '/Users/billyribeiro/Desktop/rust-course/.course-cache/racy-reservation']
+
+$ ['/Users/billyribeiro/Desktop/rust-course/.course-cache/racy-reservation']
+accepted=2 remaining=0
+
+$ ['mise', 'exec', '--', 'rustc', '--edition', '2024', '/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/concurrency/pinned_get_mut.rs', '-o', '/Users/billyribeiro/Desktop/rust-course/.course-cache/pinned-get-mut']
+error[E0277]: `PhantomPinned` cannot be unpinned
+    --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/concurrency/pinned_get_mut.rs:13:15
+     |
+  13 |     reference.get_mut().value = 2;
+     |               ^^^^^^^ within `Sticky`, the trait `Unpin` is not implemented for `PhantomPinned`
+     |
+     = note: consider using the `pin!` macro
+             consider using `Box::pin` if you need to access the pinned value outside of the current scope
+note: required because it appears within the type `Sticky`
+    --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/concurrency/pinned_get_mut.rs:3:8
+     |
+   3 | struct Sticky {
+     |        ^^^^^^
+note: required by a bound in `Pin::<&'a mut T>::get_mut`
+    --> /Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/pin.rs:1602:12
+     |
+1600 |     pub const fn get_mut(self) -> &'a mut T
+     |                  ------- required by a bound in this associated function
+1601 |     where
+1602 |         T: Unpin,
+     |            ^^^^^ required by this bound in `Pin::<&mut T>::get_mut`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0277`.
+

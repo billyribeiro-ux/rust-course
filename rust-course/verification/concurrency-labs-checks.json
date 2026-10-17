@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-09",
+  "toolchain": "1.99.0",
+  "checks": [
+    {
+      "name": "clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+        "-p",
+        "concurrency-labs",
+        "--all-targets",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 1.723
+    },
+    {
+      "name": "publication",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "run",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+        "-p",
+        "concurrency-labs",
+        "--example",
+        "publication",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 0.325
+    },
+    {
+      "name": "deadline",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "run",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+        "-p",
+        "concurrency-labs",
+        "--example",
+        "deadline",
+        "--locked",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 0.275
+    },
+    {
+      "name": "racy-build",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--edition",
+        "2024",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/concurrency/racy_reservation.rs",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/racy-reservation"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 0.151
+    },
+    {
+      "name": "racy-run",
+      "command": [
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/racy-reservation"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "passed": true,
+      "seconds": 0.183
+    },
+    {
+      "name": "pin-failure",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--edition",
+        "2024",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/concurrency/pinned_get_mut.rs",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/pinned-get-mut"
+      ],
+      "exit_code": 1,
+      "expected_exit": 1,
+      "passed": true,
+      "seconds": 0.065
+    }
+  ],
+  "log": "concurrency-labs-examples.log",
+  "limitations": [
+    "Controlled schedules and virtual time are finite evidence, not exhaustive memory-model checking or a wall-clock latency guarantee."
+  ]
+}

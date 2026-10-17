@@ -1,0 +1,42 @@
+   Compiling p06-kv v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.44s
+     Running tests/persistence_edges.rs (.course-cache/native/debug/deps/persistence_edges-f5c649b414f75d3a)
+
+running 3 tests
+test cwd_child ... ok
+test bounded_length_damage_can_resemble_an_incomplete_final_payload ... ok
+test relative_store_keeps_its_file_when_process_cwd_changes ... FAILED
+
+failures:
+
+---- relative_store_keeps_its_file_when_process_cwd_changes stdout ----
+
+thread 'relative_store_keeps_its_file_when_process_cwd_changes' (2331277) panicked at reference/p06-kv/tests/persistence_edges.rs:36:5:
+
+running 1 test
+test cwd_child ... FAILED
+
+failures:
+
+failures:
+    cwd_child
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.05s
+
+
+
+thread 'cwd_child' (2331280) panicked at reference/p06-kv/tests/persistence_edges.rs:58:5:
+assertion `left == right` failed
+  left: None
+ right: Some([97, 102, 116, 101, 114])
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    relative_store_keeps_its_file_when_process_cwd_changes
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `-p p06-kv --test persistence_edges`

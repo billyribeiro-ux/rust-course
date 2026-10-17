@@ -1,0 +1,70 @@
+01-1-aos: scan 43.749 ms, maximum RSS 49,872,896 bytes
+01-2-soa: scan 15.996 ms, maximum RSS 49,938,432 bytes
+02-1-soa: scan 16.056 ms, maximum RSS 49,938,432 bytes
+02-2-aos: scan 43.850 ms, maximum RSS 49,872,896 bytes
+03-1-aos: scan 42.926 ms, maximum RSS 49,872,896 bytes
+03-2-soa: scan 17.263 ms, maximum RSS 49,938,432 bytes
+04-1-soa: scan 17.015 ms, maximum RSS 49,938,432 bytes
+04-2-aos: scan 46.589 ms, maximum RSS 49,872,896 bytes
+05-1-aos: scan 44.108 ms, maximum RSS 49,872,896 bytes
+05-2-soa: scan 17.429 ms, maximum RSS 49,938,432 bytes
+06-1-soa: scan 17.000 ms, maximum RSS 49,938,432 bytes
+06-2-aos: scan 45.064 ms, maximum RSS 49,872,896 bytes
+07-1-aos: scan 45.486 ms, maximum RSS 49,872,896 bytes
+07-2-soa: scan 15.864 ms, maximum RSS 49,938,432 bytes
+{
+  "aos": {
+    "generation_ns": {
+      "minimum": 4119458,
+      "median": 4204292,
+      "maximum": 4712791
+    },
+    "validation_ns": {
+      "minimum": 1979833,
+      "median": 2097083,
+      "maximum": 2159458
+    },
+    "scan_ns": {
+      "minimum": 42926125,
+      "median": 44108417,
+      "maximum": 46588917
+    },
+    "process_elapsed_ns": {
+      "minimum": 57180959,
+      "median": 58530459,
+      "maximum": 60881042
+    },
+    "max_rss_bytes": {
+      "minimum": 49872896,
+      "median": 49872896,
+      "maximum": 49872896
+    }
+  },
+  "soa": {
+    "generation_ns": {
+      "minimum": 4745000,
+      "median": 5166042,
+      "maximum": 5504667
+    },
+    "validation_ns": {
+      "minimum": 2073791,
+      "median": 2261208,
+      "maximum": 2337541
+    },
+    "scan_ns": {
+      "minimum": 15864000,
+      "median": 17000417,
+      "maximum": 17429291
+    },
+    "process_elapsed_ns": {
+      "minimum": 29628792,
+      "median": 31149584,
+      "maximum": 32429084
+    },
+    "max_rss_bytes": {
+      "minimum": 49938432,
+      "median": 49938432,
+      "maximum": 49938432
+    }
+  }
+}

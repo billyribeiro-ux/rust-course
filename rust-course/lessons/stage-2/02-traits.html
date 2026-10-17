@@ -1,0 +1,265 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Traits as required capabilities, not decoration · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="02-traits" data-lesson="02-traits"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Traits as required capabilities, not decoration</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 02 / Libraries and language design</div><h1>Traits as required capabilities, not decoration</h1><p class="lead">Use generic readers and formatters to separate behavior from concrete storage and presentation choices.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-1/01-logs.html">Stream logs with bounded lines and honest accounting</a></li></ul><ul><li>Read a trait bound as an explicit capability requirement</li><li>Choose static dispatch when one generic implementation suffices</li><li>Test behavior through injected inputs instead of global state</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#borrow">borrow</a> · <a href="../../glossary.html#edition">edition</a> · <a href="../../glossary.html#generic">generic</a> · <a href="../../glossary.html#iterator">iterator</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#move">move</a> · <a href="../../glossary.html#slice">slice</a> · <a href="../../glossary.html#trait">trait</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p04">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-reuse-the-algorithm-without-hiding-its-needs">Purpose: reuse the algorithm without hiding its needs</h2>
+<p>The log analyzer accepts any type implementing BufRead. A file-backed BufReader, locked standard input, and a byte slice can all supply buffered bytes. The algorithm does not need to know which one it received; it needs the capability to inspect buffered data and consume it. A trait names that capability. A generic bound tells the compiler and the reader which operations a function is permitted to use on an otherwise unspecified type.</p>
+<p>This is a better starting model than “traits are interfaces” alone. The important question is what behavior the function requires and who supplies it. analyze&lt;R: BufRead&gt; states a concrete requirement. It is not a promise that every possible input source is nonblocking, trustworthy, or equally fast. A capability boundary should be narrow enough to support reuse but honest about the remaining behavioral assumptions.</p>
+<h2 id="prediction-same-data-different-source">Prediction: same data, different source</h2>
+<p>Predict whether analyze receives the same report from a byte slice and from a BufReader around Cursor when both contain identical bytes. Expected: yes. Neither source changes the record grammar. The tiny-buffer tests already exercise this idea. They demonstrate how a generic API creates useful test seams: you can change the source implementation without changing the parser or introducing files solely for a unit test.</p>
+<pre><code>mise exec -- cargo test -p log-detective accounting_property_across_buffer_sizes
+mise exec -- cargo test -p typed-config later_layers_win_before_validation</code></pre>
+<p>In the configuration project, Layer::environment accepts an iterator of name/value pairs. Tests pass a small array, while main supplies actual process environment pairs. This is dependency injection in plain Rust: make input explicit in a parameter. It avoids mutating global process environment during tests, which would complicate parallel execution and introduce cross-test interference. You do not need a container framework to get the important benefit.</p>
+<h2 id="guided-checkpoint-read-the-bounds-literally">Guided checkpoint: read the bounds literally</h2>
+<p>Read the environment signature. IntoIterator means the supplied value can produce an iterator. The item is a pair. Each name and value supports AsRef&lt;str&gt;, so the function can borrow text without insisting on one concrete owned-string type. Follow one iteration and identify when a borrowed name is matched and when a recognized value is copied into the layer&#x27;s owned map. The bounds support the operations the body actually performs.</p>
+<div class="code-wrap" data-source="projects/reference/p04-config/src/lib.rs" data-sha256="2a7a464a9cb460fff6be87cd27d34b26dd04ed336b8813d14b75d1043c64ef5b"><div class="code-label"><a href="../../projects/reference/p04-config/src/lib.rs">projects/reference/p04-config/src/lib.rs</a></div><pre><code>//! Resolve textual layers first, then validate into a typed configuration.
+//! ```
+//! use typed_config::{Config, Layer};
+//! let file = Layer::parse(&quot;port=9000\ntimeout_seconds=20&quot;)?;
+//! let override_layer = Layer::parse(&quot;port=9100&quot;)?;
+//! let config = Config::resolve([file, override_layer])?;
+//! assert_eq!(config.port().get(), 9100);
+//! # Ok::&lt;(), typed_config::ConfigError&gt;(())
+//! ```
+use std::{collections::BTreeMap, fmt, net::IpAddr, num::NonZeroU16, time::Duration};
+const KEYS: [&amp;str; 5] = [
+    &quot;host&quot;,
+    &quot;port&quot;,
+    &quot;timeout_seconds&quot;,
+    &quot;max_connections&quot;,
+    &quot;token&quot;,
+];
+#[derive(Clone, Default)]
+pub struct Layer {
+    values: BTreeMap&lt;String, String&gt;,
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ConfigError {
+    pub key: String,
+    pub problem: &amp;&#x27;static str,
+}
+impl fmt::Display for ConfigError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        write!(f, &quot;configuration key {}: {}&quot;, self.key, self.problem)
+    }
+}
+impl std::error::Error for ConfigError {}
+fn error(key: &amp;str, problem: &amp;&#x27;static str) -&gt; ConfigError {
+    ConfigError {
+        key: key.into(),
+        problem,
+    }
+}
+// Debug intentionally redacts every value: even an unknown key might carry a secret.
+impl fmt::Debug for Layer {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        f.debug_struct(&quot;Layer&quot;)
+            .field(&quot;keys&quot;, &amp;self.values.keys().collect::&lt;Vec&lt;_&gt;&gt;())
+            .finish()
+    }
+}
+impl Layer {
+    /// Strict key=value lines, ASCII key names, full-line # comments only.
+    /// Values are trimmed. Duplicate or unknown keys fail within a layer.
+    pub fn parse(text: &amp;str) -&gt; Result&lt;Self, ConfigError&gt; {
+        if text.len() &gt; 16_384 {
+            return Err(error(&quot;file&quot;, &quot;configuration exceeds 16 KiB&quot;));
+        }
+        let mut layer = Self::default();
+        for line in text
+            .lines()
+            .map(str::trim)
+            .filter(|s| !s.is_empty() &amp;&amp; !s.starts_with(&#x27;#&#x27;))
+        {
+            let (key, value) = line
+                .split_once(&#x27;=&#x27;)
+                .ok_or_else(|| error(&quot;file&quot;, &quot;expected key=value&quot;))?;
+            layer.insert(key.trim(), value.trim())?;
+        }
+        Ok(layer)
+    }
+    pub fn insert(&amp;mut self, key: &amp;str, value: &amp;str) -&gt; Result&lt;(), ConfigError&gt; {
+        if !KEYS.contains(&amp;key) {
+            return Err(error(&quot;unknown&quot;, &quot;unknown configuration key&quot;));
+        }
+        if self.values.contains_key(key) {
+            return Err(error(key, &quot;duplicate within one layer&quot;));
+        }
+        if value.len() &gt; 4096 {
+            return Err(error(key, &quot;value exceeds 4096 bytes&quot;));
+        }
+        self.values.insert(key.into(), value.into());
+        Ok(())
+    }
+    /// Accepts an injected iterator so tests never mutate process environment.
+    pub fn environment&lt;I, K, V&gt;(pairs: I) -&gt; Result&lt;Self, ConfigError&gt;
+    where
+        I: IntoIterator&lt;Item = (K, V)&gt;,
+        K: AsRef&lt;str&gt;,
+        V: AsRef&lt;str&gt;,
+    {
+        let mut layer = Self::default();
+        for (name, value) in pairs {
+            let key = match name.as_ref() {
+                &quot;APP_HOST&quot; =&gt; &quot;host&quot;,
+                &quot;APP_PORT&quot; =&gt; &quot;port&quot;,
+                &quot;APP_TIMEOUT_SECONDS&quot; =&gt; &quot;timeout_seconds&quot;,
+                &quot;APP_MAX_CONNECTIONS&quot; =&gt; &quot;max_connections&quot;,
+                &quot;APP_TOKEN&quot; =&gt; &quot;token&quot;,
+                _ =&gt; continue,
+            };
+            layer.insert(key, value.as_ref())?;
+        }
+        Ok(layer)
+    }
+}
+#[derive(Clone)]
+pub struct Secret(String);
+impl Secret {
+    pub fn expose(&amp;self) -&gt; &amp;str {
+        &amp;self.0
+    }
+}
+impl fmt::Debug for Secret {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        f.write_str(&quot;[REDACTED]&quot;)
+    }
+}
+#[derive(Clone, Debug)]
+pub struct Config {
+    host: IpAddr,
+    port: NonZeroU16,
+    timeout: Duration,
+    max_connections: u16,
+    token: Option&lt;Secret&gt;,
+}
+impl Config {
+    pub fn host(&amp;self) -&gt; IpAddr {
+        self.host
+    }
+    pub fn port(&amp;self) -&gt; NonZeroU16 {
+        self.port
+    }
+    pub fn timeout(&amp;self) -&gt; Duration {
+        self.timeout
+    }
+    pub fn max_connections(&amp;self) -&gt; u16 {
+        self.max_connections
+    }
+    pub fn token(&amp;self) -&gt; Option&lt;&amp;Secret&gt; {
+        self.token.as_ref()
+    }
+    /// Later layers win. Only final effective values undergo semantic validation.
+    pub fn resolve(layers: impl IntoIterator&lt;Item = Layer&gt;) -&gt; Result&lt;Self, ConfigError&gt; {
+        let mut raw: BTreeMap&lt;String, String&gt; = [
+            (&quot;host&quot;, &quot;127.0.0.1&quot;),
+            (&quot;port&quot;, &quot;8080&quot;),
+            (&quot;timeout_seconds&quot;, &quot;30&quot;),
+            (&quot;max_connections&quot;, &quot;100&quot;),
+        ]
+        .into_iter()
+        .map(|(k, v)| (k.into(), v.into()))
+        .collect();
+        for layer in layers {
+            raw.extend(layer.values);
+        }
+        let host = raw[&quot;host&quot;]
+            .parse::&lt;IpAddr&gt;()
+            .map_err(|_| error(&quot;host&quot;, &quot;expected an IPv4 or IPv6 address&quot;))?;
+        let port = raw[&quot;port&quot;]
+            .parse::&lt;NonZeroU16&gt;()
+            .map_err(|_| error(&quot;port&quot;, &quot;expected an integer in 1..=65535&quot;))?;
+        let seconds = raw[&quot;timeout_seconds&quot;]
+            .parse::&lt;u64&gt;()
+            .map_err(|_| error(&quot;timeout_seconds&quot;, &quot;expected an integer in 1..=300&quot;))?;
+        if !(1..=300).contains(&amp;seconds) {
+            return Err(error(&quot;timeout_seconds&quot;, &quot;expected an integer in 1..=300&quot;));
+        }
+        let max_connections = raw[&quot;max_connections&quot;]
+            .parse::&lt;u16&gt;()
+            .map_err(|_| error(&quot;max_connections&quot;, &quot;expected an integer in 1..=10000&quot;))?;
+        if !(1..=10_000).contains(&amp;max_connections) {
+            return Err(error(&quot;max_connections&quot;, &quot;expected an integer in 1..=10000&quot;));
+        }
+        let token = match raw.remove(&quot;token&quot;) {
+            None =&gt; None,
+            Some(token) =&gt; {
+                if token.len() &lt; 12
+                    || token.chars().any(char::is_whitespace)
+                    || token.chars().any(char::is_control)
+                {
+                    return Err(error(
+                        &quot;token&quot;,
+                        &quot;expected at least 12 bytes with no whitespace or controls&quot;,
+                    ));
+                }
+                Some(Secret(token))
+            }
+        };
+        Ok(Self {
+            host,
+            port,
+            timeout: Duration::from_secs(seconds),
+            max_connections,
+            token,
+        })
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn later_layers_win_before_validation() {
+        let file = Layer::parse(&quot;port=not-yet-valid\ntimeout_seconds=10&quot;).unwrap();
+        let env = Layer::environment([(&quot;APP_PORT&quot;, &quot;9001&quot;), (&quot;UNRELATED&quot;, &quot;ignored&quot;)]).unwrap();
+        let cli = Layer::parse(&quot;port=9002&quot;).unwrap();
+        let c = Config::resolve([file, env, cli]).unwrap();
+        assert_eq!(c.port().get(), 9002);
+        assert_eq!(c.timeout(), Duration::from_secs(10));
+    }
+    #[test]
+    fn errors_and_debug_do_not_include_secret_values() {
+        let marker = &quot;super-secret-token&quot;;
+        let layer = Layer::parse(&amp;format!(&quot;token={marker}&quot;)).unwrap();
+        assert!(!format!(&quot;{layer:?}&quot;).contains(marker));
+        let c = Config::resolve([layer]).unwrap();
+        assert!(!format!(&quot;{c:?}&quot;).contains(marker));
+        assert_eq!(c.token().unwrap().expose(), marker);
+        let invalid = Layer::parse(&quot;token=bad secret&quot;).unwrap();
+        let e = Config::resolve([invalid]).unwrap_err();
+        assert!(!e.to_string().contains(&quot;bad secret&quot;));
+        assert!(Layer::parse(&quot;token=x\ntoken=y&quot;).is_err());
+        assert!(Layer::parse(&quot;typo=x&quot;).is_err());
+    }
+    #[test]
+    fn boundaries() {
+        for port in [&quot;0&quot;, &quot;65536&quot;, &quot;-1&quot;, &quot;abc&quot;] {
+            assert!(Config::resolve([Layer::parse(&amp;format!(&quot;port={port}&quot;)).unwrap()]).is_err());
+        }
+        for seconds in [1, 300] {
+            assert!(
+                Config::resolve([Layer::parse(&amp;format!(&quot;timeout_seconds={seconds}&quot;)).unwrap()])
+                    .is_ok()
+            );
+        }
+        for seconds in [0, 301] {
+            assert!(
+                Config::resolve([Layer::parse(&amp;format!(&quot;timeout_seconds={seconds}&quot;)).unwrap()])
+                    .is_err()
+            );
+        }
+    }
+}
+</code></pre></div>
+<p>Now read Display for CalcError or ConfigError. Display describes user-facing formatting; Debug is intended for developer-oriented inspection. Deriving Debug is convenient only when every displayed field is safe and appropriate to expose. Secret deliberately implements Debug to print a redaction marker. Choosing a trait implementation is part of observable program behavior, not a cosmetic annotation. A diagnostic path can leak sensitive text just as a normal output path can.</p>
+<h2 id="intentional-compiler-mistake">Intentional compiler mistake</h2>
+<p>The supplied 05-missing-trait.rs fixture defines fn render&lt;T&gt;(value: T) and tries to print it with {}. Predict the error before compiling: the body requires Display, but the signature promises no such capability. Adding T: std::fmt::Display is a sound repair because it states the real requirement. Replacing formatting with an unrelated conversion may only move the problem. Generic code must be valid for every type satisfying its declared bounds, not merely the type used by one call site today.</p>
+<pre><code>mise exec -- rustc --edition=2024 --emit=metadata --out-dir /tmp/rust-course-diagnostics 05-missing-trait.rs</code></pre>
+<p>Run that command from rust-course/exercises/foundations, where the fixture resides. Expected result is a nonzero exit including E0277. The command is intentionally outside the Cargo reference workspace. After you write a corrected scratch copy, compile it and explain why callers with non-Display types are now rejected at the boundary. The added bound narrows valid callers in exchange for a well-defined operation.</p>
+<h2 id="static-dispatch-and-deliberate-restraint">Static dispatch and deliberate restraint</h2>
+<p>A generic function is compiled for concrete types as needed. A trait object such as &amp;mut dyn BufRead instead supports dynamic dispatch through a runtime interface. Both are useful; neither is automatically more idiomatic. This project uses a generic function because each call already has one concrete reader type and the implementation is straightforward. Introduce a trait object when you need heterogeneous values behind one runtime type, not merely because the word “abstraction” sounds desirable.</p>
+<p>Do not create a custom trait with one method for every helper function. Traits pay for themselves when they describe a coherent capability, enable distinct implementations, or express a real generic relationship. Ordinary functions and structs are often clearer. In the config project, Layer is a concrete collection of text; making every layer source implement a custom repository trait would add ceremony without improving the current two test scenarios.</p>
+<h2 id="playbook-a-test-passes-alone-and-fails-with-others">Playbook: a test passes alone and fails with others</h2>
+<p>Observation: configuration tests sometimes see another test&#x27;s environment override. Hypothesis A: map iteration order changes precedence. Hypothesis B: tests share mutable process environment. A distinguishing experiment passes an explicit fixed array to Layer::environment and removes environment mutation from the test. Expected result: deterministic values regardless of neighboring tests. That disproves map order as the cause of this reproduction when the same merge order is retained and supports the shared-input explanation.</p>
+<p>Keep the precedence logic unchanged during that experiment. If you reorder layers at the same time, you lose the ability to distinguish causes. Record the original global dependency and the new explicit input boundary. Ask AI to explain which dependency became injectable and which effects still occur in main. A sound explanation should not claim that a pure test proves operating-system environment encoding behavior.</p>
+<h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Write a report function accepting impl std::io::Write and serialize the log counters into it. Test with a Vec&lt;u8&gt;, then call it with standard output. Add a controlled writer that returns an IO error after a chosen byte count and ensure the error is preserved. This connects a trait requirement to a concrete failure mode. Do not call flush automatically without deciding whether your function owns completion of the output stream.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>list the methods your function body calls on its parameter.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>find the trait that provides those methods and use only that bound.</p></details><details><summary>Worked solution</summary><p>fn write_report(mut output: impl Write, report: &amp;Report) -&gt; io::Result&lt;()&gt; can use writeln! and return its Result; a Vec&lt;u8&gt; then serves as an in-memory sink. Ask for a review of the smallest sufficient bound and error contract. More bounds do not necessarily mean a better abstraction.</p></details>
+<h2 id="review-and-mastery-evidence">Review and mastery evidence</h2>
+<p>The recommended functions accept explicit input through standard capabilities and keep process environment or filesystem access in main. This supplies useful test seams with a small API. Concrete parameters remain a valid choice when a function has exactly one meaningful representation; a trait object becomes useful when runtime heterogeneity is required. Choose the least complex interface that expresses the real capability and preserves errors.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/book/ch10-02-traits.html">Traits</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch18-02-trait-objects.html">Trait objects</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/io/trait.Write.html">Write</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/convert/trait.AsRef.html">AsRef</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-1/01-logs.html">Previous: Stream logs with bounded lines and honest accounting</a><a href="../../lessons/stage-2/02-config.html">Next: Layer configuration, then validate the effective state</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-reuse-the-algorithm-without-hiding-its-needs">Purpose: reuse the algorithm without hiding its needs</a><a href="#prediction-same-data-different-source">Prediction: same data, different source</a><a href="#guided-checkpoint-read-the-bounds-literally">Guided checkpoint: read the bounds literally</a><a href="#intentional-compiler-mistake">Intentional compiler mistake</a><a href="#static-dispatch-and-deliberate-restraint">Static dispatch and deliberate restraint</a><a href="#playbook-a-test-passes-alone-and-fails-with-others">Playbook: a test passes alone and fails with others</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#review-and-mastery-evidence">Review and mastery evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

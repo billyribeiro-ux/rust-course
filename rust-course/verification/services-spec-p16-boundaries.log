@@ -1,0 +1,10 @@
+   Compiling p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.41s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p16_workbench-fa219227412dfdbc)
+
+running 2 tests
+test http::boundary_tests::worker_processes_and_joins_after_shutdown ... ok
+test http::boundary_tests::replay_routes_reader_denial_history_and_cancellation ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.07s
+

@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-09T19:09:06.771289+00:00",
+  "kind": "Author-team continuation audit and corrections; not independent acceptance",
+  "independent_review": "pending",
+  "findings": [
+    {
+      "id": "CF01",
+      "area": "Reader progress",
+      "issue": "A stale page wrote its complete progress snapshot, replacing a completed save from another page.",
+      "fix": "prepareSave refuses a changed stored snapshot, leaving in-page edits available to Export. The fallback exposes the saved text observed at conflict for separate recovery. README requires one editing tab and distinguishes detection from atomic locking.",
+      "files": [
+        "assets/progress-data.js",
+        "assets/course.js",
+        "verification/progress-data.test.cjs",
+        "authoring/README.html"
+      ],
+      "evidence": [
+        "reader-conflict-checks.json",
+        "reader-conflict-checks.log"
+      ],
+      "limit": "Eight pure data tests and syntax checks; actual DOM, Storage and simultaneous cross-tab behavior remain browser-unverified. Compare-before-write is not a transaction."
+    },
+    {
+      "id": "CF02",
+      "area": "P10/P14 disposable databases",
+      "issue": "A raw URL substring guard could accept a production database when the course name appeared in a username, password or query parameter.",
+      "fix": "Parse effective SQLx options, require exact documented database and local transport, and verify current_database() on each pooled connection before migrations or resets. A reusable fixture runner creates private Unix-socket-only PostgreSQL16 storage and removes only that owned cluster after successful stop.",
+      "files": [
+        "projects/reference/p10-issues/tests/postgres.rs",
+        "projects/reference/p10-issues/tests/support/mod.rs",
+        "projects/reference/p14-scheduler/tests/postgres.rs",
+        "projects/reference/p14-scheduler/tests/support/mod.rs",
+        "scripts/test-databases.py",
+        "authoring/services.json"
+      ],
+      "evidence": [
+        "database-guard-tests.json",
+        "database-fixture-checks.json",
+        "database-fixture-checks.log"
+      ],
+      "limit": "A name and loopback transport are not ownership evidence. Existing databases are not to be reset solely because their names match. Six guard test entries and four opt-in integration tests ran; no existing database was contacted."
+    },
+    {
+      "id": "CF03",
+      "area": "P09 shutdown",
+      "issue": "Waiting only for watch.changed() misses an initially true shutdown state, treats false notifications as stop, and the CLI detached its signal watcher.",
+      "fix": "Inspect current state before each wait, stop on true or closed sender, retain the same server future while observing Ctrl-C, and drain connection tasks on shutdown or accept errors.",
+      "files": [
+        "projects/reference/p09-chat/src/lib.rs",
+        "projects/reference/p09-chat/src/main.rs",
+        "authoring/services.json"
+      ],
+      "evidence": [
+        "lifecycle-guard-checks.json",
+        "check-tests.log"
+      ],
+      "limit": "Ten scoped chat tests include two new shutdown regressions. The final baseline must include the subsequent common cleanup on accept-error change. Two-second test deadlines detect hangs, not service latency promises."
+    }
+  ],
+  "primary_sources": [
+    {
+      "url": "https://html.spec.whatwg.org/multipage/webstorage.html#introduction",
+      "verified": "2026-10-09",
+      "supports": "Web Storage shared state does not promise cross-agent locking."
+    },
+    {
+      "url": "https://docs.rs/sqlx/0.9.0/sqlx/postgres/struct.PgConnectOptions.html",
+      "verified": "2026-10-09 via installed sqlx-postgres0.9.0 source; web retrieval failed",
+      "supports": "get_database/get_host/get_socket expose effective parsed options including URL query overrides."
+    },
+    {
+      "url": "https://www.postgresql.org/docs/16/functions-info.html",
+      "verified": "2026-10-09",
+      "supports": "current_database reports the connected database."
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.2/tokio/sync/watch/index.html",
+      "verified": "2026-10-09 via installed Tokio1.53.2 source documentation",
+      "supports": "The initial watch value is considered seen; borrow_and_update reads current state and marks it seen."
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.2/tokio/macro.select.html",
+      "verified": "2026-10-09",
+      "supports": "Selecting a reference to a retained pinned future preserves its execution state."
+    }
+  ],
+  "browser": "Latest direct authorized retry was blocked by saved localhost preference; no workaround attempted.",
+  "status": "Construction corrections integrated; coordinated verification passed. Browser and independent review pending.",
+  "source_sha256": {
+    "assets/progress-data.js": "6552072dd9c9f53e74d0980c026d2638abed4d952cfb65f077a13c624332940b",
+    "assets/course.js": "1dcdf9e4c936195d7cc5abf4656f9a250177748fa0755fdfc68d41871288b689",
+    "verification/progress-data.test.cjs": "9229684befe0b98e2f77d49f006aea3ffaf8845e6285e401a6b4241ca6d7fb50",
+    "authoring/README.html": "f374b7881b95a3f80df00c6033501324acffd8593c4ec79791a703cf4ee25d2c",
+    "projects/reference/p10-issues/tests/postgres.rs": "7be080c34e6557a89db9dccc9eb74a8bb0726c09458dc944227d79447193a03a",
+    "projects/reference/p10-issues/tests/support/mod.rs": "1f9ec91a185bc8d87b9c6f8c7e1a8c379a75ef11d0fe5770234f9a671804d333",
+    "projects/reference/p14-scheduler/tests/postgres.rs": "ff899dc9b968defb7fa5ee2b405f2db93f95357103c11413691f878635e1b9a5",
+    "projects/reference/p14-scheduler/tests/support/mod.rs": "1f9ec91a185bc8d87b9c6f8c7e1a8c379a75ef11d0fe5770234f9a671804d333",
+    "scripts/test-databases.py": "c8b89c1e4529d3b40967ec714c2202adec793dbff2cfb656a1716ccb2b90249d",
+    "authoring/services.json": "72d1ffb4dc083ffe93db6af8228b3bd123518b6d0b4364e1288e6d333d00f126",
+    "projects/reference/p09-chat/src/lib.rs": "ca145a0b627d59c6b806c698293d687a10524467a9e6302a56494b58b463eb89",
+    "projects/reference/p09-chat/src/main.rs": "e184a177ad53734e4d562e3f86c245968bb6a7dbfd68d476db72517bea716395"
+  },
+  "superseded_by": "resume-finalization.json",
+  "source_hash_note": "Historical hashes from initial correction snapshot. See resume-finalization.json for current source fingerprints.",
+  "latest_browser_evidence": "browser-status.json",
+  "historical_browser_note": "Any earlier localhost-block statement records the pre-browser-test snapshot; access now works. See browser-live.html for current results and remaining file-import/download limits."
+}

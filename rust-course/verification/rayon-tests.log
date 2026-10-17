@@ -1,0 +1,30 @@
+     Locking 6 packages to highest Rust 1.99 compatible versions
+   Compiling crossbeam-utils v0.8.23
+   Compiling crossbeam-epoch v0.9.20
+   Compiling rayon-core v1.13.0
+   Compiling either v1.19.0
+   Compiling crossbeam-deque v0.8.6
+   Compiling rayon v1.12.0
+   Compiling indexer-parallel-tools v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/experiments/p07-rayon)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.32s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/indexer_parallel_tools-041286c4f52380d0)
+
+running 3 tests
+test tests::fingerprint_convention_has_fixed_oracles ... ok
+test tests::bounds_are_enforced_before_scheduling ... ok
+test tests::every_strategy_returns_the_same_ordered_output ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/indexer_parallel_tools-e56648b2c316549b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests indexer_parallel_tools
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

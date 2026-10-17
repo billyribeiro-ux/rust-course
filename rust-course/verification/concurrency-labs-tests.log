@@ -1,0 +1,21 @@
+   Compiling concurrency-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.47s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/concurrency_labs-3058e4226e553743)
+
+running 7 tests
+test atomics::tests::no_partial_summary_is_exposed_by_the_api ... ok
+test atomics::tests::oversized_reservation_leaves_the_budget_unchanged ... ok
+test atomics::tests::reader_survives_publisher_drop_without_fabricating_a_summary ... ok
+test atomics::tests::budget_never_admits_more_than_available ... ok
+test deadlines::tests::closed_cancelled_and_invalid_are_distinct ... ok
+test deadlines::tests::limit_preserves_unread_channel_items ... ok
+test deadlines::tests::steady_arrivals_do_not_restart_the_absolute_deadline ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests concurrency_labs
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

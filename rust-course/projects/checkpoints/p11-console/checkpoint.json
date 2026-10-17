@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "project": "p11-console",
+  "checkpoints": [
+    {
+      "id": "01-local-state",
+      "title": "Accessible local filter state",
+      "source": "projects/scaffolds/p11-console",
+      "contract": "A local Leptos component owns one String filter and presents a labeled keyboard-accessible input and live text. It performs no network I/O and needs no backend. The complete HTML loader and locked WASM build are included; browser interaction remains a separate verification gate.",
+      "commands": ["python3 scripts/start-checkpoint.py p11 01-local-state", "mise exec -- python3 scripts/build-ui.py --project learner-work/checkpoints/p11-console/01-local-state", "python3 scripts/console-server.py --project learner-work/checkpoints/p11-console/01-local-state"]
+    },
+    {
+      "id": "final",
+      "title": "Operations console with bounded network requests",
+      "source": "projects/ui-console",
+      "contract": "The complete reference Leptos client connects to the loopback simulated workbench. It models loading, error and empty states, filters, polling, watchlists, order reconciliation, history charts and jobs. Client state lost on reload is documented. Public fixture credentials are not a production identity system.",
+      "commands": ["python3 scripts/start-checkpoint.py p11 final", "mise exec -- python3 scripts/build-ui.py --project learner-work/checkpoints/p11-console/final", "python3 scripts/console-server.py --project learner-work/checkpoints/p11-console/final"]
+    }
+  ]
+}

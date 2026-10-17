@@ -1,0 +1,219 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>An issue API you can test at its boundaries · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="05-tracker" data-lesson="05-tracker"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / An issue API you can test at its boundaries</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 05 / Networks and databases</div><h1>An issue API you can test at its boundaries</h1><p class="lead">Integrate routes, database migrations, pagination, and operational failure handling.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-5/05-sql.html">Tables, indexes, transactions, and migrations</a></li></ul><ul><li>Implement cursor pagination with a stable order</li><li>Test authorization through the actual router</li><li>Plan schema evolution and bounded database use</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#actor">actor</a> · <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#authentication">authentication</a> · <a href="../../glossary.html#authorization">authorization</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#lifetime">lifetime</a> · <a href="../../glossary.html#mise">mise</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p10">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-and-independent-specification">Purpose and independent specification</h2><p>Complete the issue tracker using the contracts from the previous lessons. A writer creates a trimmed, nonempty title of at most 200 Unicode scalar values. A reader lists only its team's issues. Results are ordered by ascending ID, with a positive limit no greater than 100 and an optional exclusive after cursor. Closing requires a matching revision and produces one audit row. Read these criteria first, then implement against your own tests before opening the reference source.</p>
+<h2 id="plain-english-model-boundaries-compose">Plain-English model: boundaries compose</h2><p>A boundary is where one set of assumptions becomes another: HTTP bytes become a typed request, an identity becomes permissions, a domain transition becomes SQL, and rows become JSON. Testing the pure title validator is useful but does not prove that the route calls it. Testing SQL alone does not prove the handler applies the right actor team. An integration test deliberately crosses several boundaries and checks the behavior visible to a caller.</p>
+<p>Pagination limits one response's work. Offset pagination skips a number of rows, which can become costly and unstable when earlier rows change. Our keyset cursor says “give me IDs greater than this known ID.” Together with <code>ORDER BY id</code>, it defines a predictable continuation. It is not a frozen snapshot across pages: newly inserted issues may appear later, and filters can change membership. Say which user experience you support instead of calling every ordered page consistent.</p>
+<h2 id="predict">Predict</h2><p>The last returned ID is 20. Between page requests, someone deletes ID 3 and inserts ID 30. With <code>after=20</code>, should the next page repeat ID20? Does deleting ID3 shift the meaning of the cursor? What would an offset of 20 mean instead?</p><details><summary>Reasoning</summary><p>The cursor excludes20 and compares key values, so deleting3 does not shift it. ID30 may appear if it belongs to this team. An offset counts currently visible rows before the response and can skip or repeat logical positions as data changes. Neither method alone guarantees a snapshot of an earlier moment.</p></details>
+<h2 id="runnable-service-checkpoint">Runnable service checkpoint</h2><p>Use a separate local application database, not the disposable integration-test database. The server runs embedded migrations on startup, limits its pool to five connections, and binds loopback port4110. This default makes migrations convenient locally; a deployment may use a separate migration step with narrower runtime permissions.</p>
+<pre><code>createdb rust_course_issues
+export DATABASE_URL="postgresql:///rust_course_issues?host=/tmp&amp;user=$USER"
+mise exec -- cargo run -p p10-issues
+# Another terminal:
+curl -H "Authorization: Bearer demo-team1-writer" -H "Content-Type: application/json" -d '{"title":"Investigate timeout"}' http://127.0.0.1:4110/issues
+curl -H "Authorization: Bearer demo-team1-reader" "http://127.0.0.1:4110/issues?limit=20"</code></pre>
+<p>Expected behavior: create returns201 with a generated issue ID and revision0; list returns an array visible to team1. A reader's create returns403. Do not paste real credentials into these fixture commands. Start with the pure validation example if PostgreSQL is unavailable.</p>
+<h2 id="explain-the-integration-test">Explain the integration test</h2><p>The test uses Tower's <code>oneshot</code> to send a real request through the Axum router without opening a network port. This exercises routing, extraction, permission checks, handlers, and response construction. It still uses an actual isolated PostgreSQL database. The test inserts a title containing an apostrophe, checks another team's empty list, denies cross-team close, checks a successful close, rejects a stale retry, and verifies pagination. Finally it forces an audit uniqueness failure and confirms rollback.</p>
+<div class="code-wrap" data-source="projects/reference/p10-issues/tests/postgres.rs" data-sha256="7be080c34e6557a89db9dccc9eb74a8bb0726c09458dc944227d79447193a03a"><div class="code-label"><a href="../../projects/reference/p10-issues/tests/postgres.rs">projects/reference/p10-issues/tests/postgres.rs</a></div><pre><code>//! Opt-in destructive tests: use only the documented disposable local fixture.
+mod support;
+use axum::{
+    body::{Body, to_bytes},
+    http::{Request, StatusCode},
+};
+use serde_json::Value;
+use tower::ServiceExt;
+#[tokio::test]
+#[ignore = &quot;requires COURSE_TEST_DATABASE_URL pointing to a disposable course database&quot;]
+async fn postgres_authorization_transaction_pagination() {
+    let pool = support::isolated_pool(&quot;COURSE_TEST_DATABASE_URL&quot;, &quot;rust_course_test_issues&quot;).await;
+    sqlx::migrate!().run(&amp;pool).await.unwrap();
+    // Test database is explicitly disposable; only these teaching tables are cleared.
+    sqlx::raw_sql(&quot;TRUNCATE issue_audit,issues RESTART IDENTITY&quot;)
+        .execute(&amp;pool)
+        .await
+        .unwrap();
+    let app = p10_issues::router(pool.clone());
+    async fn call(
+        app: axum::Router,
+        method: &amp;str,
+        path: &amp;str,
+        token: &amp;str,
+        body: &amp;str,
+    ) -&gt; (StatusCode, Value) {
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(method)
+                    .uri(path)
+                    .header(&quot;authorization&quot;, format!(&quot;Bearer {token}&quot;))
+                    .header(&quot;content-type&quot;, &quot;application/json&quot;)
+                    .body(Body::from(body.to_owned()))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        let status = response.status();
+        let bytes = to_bytes(response.into_body(), 65536).await.unwrap();
+        (status, serde_json::from_slice(&amp;bytes).unwrap())
+    }
+    assert_eq!(
+        call(
+            app.clone(),
+            &quot;POST&quot;,
+            &quot;/issues&quot;,
+            &quot;demo-team1-reader&quot;,
+            r#&quot;{&quot;title&quot;:&quot;deny&quot;}&quot;#
+        )
+        .await
+        .0,
+        StatusCode::FORBIDDEN
+    );
+    let (status, issue) = call(
+        app.clone(),
+        &quot;POST&quot;,
+        &quot;/issues&quot;,
+        &quot;demo-team1-writer&quot;,
+        r#&quot;{&quot;title&quot;:&quot;Alice&#x27;s bug&quot;}&quot;#,
+    )
+    .await;
+    assert_eq!(status, StatusCode::CREATED);
+    let id = issue[&quot;id&quot;].as_i64().unwrap();
+    assert_eq!(
+        call(app.clone(), &quot;GET&quot;, &quot;/issues&quot;, &quot;demo-team2-writer&quot;, &quot;&quot;)
+            .await
+            .1,
+        serde_json::json!([])
+    );
+    assert_eq!(
+        call(
+            app.clone(),
+            &quot;POST&quot;,
+            &amp;format!(&quot;/issues/{id}/close&quot;),
+            &quot;demo-team2-writer&quot;,
+            r#&quot;{&quot;expected_revision&quot;:0}&quot;#
+        )
+        .await
+        .0,
+        StatusCode::NOT_FOUND
+    );
+    assert_eq!(
+        call(
+            app.clone(),
+            &quot;POST&quot;,
+            &amp;format!(&quot;/issues/{id}/close&quot;),
+            &quot;demo-team1-writer&quot;,
+            r#&quot;{&quot;expected_revision&quot;:0}&quot;#
+        )
+        .await
+        .0,
+        StatusCode::OK
+    );
+    assert_eq!(
+        call(
+            app.clone(),
+            &quot;POST&quot;,
+            &amp;format!(&quot;/issues/{id}/close&quot;),
+            &quot;demo-team1-writer&quot;,
+            r#&quot;{&quot;expected_revision&quot;:0}&quot;#
+        )
+        .await
+        .0,
+        StatusCode::CONFLICT
+    );
+    assert_eq!(
+        call(
+            app.clone(),
+            &quot;GET&quot;,
+            &amp;format!(&quot;/issues?after={id}&amp;limit=1&quot;),
+            &quot;demo-team1-reader&quot;,
+            &quot;&quot;
+        )
+        .await
+        .1,
+        serde_json::json!([])
+    );
+    let count: i64 = sqlx::query_scalar(&quot;SELECT count(*) FROM issue_audit&quot;)
+        .fetch_one(&amp;pool)
+        .await
+        .unwrap();
+    assert_eq!(count, 1);
+    // A failing audit write must roll back the preceding issue update.
+    let (_, second) = call(
+        app.clone(),
+        &quot;POST&quot;,
+        &quot;/issues&quot;,
+        &quot;demo-team1-writer&quot;,
+        r#&quot;{&quot;title&quot;:&quot;rollback&quot;}&quot;#,
+    )
+    .await;
+    let second = second[&quot;id&quot;].as_i64().unwrap();
+    sqlx::query(
+        &quot;INSERT INTO issue_audit(issue_id,revision,actor,action) VALUES($1,1,1,&#x27;injected&#x27;)&quot;,
+    )
+    .bind(second)
+    .execute(&amp;pool)
+    .await
+    .unwrap();
+    assert_eq!(
+        call(
+            app.clone(),
+            &quot;POST&quot;,
+            &amp;format!(&quot;/issues/{second}/close&quot;),
+            &quot;demo-team1-writer&quot;,
+            r#&quot;{&quot;expected_revision&quot;:0}&quot;#
+        )
+        .await
+        .0,
+        StatusCode::SERVICE_UNAVAILABLE
+    );
+    let closed: bool = sqlx::query_scalar(&quot;SELECT closed FROM issues WHERE id=$1&quot;)
+        .bind(second)
+        .fetch_one(&amp;pool)
+        .await
+        .unwrap();
+    assert!(!closed);
+    let (_, concurrent) = call(
+        app.clone(),
+        &quot;POST&quot;,
+        &quot;/issues&quot;,
+        &quot;demo-team1-writer&quot;,
+        r#&quot;{&quot;title&quot;:&quot;race&quot;}&quot;#,
+    )
+    .await;
+    let concurrent = concurrent[&quot;id&quot;].as_i64().unwrap();
+    let path = format!(&quot;/issues/{concurrent}/close&quot;);
+    let (a, b) = tokio::join!(
+        call(
+            app.clone(),
+            &quot;POST&quot;,
+            &amp;path,
+            &quot;demo-team1-writer&quot;,
+            r#&quot;{&quot;expected_revision&quot;:0}&quot;#
+        ),
+        call(
+            app.clone(),
+            &quot;POST&quot;,
+            &amp;path,
+            &quot;demo-team1-writer&quot;,
+            r#&quot;{&quot;expected_revision&quot;:0}&quot;#
+        )
+    );
+    assert!(
+        (a.0 == StatusCode::OK &amp;&amp; b.0 == StatusCode::CONFLICT)
+            || (b.0 == StatusCode::OK &amp;&amp; a.0 == StatusCode::CONFLICT)
+    );
+    let count: i64 = sqlx::query_scalar(&quot;SELECT count(*) FROM issue_audit WHERE issue_id=$1&quot;)
+        .bind(concurrent)
+        .fetch_one(&amp;pool)
+        .await
+        .unwrap();
+    assert_eq!(count, 1);
+    pool.close().await;
+}
+</code></pre></div>
+<h2 id="deliberate-mistake-and-guided-increment">Deliberate mistake and guided increment</h2><p>Remove <code>ORDER BY id</code> in your learner query and run the test. It may still pass on a tiny table. This is an instructive limitation of example-based tests: observed order is not a promised order. Restore the explicit ordering, then write a three-page test with multiple teams, enough rows to cross boundaries, and IDs tracked in a set. Assert no duplicates and the specified ascending order. The implementation checkpoint is the complete router plus migration; the improvement checkpoint is your expanded pagination evidence.</p>
+<h2 id="independent-design-decisions">Independent design decisions</h2><p>Add a closed/open filter while preserving cursor semantics. Decide whether the cursor should be reusable with a different filter. Write the API rule, a client example, and a test before implementing. Then design a second migration adding an optional assignee. Explain what old binaries do when the new column exists, whether new binaries can read old rows, and when backfill work must happen.</p><details><summary>Hint 1</summary><p>The cursor is part of a query, not just an integer. Consider encoding filter context if accidental reuse matters.</p></details><details><summary>Hint 2</summary><p>An additive nullable column allows old rows and old writers during a transition. Enforcing a new required value immediately can break them.</p></details><details><summary>Reference approach</summary><p>For this small API, document that clients must preserve filters across pages and reject invalid filter values. Add a nullable assignee through a new migration and keep authorization based on team membership, not assignee identity. For a larger public API, use an opaque cursor carrying versioned query context and validate it with a maintained mechanism if tamper resistance is required.</p></details>
+<h2 id="review-and-evidence">Review and evidence</h2><p>A happy-path curl session is a useful smoke test, but insufficient boundary evidence. A stronger review asks what authorization predicate protects every query, what bounds every collection, what happens when acquiring a connection times out, and how deployment schema is known. The five-connection pool bounds active database connections. A separate16-request semaphore and five-second handler/body deadline bound admitted HTTP work; they do not replace operating-system connection limits or a deployment rate policy. This reference has no deployment TLS/authentication integration. Its local scope and remaining limits must remain visible.</p>
+<h2 id="playbook-investigation">Playbook investigation</h2><p>Observation: requests stall while CPU stays low. Misleading evidence: the database process is alive and <code>/health</code> returns200. Hypothesize exhausted pool, slow queries, lock waits, or a handler retaining a transaction. Distinguish them with pool acquisition timing and PostgreSQL activity/lock inspection in the test environment. A responsive health route only proves the runtime can answer that route. If an intentionally held row lock reproduces close latency while reads work, “CPU shortage” is disproven. Fix the transaction lifetime and add request deadlines; do not increase pool size without measuring the database budget.</p>
+<h2 id="mastery-check">Mastery check</h2><p>Demonstrate a denied request, a rolled-back transition, and a paginated traversal. Review the API as if its author were absent. Name one guarantee established by each test and one important behavior not covered.</p>
+<aside class="callout"><h2 id="when-you-get-stuck">When you get stuck</h2><p>Run <code>mise exec -- cargo test -p p10-issues --test postgres -- --ignored --nocapture</code> with the isolated database URL. Compare actual status and JSON before reading server logs. Include schema version, actor role, cursor, expected revision, and the minimal failing request in a review request.</p></aside><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Scope and invariants:</strong> local two-team issue state, permission checks on every domain operation, bounded page/body/pool sizes, atomic issue-and-audit transitions, revision conflict detection. <strong>Why this design:</strong> pure validation can run without infrastructure, while SQL constraints and transaction-scoped row locks protect durable facts under concurrent requests. <strong>Concrete habits:</strong> derive authority server-side; bind SQL values; keep all transaction statements on the same connection; test denied requests and injected rollback through the actual router.</p><p><strong>Alternative:</strong> an optimistic conditional UPDATE can reduce explicit lock code for a simple transition, but the associated audit and returned conflict semantics still require a transaction. <strong>Evidence:</strong> actual PostgreSQL integration tests and prepared query metadata are recorded separately from pure unit checks. Neither verifies a production identity provider or live deployment schema. <strong>Evolution threshold:</strong> add maintained authentication/TLS, deployment connection/rate limits, query-plan measurement, and migration rollout checks before multiuser deployment. Public fixture tokens are not secret credentials or a security claim.</p><section><h2 id="reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</h2><p>Working directory: course root. This creates a complete separate source tree; it refuses an existing destination. Run the checkpoint tests before following the guided edits. The <a href="../../projects/checkpoints/p10-issues/index.html">checkpoint contract and engineering decisions</a> state exactly which features exist.</p><pre><code>python3 scripts/start-checkpoint.py p10 final
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p10-issues/final/Cargo.toml</code></pre><p>To compare an earlier milestone with the final reference, reconstruct each ID into a different directory. The final database integration checks still require the explicitly isolated database described in this lesson; ordinary cargo test does not execute ignored database tests.</p></section>
+<h3>Keep startup and shutdown failures visible</h3><p>The binary reads DATABASE_URL through a deliberately redacted conversion: both missing and non-Unicode values produce a fixed configuration message. A VarError::NotUnicode contains the original operating-system value, so forwarding its Debug representation could expose a credential. Do not solve an encoding failure by logging the entire value. The child-process regression uses a synthetic marker and invalid byte, and confirms neither the marker nor a panic appears before any database connection.</p><p>Required startup output uses fallible Write operations. The main task retains one server future, selects it against Ctrl-C, and signals a watch channel to request graceful shutdown. IntoFuture converts Axum's awaitable server builder into the future that select! polls explicitly; tokio::pin! lets the same in-progress future be awaited afterward. After either normal or error completion, the pool is closed before the saved server or signal error is returned. A signal-registration failure requests shutdown too. No detached signal watcher is needed. See <a href="../../verification/service-output-followup.html">the scoped output evidence</a> for the actual checks and the database-service runtime limits.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://docs.rs/axum/0.8.9/axum/struct.Router.html">Axum routing</a></li><li><a href="https://www.postgresql.org/docs/18/indexes.html">PostgreSQL 18 indexes</a></li><li><a href="https://docs.rs/sqlx/0.9.0/sqlx/struct.Pool.html">SQLx0.9 pool</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-5/05-sql.html">Previous: Tables, indexes, transactions, and migrations</a><a href="../../lessons/stage-5/05-web-boundaries.html">Next: Middleware order, cookies, CSRF, and TLS boundaries</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-and-independent-specification">Purpose and independent specification</a><a href="#plain-english-model-boundaries-compose">Plain-English model: boundaries compose</a><a href="#predict">Predict</a><a href="#runnable-service-checkpoint">Runnable service checkpoint</a><a href="#explain-the-integration-test">Explain the integration test</a><a href="#deliberate-mistake-and-guided-increment">Deliberate mistake and guided increment</a><a href="#independent-design-decisions">Independent design decisions</a><a href="#review-and-evidence">Review and evidence</a><a href="#playbook-investigation">Playbook investigation</a><a href="#mastery-check">Mastery check</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

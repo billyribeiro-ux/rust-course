@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-09",
+  "status": "blocked_by_saved_localhost_permission",
+  "attempted_action": "cua.createBrowserTab chrome http://127.0.0.1:8000/",
+  "result": "Tool refused localhost access and prohibited alternative browser surfaces or indirect workarounds. No workaround was attempted.",
+  "unverified": [
+    "reader desktop and narrow rendering",
+    "keyboard focus/navigation",
+    "search interaction",
+    "copy clipboard behavior",
+    "progress and notes persistence/import/export",
+    "solution disclosure",
+    "print output",
+    "Leptos loading/error/empty interaction",
+    "forms and uncertain order reconciliation",
+    "reconnect and cancellation in browser"
+  ],
+  "separate_evidence": [
+    "site-static.json",
+    "ui-current-build.log",
+    "ui-current-clippy.log",
+    "ui-selected-project.json"
+  ],
+  "independent_review": "pending",
+  "latest_retry": {
+    "time_utc": "2026-10-09T19:02:14.556381+00:00",
+    "trigger": "User said Lets continue on",
+    "action": "cua.createBrowserTab(\"chrome\", \"http://127.0.0.1:8000/\", {sessionName: \"\ud83e\udd80 Rust course QA\"})",
+    "result": "Rejected: saved user preference still blocks localhost. Alternative browser surfaces and indirect workarounds prohibited.",
+    "policy_respected": true,
+    "user_action": "Remove localhost from saved browser blocklist; no agent-controlled permission change is available."
+  },
+  "settings_inspection": {
+    "time_utc": "2026-10-09T17:59:56.775953+00:00",
+    "action": "cua.getApp(\"com.openai.codex\")",
+    "result": "Computer Use is not allowed to use the app 'com.openai.codex' for safety reasons.",
+    "policy_respected": "No alternative access to localhost or settings was attempted. No permission changes were made.",
+    "user_action": "Enable Browser Use for127.0.0.1 through the app settings; pending user response."
+  }
+}

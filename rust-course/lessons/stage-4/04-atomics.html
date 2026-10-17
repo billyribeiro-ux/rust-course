@@ -1,0 +1,153 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Atomic operations, application races, and publication · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="04-atomics" data-lesson="04-atomics"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Atomic operations, application races, and publication</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 04 / Concurrency and async</div><h1>Atomic operations, application races, and publication</h1><p class="lead">Choose synchronization from the invariant: one atomic operation is not a transaction over your whole algorithm.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-4/04-threads.html">Ownership crosses thread boundaries</a></li></ul><ul><li>Distinguish a data race from a race in application logic</li><li>Use compare-exchange to preserve a single-counter reservation invariant</li><li>Explain Relaxed versus Release/Acquire and the limits of SeqCst</li><li>Prevent deadlock through ownership and a consistent lock order</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#deadlock">deadlock</a> · <a href="../../glossary.html#drop">drop</a> · <a href="../../glossary.html#edition">edition</a> · <a href="../../glossary.html#invariant">invariant</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p07">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-reserve-work-without-inventing-capacity">Purpose: reserve work without inventing capacity</h2>
+<p>An indexer has room for one more job. Two workers each inspect the remaining capacity, decide there is room, and reserve it. Every memory access can be legal Rust while the application admits two jobs into one slot. This lesson separates memory safety from the business invariant, then asks what synchronization actually protects that invariant. Do not replace the indexer's channels with atomic counters merely because atomics sound faster. Its bounded channel already combines admission, waiting and ownership transfer. The focused lab makes the smaller decision visible.</p>
+<h2 id="plain-english-model-indivisible-does-not-mean-everything-happens-together">Plain-English model: indivisible does not mean everything happens together</h2>
+<p>An atomic operation on a supported atomic type appears indivisible to other accesses to that same atomic object. Another thread does not observe half of one atomic integer store. A <strong>data race</strong> is a particular conflict involving concurrent memory accesses to the same location, at least one write and at least one non-atomic access, without the required synchronization; it is undefined behavior. Safe Rust's ownership rules and safe synchronization interfaces prevent data races within their sound contracts. A <strong>race condition</strong> in application logic is broader: a result depends on an ordering that violates your intended contract. Atomics can eliminate a data race while leaving a check-then-act race.</p>
+<p>Our invariant is: successful reservations consume exactly their requested units, and the available count never goes below zero. A separate load, arithmetic operation and store do not form one atomic reservation. Picture two people copying the same ticket count before either changes it. The analogy explains the check-then-act conflict, but it says nothing about processor caches, compiler transformations or Rust's memory model. We will use the documented ordering rules for those.</p>
+<h2 id="prediction-can-the-strongest-ordering-repair-the-algorithm">Prediction: can the strongest ordering repair the algorithm?</h2>
+<p>The deliberately wrong executable uses an atomic count initialized to one and <code>SeqCst</code> loads and stores. A barrier makes both workers finish their loads before either stores zero. Predict the number of accepted reservations. Is a stronger ordering than Relaxed enough to make the pair of operations indivisible?</p>
+<details><summary>Prediction and its cause</summary><p>Both workers report success, leaving zero available. Each operation participates in the required ordering, but the legal order is load1, load1, store0, store0. There is no data race on the atomic count. There is an application bug because two separate operations do not reserve conditionally as one transition. The barrier makes this particular bad interleaving reproducible instead of relying on unlucky timing.</p></details>
+<h2 id="small-runnable-examples">Small runnable examples</h2>
+<p>Working directory: the course folder. The incorrect fixture is intentionally outside the recommended workspace. Its successful execution demonstrates a wrong result, not a recommended implementation. Put its disposable executable in the shared local output area:</p>
+<pre><code>mkdir -p .local/exercises
+mise exec -- rustc --edition 2024 exercises/concurrency/racy_reservation.rs -o .local/exercises/racy-reservation
+.local/exercises/racy-reservation
+cd projects
+mise exec -- cargo run -p concurrency-labs --example publication
+mise exec -- cargo test -p concurrency-labs atomics</code></pre>
+<p>The first program prints <code>accepted=2 remaining=0</code>. The reference example prints a successful reservation of two units, a rejected further unit, no summary before publication and <code>Some((3, 120))</code> afterward. Both use standard-library atomics. The package also contains the next lesson's Tokio example, so Cargo resolves its pinned runtime dependency even though this module does not use Tokio.</p>
+<div class="code-wrap" data-source="projects/reference/p19-concurrency-labs/src/atomics.rs" data-sha256="6039885671e8f21f0da00ecdf51a5f31dfd181ae991f948d98d09e4151b1c2aa"><div class="code-label"><a href="../../projects/reference/p19-concurrency-labs/src/atomics.rs">projects/reference/p19-concurrency-labs/src/atomics.rs</a></div><pre><code>use std::sync::{
+    Arc,
+    atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering},
+};
+
+/// A single-counter budget. No other memory is published by taking a unit.
+pub struct Budget(AtomicU32);
+impl Budget {
+    pub fn new(units: u32) -&gt; Self {
+        Self(AtomicU32::new(units))
+    }
+    pub fn remaining(&amp;self) -&gt; u32 {
+        self.0.load(Ordering::Relaxed)
+    }
+    pub fn try_take(&amp;self, amount: u32) -&gt; bool {
+        let mut observed = self.0.load(Ordering::Relaxed);
+        loop {
+            let Some(next) = observed.checked_sub(amount) else {
+                return false;
+            };
+            match self
+                .0
+                .compare_exchange_weak(observed, next, Ordering::Relaxed, Ordering::Relaxed)
+            {
+                Ok(_) =&gt; return true,
+                Err(actual) =&gt; observed = actual,
+            }
+        }
+    }
+}
+
+struct Shared {
+    files: AtomicU64,
+    bytes: AtomicU64,
+    ready: AtomicBool,
+}
+/// Exactly one publication: this owner is intentionally not Clone.
+pub struct Publisher(Arc&lt;Shared&gt;);
+pub struct Reader(Arc&lt;Shared&gt;);
+pub fn publication() -&gt; (Publisher, Reader) {
+    let shared = Arc::new(Shared {
+        files: AtomicU64::new(0),
+        bytes: AtomicU64::new(0),
+        ready: AtomicBool::new(false),
+    });
+    (Publisher(Arc::clone(&amp;shared)), Reader(shared))
+}
+impl Publisher {
+    /// Consuming self prevents a second write after ready becomes true.
+    pub fn publish(self, files: u64, bytes: u64) {
+        self.0.files.store(files, Ordering::Relaxed);
+        self.0.bytes.store(bytes, Ordering::Relaxed);
+        self.0.ready.store(true, Ordering::Release);
+    }
+}
+impl Reader {
+    /// Nonblocking. None means no published summary has been observed.
+    pub fn snapshot(&amp;self) -&gt; Option&lt;(u64, u64)&gt; {
+        if !self.0.ready.load(Ordering::Acquire) {
+            return None;
+        }
+        Some((
+            self.0.files.load(Ordering::Relaxed),
+            self.0.bytes.load(Ordering::Relaxed),
+        ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn budget_never_admits_more_than_available() {
+        let budget = Budget::new(100);
+        let accepted: u32 = std::thread::scope(|scope| {
+            let handles: Vec&lt;_&gt; = (0..16)
+                .map(|_| scope.spawn(|| (0..50).filter(|_| budget.try_take(1)).count() as u32))
+                .collect();
+            handles
+                .into_iter()
+                .map(|h| h.join().expect(&quot;bounded fixture worker does not panic&quot;))
+                .sum()
+        });
+        assert_eq!(accepted, 100);
+        assert_eq!(budget.remaining(), 0);
+        assert!(!budget.try_take(1));
+        assert!(budget.try_take(0));
+    }
+    #[test]
+    fn oversized_reservation_leaves_the_budget_unchanged() {
+        let budget = Budget::new(3);
+        assert!(!budget.try_take(u32::MAX));
+        assert_eq!(budget.remaining(), 3);
+        assert!(budget.try_take(3));
+    }
+    #[test]
+    fn no_partial_summary_is_exposed_by_the_api() {
+        let (publisher, reader) = publication();
+        assert_eq!(reader.snapshot(), None);
+        publisher.publish(3, 120);
+        assert_eq!(reader.snapshot(), Some((3, 120)));
+        assert_eq!(reader.snapshot(), Some((3, 120)));
+    }
+    #[test]
+    fn reader_survives_publisher_drop_without_fabricating_a_summary() {
+        let (publisher, reader) = publication();
+        drop(publisher);
+        assert_eq!(reader.snapshot(), None);
+    }
+}
+</code></pre></div>
+<h2 id="explain-the-conditional-transition">Explain the conditional transition</h2>
+<p><code>Budget</code> keeps its <code>AtomicU32</code> private so callers cannot increase the remaining count behind its API. <code>checked_sub</code> rejects requests larger than the observed count before mutation. <code>compare_exchange_weak</code> means: replace the count only if it still equals the value we observed. Success is the instant at which this reservation takes effect. If another worker changed the count, the operation returns the actual observed value; the loop recomputes the subtraction from that value. Weak compare-exchange may also fail spuriously, so the same loop handles a failure even without an intervening writer.</p>
+<p>The successful compare-exchange is a useful <strong>linearization point</strong>: one instant that lets us explain a concurrent operation as though reservations happened in some sequential order. That does not make the whole program deterministic. Which worker wins is unspecified. There is no fairness or wait-free guarantee for an individual worker under arbitrary contention. Our tests use a fixed number of workers and attempts, not an unbounded producer loop.</p>
+<h2 id="ordering-follows-the-information-being-communicated">Ordering follows the information being communicated</h2>
+<p><code>Relaxed</code> preserves atomicity and the per-object modification rules but does not publish unrelated memory. It fits this single-counter budget: correctness comes from the conditional atomic update, and no reader infers anything about a separate payload from the count. It also fits the indexer's stop hint when the flag communicates only a boolean. Using Relaxed because it benchmarks faster without first defining what the flag means is not a sound rule.</p>
+<p>The summary has a different contract. A writer stores two counts, then announces that the pair is ready. <code>Release</code> on the ready store and <code>Acquire</code> on a reader load that observes that publication establish the synchronization needed for the preceding count writes to be observed afterward. The individual count accesses remain atomic and use Relaxed; the publication flag carries the ordering relationship. Acquire is not a command to fetch the universally newest value. A load can still observe false and return None. The API promises a valid summary if it observes publication, not an arbitrary deadline for doing so.</p>
+<p>The <code>Publisher</code> is not Clone and publishing consumes it. That ownership rule is essential: the counts are never overwritten after ready becomes true. Reusing a true flag for later updates would allow readers to combine different generations. Supporting repeated publication needs a different contract, such as a mutex-protected snapshot or a channel carrying owned snapshots. A memory-ordering change alone does not create that generation protocol. The reader deliberately returns None when the publisher is dropped without publishing; it does not spin forever or invent a result.</p>
+<p><code>AcqRel</code> combines acquire and release effects for a read-modify-write operation. <code>SeqCst</code> adds a single ordering for sequentially consistent operations, subject to Rust's documented model. Neither makes a sequence of loads and stores a multi-object transaction. Not every ordering is valid for every operation: a load cannot publish a prior write using Release, and a store cannot acquire a later observation. Read the operation's signature and documentation rather than trying orderings until compilation succeeds.</p>
+<h2 id="deliberate-mistake-and-the-playbook-investigation">Deliberate mistake and the playbook investigation</h2>
+<p>Observation: the barrier fixture accepts two reservations. Hypothesis A says the failure comes from weak visibility and SeqCst will fix it. Hypothesis B says the gap lies between checking and changing. The fixture already uses SeqCst, so its repeated wrong result disproves A for this reproduction. Next, replace the two-step transition with <code>Budget::try_take</code> while keeping the same initial budget and number of callers. The relevant claim is the number accepted, not whether threads happened to run in a pleasing order.</p>
+<p>For publication, do not claim that a Relaxed-only variant is correct because a million runs showed the expected counts. The missing observation is a allowed-but-unseen execution under the memory model. Separate the normative argument from dynamic evidence. A model checker such as Loom can explore a bounded model when a custom concurrent algorithm justifies that extra work; this lab does not claim an executed Loom proof.</p>
+<h2 id="guided-project-checkpoint-and-deadlock-reasoning">Guided project checkpoint and deadlock reasoning</h2>
+<p>Read the indexer's cancellation flag and receiver lock next to this lab. Write the invariant protected by each. Retain its channel-based admission: the channel does more than count. Add a diagnostic counter only if you need that measurement, keeping the counter distinct from authoritative admission. Run <code>mise exec -- cargo test -p p07-indexer</code> and explain why an atomic progress count need not establish that a result has been safely stored.</p>
+<p>A mutex is often the clearer alternative when several fields must change together. It protects a critical section; its guard releases the lock when dropped. With two locks, opposite acquisition order can deadlock: thread A holds X waiting for Y while B holds Y waiting for X. Stronger atomics elsewhere do not break that cycle. First ask whether one owner can receive commands through a channel or one small mutex can cover the invariant. If multiple locks are justified, define one acquisition order, such as ascending stable account ID, and follow it on every path. Do not hold a synchronous guard across await. A lock's scope should follow the invariant, not simply the largest convenient block.</p>
+<h2 id="independent-practice">Independent practice</h2>
+<p>Specify whether taking zero units succeeds; explain why the reference permits it. Implement a bounded return operation that cannot exceed an initial capacity, or explain why storing that second invariant makes a mutex simpler. Draw the state transitions before coding. Independently diagnose a two-lock transfer design with opposite caller argument orders; give a safe design without relying on a timing test to happen to hang. For the publication lab, explain why adding Clone to Publisher changes its correctness argument.</p>
+<details><summary>Hint 1</summary><p>For returning units, prevent both numeric overflow and exceeding the configured capacity. Distinguish a reported progress metric from authority to admit work.</p></details>
+<details><summary>Hint 2</summary><p>Try a small capacity such as two and enumerate take/return sequences. For locks, give the resources stable identities independent of the caller's source/destination order.</p></details>
+<details><summary>Reference approach</summary><p>A private immutable capacity plus a compare-exchange loop can bound a single available count on return, but it cannot by itself prove that a caller legitimately owns units to return. A reservation token whose Drop returns its units can express that ownership; this introduces lifetime and cancellation choices that need review. A small mutex-protected ledger may be more appropriate. For transfers, acquiring lower-ID then higher-ID locks makes ordering consistent; reject a self-transfer or handle its single-lock case explicitly. Tests should cover invalid returns, same-resource operations and concurrent conservation, not merely final formatting.</p></details>
+<h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2>
+<p>The lab uses a private atomic budget and a one-use publication owner because those types make their narrow invariants explicit. It uses Arc only for the two genuine shared owners of publication state. The indexer keeps its higher-level channel. Native tests check reservation conservation under sixteen bounded workers, oversized requests and publication API states; the intentional fixture forces the counterexample even with SeqCst. These observations do not prove every hardware execution or fairness. Expanding to repeated snapshots, resource tokens or a wait-free algorithm would require a new design argument and stronger testing.</p>
+<h2 id="when-you-get-stuck-and-mastery-check">When you get stuck and mastery check</h2>
+<p>Write the smallest forbidden outcome first. List the memory operations that could produce it and identify the exact synchronization edge you believe rules it out. Bring a reviewer the invariant, one controlled interleaving and the relevant standard-library ordering documentation. Explain, without the reference, why a data-race-free program can still overspend a budget, why Acquire/Release is appropriate for the one-use summary, and why a mutex may be the more professional choice for a larger state transition.</p>
+<h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/sync/atomic/enum.Ordering.html">Rust1.99 Ordering</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/sync/atomic/type.AtomicU32.html#method.compare_exchange_weak">AtomicU32 compare-exchange</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/sync/struct.Mutex.html">Rust mutex contract</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-4/04-threads.html">Previous: Ownership crosses thread boundaries</a><a href="../../lessons/stage-4/04-indexer.html">Next: Bound memory and make concurrent results reproducible</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-reserve-work-without-inventing-capacity">Purpose: reserve work without inventing capacity</a><a href="#plain-english-model-indivisible-does-not-mean-everything-happens-together">Plain-English model: indivisible does not mean everything happens together</a><a href="#prediction-can-the-strongest-ordering-repair-the-algorithm">Prediction: can the strongest ordering repair the algorithm?</a><a href="#small-runnable-examples">Small runnable examples</a><a href="#explain-the-conditional-transition">Explain the conditional transition</a><a href="#ordering-follows-the-information-being-communicated">Ordering follows the information being communicated</a><a href="#deliberate-mistake-and-the-playbook-investigation">Deliberate mistake and the playbook investigation</a><a href="#guided-project-checkpoint-and-deadlock-reasoning">Guided project checkpoint and deadlock reasoning</a><a href="#independent-practice">Independent practice</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#when-you-get-stuck-and-mastery-check">When you get stuck and mastery check</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

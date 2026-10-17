@@ -1,0 +1,11 @@
+{
+  "server": "Rust MCP",
+  "configured_version": "0.4.1",
+  "tool": "mcp__rust__workspace_info",
+  "requested_manifest": "/Users/billyribeiro/Desktop/rust-course/Cargo.toml",
+  "observed_result": "Unexpected response type",
+  "workspace_access_established_through_session_wrapper": false,
+  "fallback": "mise exec Cargo CLI with explicit nested course manifest and shared target directory",
+  "status": "unavailable for reliable session-wrapper use; no wrapper check claimed successful",
+  "recorded_date": "2026-10-09"
+}

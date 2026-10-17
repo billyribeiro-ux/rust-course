@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-09T19:15:47.107718+00:00",
+  "scope": "Owned tiny packaging fixture; no learner source or real archive modified",
+  "checks": [
+    {
+      "case": "source symlink rejected before archive replacement",
+      "exit_code": 1,
+      "passed": true
+    },
+    {
+      "case": "ordinary files packaged with no outside fixture",
+      "exit_code": 0,
+      "passed": true
+    }
+  ],
+  "temporary_archive_outputs_left": [],
+  "passed": true
+}

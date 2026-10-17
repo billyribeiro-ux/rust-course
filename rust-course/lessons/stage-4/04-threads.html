@@ -1,0 +1,537 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Ownership crosses thread boundaries · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="04-threads" data-lesson="04-threads"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Ownership crosses thread boundaries</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 04 / Concurrency and async</div><h1>Ownership crosses thread boundaries</h1><p class="lead">Build a bounded producer–worker–collector pipeline while preserving ownership and termination.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-3/03-recovery.html">Recovery and compaction without wishful guarantees</a></li></ul><ul><li>Explain Send and shared ownership without assuming Arc makes all data thread-safe</li><li>Keep lock scopes smaller than the work they coordinate</li><li>Trace channel closure and scoped-thread completion</li><li>Distinguish scheduling variation from result semantics</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#backpressure">backpressure</a> · <a href="../../glossary.html#borrow">borrow</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#closure">closure</a> · <a href="../../glossary.html#deadlock">deadlock</a> · <a href="../../glossary.html#drop">drop</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p07">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-overlap-independent-work-without-losing-control">Purpose: overlap independent work without losing control</h2>
+<p>Indexing several files gives us naturally independent tasks. Each worker can own one path, open one file, calculate a result, and send that result to a collector. The challenge is not merely spawning threads. It is knowing who owns each job, how many jobs can wait, who receives each result, and how every participant terminates. P07 uses a producer, a bounded job channel, a fixed set of workers, a bounded result channel and one collector. Before reading the code, draw those five parts and mark the direction in which ownership moves.</p>
+<h2 id="model-transfer-ownership-or-synchronize-shared-access">Model: transfer ownership or synchronize shared access</h2>
+<p>A channel send transfers an owned value to a receiver. After sending a PathBuf, the sender cannot keep using that moved value unless it created another owned copy. Send describes whether ownership can cross a thread boundary. Sync describes whether references can be shared safely across threads. Arc provides atomic shared ownership, but it does not make arbitrary interior operations safe; the contained type still determines what access is permitted. The receiver in this example is protected by a Mutex because multiple workers need to call its single-consumer receive operation in a coordinated way.</p>
+<h2 id="predict-compiler-failures-before-repairing-them">Predict compiler failures before repairing them</h2>
+<pre><code>cd rust-course/projects
+mise exec -- rustc --edition=2024 ../exercises/systems/rc_thread.rs
+mise exec -- rustc --edition=2024 ../exercises/systems/thread_borrow.rs
+mise exec -- cargo test -p p07-indexer queue_one</code></pre>
+<p>The first command intentionally fails with E0277 because Rc's non-atomic ownership bookkeeping is not suitable for this transfer. The second intentionally fails with E0373 because an ordinary spawned thread could outlive the local String it borrows. Predict which failure can be repaired with move and which needs a different ownership mechanism. Do not solve both by adding Arc everywhere. A value used by only one worker can simply be moved. A scoped thread can borrow a local value when the enclosing scope guarantees the thread completes before the borrowed value leaves its scope.</p>
+<h2 id="trace-the-actual-pipeline">Trace the actual pipeline</h2>
+<div class="code-wrap" data-source="projects/reference/p07-indexer/src/lib.rs" data-sha256="a86a23003bcc00cda19e1f1a1fb90c253b3d3ad16d436609f4000d26e3cf3808"><div class="code-label"><a href="../../projects/reference/p07-indexer/src/lib.rs">projects/reference/p07-indexer/src/lib.rs</a></div><pre><code>//! Bounded batch file indexer. Files are streamed; results and path metadata are capped.
+use std::{
+    fs::File,
+    io::{self, Read},
+    path::PathBuf,
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, AtomicUsize, Ordering},
+        mpsc,
+    },
+    thread,
+};
+
+#[derive(Clone, Copy, Debug)]
+pub struct Config {
+    pub workers: usize,
+    pub queue: usize,
+    pub max_files: usize,
+    pub max_bytes: u64,
+}
+impl Default for Config {
+    fn default() -&gt; Self {
+        Self {
+            workers: 4,
+            queue: 8,
+            max_files: 4096,
+            max_bytes: 16 * 1024 * 1024,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Status {
+    Indexed,
+    TooLarge,
+    Cancelled,
+    Failed(io::ErrorKind),
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Entry {
+    pub path: PathBuf,
+    pub input_index: usize,
+    pub bytes: u64,
+    pub lines: u64,
+    pub words: u64,
+    pub fingerprint: u64,
+    pub status: Status,
+}
+#[derive(Debug)]
+pub struct Report {
+    pub entries: Vec&lt;Entry&gt;,
+    pub submitted: usize,
+    pub cancelled: bool,
+    pub peak_workers: usize,
+}
+
+/// A coordinator-owned observation, not an estimate of bytes or time remaining.
+/// `received` includes failed/partial results; only `indexed` counts whole files.
+/// Counts are monotonic within a run. Completion order is not deterministic.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Progress {
+    pub total: usize,
+    pub received: usize,
+    pub indexed: usize,
+    pub too_large: usize,
+    pub failed: usize,
+    pub cancelled: usize,
+    /// Known only after the producer has joined; queued work may have no result.
+    pub submitted: Option&lt;usize&gt;,
+    pub cancellation_requested: bool,
+    /// All scoped work has joined and results have been sorted.
+    pub finished: bool,
+}
+impl Progress {
+    fn observe(&amp;mut self, status: &amp;Status) {
+        // Input is capped at 4096 and each input has at most one returned entry.
+        self.received += 1;
+        match status {
+            Status::Indexed =&gt; self.indexed += 1,
+            Status::TooLarge =&gt; self.too_large += 1,
+            Status::Failed(_) =&gt; self.failed += 1,
+            Status::Cancelled =&gt; self.cancelled += 1,
+        }
+    }
+}
+
+fn count(path: PathBuf, input_index: usize, max_bytes: u64, cancel: &amp;AtomicBool) -&gt; Entry {
+    let mut result = Entry {
+        path,
+        input_index,
+        bytes: 0,
+        lines: 0,
+        words: 0,
+        fingerprint: 0xcbf2_9ce4_8422_2325,
+        status: Status::Indexed,
+    };
+    let run = |result: &amp;mut Entry| -&gt; io::Result&lt;()&gt; {
+        let mut file = File::open(&amp;result.path)?;
+        let mut buf = [0u8; 8192];
+        let mut in_word = false;
+        let mut last = None;
+        loop {
+            if cancel.load(Ordering::Relaxed) {
+                result.status = Status::Cancelled;
+                return Ok(());
+            }
+            // Read at most the remaining budget plus one byte to detect an oversize file.
+            let allowance = (max_bytes - result.bytes + 1).min(buf.len() as u64) as usize;
+            let n = match file.read(&amp;mut buf[..allowance]) {
+                Err(e) if e.kind() == io::ErrorKind::Interrupted =&gt; continue,
+                other =&gt; other?,
+            };
+            if n == 0 {
+                break;
+            }
+            if result.bytes + n as u64 &gt; max_bytes {
+                result.status = Status::TooLarge;
+                return Ok(());
+            }
+            result.bytes += n as u64;
+            for &amp;byte in &amp;buf[..n] {
+                result.lines += u64::from(byte == b&#x27;\n&#x27;);
+                let word = !byte.is_ascii_whitespace();
+                result.words += u64::from(word &amp;&amp; !in_word);
+                in_word = word;
+                result.fingerprint =
+                    (result.fingerprint ^ u64::from(byte)).wrapping_mul(0x100_0000_01b3);
+                last = Some(byte);
+            }
+        }
+        result.lines += u64::from(last.is_some_and(|byte| byte != b&#x27;\n&#x27;));
+        Ok(())
+    };
+    if let Err(error) = run(&amp;mut result) {
+        result.status = Status::Failed(error.kind());
+    }
+    result
+}
+
+pub fn index(paths: Vec&lt;PathBuf&gt;, config: Config, cancel: Arc&lt;AtomicBool&gt;) -&gt; io::Result&lt;Report&gt; {
+    index_with_progress(paths, config, cancel, |_| {})
+}
+
+/// Index with an initial snapshot, one snapshot per received entry, and a final snapshot.
+/// Invalid configuration returns before callbacks or threads start. The callback runs
+/// synchronously on the calling coordinator, with no lock held and no extra queue.
+/// A slow callback applies backpressure through the bounded result queue; it should
+/// not wait for this same run to finish. Panics are programmer failures, not IO errors.
+/// A caller can request cancellation through its retained `Arc&lt;AtomicBool&gt;`; pending
+/// regular-file reads remain cooperative. On final progress, `submitted - received`
+/// counts accepted jobs without a returned entry, and `total - submitted` counts jobs
+/// never submitted. Neither category is silently counted as a successful file.
+pub fn index_with_progress(
+    paths: Vec&lt;PathBuf&gt;,
+    config: Config,
+    cancel: Arc&lt;AtomicBool&gt;,
+    mut on_progress: impl FnMut(Progress),
+) -&gt; io::Result&lt;Report&gt; {
+    if !(1..=32).contains(&amp;config.workers)
+        || !(1..=1024).contains(&amp;config.queue)
+        || config.max_files &gt; 4096
+        || paths.len() &gt; config.max_files
+        || config.max_bytes &gt; 64 * 1024 * 1024
+        || paths
+            .iter()
+            .any(|p| p.as_os_str().as_encoded_bytes().len() &gt; 4096)
+    {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;configuration or input exceeds documented bounds&quot;,
+        ));
+    }
+    let mut progress = Progress {
+        total: paths.len(),
+        cancellation_requested: cancel.load(Ordering::Relaxed),
+        ..Progress::default()
+    };
+    on_progress(progress);
+    let (job_tx, job_rx) = mpsc::sync_channel::&lt;(usize, PathBuf)&gt;(config.queue);
+    let (result_tx, result_rx) = mpsc::sync_channel(config.queue);
+    let job_rx = Arc::new(Mutex::new(job_rx));
+    let active = AtomicUsize::new(0);
+    let peak = AtomicUsize::new(0);
+    let (mut entries, submitted) = thread::scope(|scope| {
+        let producer_cancel = cancel.clone();
+        let producer = scope.spawn(move || {
+            let mut submitted = 0;
+            for (index, path) in paths.into_iter().enumerate() {
+                if producer_cancel.load(Ordering::Relaxed) || job_tx.send((index, path)).is_err() {
+                    break;
+                }
+                submitted += 1;
+            }
+            submitted
+        });
+        for _ in 0..config.workers {
+            let jobs = job_rx.clone();
+            let results = result_tx.clone();
+            let cancel = cancel.clone();
+            let active = &amp;active;
+            let peak = &amp;peak;
+            scope.spawn(move || {
+                loop {
+                    if cancel.load(Ordering::Relaxed) {
+                        break;
+                    }
+                    // The receiver lock protects dequeue only; file I/O is outside the lock.
+                    let next = jobs.lock().expect(&quot;receiver lock poisoned&quot;).recv();
+                    let Ok((index, path)) = next else { break };
+                    let now = active.fetch_add(1, Ordering::Relaxed) + 1;
+                    peak.fetch_max(now, Ordering::Relaxed);
+                    let entry = count(path, index, config.max_bytes, &amp;cancel);
+                    active.fetch_sub(1, Ordering::Relaxed);
+                    if results.send(entry).is_err() {
+                        break;
+                    }
+                }
+            });
+        }
+        drop(job_rx);
+        drop(result_tx);
+        let mut entries = Vec::new();
+        for entry in result_rx {
+            progress.observe(&amp;entry.status);
+            progress.cancellation_requested = cancel.load(Ordering::Relaxed);
+            entries.push(entry);
+            on_progress(progress);
+        }
+        (entries, producer.join().expect(&quot;producer panicked&quot;))
+    });
+    entries.sort_by(|a, b| a.path.cmp(&amp;b.path).then(a.input_index.cmp(&amp;b.input_index)));
+    progress.submitted = Some(submitted);
+    progress.cancellation_requested = cancel.load(Ordering::Relaxed);
+    progress.finished = true;
+    on_progress(progress);
+    Ok(Report {
+        entries,
+        submitted,
+        cancelled: progress.cancellation_requested,
+        peak_workers: peak.load(Ordering::Relaxed),
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
+    struct Scratch(PathBuf);
+    impl Scratch {
+        fn new() -&gt; Self {
+            let p = std::env::temp_dir().join(format!(
+                &quot;rust-course-index-{}-{}&quot;,
+                std::process::id(),
+                NEXT.fetch_add(1, Ordering::Relaxed)
+            ));
+            fs::create_dir(&amp;p).unwrap();
+            Self(p)
+        }
+    }
+    impl Drop for Scratch {
+        fn drop(&amp;mut self) {
+            let _ = fs::remove_dir_all(&amp;self.0);
+        }
+    }
+    fn cancel() -&gt; Arc&lt;AtomicBool&gt; {
+        Arc::new(AtomicBool::new(false))
+    }
+    #[test]
+    fn streaming_counts_across_buffer_boundaries_and_sorts() {
+        let dir = Scratch::new();
+        let a = dir.0.join(&quot;a&quot;);
+        let z = dir.0.join(&quot;z&quot;);
+        fs::write(&amp;z, &quot;x&quot;.repeat(9000) + &quot; y\nlast&quot;).unwrap();
+        fs::write(&amp;a, b&quot;&quot;).unwrap();
+        let r = index(vec![z.clone(), a.clone()], Config::default(), cancel()).unwrap();
+        assert_eq!(r.entries[0].path, a);
+        assert_eq!(r.entries[0].lines, 0);
+        assert_eq!(r.entries[1].path, z);
+        assert_eq!((r.entries[1].lines, r.entries[1].words), (2, 3));
+        assert!(r.peak_workers &lt;= 4);
+    }
+    #[test]
+    fn oversize_and_missing_files_are_per_file_results() {
+        let dir = Scratch::new();
+        let p = dir.0.join(&quot;big&quot;);
+        fs::write(&amp;p, b&quot;12345&quot;).unwrap();
+        let r = index(
+            vec![p, dir.0.join(&quot;missing&quot;)],
+            Config {
+                max_bytes: 4,
+                ..Config::default()
+            },
+            cancel(),
+        )
+        .unwrap();
+        assert_eq!(r.entries[0].status, Status::TooLarge);
+        assert_eq!(r.entries[1].status, Status::Failed(io::ErrorKind::NotFound));
+    }
+    #[test]
+    fn cancellation_before_start_submits_nothing() {
+        let r = index(
+            vec![&quot;unused&quot;.into()],
+            Config::default(),
+            Arc::new(AtomicBool::new(true)),
+        )
+        .unwrap();
+        assert!(r.cancelled);
+        assert!(r.entries.is_empty());
+        assert_eq!(r.submitted, 0);
+    }
+    #[test]
+    fn queue_one_does_not_deadlock_and_output_is_repeatable() {
+        let dir = Scratch::new();
+        let p = dir.0.join(&quot;file&quot;);
+        fs::write(&amp;p, b&quot;a b\nc&quot;).unwrap();
+        let c = Config {
+            workers: 2,
+            queue: 1,
+            ..Config::default()
+        };
+        let one = index(vec![p.clone(); 40], c, cancel()).unwrap();
+        let two = index(vec![p; 40], c, cancel()).unwrap();
+        assert_eq!(one.entries, two.entries);
+        assert_eq!(one.entries.len(), 40);
+    }
+    #[test]
+    fn invalid_limits_are_rejected() {
+        assert!(
+            index(
+                vec![],
+                Config {
+                    workers: 0,
+                    ..Config::default()
+                },
+                cancel()
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn progress_is_monotonic_and_reports_failures_without_calling_them_successes() {
+        let dir = Scratch::new();
+        let good = dir.0.join(&quot;good&quot;);
+        let empty = dir.0.join(&quot;empty&quot;);
+        let large = dir.0.join(&quot;large&quot;);
+        fs::write(&amp;good, b&quot;a b&quot;).unwrap();
+        fs::write(&amp;empty, b&quot;&quot;).unwrap();
+        fs::write(&amp;large, b&quot;12345&quot;).unwrap();
+        let mut observations = Vec::new();
+        let coordinator = thread::current().id();
+        let report = index_with_progress(
+            vec![good, empty, large, dir.0.join(&quot;missing&quot;), dir.0.clone()],
+            Config {
+                max_bytes: 4,
+                queue: 1,
+                ..Config::default()
+            },
+            cancel(),
+            |progress| {
+                assert_eq!(thread::current().id(), coordinator);
+                observations.push(progress);
+            },
+        )
+        .unwrap();
+        assert_eq!(observations.len(), 7); // Initial, five results, final.
+        assert_eq!(
+            observations[0],
+            Progress {
+                total: 5,
+                ..Progress::default()
+            }
+        );
+        for pair in observations.windows(2) {
+            assert!(pair[0].received &lt;= pair[1].received);
+            assert!(pair[0].indexed &lt;= pair[1].indexed);
+            assert!(pair[0].too_large &lt;= pair[1].too_large);
+            assert!(pair[0].failed &lt;= pair[1].failed);
+            assert_eq!(
+                pair[1].received,
+                pair[1].indexed + pair[1].too_large + pair[1].failed + pair[1].cancelled
+            );
+        }
+        assert!(
+            observations[..6]
+                .iter()
+                .all(|p| !p.finished &amp;&amp; p.submitted.is_none())
+        );
+        let final_progress = observations[6];
+        assert_eq!(
+            (
+                final_progress.received,
+                final_progress.indexed,
+                final_progress.too_large,
+                final_progress.failed
+            ),
+            (5, 2, 1, 2)
+        );
+        assert!(final_progress.finished);
+        assert_eq!(final_progress.submitted, Some(report.submitted));
+        assert_eq!(report.entries.len(), final_progress.received);
+    }
+
+    #[test]
+    fn initial_progress_can_cancel_before_any_file_is_opened() {
+        let stopping = cancel();
+        let mut observations = Vec::new();
+        let report = index_with_progress(
+            vec![&quot;not-opened&quot;.into()],
+            Config::default(),
+            Arc::clone(&amp;stopping),
+            |progress| {
+                observations.push(progress);
+                stopping.store(true, Ordering::Relaxed);
+            },
+        )
+        .unwrap();
+        assert_eq!(observations.len(), 2);
+        assert_eq!(report.submitted, 0);
+        assert!(report.entries.is_empty());
+        assert!(observations[1].finished &amp;&amp; observations[1].cancellation_requested);
+        assert_eq!(observations[1].submitted, Some(0));
+        assert_eq!(observations[1].cancelled, 0); // Unsubmitted is not a cancelled result.
+    }
+
+    #[test]
+    fn progress_cancellation_drains_results_and_accounts_for_unreturned_jobs() {
+        let dir = Scratch::new();
+        let file = dir.0.join(&quot;file&quot;);
+        fs::write(&amp;file, b&quot;a b\n&quot;).unwrap();
+        let stopping = cancel();
+        let mut final_progress = None;
+        let report = index_with_progress(
+            vec![file; 32],
+            Config {
+                workers: 1,
+                queue: 1,
+                ..Config::default()
+            },
+            Arc::clone(&amp;stopping),
+            |progress| {
+                if progress.received == 1 {
+                    stopping.store(true, Ordering::Relaxed);
+                }
+                if progress.finished {
+                    final_progress = Some(progress);
+                }
+            },
+        )
+        .unwrap();
+        let p = final_progress.unwrap();
+        assert!(p.cancellation_requested &amp;&amp; report.cancelled);
+        assert!(p.received &gt;= 1 &amp;&amp; p.received &lt;= report.submitted);
+        assert!(report.submitted &lt; p.total);
+        assert_eq!(
+            p.indexed,
+            report
+                .entries
+                .iter()
+                .filter(|e| e.status == Status::Indexed)
+                .count()
+        );
+        assert_eq!(
+            p.cancelled,
+            report
+                .entries
+                .iter()
+                .filter(|e| e.status == Status::Cancelled)
+                .count()
+        );
+        assert_eq!(p.received, p.indexed + p.cancelled);
+        assert_eq!(
+            p.received + (report.submitted - p.received) + (p.total - report.submitted),
+            p.total
+        );
+        // Callback cancellation occurs while collection is in progress. Exact counts
+        // depend on scheduling; the conservation equation does not.
+    }
+
+    #[test]
+    fn empty_work_has_initial_and_final_progress() {
+        let mut observations = Vec::new();
+        let report = index_with_progress(vec![], Config::default(), cancel(), |p| {
+            observations.push(p)
+        })
+        .unwrap();
+        assert_eq!(observations.len(), 2);
+        assert_eq!(observations[0], Progress::default());
+        assert!(observations[1].finished);
+        assert_eq!(observations[1].submitted, Some(0));
+        assert!(report.entries.is_empty());
+    }
+
+    #[test]
+    fn invalid_configuration_emits_no_misleading_started_event() {
+        let mut calls = 0;
+        let result = index_with_progress(
+            vec![],
+            Config {
+                workers: 0,
+                ..Config::default()
+            },
+            cancel(),
+            |_| calls += 1,
+        );
+        assert_eq!(result.unwrap_err().kind(), io::ErrorKind::InvalidInput);
+        assert_eq!(calls, 0);
+    }
+}
+</code></pre></div>
+<p>The input batch is validated before threads start. The producer enumerates paths and sends an input index with each path. Worker clones share access to the receiver and cancellation flag, while each result sender is an independent channel handle. Within a worker, the mutex guard exists only long enough to receive a job. The guard is dropped before count opens and reads the file. That narrow scope matters: keeping the guard through the file read would serialize most useful work even though several threads exist. Active-worker statistics surround counting, not waiting to send the finished result.</p>
+<h2 id="bounded-channels-create-backpressure">Bounded channels create backpressure</h2>
+<p>A bounded channel can make send wait when its buffer is full. That is useful because the producer cannot create an unlimited backlog. It also makes the dependency graph important. If the parent tried to produce every job before receiving results, workers could block on a full result queue while the producer blocked on a full job queue. No participant would make progress. P07 runs the producer in its own scoped thread and lets the parent drain results concurrently. The queue-one test uses many jobs to exercise this interaction with little spare buffering.</p>
+<p>Channel termination depends on ownership of handles. Receivers learn that a channel is disconnected only when every sender is gone. The parent drops its unused result sender before collecting. Workers eventually drop their clones when no jobs remain or cancellation is observed. The producer drops the job sender on exit. thread::scope ensures the spawned thread bodies are joined before its call finishes. This means references to local statistics stay valid for the workers' operation. A panic in a worker is still a failure; scoped threads do not make panics disappear or convert them automatically into ordinary per-file results.</p>
+<h2 id="playbook-investigation-four-workers-behave-like-one">Playbook investigation: four workers behave like one</h2>
+<p>Observation: a run reports a peak active count of one. Hypothesis A says the machine has only one usable CPU. Hypothesis B says file reading occurs while the receiver mutex remains held. Hypothesis C says the chosen files are too small for overlap to appear. Select two experiments before editing. Inspect the lexical lifetime of the guard, then compare tiny files with larger ordinary files while holding configuration fixed. A correct guard scope and occasional peak above one on larger inputs disproves “the program always serializes all work.” A synthetic delayed counting function can isolate coordination from disk behavior, but its timing is not a disk-performance measurement.</p>
+<p>A justified fix may shorten a guard lifetime; it may also be no code change if the observation came from an uninformative workload. Report the hypothesis, predicted outcome and result. Do not introduce sleep into production code to make the peak statistic look better. A higher peak is not automatically higher throughput: storage contention and scheduling overhead can make extra workers slower.</p>
+<h2 id="guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</h2>
+<p>Mark every send, receive and drop in the pipeline diagram. Explain why the collector eventually sees channel closure on the ordinary path. Then repair the two compile-fail examples using ownership that matches the task. Independently write a two-worker pipeline with a queue capacity of one and a finite set of integer jobs. Add an early producer exit and prove the collector terminates. Leave yourself the decision of whether a worker panic should terminate the whole batch or become a structured batch error; document the policy before implementation.</p>
+<details><summary>Tiered hints and solution reasoning</summary><details><summary>Hint 1: choose the next observation</summary><p>count remaining sender handles, not just threads.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>a temporary mutex guard lasts through its expression or explicit binding scope.</p></details><details><summary>Worked solution</summary><p>For the Rc example, moving a plain String is sufficient when there is only one consumer; Arc is appropriate only when shared ownership is actually needed. For the local borrow, move ownership or use thread::scope. The reference pipeline's producer thread avoids waiting for all submissions before any collection can occur.</p></details></details>
+<aside class="stuck"><h3>When you get stuck</h3><p>Reduce to queue capacity one and two jobs, draw each participant's next blocking operation, and identify which handle keeps a channel open. Run the single queue-one test. Read sync_channel and thread::scope documentation. Ask for review with the dependency diagram, handle ownership and the exact point where progress stops; “Rust threads deadlock” is a hypothesis, not an observation.</p></aside>
+<h2 id="review-and-mastery">Review and mastery</h2>
+<p>Submit the pipeline diagram, compiler-error repairs and a termination argument. You are ready when you can explain why each shared object needs its particular wrapper, predict a bounded-channel deadlock from ownership and waiting, and distinguish output correctness from nondeterministic completion order.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Current scope and invariants.</strong> At most the configured fixed number of workers count files, both channels are bounded, each file uses a fixed-size read buffer, and input paths plus collected results have explicit batch limits.</p><p><strong>Why this is the current recommended shape.</strong> Owned jobs move through channels; Arc is used only for shared cancellation and receiver ownership. Mutex scope covers dequeue, not file I/O. A pure streaming counter preserves state across reads, per-file status preserves partial failures, and final sorting makes entries deterministic.</p><p><strong>Reasonable alternative and tradeoff.</strong> A work-stealing library is a reasonable alternative for CPU-heavy independent jobs and may simplify scheduling. The explicit fixed worker pool is a good fit here because its bounded queues and shutdown dependencies are the subject and are small enough to inspect. Unbounded thread-per-file spawning is a deliberate rejected design, not an early recommended step.</p><p><strong>Evidence and limits.</strong> Native reference tests were run through mise in the coordinated course verification; inspect the current verification record for exact results. Chunk-boundary counts; empty files; oversize and missing paths; cancellation before submission; queue-one termination; repeatable entries; invalid configuration. The total bound includes capped path/result metadata, not just the 8192-byte buffers. Ordinary file reads can block cancellation. Files may change during a run. Partial counts from failed or oversized files are not complete-file statistics.</p><p><strong>Requirement that would justify evolution.</strong> For recursive or effectively unbounded discovery, stream results to a sink and use bounded or external sorting instead of collecting an unlimited list. For hard shutdown deadlines, revisit the synchronous I/O boundary and supported file types.</p><p>In your review, explain this choice in your own words, preserve the behavioral contract during changes, and name the evidence that would make you choose the alternative. Deliberately broken variants above are diagnostic exercises, never recommended implementation stages.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/std/sync/mpsc/fn.sync_channel.html">sync_channel</a></li><li><a href="https://doc.rust-lang.org/std/thread/fn.scope.html">Scoped threads</a></li><li><a href="https://doc.rust-lang.org/std/marker/trait.Send.html">Send</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-3/03-recovery.html">Previous: Recovery and compaction without wishful guarantees</a><a href="../../lessons/stage-4/04-atomics.html">Next: Atomic operations, application races, and publication</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-overlap-independent-work-without-losing-control">Purpose: overlap independent work without losing control</a><a href="#model-transfer-ownership-or-synchronize-shared-access">Model: transfer ownership or synchronize shared access</a><a href="#predict-compiler-failures-before-repairing-them">Predict compiler failures before repairing them</a><a href="#trace-the-actual-pipeline">Trace the actual pipeline</a><a href="#bounded-channels-create-backpressure">Bounded channels create backpressure</a><a href="#playbook-investigation-four-workers-behave-like-one">Playbook investigation: four workers behave like one</a><a href="#guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</a><a href="#review-and-mastery">Review and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,23 @@
+   Compiling memchr v2.8.3
+   Compiling serde_core v1.0.229
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.49s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/course_ui_model-905f831849994fdd)
+
+running 5 tests
+test tests::uncertain_http_outcomes_remain_uncertain ... ok
+test tests::money_is_exact_integer_formatting_including_minimum ... ok
+test tests::retry_rejection_does_not_resolve_an_earlier_attempt ... ok
+test tests::empty_history_decodes_without_a_fabricated_cursor ... ok
+test tests::boundary_sequences_do_not_wrap ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests course_ui_model
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

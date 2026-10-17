@@ -1,0 +1,10 @@
+   Compiling learner-p09-chat v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p09-chat)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running unittests src/main.rs (.course-cache/scaffolds/debug/deps/learner_p09_chat-cc7438227a08958a)
+
+running 2 tests
+test tests::control_characters_are_rejected ... ok
+test tests::length_is_bytes ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

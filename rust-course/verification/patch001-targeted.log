@@ -1,0 +1,84 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay)
+   Compiling p06-kv v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv)
+   Compiling quote v1.0.47
+   Compiling syn v2.0.119
+   Compiling course-kind-derive v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive)
+   Compiling rust-specializations v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.10s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p06_kv-0e5c0c32c57fab6c)
+
+running 10 tests
+test tests::crc_known_vector ... ok
+test tests::malicious_length_is_rejected_before_allocation ... ok
+test tests::complete_corruption_is_never_silently_discarded ... ok
+test tests::read_error_is_not_misclassified_as_torn_tail ... ok
+test tests::overwritten_deleted_and_empty_values_replay ... ok
+test tests::every_torn_suffix_recovers_only_the_complete_prefix ... ok
+test tests::failed_write_keeps_acknowledged_state_and_poison_requires_reopen ... ok
+test tests::stale_compaction_file_is_visible_and_original_remains_writable ... ok
+test tests::reopen_repairs_tail_and_can_append ... ok
+test tests::compaction_preserves_state_and_lock ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p06_kv-43c15a7b67f80f6f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p12_replay-f8430eaea09acc5b)
+
+running 6 tests
+test tests::capacity_and_missing_cancel_preserve_state ... ok
+test tests::exact_decimal_conversion_rejects_bad_inputs ... ok
+test tests::injected_accounting_overflow_does_not_partially_insert ... ok
+test tests::rejection_is_transactional_and_corrected_event_can_retry ... ok
+test tests::synthetic_processing_keeps_live_state_bounded ... ok
+test tests::replay_is_identical_including_full_state ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/benchmark.rs (.course-cache/native/debug/deps/benchmark-2967bb5c9403ea48)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p12_replay-f4991495b451c673)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/rust_specializations-37a720c898e9ee5c)
+
+running 4 tests
+test tests::ffi_boundary ... ok
+test tests::macro_once_and_overflow ... ok
+test tests::generic_derive_retains_parameters ... ok
+test tests::trait_object_associated_item ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p06_kv
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p12_replay
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests rust_specializations
+
+running 1 test
+test reference/p17-specializations/src/lib.rs - with_first (line 8) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.43s; merged doctests compilation took 0.21s

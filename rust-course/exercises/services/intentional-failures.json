@@ -1,0 +1,16 @@
+[
+  {
+    "path": "exercises/services/partial-read-broken.rs",
+    "kind": "runtime-test-failure",
+    "expected": "test a_frame_is_not_one_read fails: left h, right hello",
+    "solution": "exercises/services/partial-read-solution.rs",
+    "compile_expected": "success"
+  },
+  {
+    "path": "projects/reference/p16-workbench/src/lib.rs:Store rustdoc",
+    "kind": "rustdoc-compile-fail",
+    "expected": "E0616 private field: callers cannot mutate persisted engine directly",
+    "verification": "mise exec -- cargo test -p p16-workbench --doc",
+    "solution": "Use Store::commit for mutation and Store::snapshot for read-only access."
+  }
+]

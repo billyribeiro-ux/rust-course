@@ -1,0 +1,526 @@
+$ python3 scripts/start-checkpoint.py p01 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add
+Parse two bounded signed decimal i64 strings and return their checked sum. Invalid numbers and arithmetic overflow are different errors. This stage deliberately has no units, operator selection, or general CLI parser.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add/Cargo.toml
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p01 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+   Compiling workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.91s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/workshop_calculator-12117b5c740cfbdd)
+
+running 8 tests
+test conversion::tests::avoids_false_intermediate_overflow_and_rejects_real_range_loss ... ok
+test conversion::tests::invalid_units_numbers_and_nonfinite_inputs_are_errors ... ok
+test conversion::tests::explicit_zero_is_valid_and_negative_zero_keeps_its_sign ... ok
+test conversion::tests::every_unit_pair_agrees_with_independent_expected_values ... ok
+test conversion::tests::common_fractional_signed_and_scientific_values ... ok
+test tests::recoverable_errors ... ok
+test tests::exhaustive_small_addition_commutes ... ok
+test tests::units_and_integer_division ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/workshop_calculator-f76f9be1c0e7d010)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-7e259a931c3db2ae)
+
+running 5 tests
+test non_unicode_operand_is_a_usage_error ... ok
+test adding_conversion_does_not_silently_change_integer_arithmetic ... ok
+test conversion_cli_accepts_fractional_signed_and_scientific_values ... ok
+test cli_separates_success_domain_and_usage ... ok
+test conversion_cli_reports_validation_and_range_errors_without_success_output ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+   Doc-tests workshop_calculator
+
+running 2 tests
+test src/lib.rs - (line 2) ... ok
+test src/conversion.rs - conversion (line 3) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.42s; merged doctests compilation took 0.21s
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p01 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked
+Parse two bounded signed decimal i64 strings and return their checked sum. Invalid numbers and arithmetic overflow are different errors. This stage deliberately has no units, operator selection, or general CLI parser.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked/Cargo.toml
+{"packages":[{"name":"checkpoint-p01-calculator","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked#checkpoint-p01-calculator@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"checkpoint_p01_calculator","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"checkpoint-p01-calculator","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":null,"repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked#checkpoint-p01-calculator@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked#checkpoint-p01-calculator@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p01 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/Cargo.toml
+{"packages":[{"name":"workshop-calculator","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked#workshop-calculator@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"workshop_calculator","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"workshop-calculator","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true},{"kind":["example"],"crate_types":["bin"],"name":"hello","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/examples/hello.rs","edition":"2024","doc":false,"doctest":false,"test":false},{"kind":["example"],"crate_types":["bin"],"name":"roundoff","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/examples/roundoff.rs","edition":"2024","doc":false,"doctest":false,"test":false},{"kind":["example"],"crate_types":["bin"],"name":"workshop_basics","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/examples/workshop_basics.rs","edition":"2024","doc":false,"doctest":false,"test":false},{"kind":["test"],"crate_types":["bin"],"name":"cli","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/tests/cli.rs","edition":"2024","doc":false,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":"README.md","repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked#workshop-calculator@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked#workshop-calculator@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p02 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain
+Keep at most 32 tasks with private fields, nonempty titles of at most 200 UTF-8 bytes and no control characters. Add validates before mutation; complete is idempotent and reports missing IDs. This stage has no file format or I/O.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain/Cargo.toml
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p02 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+   Compiling task-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.43s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/task_journal-39dc715cf0625543)
+
+running 3 tests
+test tests::id_overflow_is_an_error ... ok
+test tests::round_trip_and_transitions ... ok
+test tests::rejects_corruption_without_partial_success ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/task_journal-5ca89071c365a840)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/storage.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/storage-5d1ede904b3ad957)
+
+running 2 tests
+test checked_in_fixture_roundtrips ... ok
+test saves_reloads_and_preserves_corrupt_input ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests task_journal
+
+running 1 test
+test src/lib.rs - (line 3) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.42s; merged doctests compilation took 0.23s
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p02 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked
+Keep at most 32 tasks with private fields, nonempty titles of at most 200 UTF-8 bytes and no control characters. Add validates before mutation; complete is idempotent and reports missing IDs. This stage has no file format or I/O.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked/Cargo.toml
+{"packages":[{"name":"checkpoint-p02-journal","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked#checkpoint-p02-journal@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"checkpoint_p02_journal","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"checkpoint-p02-journal","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":null,"repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked#checkpoint-p02-journal@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked#checkpoint-p02-journal@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p02 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked/Cargo.toml
+{"packages":[{"name":"task-journal","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked#task-journal@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"task_journal","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"task-journal","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true},{"kind":["test"],"crate_types":["bin"],"name":"storage","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked/tests/storage.rs","edition":"2024","doc":false,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":"README.md","repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked#task-journal@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked#task-journal@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p03 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines
+Read one LF-delimited byte line while retaining at most max bytes (1..=4096). Drain an oversized line before the next call; treat a nonempty final unterminated line as a line; propagate I/O errors. CR remains payload at this stage, and UTF-8/record grammar are not yet interpreted.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines/Cargo.toml
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p03 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+   Compiling log-detective v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.39s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/log_detective-5b8ee0d2826639f0)
+
+running 4 tests
+test tests::drain_oversized_then_recover ... ok
+test tests::rejects_total_exhaustion_and_invalid_limits ... ok
+test tests::tiny_buffers_and_final_line ... ok
+test tests::accounting_property_across_buffer_sizes ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/log_detective-b49d3a9e9500c219)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fixtures.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/fixtures-47565b661898f671)
+
+running 1 test
+test fixture_totals ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests log_detective
+
+running 1 test
+test src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.42s; merged doctests compilation took 0.24s
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p03 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked
+Read one LF-delimited byte line while retaining at most max bytes (1..=4096). Drain an oversized line before the next call; treat a nonempty final unterminated line as a line; propagate I/O errors. CR remains payload at this stage, and UTF-8/record grammar are not yet interpreted.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked/Cargo.toml
+{"packages":[{"name":"checkpoint-p03-logs","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked#checkpoint-p03-logs@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"checkpoint_p03_logs","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"checkpoint-p03-logs","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":null,"repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked#checkpoint-p03-logs@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked#checkpoint-p03-logs@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p03 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked/Cargo.toml
+{"packages":[{"name":"log-detective","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked#log-detective@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"log_detective","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"log-detective","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true},{"kind":["test"],"crate_types":["bin"],"name":"fixtures","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked/tests/fixtures.rs","edition":"2024","doc":false,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":"README.md","repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked#log-detective@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked#log-detective@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p04 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port
+Resolve at most eight optional textual port layers, with later present values winning and default 8080. Validate only the effective value as a nonzero u16. The result stores a private validated port; this milestone does not read process environment/files or manage secrets.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port/Cargo.toml
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p04 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+   Compiling typed-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.51s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/typed_config-bba189fa2ecb6b2f)
+
+running 3 tests
+test tests::later_layers_win_before_validation ... ok
+test tests::errors_and_debug_do_not_include_secret_values ... ok
+test tests::boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/typed_config-eff6c64c4c81c3c7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-c6a456a9a84edbde)
+
+running 1 test
+test cli_override_beats_environment_and_redacts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+   Doc-tests typed_config
+
+running 1 test
+test src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.45s; merged doctests compilation took 0.26s
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p04 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked
+Resolve at most eight optional textual port layers, with later present values winning and default 8080. Validate only the effective value as a nonzero u16. The result stores a private validated port; this milestone does not read process environment/files or manage secrets.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked/Cargo.toml
+{"packages":[{"name":"checkpoint-p04-config","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked#checkpoint-p04-config@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"checkpoint_p04_config","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"checkpoint-p04-config","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":null,"repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked#checkpoint-p04-config@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked#checkpoint-p04-config@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p04 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked/Cargo.toml
+{"packages":[{"name":"typed-config","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked#typed-config@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"typed_config","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"typed-config","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true},{"kind":["test"],"crate_types":["bin"],"name":"cli","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked/tests/cli.rs","edition":"2024","doc":false,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":"README.md","repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked#typed-config@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked#typed-config@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p05 01-token-spans --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans
+Tokenize at most 1024 UTF-8 source bytes into at most 64 tokens: nonnegative decimal i64 literals, plus, star and ASCII whitespace. Keep byte spans; reject unknown symbols and out-of-range literals. This stage does not parse precedence, unary signs or parentheses, or evaluate expressions.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans/Cargo.toml
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p05 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+   Compiling expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/expression_language-89994c1432991a56)
+
+running 4 tests
+test tests::precise_error_spans ... ok
+test tests::precedence_associativity_unary ... ok
+test tests::resource_limits_are_errors ... ok
+test tests::deterministic_exhaustive_small_integer_properties ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/expression_language-b29df0ef49a652e4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/corpus.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/corpus-ba75a4a9cdb4007f)
+
+running 1 test
+test checked_in_examples ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests expression_language
+
+running 1 test
+test src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+all doctests ran in 0.39s; merged doctests compilation took 0.21s
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p05 01-token-spans --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked
+Tokenize at most 1024 UTF-8 source bytes into at most 64 tokens: nonnegative decimal i64 literals, plus, star and ASCII whitespace. Keep byte spans; reject unknown symbols and out-of-range literals. This stage does not parse precedence, unary signs or parentheses, or evaluate expressions.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked/Cargo.toml
+{"packages":[{"name":"checkpoint-p05-expressions","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked#checkpoint-p05-expressions@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"checkpoint_p05_expressions","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"checkpoint-p05-expressions","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":null,"repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked#checkpoint-p05-expressions@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked#checkpoint-p05-expressions@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p05 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked/Cargo.toml
+{"packages":[{"name":"expression-language","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked#expression-language@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"expression_language","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"expression-language","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true},{"kind":["test"],"crate_types":["bin"],"name":"corpus","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked/tests/corpus.rs","edition":"2024","doc":false,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":"README.md","repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked#expression-language@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked#expression-language@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p06 01-prefix-replay --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay
+Replay at most 65536 bytes of a miniature format: one length byte, payload, one wrapping-byte-sum checksum. Return complete payloads, valid byte boundary and torn-tail flag. Ignore only incomplete final records; reject complete checksum damage. This is not KV01, CRC32, or a durable file store.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay/Cargo.toml
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p06 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+   Compiling p06-kv v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p06_kv-46b49617b609d0dc)
+
+running 10 tests
+test tests::crc_known_vector ... ok
+test tests::complete_corruption_is_never_silently_discarded ... ok
+test tests::read_error_is_not_misclassified_as_torn_tail ... ok
+test tests::malicious_length_is_rejected_before_allocation ... ok
+test tests::overwritten_deleted_and_empty_values_replay ... ok
+test tests::every_torn_suffix_recovers_only_the_complete_prefix ... ok
+test tests::failed_write_keeps_acknowledged_state_and_poison_requires_reopen ... ok
+test tests::stale_compaction_file_is_visible_and_original_remains_writable ... ok
+test tests::reopen_repairs_tail_and_can_append ... ok
+test tests::compaction_preserves_state_and_lock ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p06_kv-3068e3903ee653fc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p06_kv
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p06 01-prefix-replay --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked
+Replay at most 65536 bytes of a miniature format: one length byte, payload, one wrapping-byte-sum checksum. Return complete payloads, valid byte boundary and torn-tail flag. Ignore only incomplete final records; reject complete checksum damage. This is not KV01, CRC32, or a durable file store.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked/Cargo.toml
+{"packages":[{"name":"checkpoint-p06-kv","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked#checkpoint-p06-kv@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"checkpoint_p06_kv","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"checkpoint-p06-kv","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":null,"repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked#checkpoint-p06-kv@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked#checkpoint-p06-kv@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked","metadata":null}
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p06 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked/Cargo.toml
+{"packages":[{"name":"p06-kv","version":"0.1.0","id":"path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked#p06-kv@0.1.0","license":null,"license_file":null,"description":null,"source":null,"dependencies":[],"targets":[{"kind":["lib"],"crate_types":["lib"],"name":"p06_kv","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked/src/lib.rs","edition":"2024","doc":true,"doctest":true,"test":true},{"kind":["bin"],"crate_types":["bin"],"name":"p06-kv","src_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked/src/main.rs","edition":"2024","doc":true,"doctest":false,"test":true}],"features":{},"manifest_path":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked/Cargo.toml","metadata":null,"publish":[],"authors":[],"categories":[],"keywords":[],"readme":null,"repository":null,"homepage":null,"documentation":null,"edition":"2024","links":null,"default_run":null,"rust_version":"1.99"}],"workspace_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked#p06-kv@0.1.0"],"workspace_default_members":["path+file:///Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked#p06-kv@0.1.0"],"resolve":null,"target_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","build_directory":"/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target","version":1,"workspace_root":"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked","metadata":null}
+
+exit: 0

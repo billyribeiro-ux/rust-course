@@ -1,0 +1,301 @@
+{
+  "verified_at": "2026-10-09T19:17:31.783696+00:00",
+  "scope": "Professional handling of output failures from first P01 examples/checkpoint through P01/P02/P04/P05 CLIs",
+  "commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "workshop-calculator",
+        "-p",
+        "task-journal",
+        "-p",
+        "typed-config",
+        "-p",
+        "expression-language",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "check",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "workshop-calculator",
+        "-p",
+        "task-journal",
+        "-p",
+        "typed-config",
+        "-p",
+        "expression-language",
+        "--all-targets",
+        "--locked"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "workshop-calculator",
+        "-p",
+        "task-journal",
+        "-p",
+        "typed-config",
+        "-p",
+        "expression-language",
+        "--all-targets",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "workshop-calculator",
+        "-p",
+        "task-journal",
+        "-p",
+        "typed-config",
+        "-p",
+        "expression-language",
+        "--locked"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "workshop-calculator",
+        "--example",
+        "workshop_basics",
+        "--locked"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "build",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "workshop-calculator",
+        "--examples",
+        "--locked"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "verification/cli-output-probe.py",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-checkpoint.py",
+        "p01",
+        "01-checked-add",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/output-checkpoint-hffon7ap/p01-checked-add"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/output-checkpoint-hffon7ap/p01-checked-add/Cargo.toml",
+        "--locked"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/output-checkpoint-hffon7ap/p01-checked-add/Cargo.toml",
+        "--all-targets",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/output-checkpoint-hffon7ap/p01-checked-add/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+    "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+  },
+  "passed": true,
+  "native_test_entries_passed": 51,
+  "failed": 0,
+  "example_process_observations": 9,
+  "author_self_review_complete": true,
+  "independent_review": "pending",
+  "findings": [
+    {
+      "location": "P01 hello, workshop_basics and roundoff examples; 01-checked-add checkpoint; P01/P02/P04/P05 src/main.rs",
+      "issue": "println!/eprintln! could panic on an ordinary broken output pipe.",
+      "correction": "Use fallible writeln! and explicit flush; propagate failures through Result, preserve normal output/status, and make terminal diagnostics best effort."
+    },
+    {
+      "location": "P02 add acknowledgement",
+      "issue": "Saving and printing success are distinct boundaries; a failed acknowledgement can follow a committed save.",
+      "correction": "Document prefix/acknowledgement uncertainty and add a real closed-pipe add test that reloads the successfully saved task."
+    },
+    {
+      "location": "00-programs greeting explanation and later affected lessons",
+      "issue": "The initial printing idiom did not explain output failure.",
+      "correction": "Teach the small I/O Result boundary and ? at first output, then reinforce actual pipe evidence without adding a logging framework."
+    },
+    {
+      "location": "verification/cli-output-initial-probe.log and verification commands",
+      "issue": "mise.toml overrode a shell CARGO_TARGET_DIR; an initial process probe reached a stale shared-target greeting binary and detected its old panic.",
+      "correction": "Preserved the failed probe; set CARGO_TARGET_DIR and CARGO_BUILD_BUILD_DIR after mise selection using mise exec -- env; rebuilt current source and passed all nine example observations."
+    }
+  ],
+  "primary_docs": [
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/fn.pipe.html",
+      "local_sha256": "340a41ca5d3fa181808fd0fd513ed02cc8cfa03cff35a33b518116673ac3f683"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/src/std/process.rs.html",
+      "local_sha256": "ed4f9cab868908b49cd9e3dec7c67ec3f7a53bf35a0dc21ea51cf31fbca4e113"
+    }
+  ],
+  "limitations": [
+    "Verified on this macOS ARM host; no Windows execution claimed.",
+    "Successful flush does not establish downstream consumption or durable storage.",
+    "Partial stdout may exist on failure; journal persistence can precede a failed acknowledgement.",
+    "No browser or independent review claim."
+  ],
+  "changed_files": [
+    "projects/reference/p01-calculator/src/main.rs",
+    "projects/reference/p01-calculator/examples/hello.rs",
+    "projects/reference/p01-calculator/examples/workshop_basics.rs",
+    "projects/reference/p01-calculator/examples/roundoff.rs",
+    "projects/reference/p01-calculator/tests/output.rs",
+    "projects/reference/p02-journal/src/main.rs",
+    "projects/reference/p02-journal/tests/output.rs",
+    "projects/reference/p04-config/src/main.rs",
+    "projects/reference/p04-config/tests/output.rs",
+    "projects/reference/p05-expressions/src/main.rs",
+    "projects/reference/p05-expressions/tests/output.rs",
+    "projects/checkpoints/p01-calculator/01-checked-add/src/main.rs",
+    "projects/checkpoints/p01-calculator/01-checked-add/tests/output.rs",
+    "projects/checkpoints/p01-calculator/checkpoint.json",
+    "projects/checkpoints/p01-calculator/index.html",
+    "authoring/prerequisites.json",
+    "authoring/foundations.json",
+    "authoring/conversion.json",
+    "projects/reference/p01-calculator/README.html",
+    "projects/reference/p01-calculator/decisions.html",
+    "projects/reference/p02-journal/README.html",
+    "projects/reference/p02-journal/decisions.html",
+    "projects/reference/p04-config/README.html",
+    "projects/reference/p04-config/decisions.html",
+    "projects/reference/p05-expressions/README.html",
+    "projects/reference/p05-expressions/decisions.html",
+    "verification/cli-output-probe.py",
+    "verification/cli-output-followup.log",
+    "verification/cli-output-followup.json",
+    "verification/cli-output-followup.html",
+    "verification/cli-output-initial-probe.log"
+  ]
+}

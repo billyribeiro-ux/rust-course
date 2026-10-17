@@ -1,0 +1,164 @@
+{
+  "date": "2026-10-09T06:50:01.421869+00:00",
+  "authored": "complete",
+  "author_self_review": "complete",
+  "independent_review": "pending",
+  "lesson": {
+    "file": "authoring/completion-parallel-tools.json",
+    "id": "04-parallel-tools",
+    "stage": 4,
+    "prerequisites": [
+      "04-indexer"
+    ],
+    "prose_words": 1694
+  },
+  "source": "projects/experiments/p07-rayon",
+  "standalone_workspace": true,
+  "native_workspace_lock_changed": false,
+  "rayon_version": "1.12.0",
+  "version_evidence": {
+    "published_crate_date": "2026-04-14",
+    "release_notes_date": "2026-04-13",
+    "eligible_before_cutoff": "2026-10-08",
+    "declared_msrv": "1.80",
+    "verified_compiler": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "tag": "v1.12.0",
+    "tag_sha_observed": "c9ced185ae3508246a9eb70c8407a1199bb1b77f",
+    "primary_sources": [
+      "https://docs.rs/crate/rayon/1.12.0",
+      "https://github.com/rayon-rs/rayon/blob/v1.12.0/RELEASES.md",
+      "https://docs.rs/rayon/1.12.0/rayon/struct.ThreadPoolBuilder.html",
+      "https://docs.rs/rayon/1.12.0/rayon/iter/trait.IndexedParallelIterator.html"
+    ]
+  },
+  "commands": [
+    {
+      "command": "mise exec -- cargo info rayon --offline",
+      "exit_code": 0,
+      "output": "rayon 1.12.0; rust-version 1.80; MIT OR Apache-2.0; upstream rayon-rs/rayon"
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path rust-course/projects/experiments/p07-rayon/Cargo.toml --target-dir .course-cache/native",
+      "exit_code": 0,
+      "log": "verification/rayon-tests.log",
+      "tests_passed": 3
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --locked --manifest-path rust-course/projects/experiments/p07-rayon/Cargo.toml --target-dir .course-cache/native --all-targets -- -D warnings",
+      "exit_code": 0,
+      "log": "verification/rayon-clippy.log"
+    },
+    {
+      "command": "mise exec -- cargo run --release --offline --locked --manifest-path rust-course/projects/experiments/p07-rayon/Cargo.toml --target-dir .course-cache/native",
+      "exit_code": 0,
+      "log": "verification/rayon-example.log"
+    },
+    {
+      "command": "mise exec -- cargo audit --db .course-cache/advisory-db --file rust-course/projects/experiments/p07-rayon/Cargo.lock --no-fetch --json",
+      "exit_code": 0,
+      "log": "verification/rayon-audit.json"
+    }
+  ],
+  "workload": {
+    "kind": "CPU-only per-buffer deterministic fingerprint; no filesystem/network I/O",
+    "normal_files": 32,
+    "normal_bytes_per_file": 32768,
+    "normal_input_payload_bytes": 1048576,
+    "normal_workers": 4,
+    "max_files": 128,
+    "max_bytes_per_file": 65536,
+    "max_input_payload_bytes": 8388608,
+    "worker_range": [
+      1,
+      8
+    ]
+  },
+  "equality": {
+    "strategies": [
+      "serial iterator",
+      "bounded scoped threads",
+      "explicit local Rayon pool"
+    ],
+    "comparison": "entire ordered Vec<u64>, same immutable input, not only aggregate hash",
+    "fixture_cases": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        3,
+        37
+      ],
+      [
+        17,
+        1025
+      ],
+      [
+        128,
+        3
+      ]
+    ],
+    "worker_counts": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "observed_demo": "files=32 input_bytes=1048576 workers=4 equal_ordered_outputs=true"
+  },
+  "decision": "Keep explicit bounded blocking-I/O workers in P07 reference. Rayon is an optional CPU-stage experiment over already-bounded in-memory inputs. Budget I/O and CPU pools together if combining; do not substitute unbounded global scheduling or buffer collection.",
+  "limits": [
+    "No comparative timing was collected and no speed ranking is claimed.",
+    "Fingerprint equality does not prove unknown file-byte equality; all strategies here borrow identical buffers.",
+    "Requested worker budget and reported pool size are not evidence that all workers were active simultaneously.",
+    "Payload bound excludes allocator metadata, runtime state and thread stacks.",
+    "Local pool construction is included in demo behavior; a long-lived service may own and reuse a pool when justified.",
+    "Cached advisory scan is a known-report snapshot, not a security proof."
+  ],
+  "advisory_scan": {
+    "vulnerabilities": 0,
+    "warnings": {},
+    "database_advisories": 1295
+  },
+  "locked_packages": [
+    {
+      "name": "crossbeam-deque",
+      "version": "0.8.6"
+    },
+    {
+      "name": "crossbeam-epoch",
+      "version": "0.9.20"
+    },
+    {
+      "name": "crossbeam-utils",
+      "version": "0.8.23"
+    },
+    {
+      "name": "either",
+      "version": "1.19.0"
+    },
+    {
+      "name": "indexer-parallel-tools",
+      "version": "0.1.0"
+    },
+    {
+      "name": "rayon",
+      "version": "1.12.0"
+    },
+    {
+      "name": "rayon-core",
+      "version": "1.13.0"
+    }
+  ],
+  "source_sha256": {
+    "projects/experiments/p07-rayon/Cargo.toml": "ca56a8d79ef2bb7fb33b263a8ec039efbea41a6e5f1f6f744838efbc88d8d914",
+    "projects/experiments/p07-rayon/Cargo.lock": "40d671cf6d68c19c9cc8f6b8590c6b9c71397e409896ca77f25f3dcad408f8e2",
+    "projects/experiments/p07-rayon/src/lib.rs": "570125be102c844bc579d998cfc69312309cdc6ef1b11caa3b79e6309679d42e",
+    "projects/experiments/p07-rayon/src/main.rs": "686215c3f0a4359ea5687469a16997e14419d4f95318497a55468f38430c21d8"
+  },
+  "construction_gap_closed": "Added substantive serial/threads/Rayon comparison, explicit CPU-versus-blocking-I/O decision, exact maintained stable dependency pin, fixed pool budget, complete output tests and standalone runnable source."
+}

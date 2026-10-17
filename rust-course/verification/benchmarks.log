@@ -1,0 +1,135 @@
+LOCAL COMPARATIVE BENCHMARK EVIDENCE
+{
+  "measured_at_utc": "2026-10-09T05:14:19.033143+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "profile": "release (Cargo default optimized profile; no custom release override)",
+  "background_load": "uncontrolled shared workstation; no CPU isolation or frequency locking",
+  "sample_design": "two warmups per variant plus one untimed reference; seven paired trials with alternating order; no randomized order; full result comparisons excluded from timing",
+  "rustc": {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "rustc",
+      "-Vv"
+    ],
+    "exit_code": 0,
+    "stdout": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+    "stderr": ""
+  },
+  "cargo": {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "--version"
+    ],
+    "exit_code": 0,
+    "stdout": "cargo 1.99.0 (5f94df478 2026-08-27)\n",
+    "stderr": ""
+  },
+  "cpu": {
+    "command": [
+      "sysctl",
+      "-n",
+      "machdep.cpu.brand_string"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "sysctl: sysctl fmt -1 1024 1: Operation not permitted\n"
+  },
+  "logical_cpus": {
+    "command": [
+      "sysctl",
+      "-n",
+      "hw.logicalcpu"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "sysctl: sysctl fmt -1 1024 1: Operation not permitted\n"
+  },
+  "memory_bytes": {
+    "command": [
+      "sysctl",
+      "-n",
+      "hw.memsize"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "sysctl: sysctl fmt -1 1024 1: Operation not permitted\n"
+  },
+  "os": {
+    "command": [
+      "sw_vers",
+      "-productVersion"
+    ],
+    "exit_code": 0,
+    "stdout": "26.6.2\n",
+    "stderr": ""
+  },
+  "power": {
+    "command": [
+      "pmset",
+      "-g",
+      "batt"
+    ],
+    "exit_code": 0,
+    "stdout": "Now drawing from 'AC Power'\n",
+    "stderr": ""
+  }
+}
+COMMAND .course-cache/native/release/benchmark 1000003
+EXIT 0
+benchmark=replay profile=release events=1000003 samples_per_variant=7 warmups_per_variant=2 untimed_reference_runs=1 batch_limit=1024
+timed=generation_and_replay excluded=state_comparison_output includes_batch_allocation=true live_orders_peak=2
+sample	position	variant	elapsed_ns	accepted	open_orders	digest	full_state_equal
+1	1	stream	8906375	1000003	1	299064b0e2d240df	true
+1	2	batch1024	9639500	1000003	1	299064b0e2d240df	true
+2	1	batch1024	9683875	1000003	1	299064b0e2d240df	true
+2	2	stream	8833083	1000003	1	299064b0e2d240df	true
+3	1	stream	8907500	1000003	1	299064b0e2d240df	true
+3	2	batch1024	9579000	1000003	1	299064b0e2d240df	true
+4	1	batch1024	9176709	1000003	1	299064b0e2d240df	true
+4	2	stream	8277750	1000003	1	299064b0e2d240df	true
+5	1	stream	8267750	1000003	1	299064b0e2d240df	true
+5	2	batch1024	8900833	1000003	1	299064b0e2d240df	true
+6	1	batch1024	9143291	1000003	1	299064b0e2d240df	true
+6	2	stream	8805084	1000003	1	299064b0e2d240df	true
+7	1	stream	8754625	1000003	1	299064b0e2d240df	true
+7	2	batch1024	9574042	1000003	1	299064b0e2d240df	true
+limit=local_observation_only no_disk_input=true randomization=false order=alternating_pairs
+
+
+COMMAND .course-cache/native/release/indexer-benchmark .course-cache/benchmark-fixtures
+EXIT 0
+benchmark=indexer profile=release files=64 bytes_per_file=131072 total_bytes=8388608 samples_per_variant=7 warmups_per_variant=2 untimed_reference_runs=1 queue=8
+fixture_dir=/Users/billyribeiro/Desktop/rust-course/.course-cache/benchmark-fixtures/indexer-v1-88641-1791522859697013000
+fixture_generator=indexer-v1 source=projects/reference/p07-indexer/src/bin/indexer-benchmark.rs fixture_creation_timed=false cache=warm_after_baseline_and_warmups
+timed=path_clone_thread_start_file_open_read_count_collection_sort excluded=fixture_generation_full_result_comparison_output
+sample	position	variant	elapsed_ns	submitted	entries	peak_workers	full_output_equal
+1	1	workers1	11358250	64	64	1	true
+1	2	workers4	3307417	64	64	4	true
+2	1	workers4	3177750	64	64	4	true
+2	2	workers1	11308042	64	64	1	true
+3	1	workers1	11335500	64	64	1	true
+3	2	workers4	3295042	64	64	4	true
+4	1	workers4	3276125	64	64	4	true
+4	2	workers1	11234208	64	64	1	true
+5	1	workers1	11281750	64	64	1	true
+5	2	workers4	3395917	64	64	4	true
+6	1	workers4	3282542	64	64	4	true
+6	2	workers1	11481375	64	64	1	true
+7	1	workers1	11395083	64	64	1	true
+7	2	workers4	3280584	64	64	4	true
+limit=local_warm_cache_observation_only cold_disk=false randomization=false order=alternating_pairs fixture_retained=true
+
+
+HARDWARE METADATA RECOVERED AFTER APPROVED READ
+COMMAND sysctl -n machdep.cpu.brand_string hw.logicalcpu hw.memsize
+EXIT 0
+Apple M3 Ultra
+28
+103079215104
+Timing samples unchanged. Initial sandbox-denied attempts retained above for provenance.

@@ -1,0 +1,113 @@
+{
+  "patch": "001",
+  "verified_date": "2026-10-09",
+  "scope": [
+    "p09-chat",
+    "p10-issues",
+    "p14-scheduler",
+    "p15-replication",
+    "p16-workbench"
+  ],
+  "author_self_review": "complete",
+  "independent_review": "pending",
+  "changes": [
+    {
+      "location": "projects/reference/p09-chat/src/lib.rs",
+      "issue": "Writer could emit control characters rejected by the receiver.",
+      "fix": "Writer now enforces the same control-character rule before emitting a frame. Bounded decoder and persistent reader future retained."
+    },
+    {
+      "location": "projects/reference/p10-issues/src/lib.rs",
+      "issue": "Library transition should enforce writer permission independently of HTTP handler.",
+      "fix": "close_issue checks write permission; existing team predicate, transaction, and revision tests retained. Generated actual SQLx0.9 package metadata and verified online/offline optional query feature."
+    },
+    {
+      "location": "projects/reference/p14-scheduler/src/lib.rs",
+      "issue": "Finite execution did not bound durable admission.",
+      "fix": "Transaction-scoped advisory admission lock protects10,000-row cap, duplicate payload check and insertion; capacity test passed against PostgreSQL. Invalid system clock is returned explicitly."
+    },
+    {
+      "location": "projects/reference/p15-replication/src/lib.rs",
+      "issue": "Risk of overstating simulated durability and consensus.",
+      "fix": "Source and lesson explicitly label fixed-leader model, finite schedules, no elections/network/disk; prefix invariant and recovery tests retained."
+    },
+    {
+      "location": "projects/reference/p16-workbench/src/replay.rs",
+      "issue": "Initial milestone lacked implemented persistent jobs/history/migration.",
+      "fix": "Added bounded durable replay jobs/cursors/cancellation, history1024/page256, version1 migration fixture and position-checked version2 writes; actual recovery/invalid-job/cursor tests."
+    },
+    {
+      "location": "projects/reference/p16-workbench/src/http.rs",
+      "issue": "Blocking task budget alone did not bound active handler/body wait.",
+      "fix": "Added16-request admission and5s deadline around router plus existing8 blocking-work slots; actual overload429 and slow-body408 tests. Timeout uncertainty explicitly taught."
+    },
+    {
+      "location": "authoring/services.json",
+      "issue": "Review language could frame weaker patterns as normal onboarding defaults.",
+      "fix": "Marked bad patterns as deliberate review defects; added project-specific Engineering decisions and evidence for all five projects; all lessons include concrete investigation/stuck panels."
+    },
+    {
+      "location": "projects/scaffolds",
+      "issue": "Scaffolds initially only printed instructions.",
+      "fix": "Replaced all five with runnable, tested first checkpoints demonstrating bounds/errors/valid transitions and avoiding external infrastructure."
+    },
+    {
+      "location": "projects/reference/p10-issues/src/lib.rs and projects/reference/p14-scheduler/src/main.rs",
+      "issue": "Pool/concurrent worker limits alone did not bound HTTP handlers.",
+      "fix": "Both APIs now admit16 active requests with5s handler/body deadline; scheduler pool has3s acquisition and statement timeouts. Timeouts retain uncertain-outcome semantics."
+    },
+    {
+      "location": "projects/reference/p16-workbench/src/lib.rs",
+      "issue": "Later live requests could consume log slots reserved implicitly by accepted replay work.",
+      "fix": "Accepted replay work reserves remaining step capacity; boundary test consumes9997 live ticks then confirms replay still completes at event10000."
+    },
+    {
+      "location": "projects/reference/p16-workbench/src/lib.rs; src/http.rs",
+      "issue": "Author cross-review found public mutable Store.engine, lexical fill ordering, and ignored duplicate replay result.",
+      "fix": "Restricted engine to crate, added read-only Store.snapshot and compile-fail public-boundary test; bounded acceptance-order fill deque plus exact order lookup route; reject duplicate journal events and check physical-record cap. Regression tests use nonmonotonic IDs and duplicated legacy records."
+    },
+    {
+      "location": "projects/reference/p16-workbench/src/http.rs test fixture helpers",
+      "issue": "Two parallel tests could choose the same timestamp-based temporary filename.",
+      "fix": "Added atomic ordinal to filename allocation; prior failure retained in services-test-first-failure.log. Full subsequent suite rerun."
+    },
+    {
+      "location": "projects/reference/p16-workbench/src/lib.rs CommitError; src/http.rs commit mapping",
+      "issue": "Routine rejected orders and uncertain storage writes both used409, trapping the UI in unresolved state for normal invalid input.",
+      "fix": "Typed CommitError separates pre-append Rejected\u2192422, identity Conflict\u2192409, and Storage/any post-append inconsistency\u2192503. Two API regressions cover quote/cash rejection with unchanged state, ID conflict, write failure, and poisoning. Nineteen native p16 tests plus compile-fail doc test passed; scoped Clippy executed."
+    },
+    {
+      "location": "projects/scaffolds/p09-chat/src/main.rs",
+      "issue": "Learner encoder omitted the reference protocol control-character rule.",
+      "fix": "Rejects all Unicode control characters before emission; newline and DEL rejection plus UTF-8 byte-length tests pass."
+    },
+    {
+      "location": "authoring/completion-network.json and projects/reference/p10-issues/tests/web_boundaries.rs",
+      "issue": "Middleware order and cookie/CSRF/TLS boundary reasoning needed focused practice and evidence.",
+      "fix": "Added substantial bridge lesson with runnable six-test boundary suite, deployment design assessment, prediction, deliberate error, worked review, and evidence limits."
+    }
+  ],
+  "evidence_files": [
+    "verification/postgres-tests.log",
+    "verification/services-exercises.json",
+    "verification/services-final-checks.log",
+    "verification/workbench-load.json",
+    "verification/services-final-checks.json"
+  ],
+  "limits": [
+    "Independent review not yet performed.",
+    "Public demo identities only; production auth/TLS excluded.",
+    "p16 single writer journal does not prove power-failure durability or multiple-process safety.",
+    "p15 is not Raft and does not provide production consensus.",
+    "No fabricated load/performance results; root verification reports actual measurements if executed."
+  ],
+  "findings": [
+    {
+      "location": "projects/reference/p16-workbench/src/main.rs",
+      "issue": "Non-UTF-8 WORKBENCH_LOG silently selected the default path; malformed address environment could silently select a default, and journal I/O preceded address validation.",
+      "change": "Read the native journal path with var_os/PathBuf, distinguish an absent address from invalid text, validate loopback configuration before opening persistence, and escape the displayed path.",
+      "verification": "verification/workbench-config-check.json; current native build/Clippy; repeated actual HTTP acceptance audit.",
+      "remaining_uncertainty": "Native-byte path regression executed on Unix/macOS; Windows path behavior not separately exercised."
+    }
+  ]
+}

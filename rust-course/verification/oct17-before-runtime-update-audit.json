@@ -1,0 +1,152 @@
+{
+  "as_of": "2026-10-17",
+  "recorded_at": "2026-10-17T11:44:29.847558+00:00",
+  "overall": "Course content and stable Rust baseline updated; environment-dependent verification remains incomplete.",
+  "inventory": {
+    "authored_lessons": 57,
+    "main_projects": 16,
+    "reconstructible_checkpoints": 37,
+    "project_assignments": 16,
+    "stage_gates": 10,
+    "final_assessments": 4,
+    "required_objective_groups": 83
+  },
+  "version_evidence": "versions-2026-10-17.json",
+  "official_documentation_evidence": "primary-sources-2026-10-17.json",
+  "snapshot_integrity": "oct17-evidence-integrity.json",
+  "selected_versions": {
+    "rust": "1.99.1",
+    "edition": "2024",
+    "tokio": "1.53.3",
+    "serde_json": "1.0.154",
+    "uuid": "1.28.0",
+    "syn": "3.0.9",
+    "postgresql": "18.6",
+    "node": "26.12.0",
+    "lossless-json": "4.3.2",
+    "svelte-check": "4.7.7",
+    "typescript": "6.0.3"
+  },
+  "compatibility_exception": "TypeScript 7.0.2 is latest stable, but svelte-check 4.7.7 declares ^5.0.0 || ^6.0.0. Version 6.0.3 is the latest supported choice. No peer override was used.",
+  "passed": [
+    {
+      "scope": "Coordinated native baseline: formatting, tests, check, strict Clippy, docs, dependency tree, JavaScript syntax/data tests, static correspondence",
+      "count": 13,
+      "evidence": "checks.json"
+    },
+    {
+      "scope": "Native Cargo test entries",
+      "passed": 218,
+      "failed": 0,
+      "ignored": 4,
+      "evidence": "check-tests.log",
+      "limit": "Entries include one P06 helper that does no work in the parent runner; not 218 independent correctness claims."
+    },
+    {
+      "scope": "Explicit PostgreSQL 18.6 integration tests in an owned disposable Unix-socket-only cluster",
+      "passed": 4,
+      "evidence": "database-fixture-checks.json"
+    },
+    {
+      "scope": "37 portable checkpoint reconstructions, native tests or WASM compilation as applicable",
+      "command_records": 74,
+      "evidence": "oct17-checkpoints.json"
+    },
+    {
+      "scope": "Fresh source correspondence for the 37 tested checkpoint caches",
+      "passed": 37,
+      "evidence": "oct17-checkpoint-source-correspondence.json"
+    },
+    {
+      "scope": "Auxiliary crates, 16 scaffold compilation checks, 12 intentional compiler errors, broken/solution partial-read exercise",
+      "command_records": 37,
+      "evidence": "oct17-extras.json"
+    },
+    {
+      "scope": "Selected optimized arithmetic, parser, replay and unsafe tests",
+      "passed": 57,
+      "failed": 0,
+      "evidence": "oct17-release-tests.log"
+    },
+    {
+      "scope": "P13 Miri, nightly-2026-10-17",
+      "passed": 7,
+      "evidence": "oct17-miri.log",
+      "limit": "Executed cases only; no universal soundness proof."
+    },
+    {
+      "scope": "Leptos WASM strict Clippy",
+      "evidence": "oct17-ui-clippy.log"
+    },
+    {
+      "scope": "Edition 2024 let-chain assertion example",
+      "evidence": "oct17-let-chains.log"
+    },
+    {
+      "scope": "Outer Axum starter strict Clippy",
+      "evidence": "oct17-root-clippy.log"
+    },
+    {
+      "scope": "Real Rust HTTP acceptance",
+      "groups": 11,
+      "requests": 241,
+      "evidence": "oct17-http.json"
+    },
+    {
+      "scope": "Saved browser JSON export, exact synthetic note and completion flag",
+      "evidence": "oct17-browser.json"
+    }
+  ],
+  "observed_without_new_durable_command_logs": [
+    "During the initial dependency update, npm test passed nine tests, svelte-check reported zero errors and warnings, and Vite built 121 modules. The later attempts to capture coordinated logs failed at mise selection before Node execution. These initial observations are not presented as a complete logged rerun.",
+    "The Leptos WASM package was rebuilt during the initial update; the dated durable UI Clippy and checkpoint compilation records provide separate evidence."
+  ],
+  "changes": [
+    "Updated manifests, lockfiles, dated tool pins, versioned documentation links and current PostgreSQL labels. Historical measurement versions and dates are retained.",
+    "Added a runnable let-chain example with explicit Option-versus-Result tradeoffs; updated C variadic FFI and Box ownership-transfer guidance from Rust release documentation.",
+    "Replaced timestamp-only temporary test directories in P02, P06 and P16 with atomic sequence allocation and a no-overwrite create_dir ownership check.",
+    "Made the outer Axum starter propagate startup output errors and drop the stdout lock before awaiting the server.",
+    "Isolated checkpoint compiler caches, retained stable reconstruction paths, and added a fresh-source comparison before any reuse.",
+    "Corrected the AtomicU32 documentation URL to its current type-alias page and preserved successful primary-source snapshots."
+  ],
+  "initial_failures": [
+    {
+      "issue": "Parallel P06 test directories collided when timestamps repeated.",
+      "resolution": "Atomic sequence plus create_dir retry; canonical and reconstructed tests passed.",
+      "evidence": "oct17-initial-oct17-checkpoints.log"
+    },
+    {
+      "issue": "A cached executable embedded CARGO_MANIFEST_DIR pointing to a removed reconstruction.",
+      "resolution": "Stable reconstruction paths and an isolated build cache; all 37 passed, then fresh source hashes matched.",
+      "evidence": "oct17-checkpoints.json"
+    },
+    {
+      "issue": "One initial P08 closed-output process run unexpectedly returned success.",
+      "resolution": "Not reproduced across 100 repeats or the fresh-cache full baseline. No root cause is asserted; retain as a possible intermittent test issue.",
+      "evidence": "oct17-monitor-repeat.json"
+    }
+  ],
+  "remaining": [
+    {
+      "scope": "Managed runtime selection",
+      "status": "blocked",
+      "evidence": "oct17-tools.json",
+      "detail": "Latest coordinated fuzz and optional Svelte test/check/build/audit/HTTP attempts stopped during mise selection. Global Rust 1.99.0 and Node 24.21.0 locks do not register the requested versions in the active configuration. wasm-bindgen-cli is not registered globally. No tool installation or global lock change was performed after the user supplied the machine policy.",
+      "owner_command": "mise-root use -g rust@1.99.1 node@26.12.0 cargo:wasm-bindgen-cli@0.2.129",
+      "followup": "Repeat the failed commands after owner-managed registration; optional nightly fuzz/Miri also require the dated nightly and components through the owner-approved manager."
+    },
+    {
+      "scope": "Progress file import and invalid-file rejection in Chrome",
+      "status": "blocked",
+      "evidence": "oct17-browser.json",
+      "detail": "The extension requires Allow access to file URLs. The restriction was not bypassed."
+    },
+    {
+      "scope": "Independent acceptance",
+      "status": "pending",
+      "detail": "Author review and executable checks do not constitute independent review or learner competence."
+    }
+  ],
+  "historical_evidence": "Older benchmark, browser, fuzz and advisory records retain their dates and dependency graphs. The earlier Svelte HTTP report was restored byte-for-byte from the prior archive; the October 17 failed attempt is retained separately in oct17-svelte-http.json and .log.",
+  "all_requested_verification_complete": false
+}

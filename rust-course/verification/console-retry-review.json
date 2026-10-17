@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-09T17:59:27.637765+00:00",
+  "scope": "Author-side console retry and explicit verification cache correction",
+  "independent_review": "pending",
+  "findings": [
+    {
+      "issue": "Replay scheduling generated a new UUID and tick payload on every button click after an uncertain network response.",
+      "correction": "ReplaySubmission retains the exact logical instruction until confirmed acceptance or a definite initial rejection. Later rejections cannot resolve an earlier uncertain attempt.",
+      "evidence": "Seven native UI-model tests including two new replay tests; WASM check/build passed. No browser behavior claimed."
+    },
+    {
+      "issue": "A newly observed global Cargo build.build-dir redirected intermediates independently of explicit --target-dir.",
+      "correction": "Verification and WASM build helpers set CARGO_BUILD_BUILD_DIR for the child command to the requested target. User configuration and full-debug/incremental profiles remain unchanged.",
+      "evidence": "Local Rust1.99.0 Cargo primary docs read; scoped commands recorded their build_dir and succeeded."
+    }
+  ],
+  "checks": "console-retry-checks.json",
+  "log": "console-retry-checks.log",
+  "source_sha256": {
+    "projects/ui-console/src/lib.rs": "8c22fcd2440f6b13783e43d61cb5240655f73104d3d0f730b8d5372539291786",
+    "projects/reference/p11-ui-model/src/lib.rs": "b4510c4c374df5bb9610a393fa226e6684abf921ebad3e009fbc0a87ea831de1",
+    "authoring/interface.json": "3c2e302a52df149eacf1625f31eb75a417e5dc545629bbe281896982118985c3",
+    "scripts/verify.py": "e55467ff7bbe27223becfaf9d91b79c08d778e471dfbf2283e716285b75c1f4c",
+    "scripts/build-ui.py": "21dec7aa2fdf3018a21e6013e46d8c047626c713bb7fc8cce06f8af7a257cb69"
+  },
+  "limits": [
+    "Pending replay identity lives only in the open page; it is not persisted across reloads.",
+    "Model tests do not exercise native browser network policy, DOM events, accessibility or visual layout.",
+    "The global mixed Cargo cache was not deleted, relocated or counted as course-only storage."
+  ],
+  "primary_source": {
+    "reference": "https://doc.rust-lang.org/1.99.0/cargo/reference/config.html#buildbuild-dir",
+    "local_verified_copy": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/cargo/reference/config.html",
+    "note": "Versioned web URL was unavailable through the web tool; read the installed1.99.0 documentation instead."
+  },
+  "additional_primary_source": {
+    "path": "/Users/billyribeiro/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/gloo-net-0.7.0/src/http/response.rs",
+    "sha256": "d6b087672816aee06103f1d5a8fdeceb73f0ce117e3193ca5db0dfbb9779d6ed",
+    "observation": "Response::json passes awaited response text to serde_json::from_str; no JavaScript JSON.parse numeric conversion in that method.",
+    "lesson": "06-boundaries"
+  }
+}

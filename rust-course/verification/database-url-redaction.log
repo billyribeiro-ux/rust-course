@@ -1,0 +1,46 @@
+$ mise exec -- cargo test --locked --offline --manifest-path projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p10-issues --test postgres postgres_authorization_transaction_pagination -- --ignored --exact --nocapture
+Synthetic non-UTF-8 environment fixture; payload deliberately omitted from log.
+
+running 1 test
+test postgres_authorization_transaction_pagination ... FAILED
+
+failures:
+
+failures:
+    postgres_authorization_transaction_pagination
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+   Compiling p10-issues v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.63s
+     Running tests/postgres.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/postgres-2d7c0e83bf0fc9d7)
+
+thread 'postgres_authorization_transaction_pagination' (3488310) panicked at reference/p10-issues/tests/support/mod.rs:33:10:
+set the documented disposable test URL: "test URL is missing or is not UTF-8"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `-p p10-issues --test postgres`
+
+expected rejection verified=True
+$ mise exec -- cargo test --locked --offline --manifest-path projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p14-scheduler --test postgres crash_redelivery_fencing_dedup_cancellation -- --ignored --exact --nocapture
+Synthetic non-UTF-8 environment fixture; payload deliberately omitted from log.
+
+running 1 test
+test crash_redelivery_fencing_dedup_cancellation ... FAILED
+
+failures:
+
+failures:
+    crash_redelivery_fencing_dedup_cancellation
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+   Compiling p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running tests/postgres.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/postgres-046d47942d28a9db)
+
+thread 'crash_redelivery_fencing_dedup_cancellation' (3488573) panicked at reference/p14-scheduler/tests/support/mod.rs:33:10:
+set the documented disposable test URL: "test URL is missing or is not UTF-8"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `-p p14-scheduler --test postgres`
+
+expected rejection verified=True

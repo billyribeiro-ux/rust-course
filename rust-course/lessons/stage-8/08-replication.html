@@ -1,0 +1,375 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>A deterministic replicated-state laboratory · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="08-replication" data-lesson="08-replication"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / A deterministic replicated-state laboratory</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 08 / Distributed behavior</div><h1>A deterministic replicated-state laboratory</h1><p class="lead">Test narrow safety and liveness properties without claiming production consensus.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-8/08-scheduler.html">Leases, retries, cancellation, and recovery</a></li></ul><ul><li>Define safety versus liveness precisely</li><li>Explore partitions, loss, delay and restart deterministically</li><li>Identify assumptions missing from a consensus protocol</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#consensus">consensus</a> · <a href="../../glossary.html#durability">durability</a> · <a href="../../glossary.html#invariant">invariant</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#panic">panic</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p15">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-and-specification-first">Purpose and specification first</h2><p>Build a deterministic simulator with three nodes and a permanent leader, node0. Only the leader may propose values. It assigns each value its next log index. Followers append only the next missing index and acknowledge an identical duplicate. A conflicting value at an existing index cannot overwrite it. The leader calls a prefix committed after acknowledgments from any two nodes. There is no leader election, membership change, real networking, real disk, malicious-node model, or claim to implement Raft.</p>
+<h2 id="plain-english-model-events-instead-of-wall-time">Plain-English model: events instead of wall time</h2><p>A simulator turns uncertain timing into explicit choices. A queue holds message objects. A step delivers or drops one object according to current node and partition state. Delay moves a packet to the end; loss removes it; crash makes a node unavailable while preserving its simulated durable vector. “Durable” here means the model preserves it across the simulator's restart action. It does not mean bytes reached a disk or survived a power failure.</p>
+<p>A <em>safety property</em> says something bad never happens. Here, every follower's log must remain a prefix of the fixed leader's log, and existing entries must never change. A <em>liveness property</em> says something good eventually happens under explicit assumptions. Here, after the leader and one follower are online, their link is healed, and resend/delivery continues, proposed entries can reach a two-node acknowledgment count. A permanent partition can prevent progress. No amount of local type checking promises communication eventually succeeds.</p>
+<h2 id="prediction">Prediction</h2><p>Partition the leader from both followers, propose42, and drain the queue. Has42 been committed? Heal only the link to follower1, resend, and drain again. Does follower2 need to be online for progress?</p><details><summary>Answer</summary><p>The first committed count is0. The leader's local append alone is not a two-node acknowledgment. After one follower receives and acknowledges the entry, the count becomes1. The second follower may remain isolated. This illustrates a quorum in this model, not a complete theorem about arbitrary leader changes.</p></details>
+<h2 id="small-runnable-example">Small runnable example</h2><p>Working directory: <code>rust-course/projects</code>. This project uses only the standard library and the pinned compiler.</p>
+<div class="code-wrap" data-source="projects/reference/p15-replication/src/main.rs" data-sha256="d31d93eccbcb8a60c895fb36aa85a42551ac3cd0766d97715db52ceed4051e57"><div class="code-label"><a href="../../projects/reference/p15-replication/src/main.rs">projects/reference/p15-replication/src/main.rs</a></div><pre><code>use std::io::{self, Write};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let mut lab = p15_replication::Lab::default();
+    lab.partition(0, 1, true);
+    lab.partition(0, 2, true);
+    // The fixed fixture has an online leader and an empty 1000-entry log.
+    lab.propose(42)
+        .expect(&quot;one fixed proposal fits the fresh online-leader fixture&quot;);
+    lab.drain();
+    let mut output = io::stdout().lock();
+    writeln!(
+        output,
+        &quot;partition: committed={} prefix_safe={}&quot;,
+        lab.committed,
+        lab.prefix_safe()
+    )?;
+    lab.partition(0, 1, false);
+    lab.resend();
+    lab.drain();
+    writeln!(
+        output,
+        &quot;healed: committed={} prefix_safe={}&quot;,
+        lab.committed,
+        lab.prefix_safe()
+    )?;
+    output.flush()
+}
+</code></pre></div><pre><code>mise exec -- cargo run -p p15-replication
+mise exec -- cargo test -p p15-replication</code></pre>
+<p>Expected output reports committed0 while partitioned and committed1 after healing, with prefix safety true in both cases. A system can remain safe while unavailable. Availability is not proved by a safety assertion.</p>
+<h2 id="guided-construction">Guided construction</h2><p>Start with Node, Message, Packet, and an empty Lab. Implement leader proposal and an append-only follower rule. Test duplicate append before adding acknowledgments. Then add an acknowledgment set per index and advance the committed prefix only while every earlier index has enough acknowledgments. This last condition matters: receiving acknowledgment for a later position should not skip an uncommitted hole.</p>
+<div class="code-wrap" data-source="projects/reference/p15-replication/src/lib.rs" data-sha256="1c0ae747a6f7f689cf8df6659200f27809cd7052ed9e1e23994554e460019694"><div class="code-label"><a href="../../projects/reference/p15-replication/src/lib.rs">projects/reference/p15-replication/src/lib.rs</a></div><pre><code>//! Deterministic fixed-leader replication simulator. NOT Raft; no leader election.
+use std::collections::{BTreeSet, VecDeque};
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Message {
+    Append { index: usize, value: i64 },
+    Ack { index: usize },
+}
+#[derive(Clone, Debug)]
+pub struct Packet {
+    pub from: usize,
+    pub to: usize,
+    pub body: Message,
+}
+#[derive(Clone, Debug, Default)]
+pub struct Node {
+    pub durable: Vec&lt;i64&gt;,
+    pub online: bool,
+}
+#[derive(Debug)]
+pub struct Lab {
+    pub nodes: [Node; 3],
+    pub queue: VecDeque&lt;Packet&gt;,
+    pub blocked: BTreeSet&lt;(usize, usize)&gt;,
+    acks: Vec&lt;BTreeSet&lt;usize&gt;&gt;,
+    pub committed: usize,
+}
+impl Default for Lab {
+    fn default() -&gt; Self {
+        Self {
+            nodes: std::array::from_fn(|_| Node {
+                durable: vec![],
+                online: true,
+            }),
+            queue: VecDeque::new(),
+            blocked: BTreeSet::new(),
+            acks: vec![],
+            committed: 0,
+        }
+    }
+}
+impl Lab {
+    pub fn propose(&amp;mut self, value: i64) -&gt; Result&lt;usize, &amp;&#x27;static str&gt; {
+        if !self.nodes[0].online {
+            return Err(&quot;leader offline&quot;);
+        }
+        if self.nodes[0].durable.len() &gt;= 1000 {
+            return Err(&quot;log budget&quot;);
+        }
+        let index = self.nodes[0].durable.len();
+        self.nodes[0].durable.push(value);
+        self.acks.push(BTreeSet::from([0]));
+        self.resend();
+        Ok(index)
+    }
+    pub fn resend(&amp;mut self) {
+        self.queue.clear();
+        for to in 1..3 {
+            for (index, &amp;value) in self.nodes[0].durable.iter().enumerate() {
+                self.queue.push_back(Packet {
+                    from: 0,
+                    to,
+                    body: Message::Append { index, value },
+                });
+            }
+        }
+    }
+    pub fn partition(&amp;mut self, a: usize, b: usize, on: bool) {
+        for edge in [(a, b), (b, a)] {
+            if on {
+                self.blocked.insert(edge);
+            } else {
+                self.blocked.remove(&amp;edge);
+            }
+        }
+    }
+    pub fn crash(&amp;mut self, node: usize) {
+        self.nodes[node].online = false;
+    }
+    pub fn restart(&amp;mut self, node: usize) {
+        self.nodes[node].online = true;
+    }
+    pub fn delay(&amp;mut self) {
+        if let Some(p) = self.queue.pop_front() {
+            self.queue.push_back(p);
+        }
+    }
+    pub fn drop_next(&amp;mut self) {
+        self.queue.pop_front();
+    }
+    pub fn step(&amp;mut self) -&gt; bool {
+        let Some(packet) = self.queue.pop_front() else {
+            return false;
+        };
+        if !self.nodes[packet.to].online || self.blocked.contains(&amp;(packet.from, packet.to)) {
+            return true;
+        }
+        match packet.body {
+            Message::Append { index, value } =&gt; {
+                if packet.from != 0 || packet.to == 0 {
+                    return true;
+                }
+                let log = &amp;mut self.nodes[packet.to].durable;
+                if index == log.len() {
+                    log.push(value);
+                }
+                if log.get(index) == Some(&amp;value) {
+                    self.queue.push_back(Packet {
+                        from: packet.to,
+                        to: 0,
+                        body: Message::Ack { index },
+                    });
+                }
+            }
+            Message::Ack { index } =&gt; {
+                if packet.to != 0 || packet.from == 0 {
+                    return true;
+                }
+                if let Some(acks) = self.acks.get_mut(index) {
+                    acks.insert(packet.from);
+                }
+                while self.committed &lt; self.acks.len() &amp;&amp; self.acks[self.committed].len() &gt;= 2 {
+                    self.committed += 1;
+                }
+            }
+        }
+        true
+    }
+    pub fn drain(&amp;mut self) {
+        while self.step() {}
+    }
+    pub fn prefix_safe(&amp;self) -&gt; bool {
+        self.nodes
+            .iter()
+            .all(|node| self.nodes[0].durable.starts_with(&amp;node.durable))
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn partition_blocks_commit_until_heal() {
+        let mut l = Lab::default();
+        l.partition(0, 1, true);
+        l.partition(0, 2, true);
+        l.propose(7).unwrap();
+        l.drain();
+        assert_eq!(l.committed, 0);
+        assert!(l.prefix_safe());
+        l.partition(0, 1, false);
+        l.resend();
+        l.drain();
+        assert_eq!(l.committed, 1);
+    }
+    #[test]
+    fn duplicates_restarts_delay_and_loss() {
+        for dropped in 0..12 {
+            let mut l = Lab::default();
+            l.propose(10).unwrap();
+            l.propose(20).unwrap();
+            for step in 0..12 {
+                if step == dropped {
+                    l.drop_next();
+                }
+                if step % 3 == 0 {
+                    l.delay();
+                }
+                l.step();
+                assert!(l.prefix_safe());
+            }
+            l.crash(1);
+            l.resend();
+            l.drain();
+            l.restart(1);
+            l.resend();
+            l.drain();
+            assert!(l.prefix_safe());
+            assert_eq!(l.nodes[1].durable, vec![10, 20]);
+            assert_eq!(l.committed, 2);
+        }
+    }
+    #[test]
+    fn conflicting_append_cannot_replace_prefix() {
+        let mut l = Lab::default();
+        l.propose(1).unwrap();
+        l.drain();
+        l.queue.push_back(Packet {
+            from: 0,
+            to: 1,
+            body: Message::Append {
+                index: 0,
+                value: 999,
+            },
+        });
+        l.drain();
+        assert_eq!(l.nodes[1].durable, vec![1]);
+    }
+    #[test]
+    fn later_and_duplicate_acknowledgments_do_not_skip_a_commit_hole() {
+        let mut l = Lab::default();
+        l.propose(10).unwrap();
+        l.propose(20).unwrap();
+        // Deliver the two legitimate appends to follower 1, but neither ack yet.
+        assert!(l.step());
+        assert!(l.step());
+        assert_eq!(l.nodes[1].durable, [10, 20]);
+        assert_eq!(l.committed, 0);
+        let later = l
+            .queue
+            .iter()
+            .position(|packet| packet.from == 1 &amp;&amp; packet.body == Message::Ack { index: 1 })
+            .unwrap();
+        let ack = l.queue.remove(later).unwrap();
+        for _ in 0..3 {
+            l.queue.push_front(ack.clone());
+            assert!(l.step());
+            assert_eq!(l.committed, 0);
+            assert_eq!(l.acks[1], BTreeSet::from([0, 1]));
+            assert!(l.prefix_safe());
+        }
+        let earlier = l
+            .queue
+            .iter()
+            .position(|packet| packet.from == 1 &amp;&amp; packet.body == Message::Ack { index: 0 })
+            .unwrap();
+        let ack = l.queue.remove(earlier).unwrap();
+        l.queue.push_front(ack);
+        assert!(l.step());
+        assert_eq!(l.committed, 2);
+        assert!(l.nodes[2].durable.is_empty()); // Only leader plus one follower.
+        assert!(l.prefix_safe());
+    }
+}
+</code></pre></div>
+<p>The reference resend action clears queued packets and emits the leader's current history to followers. This is a deterministic recovery shortcut, not a realistic network retransmission layer. It makes repeated healing experiments simple, but you must keep that simplification in any claimed liveness result. A production log would also need bounded replication windows, snapshots, persistent term/index metadata, and a specified recovery algorithm.</p>
+<h2 id="deliberate-mistake">Deliberate mistake</h2><p>Change the follower to append every received value regardless of index. Deliver the same append twice. The follower now has extra history and the prefix property fails. Restore the index rule. Then deliberately accept a conflicting duplicate by overwriting an existing entry. The conflict test exposes another safety violation. Neither bug requires unsafe Rust.</p>
+<h2 id="independent-experiments">Independent experiments</h2><p>Enumerate schedules containing two proposals, one dropped packet, one crash, and one restart. State a finite bound on steps and assert safety after every action, not only after drain. Add a new invariant that committed never decreases. Decide what should happen if the leader restarts and forgets acknowledgment sets while retaining its log. Do not add a new leader until you have written a protocol for authority and conflicting history.</p><details><summary>Hint 1</summary><p>Represent actions as data so a failing schedule can be printed and replayed exactly.</p></details><details><summary>Hint 2</summary><p>A safety check should run after each transition. A final converged state can hide an earlier temporary violation.</p></details><details><summary>Reference reasoning</summary><p>Use a bounded depth-first enumeration over a small action alphabet, prune impossible node indices, and retain the shortest failing sequence. For leader restart, reconstruct or reacquire acknowledgments and avoid reporting old commitment from unverified volatile state. The reference keeps acknowledgment state in the simulator, so changing that assumption is a genuine model extension.</p></details>
+<h2 id="review-and-evidence">Review and evidence</h2><p>A misleading demonstration sends messages in perfect order and calls the result consensus. This lab explicitly perturbs delivery and states what it does not implement. Its tests check a finite family of schedules, duplicate behavior, conflict rejection, and recovery after healing. They do not constitute exhaustive model checking, a proof of linearizability, or validation of real network and disk code. Study the original Raft paper before designing election, terms, voting, or log reconciliation; do not infer those rules from this simplified fixed-leader model.</p>
+<h2 id="playbook-investigation">Playbook investigation</h2><p>Observation: the leader reports no progress after healing. A tempting guess is that majority replication requires all three nodes. Inspect the queue and acknowledgments. If the lost append was never resent, the missing assumption is continued retransmission, not a three-node quorum. Schedule one explicit resend and see whether two acknowledgments suffice. That experiment disproves the all-nodes hypothesis for this model. If progress still fails, inspect out-of-order indices and dropped acknowledgments separately rather than changing quorum size until the test passes.</p>
+<h2 id="mastery-check">Mastery check</h2><p>Explain the exact safety invariant, liveness assumptions, and simulated durability boundary. Produce a failing schedule for a deliberate bug, then fix it and retain the regression. Identify three additional mechanisms needed before this could reasonably be called a consensus implementation.</p>
+<aside class="callout"><h2 id="when-you-get-stuck">When you get stuck</h2><p>Run <code>mise exec -- cargo test -p p15-replication duplicates_restarts_delay_and_loss -- --nocapture</code>. Print each action with queue and logs only in your learner copy. Compare the first divergence against the prefix invariant. Ask for review with a minimal replayable schedule and the precise property; “it sometimes disagrees” is not enough.</p></aside><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Scope and invariants:</strong> three simulated nodes, one permanent leader,1,000 log entries, bounded resend queue, immutable indexed entries, and follower-prefix safety. Simulated restart retains model state; no disk semantics are implied. <strong>Why this design:</strong> representing delivery decisions as data creates reproducible failures without wall-clock races. <strong>Concrete habits:</strong> name a precise property; assert it after transitions; preserve failing schedules; state fairness and delivery assumptions separately from safety.</p><p><strong>Alternative:</strong> use a model checker and a formal specification for broader state exploration; use an established consensus implementation for an actual replicated service. The educational simulator exposes its state for experiments and does not validate arbitrary malicious packets or node indices as an Internet service would. <strong>Evidence:</strong> finite schedule tests establish the tested schedules only. <strong>Evolution threshold:</strong> leader change, membership change, persisted term metadata, or Byzantine participants require a new protocol specification and evidence, not a renamed function or an additional happy-path test.</p><section><h2 id="reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</h2><p>Working directory: course root. This creates a complete separate source tree; it refuses an existing destination. Run the checkpoint tests before following the guided edits. The <a href="../../projects/checkpoints/p15-replication/index.html">checkpoint contract and engineering decisions</a> state exactly which features exist.</p><pre><code>python3 scripts/start-checkpoint.py p15 01-append-transport
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p15-replication/01-append-transport/Cargo.toml</code></pre><p>To compare an earlier milestone with the final reference, reconstruct each ID into a different directory. Run the final project’s own boundary fixtures as described in its contract; the chat and workbench use loopback services, and the workbench uses a dedicated disposable journal. These projects do not require PostgreSQL. Passing ordinary unit tests does not establish every network or restart behavior.</p></section><section><h2 id="complete-earlier-milestone-source">Complete earlier milestone source</h2><p>This transport milestone has no commitment rule yet. Taking a packet removes it from the queue; retain the value to delay or redeliver it, or discard it to model loss. Check a gap before mutating a follower.</p><div class="code-wrap" data-source="projects/checkpoints/p15-replication/01-append-transport/src/lib.rs" data-sha256="257ac1d3940f229945300e28baab88b6eb33f97e104c5d56a95fb00e97c5cc9d"><div class="code-label"><a href="../../projects/checkpoints/p15-replication/01-append-transport/src/lib.rs">projects/checkpoints/p15-replication/01-append-transport/src/lib.rs</a></div><pre><code>//! Fixed-leader append transport model. No acknowledgments or committed prefix yet.
+//! Packet scheduling is explicit data, not a real network or consensus algorithm.
+use std::collections::VecDeque;
+#[derive(Debug, Clone, Copy)]
+pub struct Packet {
+    pub to: usize,
+    pub index: usize,
+    pub value: i64,
+}
+#[derive(Default)]
+pub struct Lab {
+    logs: [Vec&lt;i64&gt;; 3],
+    pending: VecDeque&lt;Packet&gt;,
+}
+impl Lab {
+    pub fn propose(&amp;mut self, value: i64) -&gt; Result&lt;(), &amp;&#x27;static str&gt; {
+        if self.logs[0].len() &gt;= 8 || self.pending.len() &gt; 14 {
+            return Err(&quot;budget&quot;);
+        }
+        let index = self.logs[0].len();
+        self.logs[0].push(value);
+        for to in [1, 2] {
+            self.pending.push_back(Packet { to, index, value });
+        }
+        Ok(())
+    }
+    pub fn take(&amp;mut self) -&gt; Option&lt;Packet&gt; {
+        self.pending.pop_front()
+    }
+    pub fn deliver(&amp;mut self, packet: Packet) -&gt; Result&lt;bool, &amp;&#x27;static str&gt; {
+        if !(1..=2).contains(&amp;packet.to) {
+            return Err(&quot;invalid follower&quot;);
+        }
+        let log = &amp;mut self.logs[packet.to];
+        if packet.index == log.len() {
+            if log.len() &gt;= 8 {
+                return Err(&quot;log budget&quot;);
+            }
+            log.push(packet.value);
+            return Ok(true);
+        }
+        if log.get(packet.index) == Some(&amp;packet.value) {
+            Ok(false)
+        } else {
+            Err(&quot;gap or conflict&quot;)
+        }
+    }
+    pub fn log(&amp;self, node: usize) -&gt; Option&lt;&amp;[i64]&gt; {
+        self.logs.get(node).map(Vec::as_slice)
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn duplicate_delivery_has_one_effect() {
+        let mut l = Lab::default();
+        l.propose(42).unwrap();
+        let packet = l.take().unwrap();
+        assert!(l.deliver(packet).unwrap());
+        assert!(!l.deliver(packet).unwrap());
+        assert_eq!(l.log(1), Some(&amp;[42][..]));
+    }
+    #[test]
+    fn delay_can_create_a_gap_without_corrupting_prefix() {
+        let mut l = Lab::default();
+        l.propose(10).unwrap();
+        l.propose(20).unwrap();
+        let first = l.take().unwrap();
+        let _other = l.take().unwrap();
+        let later = l.take().unwrap();
+        assert!(l.deliver(later).is_err());
+        assert_eq!(l.log(1), Some(&amp;[][..]));
+        l.deliver(first).unwrap();
+        l.deliver(later).unwrap();
+        assert_eq!(l.log(1), Some(&amp;[10, 20][..]));
+    }
+    #[test]
+    fn invalid_target_and_capacity_are_explicit() {
+        let mut l = Lab::default();
+        assert!(
+            l.deliver(Packet {
+                to: 99,
+                index: 0,
+                value: 3
+            })
+            .is_err()
+        );
+        for n in 0..8 {
+            l.propose(n).unwrap();
+        }
+        assert!(l.propose(9).is_err());
+        assert_eq!(l.log(0).unwrap().len(), 8);
+    }
+}
+</code></pre></div></section>
+<h3>A small demonstration still handles its boundaries</h3><p>The simulator entry point prints through a locked stdout Write implementation and returns an I/O result, so a closed pipe is an ordinary error instead of a panic. Its one expect is a stated programmer invariant: Lab::default creates an online leader with an empty bounded log, and this fixed demonstration proposes only one value. That is not permission to expect success on arbitrary learner-provided schedules; the independent driver must validate and handle its inputs. The <a href="../../verification/service-output-followup.html">closed-output child-process regression</a> checks the actual demonstration executable.</p><h2 id="explore-the-model">Explore the model</h2><section class="widget" data-widget="partition" aria-label="A delayed replica"><h3>A delayed replica</h3><p>Conceptual teaching model: this trace does not show physical memory placement, prove a scheduler property, or implement consensus. Read the state explanation after each action.</p><div class="widget-visual" aria-hidden="true"></div><p data-output aria-live="polite"></p><button data-action="next">Next state</button><button data-action="reset">Reset</button><noscript>JavaScript is disabled. The lesson above contains the equivalent explanation; this optional state trace needs JavaScript.</noscript></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://raft.github.io/raft.pdf">Raft paper</a></li><li><a href="https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf">FLP impossibility paper</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-8/08-scheduler.html">Previous: Leases, retries, cancellation, and recovery</a><a href="../../lessons/stage-8/08-operations.html">Next: Operate a service with evidence and a rollback plan</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-and-specification-first">Purpose and specification first</a><a href="#plain-english-model-events-instead-of-wall-time">Plain-English model: events instead of wall time</a><a href="#prediction">Prediction</a><a href="#small-runnable-example">Small runnable example</a><a href="#guided-construction">Guided construction</a><a href="#deliberate-mistake">Deliberate mistake</a><a href="#independent-experiments">Independent experiments</a><a href="#review-and-evidence">Review and evidence</a><a href="#playbook-investigation">Playbook investigation</a><a href="#mastery-check">Mastery check</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</a><a href="#complete-earlier-milestone-source">Complete earlier milestone source</a><a href="#explore-the-model">Explore the model</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

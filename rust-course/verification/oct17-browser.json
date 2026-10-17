@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-17",
+  "isolated_origin": "http://127.0.0.1:8765",
+  "export": {
+    "passed": true,
+    "bytes": 179,
+    "sha256": "1a0a75adf277eb48dc9ae83fc8a5fdc5bb67cb52d4aedda8f5c7a64bc877ce17",
+    "fixture": "oct17-export-fixture.json",
+    "note": "The browser download-event wait timed out, but the actual saved file was read and its exact synthetic note and completion flag verified."
+  },
+  "import": {
+    "passed": false,
+    "status": "blocked_by_extension_permission",
+    "reason": "File chooser requires Allow access to file URLs; no permission changed or bypass attempted.",
+    "retry": {
+      "date": "2026-10-17T11:54:38.209380+00:00",
+      "origin": "http://127.0.0.1:8767",
+      "fixture": "oct17-export-fixture.json",
+      "result": "same extension file-URL restriction; upload did not proceed"
+    }
+  },
+  "scope": "Synthetic progress only on a separate port; no existing learner notes were modified."
+}

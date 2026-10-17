@@ -1,0 +1,15 @@
+Rust MCP follow-up — 2026-10-09
+
+LIVE SESSION TOOLS: FAILED (Unexpected response type)
+workspace_info: correct absolute nested course manifest; explicit Rust 1.99.0.
+cargo_metadata: same manifest; no_deps; frozen.
+
+DIRECT STDIO MCP: PASSED
+Configured binary/PATH: initialize; 33 tools; workspace-info; frozen cargo-metadata.
+Explicit-workspace launch: workspace-info; frozen cargo-metadata; frozen cargo-check core-rust-labs --lib using shared native target.
+
+No config, global toolchain, security or permission settings changed.
+Inference: live client/session integration boundary remains faulty; precise client cause unavailable.
+Next documented action: restart the rust MCP connection in host Settings, then retry the explicit manifest tool call.
+Official docs: https://learn.chatgpt.com/docs/extend/mcp?surface=cli
+Raw request/result evidence: mcp-followup.json

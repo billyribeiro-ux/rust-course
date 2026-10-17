@@ -1,0 +1,9 @@
+PASS real Rust snapshot through Vite preserves integer text, ledger and32-symbol budget
+PASS actual JavaScript client and lossless decoder consume real proxy response
+PASS read-only route, body, origin and identity rejection preserves state
+PASS HTML entry and development module assets are served successfully
+PASS four real upstream requests enforce fifth-request admission429
+PASS capacity returns after real responses close
+PASS real client/proxy timeout produces bounded failure
+PASS server state and proxy recover after timeout
+{"overall": "passed", "checks": 8, "http_requests": 52}

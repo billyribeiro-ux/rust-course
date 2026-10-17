@@ -1,0 +1,62 @@
+$ /Users/billyribeiro/.local/share/mise/installs/postgres/18.6/.mise-bins/initdb -D /tmp/rust-db-test-b7qcvuk6/data --auth=trust --no-locale -E UTF8
+The files belonging to this database system will be owned by user "billyribeiro".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C".
+The default text search configuration will be set to "english".
+
+Data page checksums are enabled.
+
+creating directory /tmp/rust-db-test-b7qcvuk6/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default "max_connections" ... 100
+selecting default "shared_buffers" ... 128MB
+selecting default time zone ... America/New_York
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+Success. You can now start the database server using:
+
+    /Users/billyribeiro/.local/share/mise/installs/postgres/18.6/bin/pg_ctl -D /tmp/rust-db-test-b7qcvuk6/data -l logfile start
+
+$ /Users/billyribeiro/.local/share/mise/installs/postgres/18.6/.mise-bins/pg_ctl -D /tmp/rust-db-test-b7qcvuk6/data -l /tmp/rust-db-test-b7qcvuk6/server.log -o "-c listen_addresses= -c unix_socket_directories=/tmp/rust-db-test-b7qcvuk6/socket -p 65433" -w start
+waiting for server to start.... done
+server started
+$ /Users/billyribeiro/.local/share/mise/installs/postgres/18.6/.mise-bins/createdb -h /tmp/rust-db-test-b7qcvuk6/socket -p 65433 -U billyribeiro rust_course_test_issues
+$ /Users/billyribeiro/.local/share/mise/installs/postgres/18.6/.mise-bins/createdb -h /tmp/rust-db-test-b7qcvuk6/socket -p 65433 -U billyribeiro rust_course_test_scheduler
+$ mise exec -- cargo test --locked --manifest-path projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p10-issues -p p14-scheduler --test postgres -- --ignored --nocapture
+   Compiling tokio v1.53.3
+   Compiling tokio-stream v0.1.19
+   Compiling hyper v1.12.0
+   Compiling tower v0.5.3
+   Compiling sqlx-core v0.9.0
+   Compiling hyper-util v0.1.21
+   Compiling axum v0.8.9
+   Compiling sqlx-postgres v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling p10-issues v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues)
+   Compiling p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.84s
+     Running tests/postgres.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/postgres-c9e4769430383a2b)
+
+running 1 test
+database operation failed: error returned from database: duplicate key value violates unique constraint "issue_audit_pkey" at line 673
+test postgres_authorization_transaction_pagination ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.03s
+
+     Running tests/postgres.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/postgres-ef31a3fad977647f)
+
+running 3 tests
+test crash_redelivery_fencing_dedup_cancellation ... ok
+test completion_samples_clock_after_waiting_for_its_row_lock ... ok
+test lease_fields_cannot_rewrite_durable_payload_or_retry_count ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.07s
+
+$ /Users/billyribeiro/.local/share/mise/installs/postgres/18.6/.mise-bins/pg_ctl -D /tmp/rust-db-test-b7qcvuk6/data -m fast -w stop
+waiting for server to shut down.... done
+server stopped

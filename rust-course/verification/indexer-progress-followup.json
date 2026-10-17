@@ -1,0 +1,326 @@
+{
+  "date": "2026-10-09",
+  "review_kind": "author self-review and scoped executed verification",
+  "independent_review": "pending",
+  "status": "passed",
+  "commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--version"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:00.793400+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "fmt",
+        "-p",
+        "p07-indexer",
+        "--manifest-path",
+        "projects/Cargo.toml"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:00.835073+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "p07-indexer",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:00.916410+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--locked",
+        "-p",
+        "p07-indexer",
+        "--all-targets",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:03.284522+00:00",
+      "exit_code": 101
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "fmt",
+        "-p",
+        "p07-indexer",
+        "--manifest-path",
+        "projects/Cargo.toml"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:30.518494+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "p07-indexer",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:30.596987+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--locked",
+        "-p",
+        "p07-indexer",
+        "--all-targets",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:31.444724+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-checkpoint.py",
+        "p07",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/p07-progress-checkpoint-d4ofx_lo/final"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:09:31.734663+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/p07-progress-checkpoint-d4ofx_lo/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:09:31.773911+00:00",
+      "exit_code": 0
+    }
+  ],
+  "tests": {
+    "library": 10,
+    "cli": 2,
+    "failed": 0,
+    "ignored": 0,
+    "new_library": 5,
+    "new_cli": 2
+  },
+  "changes": [
+    "Added synchronous coordinator-owned Progress callback; existing index API is a no-op-observer wrapper.",
+    "CLI emits progress on stderr while preserving deterministic final data on stdout; progress output failure requests cancellation and joins before error return.",
+    "Added concrete progressive accounting, investigation, engineering decisions and source inclusion in lesson 04-indexer."
+  ],
+  "limits": [
+    "Progress describes returned files, not timed or byte-level completion.",
+    "Synchronous filesystem reads and user callbacks may block; cancellation is cooperative.",
+    "Thread scheduling can vary intermediate counts; category conservation and final returned-entry agreement are tested.",
+    "Existing benchmark numbers use index with no progress output; no speed measurements were rerun or fabricated.",
+    "Closed progress-output sink regression is Unix-specific.",
+    "No browser inspection or independent acceptance claimed."
+  ],
+  "evidence": "verification/indexer-progress-followup.log",
+  "source_sha256": {
+    "projects/reference/p07-indexer/src/lib.rs": "a86a23003bcc00cda19e1f1a1fb90c253b3d3ad16d436609f4000d26e3cf3808",
+    "projects/reference/p07-indexer/src/main.rs": "ffe1fecac60f0e73152cd6c19e5c37b03f26c659b9792c968fb1a546358552e5",
+    "projects/reference/p07-indexer/tests/cli.rs": "c68b704c32d6790ea86636dc9d7f8345d08fc89366d6b5c48c2bab47020c358b"
+  },
+  "documentation": [
+    {
+      "source": "installed Rust 1.99.0 primary rustdoc",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/sync/mpsc/fn.sync_channel.html",
+      "url": "https://doc.rust-lang.org/1.99.0/std/sync/mpsc/fn.sync_channel.html",
+      "sha256": "418e8ee8c7e89701b46c305f28ded380ee7b6db37522aa5b6de26d393ebb06e8"
+    },
+    {
+      "source": "installed Rust 1.99.0 primary rustdoc",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/thread/fn.scope.html",
+      "url": "https://doc.rust-lang.org/1.99.0/std/thread/fn.scope.html",
+      "sha256": "fe2d8333925772173c4fdcd9ea611b42b9f5ad960b537b9c550b923b6a4e15b4"
+    },
+    {
+      "source": "installed Rust 1.99.0 primary rustdoc",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/ops/trait.FnMut.html",
+      "url": "https://doc.rust-lang.org/1.99.0/std/ops/trait.FnMut.html",
+      "sha256": "6e316b037f6de25542a50e4afa7892c38ddea12e1e5a056d04712a616ac2570b"
+    },
+    {
+      "source": "installed Rust 1.99.0 primary rustdoc",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/io/trait.Write.html",
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/trait.Write.html",
+      "sha256": "94483f38e85993952298cef6ca2d5bffc59cc4ad361889926d2ba03a53fda470"
+    }
+  ],
+  "initial_failure": "Strict Clippy rejected nested progress-output condition as collapsible_if. Reviewed and replaced with a short-circuit let chain; initial output retained in log.",
+  "final_commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "fmt",
+        "-p",
+        "p07-indexer",
+        "--manifest-path",
+        "projects/Cargo.toml"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:30.518494+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "p07-indexer",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:30.596987+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--locked",
+        "-p",
+        "p07-indexer",
+        "--all-targets",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:08:31.444724+00:00",
+      "exit_code": 0
+    }
+  ],
+  "checkpoint": {
+    "project": "p07",
+    "checkpoint": "final",
+    "reconstructed": true,
+    "offline_locked_all_targets": "passed",
+    "test_entries": 12,
+    "cleanup": "Only the newly owned temporary reconstruction was removed after commands completed. No learner work or shared build output was removed."
+  }
+}

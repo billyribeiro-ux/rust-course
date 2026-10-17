@@ -1,0 +1,158 @@
+{
+  "date": "2026-10-09",
+  "kind": "author-team reader follow-up",
+  "independent_review": "pending",
+  "browser_review": "not performed; saved browser access restrictions remain",
+  "scope": [
+    "Static review of current reader JavaScript, pure backup parser, responsive CSS and generated shell.",
+    "Executed Node tests for the pure backup parser and JavaScript syntax checks. No DOM, fake DOM, browser emulator, browser navigation or alternative browser route was used."
+  ],
+  "findings": [
+    {
+      "id": "RF01",
+      "issue": "Import activation relied on a control that was not a straightforward keyboard-operable button.",
+      "correction": "The generated shell now provides a real type=button Import control that activates the hidden file input; it has an accessible progress-JSON label.",
+      "locations": [
+        "scripts/build-course.py:shell",
+        "assets/course.js:#import-open click handler"
+      ],
+      "evidence": "Source relationship and JavaScript syntax checked; native file-picker interaction not observed."
+    },
+    {
+      "id": "RF02",
+      "issue": "Import success messaging could hide a localStorage write failure.",
+      "correction": "save returns a Boolean. Import reports a successful persisted merge only when save succeeds; otherwise it identifies page-only data and tells the reader to export before leaving.",
+      "locations": [
+        "assets/course.js:save",
+        "assets/course.js:#import change handler"
+      ],
+      "evidence": "Control-flow source review. Actual browser storage denial/quota behavior was not executed."
+    },
+    {
+      "id": "RF03",
+      "issue": "The former import silently discarded notes of at least 100000 characters, although the reader could save and export those notes.",
+      "correction": "A shared pure parser validates every notes/completed entry and rejects an invalid map as a whole. It preserves long valid strings; the import event applies an explicit 64 MiB file limit instead of silently filtering long notes. Parsing completes before any state merge.",
+      "locations": [
+        "assets/progress-data.js:record and parse",
+        "assets/course.js:#import change handler"
+      ],
+      "evidence": "Five pure Node tests passed, including exact long-Unicode round-trip, whole-import rejection for invalid entries and Boolean completion validation."
+    },
+    {
+      "id": "RF04",
+      "issue": "After unreadable saved progress, an unrelated theme or note save could overwrite recoverable original storage.",
+      "correction": "The reader retains the original raw text and blocks ordinary writes with loadInvalid. A validated user import must save that original under a recovery key before replacement is allowed. If recovery storage fails, the original key remains untouched and imported data stays page-only. Export exposes both current JSON and the retained original recovery text.",
+      "locations": [
+        "assets/course.js:initial storage load",
+        "assets/course.js:save",
+        "assets/course.js:#import change handler",
+        "assets/course.js:#export click handler"
+      ],
+      "evidence": "Source review of write order, guards and error paths. No synthetic Storage object or browser-storage test was used."
+    },
+    {
+      "id": "RF05",
+      "issue": "The mobile overlay covered the topbar menu button even though sequential keyboard navigation reached that button after the last sidebar link. Closed off-screen navigation also needed exclusion from focus.",
+      "correction": "At widths up to 850px, the sidebar is a normal-flow disclosure: display:none while closed, display:block while open, position:static and max-height:65vh with inherited scrolling. It no longer overlays the following topbar. Opening requests focus on the first link; Escape closes it, updates aria-expanded and requests focus on Menu.",
+      "locations": [
+        "assets/course.css:@media(max-width:850px)",
+        "assets/course.js:#menu and Escape handlers",
+        "scripts/build-course.py:shell navigation IDs and aria-controls"
+      ],
+      "evidence": "CSS/DOM-order and event-handler source review only. Actual layout, scrolling, Tab order and focus visibility remain unobserved."
+    },
+    {
+      "id": "RF06",
+      "issue": "A requested download was reported as exported without evidence that the browser saved it, and a manual fallback placed far down a lesson could be hard to reach.",
+      "correction": "Export always reveals a labeled readonly JSON textarea, opens its details panel and requests focus on that textarea. It reports Download requested and asks the user to confirm the file or copy the fallback. The original unreadable text is separately labeled for recovery; object URLs are revoked after use.",
+      "locations": [
+        "assets/course.js:#export click handler"
+      ],
+      "evidence": "Source review and syntax check. Download persistence, native dialog behavior and focus effects were not browser-verified."
+    }
+  ],
+  "node_version": "v24.21.0",
+  "tests": {
+    "passed": 5,
+    "failed": 0,
+    "cases": [
+      "Long Unicode notes round-trip unchanged.",
+      "Invalid entries reject the entire import instead of dropping notes.",
+      "Completed entries must be Boolean.",
+      "Unknown versions and malformed JSON are rejected.",
+      "Special object keys remain own data without changing the prototype."
+    ]
+  },
+  "commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--test",
+        "verification/progress-data.test.cjs"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--check",
+        "assets/progress-data.js"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--check",
+        "assets/course.js"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0
+    }
+  ],
+  "log": "verification/reader-followup.log",
+  "source_sha256": {
+    "assets/course.js": "465402d4e9ae5816a341018b62e2c9cf508166f26bd0c64079d7ffc9abee40c3",
+    "assets/progress-data.js": "f641f01c0cfc6c49658d7a1ff48610700ebe1296c686f1105826cd2aff885d60",
+    "assets/course.css": "a54f6c2766fa64c0c4df8f2906ec7a80c8e2f8fe6139632a9a10dd98cf473a61",
+    "scripts/build-course.py": "ea8233fb8dbb708b241a95619d909fae066dd9f8cf8adc423a6f12420dc3b38e",
+    "verification/progress-data.test.cjs": "6edfc75ca395bf4cc0dba3e197e249379870f8907a52847dd1746a19bf4aa5e9"
+  },
+  "conclusion": "All identified source-level defects listed here are corrected in the reviewed source. This is not browser acceptance or proof of every storage/focus/download behavior.",
+  "remaining_limits": [
+    "Actual keyboard, screen-reader, responsive layout and focus-visible behavior still require permitted browser verification.",
+    "The storage recovery and download branches were reviewed in source, not executed against a browser or simulated DOM.",
+    "The explicit 64 MiB import cap rejects larger backups with an error; the reader does not claim arbitrary-sized files are supported.",
+    "Shared-origin concurrent-tab editing and browser-managed storage eviction are outside these five pure parser tests.",
+    "A download request is not evidence that a file reached the user's filesystem; the UI now says so and supplies manual copy text."
+  ],
+  "primary_references": [
+    {
+      "title": "WHATWG HTML: File Upload state (type=file)",
+      "url": "https://html.spec.whatwg.org/multipage/input.html#file-upload-state-(type=file)",
+      "scope": "Primary semantics for the native file input; documentation review does not verify this browser's file chooser, download policy or actual focus/visibility."
+    }
+  ]
+}

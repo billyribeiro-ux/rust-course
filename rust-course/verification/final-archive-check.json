@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-09T06:57:01.527784+00:00",
+  "archive_file": "Candidate rust-course-review.zip validated before final evidence metadata refresh",
+  "archive_bytes": 1635651,
+  "files": 655,
+  "forbidden_entries": [],
+  "zip_integrity": "passed",
+  "extracted_static_check": {
+    "kind": "static checks only; not rendered browser QA",
+    "pages": 129,
+    "local_links_checked": 6091,
+    "source_inclusions_checked": 73,
+    "lessons_checked": 57,
+    "issues": [],
+    "total_issues": 0
+  },
+  "checkpoint_sources_and_locks_present": 37,
+  "extraction_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-extraction-e123invl",
+  "scope": "Fresh archive extraction, HTML/source correspondence, link graph and complete checkpoint catalog. Compiler/HTTP evidence is separately recorded; no browser rendering.",
+  "final_checksum": "The final archive is verified again after freezing metadata. Its exact SHA-256 and byte count are in the sibling rust-course-archive-verification.json and rust-course-review.zip.sha256, outside the archive to avoid a self-checksum cycle.",
+  "followup": "The original candidate record above is historical. The refreshed artifact is checked by scripts/verify-archive.py after final packing; exact file equality, fresh extraction, size and checksum are recorded in the sibling rust-course-archive-verification.json."
+}

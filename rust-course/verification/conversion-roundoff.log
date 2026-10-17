@@ -1,0 +1,4 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running `.course-cache/native/debug/examples/roundoff`
+0.1 + 0.2 = 0.30000000000000004
+equal to 0.3: false

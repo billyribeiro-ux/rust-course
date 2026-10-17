@@ -1,0 +1,10 @@
+$ mise exec -- rustc -Vv
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+binary: rustc
+commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+commit-date: 2026-10-13
+host: aarch64-apple-darwin
+release: 1.99.1
+LLVM version: 23.1.1

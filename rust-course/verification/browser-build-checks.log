@@ -1,0 +1,24 @@
+$ mise exec node@24.21.0 -- node --check assets/course.js
+
+
+$ mise exec node@24.21.0 -- node --test verification/progress-data.test.cjs
+✔ exported notes round-trip, including long Unicode text (2.260458ms)
+✔ invalid entries reject the entire import instead of dropping notes (0.279625ms)
+✔ completed values must be booleans (0.081708ms)
+✔ unknown versions and malformed JSON are rejected (0.074375ms)
+✔ special object keys are own data, not a prototype change (0.083709ms)
+✔ a stale lesson tab cannot authorize overwriting a completed newer save (0.092ms)
+✔ first save and repeated saves work when the expected snapshot still matches (0.072334ms)
+✔ deletion, malformed replacement and another first save also conflict (0.075917ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 44.157583
+
+
+$ mise exec -- cargo fmt --manifest-path projects/ui-console/Cargo.toml -- --check
+

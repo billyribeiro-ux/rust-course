@@ -1,0 +1,300 @@
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/00-scaffold#learner-p09-chat@0.1.0", "full_stdout_sha256": "360beeca221644c542569fa012432c70540c2adb329f5a852bb5cf13e3b20e21"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat 01-framing --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/01-framing
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/01-framing
+A synchronous byte-stream codec accepts UTF-8 frames of1..1024 bytes without control characters; distinguishes clean EOF from truncated input; bounds allocation before reading payload. No TCP listener, Tokio task, broadcast, or shutdown behavior exists in this milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/01-framing/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/01-framing/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/01-framing#checkpoint-p09-chat-01-framing@0.1.0", "full_stdout_sha256": "14507ec95f127f036518e62c10ad1f54e1be68b33c40bc8e036cdf85b35b3ef0"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/final/Cargo.toml
+metadata summary: {"packages": 17, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p09-chat/final#p09-chat@0.1.0", "full_stdout_sha256": "641c2659d188dee89c57aca385ef4b75c43d736789e5b30513f8eee4b7a24337"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/00-scaffold#learner-p09-chat@0.1.0", "full_stdout_sha256": "c124d05b2e3c8530e56a2431102ce771b3074131ef35f3c4d250f8257cc71026"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat 01-framing --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/01-framing
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/01-framing
+A synchronous byte-stream codec accepts UTF-8 frames of1..1024 bytes without control characters; distinguishes clean EOF from truncated input; bounds allocation before reading payload. No TCP listener, Tokio task, broadcast, or shutdown behavior exists in this milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/01-framing/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/01-framing/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/01-framing#checkpoint-p09-chat-01-framing@0.1.0", "full_stdout_sha256": "f90c8dcebc77e83a335b6f46c4a111bbd6d8beaf8c7053b49580ff78bc063e5e"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/final/Cargo.toml
+metadata summary: {"packages": 17, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/final#p09-chat@0.1.0", "full_stdout_sha256": "f17d51f4e01740722d368788ca1f801c0dd83df6804e862a5af0ba2cf305d2ca"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/00-scaffold#learner-p10-issues@0.1.0", "full_stdout_sha256": "d4fbdd2f7aa9908c9727352d974aaffa9a8c2ea9ac7a731f9b5290330a93094d"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues 01-http-validation --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/01-http-validation
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/01-http-validation
+An in-process Axum service exposes POST /issues/validate; the writer fixture receives a normalized title, a reader receives403, unknown identity401, invalid title422, invalid JSON400, and oversized body413. Four admitted requests, a one-second deadline, and4096-byte bodies are bounded. Nothing is persisted and this endpoint never creates an issue.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/01-http-validation/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/01-http-validation/Cargo.toml
+metadata summary: {"packages": 52, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/01-http-validation#checkpoint-p10-issues-01-http-validation@0.1.0", "full_stdout_sha256": "7e70189dcf553db67888bf332a31d0745d3116f3c783151efc27c20c883e2871"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/final/Cargo.toml
+metadata summary: {"packages": 162, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p10-issues/final#p10-issues@0.1.0", "full_stdout_sha256": "084c2fe4d14791696f439f667076223720fabdbb97b5e338cffc3ebd6b93dc6b"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/00-scaffold#learner-p10-issues@0.1.0", "full_stdout_sha256": "2e2e3f59b061f006b15a89f0128217cdbefc85a75a6a1014c0d72ceb11c84348"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues 01-http-validation --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/01-http-validation
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/01-http-validation
+An in-process Axum service exposes POST /issues/validate; the writer fixture receives a normalized title, a reader receives403, unknown identity401, invalid title422, invalid JSON400, and oversized body413. Four admitted requests, a one-second deadline, and4096-byte bodies are bounded. Nothing is persisted and this endpoint never creates an issue.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/01-http-validation/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/01-http-validation/Cargo.toml
+metadata summary: {"packages": 52, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/01-http-validation#checkpoint-p10-issues-01-http-validation@0.1.0", "full_stdout_sha256": "37d3fbbd7205e9fd853ee2ff4f4fc621992283dd3e70e9349dcf0d32c807ed39"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/final/Cargo.toml
+metadata summary: {"packages": 162, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/final#p10-issues@0.1.0", "full_stdout_sha256": "a6bcd7897203a26e8b2e36a69898855c765594b257e098791a85076ebb6a1615"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/00-scaffold#learner-p14-scheduler@0.1.0", "full_stdout_sha256": "1b3286bdf74396a21f51f6b498c6e97dff456805d5f65e3e248bd6bcc8947e79"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler 01-lease-model --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/01-lease-model
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/01-lease-model
+An in-memory queue retains at most16 jobs,256-byte payloads, three claims per job, and ten logical ticks per lease. Exact enqueue retries have no new effect; conflicting payloads fail. Expiry permits redelivery and a newer token fences old completion. Cancellation revokes completion. No database, OS clock, background worker, or external effect is implemented.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/01-lease-model/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/01-lease-model/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/01-lease-model#checkpoint-p14-scheduler-01-lease-model@0.1.0", "full_stdout_sha256": "dba10e574cb733e228530d83f21c19c8e643ae8bdfbd2ae67569ea3308ad8db5"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/final/Cargo.toml
+metadata summary: {"packages": 162, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p14-scheduler/final#p14-scheduler@0.1.0", "full_stdout_sha256": "e30dc966c8ff5f1bdcd06a0c80c075df9c48a9723c1d970537fa971e04a02480"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/00-scaffold#learner-p14-scheduler@0.1.0", "full_stdout_sha256": "1ba74748407a63cadb82ac8936464038ca6c1920631c5a44b6c4694c76b6b905"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler 01-lease-model --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/01-lease-model
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/01-lease-model
+An in-memory queue retains at most16 jobs,256-byte payloads, three claims per job, and ten logical ticks per lease. Exact enqueue retries have no new effect; conflicting payloads fail. Expiry permits redelivery and a newer token fences old completion. Cancellation revokes completion. No database, OS clock, background worker, or external effect is implemented.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/01-lease-model/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/01-lease-model/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/01-lease-model#checkpoint-p14-scheduler-01-lease-model@0.1.0", "full_stdout_sha256": "350648dc807c557b8160a2907fa278f96338df01435947e600ee7941ccaedfd3"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/final/Cargo.toml
+metadata summary: {"packages": 162, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/final#p14-scheduler@0.1.0", "full_stdout_sha256": "0ee850cd64c29e3af618ecbd6023fa0a9b98254a80ddd421dc02e9f03d43a946"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/00-scaffold#learner-p15-replication@0.1.0", "full_stdout_sha256": "a95e988bcd8b1a6026ee224d22c82e1c249581a7617ead79a7bcd6a7e0d91c99"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication 01-append-transport --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/01-append-transport
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/01-append-transport
+A fixed leader proposes up to8 values and produces at most16 pending packets for two followers. A caller can take, delay, drop, or deliver packets. Duplicate delivery is idempotent; gaps, conflicts, and invalid follower indices fail. No acknowledgments, committed prefix, elections, process persistence, or consensus guarantee exists here.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/01-append-transport/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/01-append-transport/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/01-append-transport#checkpoint-p15-replication-01-append-transport@0.1.0", "full_stdout_sha256": "fce90196c5ca00c1e840ccc93935ca40f5bb351f07d16c35dffbe37c63baa7da"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/final/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p15-replication/final#p15-replication@0.1.0", "full_stdout_sha256": "b7f60654cdedc214502720fc05567efc722745f79eed0a77d82af27657c95a93"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/00-scaffold#learner-p15-replication@0.1.0", "full_stdout_sha256": "7bd41176a9cccbbdb2ce22edafe57cd8d8101b2a71d466b98d01d7ff55574013"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication 01-append-transport --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/01-append-transport
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/01-append-transport
+A fixed leader proposes up to8 values and produces at most16 pending packets for two followers. A caller can take, delay, drop, or deliver packets. Duplicate delivery is idempotent; gaps, conflicts, and invalid follower indices fail. No acknowledgments, committed prefix, elections, process persistence, or consensus guarantee exists here.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/01-append-transport/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/01-append-transport/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/01-append-transport#checkpoint-p15-replication-01-append-transport@0.1.0", "full_stdout_sha256": "e7d9862d2e559b1999bca50a87dd8dff2ab37ec45c6b454dab79b9b661a9adef"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/final/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/final#p15-replication@0.1.0", "full_stdout_sha256": "c7268fe5eb65eeec37d533a7caaa141f5f9301b1a9ca5d21c9c7950e28d6d9b6"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/00-scaffold#learner-p16-workbench@0.1.0", "full_stdout_sha256": "5131437663e5ff2d670758ce9de70107459e6cdbbc6f8ad56bfdbb21ca0cb271"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench 01-order-domain --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/01-order-domain
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/01-order-domain
+A single synthetic symbol uses integer cents and whole shares. Quotes require increasing sequence numbers; orders retain stable logical IDs and an original accepted price. Purchases and sales use checked arithmetic, prohibit negative cash/shares, retain at most64 orders, and reject without partial state changes. No files, HTTP, watchlists, replay jobs, chart, or actual trading exists.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/01-order-domain/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/01-order-domain/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/01-order-domain#checkpoint-p16-workbench-01-order-domain@0.1.0", "full_stdout_sha256": "4f455580b4d8d8b6966a0d695d94e3a67494af22cbf64291f4eff58869ed240a"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/final/Cargo.toml
+metadata summary: {"packages": 54, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/p16-workbench/final#p16-workbench@0.1.0", "full_stdout_sha256": "875f98acd12e4f31aae42a5a47811c127fc574e7cb90296a793af3eb67b394ad"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/00-scaffold/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/00-scaffold#learner-p16-workbench@0.1.0", "full_stdout_sha256": "beaa62d3ce9fb37b9dc8f723915a90d4a593bd1acab1bcc301b85c03408118ef"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench 01-order-domain --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/01-order-domain
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/01-order-domain
+A single synthetic symbol uses integer cents and whole shares. Quotes require increasing sequence numbers; orders retain stable logical IDs and an original accepted price. Purchases and sales use checked arithmetic, prohibit negative cash/shares, retain at most64 orders, and reject without partial state changes. No files, HTTP, watchlists, replay jobs, chart, or actual trading exists.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/01-order-domain/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/01-order-domain/Cargo.toml
+metadata summary: {"packages": 1, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/01-order-domain#checkpoint-p16-workbench-01-order-domain@0.1.0", "full_stdout_sha256": "88404988a93570d64d970ab7904f74758b4b68e1718bbcaa7cfca18e04d9baa4"}
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/final/Cargo.toml
+metadata summary: {"packages": 54, "root": "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/final#p16-workbench@0.1.0", "full_stdout_sha256": "bf880b66d6ec965c67f3ad9bc2355bd84231d232291bff218a367fa3a5cc7933"}
+exit=0

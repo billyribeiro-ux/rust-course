@@ -1,0 +1,77 @@
+{
+  "patch": "001",
+  "scope": "p11 UI and course shell",
+  "independent_review": "pending",
+  "findings": [
+    {
+      "location": "projects/ui-console/src/lib.rs::App",
+      "issue": "Reactive cancellation flag could be disposed while an awaited request remained active",
+      "change": "Independently owned AtomicBool cancellation flag with post-await checks; explicit ordering rationale"
+    },
+    {
+      "location": "projects/ui-console/src/lib.rs::submit",
+      "issue": "Validated quantity later used unwrap and timestamp-counter IDs lacked a strong uniqueness mechanism",
+      "change": "Pattern match returns validated quantity; maintained UUID v4 crate generates IDs; ambiguous responses never auto-retry mutations"
+    },
+    {
+      "location": "projects/ui-console/src/lib.rs::get_json",
+      "issue": "Snapshot deadline ended after headers, before body decoding",
+      "change": "Keep cancellation timer alive through typed body parsing"
+    },
+    {
+      "location": "authoring/interface.json",
+      "issue": "Beginner-versus-idiomatic review framing",
+      "change": "Recommended semantic HTML from first checkpoint; incomplete controls explicitly labeled mistakes; project-specific decisions/evidence in every UI lesson"
+    },
+    {
+      "location": "assets/course.css",
+      "issue": "Export/import hidden on narrow displays",
+      "change": "Wrap the toolbar and retain all progress controls at narrow widths"
+    },
+    {
+      "location": "projects/reference/p11-ui-model/src/lib.rs; projects/ui-console/src/lib.rs",
+      "issue": "Empty history used null cursors while the UI expected numbers; replay sequence arithmetic could overflow.",
+      "change": "Optional history cursors match the schema; five-tick sequence range is checked before construction; targeted native regressions cover both."
+    },
+    {
+      "location": "projects/ui-console/src/lib.rs::submit and reconcile",
+      "issue": "Uncertain responses could be called rejected and a subsequent submit generated a new command ID.",
+      "change": "Classify deadline/conflict/server outcomes as uncertain. Retain exact instruction and ID, disable new input until resolved, permit same-payload retry and exact ledger lookup. Explicitly document page-lifetime retention."
+    },
+    {
+      "location": "projects/ui-console/src/lib.rs::App; scripts/console-server.py",
+      "issue": "Pause status could be overwritten by in-flight refresh; UI symbol bound disagreed with server; loopback-origin documentation differed from proxy check.",
+      "change": "Derive refresh completion label from current pause state; enforce 1\u20138-letter symbols; use documented 127.0.0.1 origin and bounded exact-order proxy route."
+    },
+    {
+      "location": "scripts/build-course.py; authoring/assessments-fragment.html",
+      "issue": "Stage assessment anchors and source-directory links were not portable static targets.",
+      "change": "Use actual gate anchors and project HTML/manifests. Static checker now reports zero missing links and exact source correspondence."
+    },
+    {
+      "location": "projects/reference/p11-ui-model/src/lib.rs::write_outcome",
+      "issue": "Rejecting a later retry does not establish that an earlier uncertain write failed.",
+      "change": "Retain pending identity across any retry rejection; only confirmed success or exact matching ledger reconciliation resolves it. Native regression covers401/422/429 after an uncertain attempt."
+    },
+    {
+      "location": "scripts/console-server.py",
+      "issue": "The loopback proxy previously admitted unlimited handler threads and idle incomplete bodies.",
+      "change": "Admit at most16 connections before spawning threads; reject excess with503 and apply a5-second idle socket timeout. Actual socket fixture confirms rejection and slot recovery; no total request deadline or public deployment claim."
+    },
+    {
+      "location": "projects/ui-console/index.html",
+      "issue": "A static WASM-package import failed before its error handler when the portable package had not yet been built.",
+      "change": "Visible startup/build instructions plus a dynamic import inside try/catch handle absent generated files. Inline JavaScript syntax checked; real-browser gate stays pending."
+    }
+  ],
+  "verification": {
+    "wasm_check": "passed; verification/ui-final-check.log",
+    "browser": "blocked: browser tool reported user declined localhost access",
+    "code_snippets": "regenerated from source and hash-checked by build-course.py",
+    "wasm_build": "passed; verification/ui-final-build.log",
+    "native_model": "5 tests passed: verification/ui-model-tests.log",
+    "proxy": "actual socket checks passed: verification/proxy-checks.json",
+    "wasm_clippy": "passed with-Dwarnings for final Rust UI source; verification/ui-clippy.log",
+    "loader": "syntax passed; verification/ui-loader-check.json"
+  }
+}

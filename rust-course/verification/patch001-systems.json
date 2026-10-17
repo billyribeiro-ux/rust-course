@@ -1,0 +1,142 @@
+{
+  "patch": "patch001",
+  "scope": "systems, concurrency, performance and unsafe projects and all 12 related lessons",
+  "author_self_review": "completed",
+  "independent_review": "pending",
+  "browser_review": "not performed; root reports browser access declined",
+  "principle": "Use professional, idiomatic habits appropriate to current scope from the first recommended implementation; poor patterns appear only in explicit diagnostic exercises.",
+  "items": [
+    {
+      "locations": [
+        "authoring/systems.json",
+        "projects/reference/p06-kv/decisions.html",
+        "projects/reference/p07-indexer/decisions.html",
+        "projects/reference/p08-monitor/decisions.html",
+        "projects/reference/p12-replay/decisions.html",
+        "projects/reference/p13-unsafe/decisions.html"
+      ],
+      "issue": "Each checkpoint needed an explicit engineering-decision review alongside runnable code.",
+      "fix": "Every lesson now states scope/invariants, chosen design and concrete Rust habits, reasonable alternative/tradeoff, tests/evidence limits, and the requirement threshold for evolution; 5 standalone HTML project decision records added.",
+      "status": "fixed"
+    },
+    {
+      "locations": [
+        "projects/reference/p06-kv/src/lib.rs"
+      ],
+      "issue": "Write-error poisoning and stale compaction were documented but lacked direct regressions.",
+      "fix": "Added real read-only-descriptor write failure injection asserting old acknowledged map, poisoned writes and successful reopen; added stale .compact test asserting visible AlreadyExists error and original log remains writable.",
+      "affected_tests": [
+        "failed_write_keeps_acknowledged_state_and_poison_requires_reopen",
+        "stale_compaction_file_is_visible_and_original_remains_writable"
+      ],
+      "status": "verified; targeted tests passed in verification/patch001-targeted.log"
+    },
+    {
+      "locations": [
+        "projects/reference/p12-replay/src/bin/benchmark.rs",
+        "authoring/systems.json"
+      ],
+      "issue": "Benchmark aggregate figures alone did not retain individual local samples for review.",
+      "fix": "Print every raw nanosecond sample before sorting, preserving median/min/max and no universal throughput claim.",
+      "affected_tests": [
+        "p12-replay existing semantic tests",
+        "benchmark executable smoke run"
+      ],
+      "status": "verified; targeted tests passed in verification/patch001-targeted.log"
+    },
+    {
+      "locations": [
+        "projects/reference/p07-indexer/src/lib.rs",
+        "projects/reference/p08-monitor/src/lib.rs"
+      ],
+      "issue": "Check professional resource and lifecycle habits at first implementation.",
+      "fix": "Already complies: bounded admission/queues/buffers; narrow receiver lock; per-file failures; deterministic presentation; request-wide and endpoint deadlines; bounded retries; owned task set aborted and drained at shutdown. Documented cooperative cancellation and limited HTTP transport scope.",
+      "status": "already complies"
+    },
+    {
+      "locations": [
+        "projects/reference/p13-unsafe/src/lib.rs"
+      ],
+      "issue": "Check unsafe-first teaching and unsupported claims.",
+      "fix": "Already complies: safe baseline precedes custom unsafe representation; private initialized-prefix invariant and local safety comments; bounds, ownership, ZST/alignment/drop/panic tests; Miri explicitly additional evidence and independent review pending.",
+      "status": "already complies"
+    },
+    {
+      "locations": [
+        "exercises/systems/manifest.json",
+        "verification/systems-compile-fail.json"
+      ],
+      "issue": "Intentional failures must be clearly labeled and match compiler diagnostics.",
+      "fix": "All 4 compile-fail examples verified under mise; E0502/E0277/E0373/E0133 observed as expected.",
+      "status": "verified"
+    },
+    {
+      "locations": [
+        "projects/reference/p12-replay/src/lib.rs",
+        "projects/reference/p12-replay/src/main.rs",
+        "authoring/systems.json",
+        "projects/reference/p12-replay/decisions.html"
+      ],
+      "issue": "Public mutable replay metrics let API callers bypass validated accounting transitions.",
+      "fix": "Made accounting fields private, exposed read-only getter methods, and updated CLI plus engineering explanations. Test-only internal overflow injection remains available inside the module.",
+      "affected_tests": [
+        "p12-replay full-state replay and transactional rejection suite",
+        "p12-replay CLI compilation"
+      ],
+      "status": "verified; targeted tests passed in verification/patch001-targeted.log"
+    }
+  ],
+  "executed_commands": [
+    {
+      "command": "mise exec -- cargo test --workspace --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native",
+      "executor": "root",
+      "result": "passed baseline; verification/native-tests.log",
+      "limitation": "Before the 2 added P06 regressions and raw-sample-output change; targeted rerun requested."
+    },
+    {
+      "command": "mise exec -- cargo fmt -p p06-kv -p p07-indexer -p p08-monitor -p p12-replay -p p13-unsafe",
+      "cwd": "rust-course/projects",
+      "executor": "systems author",
+      "result": "exit 0"
+    },
+    {
+      "command": "mise exec -- rustc --edition=2024 --error-format=json <each systems exercise> --out-dir <temporary directory>",
+      "cwd": "rust-course/projects",
+      "executor": "systems author",
+      "result": "All 4 intentionally failed with expected code; verification/systems-compile-fail.json"
+    },
+    {
+      "command": "mise exec -- cargo test --manifest-path scaffolds/<package>/Cargo.toml --target-dir <temporary directory> (all 5 packages)",
+      "cwd": "rust-course/projects",
+      "executor": "systems author",
+      "result": "Each scaffold compiles and its acceptance tests intentionally fail at explicit learner TODO; verification/systems-scaffolds.json",
+      "limitation": "This validates the starting exercise state; it is not a completed learner solution."
+    },
+    {
+      "command": "mise exec -- cargo test --manifest-path rust-course/projects/Cargo.toml -p p06-kv -p p12-replay -p rust-specializations --target-dir .course-cache/native > rust-course/verification/patch001-targeted.log 2>&1",
+      "executor": "root",
+      "result": "Latest P06/P12 tests passed including private accounting fields; verification/patch001-targeted.log",
+      "cwd": "outer rust-course workspace"
+    },
+    {
+      "command": "mise exec rust@nightly-2026-10-08 -- cargo miri test --manifest-path rust-course/projects/Cargo.toml -p p13-unsafe --target-dir .course-cache/miri",
+      "executor": "root",
+      "result": "7 tests passed; verification/miri-tests.log",
+      "limitation": "Executed-path dynamic evidence under the dated nightly; not a universal soundness proof."
+    }
+  ],
+  "lesson_ids": [
+    "03-tests",
+    "03-raii",
+    "03-log-store",
+    "03-recovery",
+    "04-threads",
+    "04-indexer",
+    "04-futures",
+    "04-monitor",
+    "07-performance",
+    "07-replay",
+    "07-unsafe",
+    "07-auditing"
+  ]
+}

@@ -1,0 +1,19 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p08_monitor-e08f30ea96476369)
+
+running 6 tests
+test tests::rejects_remote_addresses ... ok
+test tests::shutdown_aborts_in_flight_and_unstarted_work ... ok
+test tests::malformed_response_is_bounded ... ok
+test tests::concurrency_cap_and_input_order_hold ... ok
+test tests::retries_then_recovers ... ok
+test tests::hung_endpoint_has_a_deadline ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p08_monitor-5fde8386dd288a2b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

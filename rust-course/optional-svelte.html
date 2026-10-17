@@ -1,0 +1,294 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>One Rust backend, an optional Svelte 5 client · Rust Workshop</title><link rel="stylesheet" href="./assets/course.css"><script defer src="./assets/search-index.js"></script><script defer src="./assets/progress-data.js"></script><script defer src="./assets/course.js"></script></head><body data-root="./" data-page="optional-svelte"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="./index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="./index.html">Learning map</a><a class="nav-link" href="./playbook.html">Problem-solving playbook</a><a class="nav-link" href="./projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="./index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="./index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="./index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="./index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="./index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="./index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="./index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="./index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="./index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="./index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="./assessments/index.html">Independent assessments</a><a class="nav-link" href="./glossary.html">Glossary</a><a class="nav-link" href="./sources.html">Sources & versions</a><a class="nav-link" href="./review.html">Review checklist</a><a class="nav-link" href="./verification/index.html">Verification evidence</a><a class="nav-link" href="./coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="./index.html">Workshop</a> / One Rust backend, an optional Svelte 5 client</div><div class="eyebrow">Optional specialization · outside the Rust prerequisites</div>
+<h1>One Rust backend, an optional Svelte 5 client</h1>
+<p>This bridge builds a small, real, read-only interface for the same simulated workbench used by the Leptos console. It teaches a network boundary: a client written in another language must preserve the backend's contracts, numeric meaning, permission boundaries, and resource budgets. The main Rust learning path continues to use Leptos. You do not need Svelte, Node, or this exercise to complete the Rust projects.</p>
+<p>Prerequisites: <a href="lessons/stage-6/06-browser.html">browser foundations</a>, <a href="lessons/stage-5/05-web-boundaries.html">HTTP/browser boundaries</a>, and the <a href="lessons/stage-9/09-workbench.html">workbench API contract</a>. Optional JavaScript prerequisites are functions, objects, promises, and try/catch. A promise represents an eventual result; awaiting it suspends this function until it settles. JavaScript's garbage collector manages memory, but your code still owns the lifetime of requests and timers.</p>
+<h2 id="purpose-and-plain-english-model">Purpose and plain-English model</h2>
+<p>The Rust server owns quotes, positions, cash, accepted orders, and durable events. The client receives a snapshot: a read model for display at one point in time. Filtering a table changes which rows are visible; it does not change the authoritative quote map. Replacing the UI framework does not move transaction rules into the browser.</p>
+<p>Svelte compiles components written with markup, JavaScript, and scoped CSS. A rune is syntax understood by its compiler. <code>$state</code> makes a value reactive: assignments can update dependent markup. <code>$state.raw</code> is useful for the snapshot because this component replaces the whole response rather than mutating nested fields. <code>$derived.by</code> computes filtered rows from the current snapshot and filter. It is a calculation, not a place to start a request. <code>onMount</code> starts the initial read after mounting and returns a synchronous cleanup function. Cleanup cancels the request and prevents a late completion from updating a destroyed component. See the official <a href="https://svelte.dev/docs/svelte/$state">state</a>, <a href="https://svelte.dev/docs/svelte/$derived">derived-state</a>, and <a href="https://svelte.dev/docs/svelte/lifecycle-hooks">lifecycle documentation</a>.</p>
+<p>This is client-side rendering. The build produces JavaScript that mounts into the page's root element; there is no server-generated component HTML to hydrate. Hydration means connecting client behavior to compatible HTML already rendered on the server. We do not introduce SvelteKit, server rendering, or another backend for this read-only experiment.</p>
+<h2 id="verified-versions-and-why-these-choices-fit">Verified versions and why these choices fit</h2>
+<p>Version audit date: 2026-10-17. The selected frontend package releases were published by that date: Svelte5.57.2, Vite8.3.4, the official Svelte Vite plugin7.3.1, svelte-check4.7.7, TypeScript6.0.3, and lossless-json4.3.2. The package manifest and lockfile pin the dependency graph. TypeScript7 was available at verification, but the selected checker advertises compatibility with TypeScript5 or6; we use6.0.3. The optional mise file pins the already available Node26.12.0 runtime, which satisfies these packages' declared engine ranges. This is a tested combination, not a promise that arbitrary latest versions work together.</p>
+<p>Vite supplies the Svelte build integration and a local development server. The official plugin's peer ranges accept the chosen Svelte and Vite versions. The maintained lossless-json parser has one concrete purpose here: preserve Rust integer values before JavaScript can round them. The experiment has no CDN, external account, or runtime cloud dependency. npm downloads development dependencies during installation; the page itself reads only the loopback backend.</p>
+<h2 id="prediction-a-tiny-number-can-expose-a-large-boundary-error">Prediction: a tiny number can expose a large boundary error</h2>
+<p>Predict what ordinary JavaScript <code>JSON.parse</code> does with the integer18446744073709551615, the largest Rust u64. Now predict whether clicking Refresh twice while one request is waiting should send one request or two. Finally, imagine that a component disappears before a response arrives: who cancels its request, and who prevents a stale state update?</p>
+<details><summary>Prediction answer</summary><p>A JavaScript Number cannot represent every u64 exactly; ordinary parsing can round this integer. Our decoder parses integer tokens directly into bigint, then validates their Rust ranges. The client admits one outstanding request; the second call rejects without fetching. Component cleanup aborts the current request, and the disposed flag prevents an already-resolving continuation from updating state. Cancellation and a stale-result guard solve related but different lifecycle problems.</p></details>
+<h2 id="launch-the-actual-application">Launch the actual application</h2>
+<p>All project source is in <a href="experiments/svelte-bridge/package.json">experiments/svelte-bridge</a>. Use a new learner data directory for the Rust journal. If the chosen journal already exists, the backend resumes it; choose a new path when you want an empty session. Do not start a second writer on the same file.</p>
+<p>Terminal1, working directory: course root. Skip this start command if your workbench is already running on4116 and you intend to inspect that synthetic session.</p>
+<pre><code>mkdir -p learner-work/svelte-bridge-data
+WORKBENCH_LOG="$PWD/learner-work/svelte-bridge-data/events.jsonl" mise exec -- cargo run --manifest-path projects/Cargo.toml -p p16-workbench</code></pre>
+<p>Terminal2, working directory: course root, then the optional experiment:</p>
+<pre><code>cd experiments/svelte-bridge
+mise trust
+mise install
+mise exec -- npm ci --ignore-scripts
+mise exec -- npm run check
+mise exec -- npm test
+mise exec -- npm run build
+mise exec -- npm run dev</code></pre>
+<p>Open <a href="http://127.0.0.1:4176/">127.0.0.1:4176</a>. Vite uses a strict port: a conflict fails rather than silently moving the application to a different origin. The initial empty session displays cash and an empty-quotes explanation. In a third terminal, add one synthetic quote, then choose Refresh in the page:</p>
+<pre><code>curl -H 'Authorization: Bearer demo-operator' -H 'Content-Type: application/json' -d '{"event_id":"svelte-tick-1","symbol":"RUST","price_cents":125,"sequence":1}' http://127.0.0.1:4116/api/ticks</code></pre>
+<p>An exact retry of this tick is harmless; a previously used ID with different content is a conflict. If an existing session already has a later RUST sequence, use a fresh session or inspect its state before selecting an appropriate new event. The interface itself performs only GET /api/snapshot. It cannot submit orders, change watchlists, or create jobs.</p>
+<h2 id="the-complete-component">The complete component</h2>
+<p>File: <code>experiments/svelte-bridge/src/App.svelte</code>. The explicit received time is the browser's observation time, not a market timestamp. A failed refresh preserves the previous snapshot with a stale-state message. Empty quotes, an empty filter result, and an unavailable server have separate explanations. Native buttons and a labeled input supply keyboard behavior; keyed rows use a unique symbol. Compiler accessibility checks are useful evidence but do not replace a screen-reader and keyboard review.</p>
+<div class="code-wrap" data-source="experiments/svelte-bridge/src/App.svelte" data-sha256="9a53ea2797df1f39907426d910e9d59017aecd57c60c1139d142f1791015194d"><div class="code-label"><a href="./experiments/svelte-bridge/src/App.svelte">experiments/svelte-bridge/src/App.svelte</a></div><pre><code>&lt;script&gt;
+  import { onMount } from &#x27;svelte&#x27;;
+  import { createSnapshotClient, money } from &#x27;./client.js&#x27;;
+
+  /** @type {import(&#x27;./client.js&#x27;).Snapshot | null} */
+  let snapshot = $state.raw(null);
+  let filter = $state(&#x27;&#x27;);
+  let busy = $state(false);
+  let status = $state(&#x27;Waiting for the first snapshot.&#x27;);
+  let error = $state(&#x27;&#x27;);
+  let received = $state(&#x27;&#x27;);
+  const client = createSnapshotClient();
+  let disposed = false;
+  const visibleQuotes = $derived.by(() =&gt; (snapshot?.quotes ?? []).filter(quote =&gt; quote.symbol.includes(filter.trim().toUpperCase())));
+
+  async function refresh() {
+    if (busy || disposed) return;
+    busy = true;
+    error = &#x27;&#x27;;
+    status = snapshot ? &#x27;Refreshing; previous snapshot remains visible.&#x27; : &#x27;Loading the first snapshot…&#x27;;
+    try {
+      const next = await client.load();
+      if (disposed) return;
+      snapshot = next;
+      received = new Date().toLocaleTimeString();
+      status = &#x27;Snapshot received. Refresh to request another.&#x27;;
+    } catch (problem) {
+      if (disposed) return;
+      error = problem instanceof Error &amp;&amp; problem.name !== &#x27;AbortError&#x27; ? problem.message : &#x27;Request cancelled or its three-second deadline expired.&#x27;;
+      status = snapshot ? &#x27;Refresh failed; the displayed snapshot may be stale.&#x27; : &#x27;No snapshot is available.&#x27;;
+    } finally {
+      if (!disposed) busy = false;
+    }
+  }
+
+  onMount(() =&gt; {
+    void refresh();
+    return () =&gt; { disposed = true; client.cancel(); };
+  });
+&lt;/script&gt;
+
+&lt;svelte:head&gt;&lt;title&gt;Simulated Rust snapshot · optional Svelte bridge&lt;/title&gt;&lt;/svelte:head&gt;
+&lt;main&gt;
+  &lt;p class=&quot;eyebrow&quot;&gt;Optional language boundary lab&lt;/p&gt;
+  &lt;h1&gt;Rust snapshot, Svelte interface&lt;/h1&gt;
+  &lt;p class=&quot;notice&quot;&gt;&lt;strong&gt;SIMULATED DATA ONLY.&lt;/strong&gt; This read-only client uses public local fixture credentials. It does not place orders or connect to a broker.&lt;/p&gt;
+  &lt;div class=&quot;actions&quot;&gt;
+    &lt;button type=&quot;button&quot; onclick={refresh} disabled={busy}&gt;Refresh snapshot&lt;/button&gt;
+    &lt;button type=&quot;button&quot; onclick={() =&gt; client.cancel()} disabled={!busy}&gt;Cancel request&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;p role=&quot;status&quot;&gt;{status}&lt;/p&gt;
+  {#if error}&lt;p class=&quot;error&quot; role=&quot;alert&quot;&gt;{error} If the service is unavailable, start the local Rust workbench on port 4116, then retry.&lt;/p&gt;{/if}
+  {#if snapshot}
+    &lt;p&gt;Received locally at {received}. Committed events: {snapshot.events.toString()}. Simulated cash: &lt;strong&gt;{money(snapshot.cash_cents)}&lt;/strong&gt;.&lt;/p&gt;
+    &lt;label for=&quot;symbol-filter&quot;&gt;Filter quote symbols&lt;/label&gt;
+    &lt;input id=&quot;symbol-filter&quot; bind:value={filter} maxlength=&quot;8&quot; placeholder=&quot;For example, RUST&quot; autocomplete=&quot;off&quot; /&gt;
+    &lt;p&gt;Watchlist: {snapshot.watchlist.length ? snapshot.watchlist.join(&#x27;, &#x27;) : &#x27;empty&#x27;}.&lt;/p&gt;
+    {#if snapshot.quotes.length === 0}
+      &lt;p&gt;No quotes yet. Add a synthetic tick using the course terminal example.&lt;/p&gt;
+    {:else if visibleQuotes.length === 0}
+      &lt;p&gt;No symbols match this filter. Clear it to show all quotes.&lt;/p&gt;
+    {:else}
+      &lt;div class=&quot;table-wrap&quot;&gt;&lt;table&gt;
+        &lt;caption&gt;Latest accepted synthetic quotes&lt;/caption&gt;
+        &lt;thead&gt;&lt;tr&gt;&lt;th scope=&quot;col&quot;&gt;Symbol&lt;/th&gt;&lt;th scope=&quot;col&quot;&gt;Price&lt;/th&gt;&lt;th scope=&quot;col&quot;&gt;Sequence&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+        &lt;tbody&gt;{#each visibleQuotes as quote (quote.symbol)}&lt;tr&gt;&lt;th scope=&quot;row&quot;&gt;{quote.symbol}&lt;/th&gt;&lt;td&gt;{money(quote.price_cents)}&lt;/td&gt;&lt;td&gt;{quote.sequence.toString()}&lt;/td&gt;&lt;/tr&gt;{/each}&lt;/tbody&gt;
+      &lt;/table&gt;&lt;/div&gt;
+    {/if}
+    &lt;h2&gt;Position ledger&lt;/h2&gt;
+    {#if snapshot.positions.length === 0}&lt;p&gt;No simulated positions.&lt;/p&gt;
+    {:else}&lt;ul&gt;{#each snapshot.positions as position (position.symbol)}&lt;li&gt;{position.symbol}: {position.quantity.toString()} whole shares&lt;/li&gt;{/each}&lt;/ul&gt;{/if}
+  {/if}
+  &lt;p class=&quot;scope&quot;&gt;One request at a time; a three-second deadline and a 64 KiB response budget. Filter and snapshot state reset on reload. The course&#x27;s main interface remains Leptos.&lt;/p&gt;
+&lt;/main&gt;
+
+&lt;style&gt;
+  :global(body) { margin: 0; background: #101b2a; color: #e6edf5; font: 1rem/1.65 system-ui, sans-serif; }
+  main { max-width: 72ch; margin: 2rem auto; padding: 0 1.2rem 3rem; }
+  h1 { font-size: clamp(1.8rem, 5vw, 2.7rem); line-height: 1.15; }
+  .eyebrow { color: #99c9de; letter-spacing: .05em; }
+  .notice { border-left: .3rem solid #e8ba70; padding: .8rem 1rem; background: #1d2b3f; }
+  .actions { display: flex; gap: .7rem; flex-wrap: wrap; }
+  button, input { font: inherit; border: 1px solid #9baabb; border-radius: .3rem; padding: .55rem .8rem; }
+  button { background: #b4e4f0; color: #102538; cursor: pointer; }
+  button:disabled { opacity: .55; cursor: default; }
+  input { display: block; margin: .4rem 0 1rem; max-width: 100%; box-sizing: border-box; background: #182a3f; color: #fff; }
+  :global(:focus-visible) { outline: 3px solid #f0c16d; outline-offset: 3px; }
+  .error { border-left: .3rem solid #ffa9a9; padding: .6rem 1rem; color: #ffcbcb; }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  caption { text-align: left; font-weight: 700; padding: .5rem 0; }
+  th, td { text-align: left; border-bottom: 1px solid #53687f; padding: .6rem; }
+  .scope { border-top: 1px solid #53687f; padding-top: 1rem; color: #b7c9db; }
+&lt;/style&gt;
+</code></pre></div>
+<p><code>busy</code> controls the disabled buttons and protects the event handler from duplicate interaction. The client also enforces admission internally, because a visual disabled state alone is not a concurrency guarantee. <code>snapshot</code> is owned by this component instance. Reloading the page discards this local read model and filter; the durable Rust journal remains authoritative. No effect writes derived filter state back into another reactive variable.</p>
+<h2 id="decode-and-bound-the-network-boundary">Decode and bound the network boundary</h2>
+<p>File: <code>experiments/svelte-bridge/src/client.js</code>. The existing JSON fields remain unchanged: simulated, cash_cents, quotes, positions, orders, watchlist, and events. The decoder validates collection budgets and identity uniqueness as well as integer ranges. It accepts u64 sequence values without truncation and formats cents using bigint division and remainder. This is display formatting, not a second trading engine. Do not convert these values through Number and then attempt to recover lost digits.</p>
+<div class="code-wrap" data-source="experiments/svelte-bridge/src/client.js" data-sha256="6d6f594c618959825fea2c77c3dc9bdde4d45b5a35a5f4745c14af0f8c34d9da"><div class="code-label"><a href="./experiments/svelte-bridge/src/client.js">experiments/svelte-bridge/src/client.js</a></div><pre><code>import { parse } from &#x27;lossless-json&#x27;;
+/** @typedef {{symbol:string,price_cents:bigint,sequence:bigint}} Quote */
+/** @typedef {{symbol:string,quantity:bigint}} Position */
+/** @typedef {{order_id:string,symbol:string,side:&#x27;buy&#x27;|&#x27;sell&#x27;,quantity:bigint,price_cents:bigint}} Fill */
+/** @typedef {{simulated:true,cash_cents:bigint,quotes:Quote[],positions:Position[],orders:Fill[],watchlist:string[],events:bigint}} Snapshot */
+const I64_MAX = 9223372036854775807n;
+const U64_MAX = 18446744073709551615n;
+export const MAX_BYTES = 65_536;
+/** @param {unknown} value @returns {value is Record&lt;string,unknown&gt;} */
+function object(value) { return value !== null &amp;&amp; typeof value === &#x27;object&#x27; &amp;&amp; !Array.isArray(value); }
+/** @param {unknown} value @param {bigint} min @param {bigint} max */
+function integer(value, min, max) { return typeof value === &#x27;bigint&#x27; &amp;&amp; value &gt;= min &amp;&amp; value &lt;= max; }
+/** @param {unknown} value @returns {value is string} */
+function symbol(value) { return typeof value === &#x27;string&#x27; &amp;&amp; /^[A-Z]{1,8}$/.test(value); }
+/** @param {unknown} value @returns {value is string} */
+function identifier(value) { return typeof value === &#x27;string&#x27; &amp;&amp; /^[A-Za-z0-9_-]{1,80}$/.test(value); }
+/** @param {unknown[]} rows @param {string} key */
+function unique(rows, key) { return new Set(rows.map(row =&gt; object(row) ? row[key] : undefined)).size === rows.length; }
+/** Decode the existing Rust JSON contract without rounding i64/u64 values.
+ * @param {string} text @returns {Snapshot}
+ */
+export function decodeSnapshot(text) {
+  const value = parse(text, null, { parseNumber: (number) =&gt; {
+    if (!/^-?\d+$/.test(number) || number.length &gt; 21) throw new Error(&#x27;Expected bounded integer JSON&#x27;);
+    return BigInt(number);
+  }});
+  if (!object(value) || value.simulated !== true || !integer(value.cash_cents, 0n, I64_MAX)
+      || !integer(value.events, 0n, 10_000n)) throw new Error(&#x27;Invalid snapshot envelope&#x27;);
+  const { quotes, positions, orders, watchlist } = value;
+  if (!Array.isArray(quotes) || quotes.length &gt; 32 || !unique(quotes, &#x27;symbol&#x27;)
+      || !quotes.every(q =&gt; object(q) &amp;&amp; symbol(q.symbol) &amp;&amp; integer(q.price_cents, 1n, 100_000_000n) &amp;&amp; integer(q.sequence, 0n, U64_MAX))) throw new Error(&#x27;Invalid quotes&#x27;);
+  if (!Array.isArray(positions) || positions.length &gt; 32 || !unique(positions, &#x27;symbol&#x27;)
+      || !positions.every(p =&gt; object(p) &amp;&amp; symbol(p.symbol) &amp;&amp; integer(p.quantity, 0n, I64_MAX))) throw new Error(&#x27;Invalid positions&#x27;);
+  if (!Array.isArray(orders) || orders.length &gt; 100 || !unique(orders, &#x27;order_id&#x27;)
+      || !orders.every(o =&gt; object(o) &amp;&amp; identifier(o.order_id) &amp;&amp; symbol(o.symbol) &amp;&amp; (o.side === &#x27;buy&#x27; || o.side === &#x27;sell&#x27;) &amp;&amp; integer(o.quantity, 1n, 10_000n) &amp;&amp; integer(o.price_cents, 1n, 100_000_000n))) throw new Error(&#x27;Invalid orders&#x27;);
+  if (!Array.isArray(watchlist) || watchlist.length &gt; 32 || new Set(watchlist).size !== watchlist.length
+      || !watchlist.every(symbol)) throw new Error(&#x27;Invalid watchlist&#x27;);
+  // The preceding structural checks establish this read model at the boundary.
+  return /** @type {Snapshot} */ (/** @type {unknown} */ (value));
+}
+/** Format exact cents without passing through floating point. @param {bigint} cents */
+export function money(cents) {
+  const magnitude = cents &lt; 0n ? -cents : cents;
+  return `${cents &lt; 0n ? &#x27;-&#x27; : &#x27;&#x27;}$${magnitude / 100n}.${String(magnitude % 100n).padStart(2, &#x27;0&#x27;)}`;
+}
+/** One outstanding fetch per client, explicit byte budget, deadline and cancellation.
+ * @param {{fetcher?:typeof fetch,deadlineMs?:number}} [options]
+ */
+export function createSnapshotClient({ fetcher = globalThis.fetch, deadlineMs = 3000 } = {}) {
+  if (!Number.isFinite(deadlineMs) || deadlineMs &lt;= 0 || deadlineMs &gt; 30_000) throw new Error(&#x27;Invalid deadline&#x27;);
+  /** @type {AbortController | null} */
+  let active = null;
+  return {
+    cancel() { active?.abort(); },
+    async load() {
+      if (active) throw new Error(&#x27;A snapshot request is already active&#x27;);
+      const controller = new AbortController();
+      active = controller;
+      const timer = setTimeout(() =&gt; controller.abort(), deadlineMs);
+      try {
+        const response = await fetcher(&#x27;/api/snapshot&#x27;, {
+          headers: { Authorization: &#x27;Bearer demo-reader&#x27; },
+          credentials: &#x27;omit&#x27;, cache: &#x27;no-store&#x27;, signal: controller.signal
+        });
+        controller.signal.throwIfAborted();
+        if (!response.ok) throw new Error(`Snapshot request failed (HTTP ${response.status})`);
+        if (!response.headers.get(&#x27;content-type&#x27;)?.startsWith(&#x27;application/json&#x27;) || !response.body) throw new Error(&#x27;Expected JSON response&#x27;);
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder(&#x27;utf-8&#x27;, { fatal: true });
+        let bytes = 0;
+        let text = &#x27;&#x27;;
+        try {
+          while (true) {
+            const chunk = await reader.read();
+            controller.signal.throwIfAborted();
+            if (chunk.done) break;
+            bytes += chunk.value.byteLength;
+            if (bytes &gt; MAX_BYTES) throw new Error(&#x27;Snapshot response exceeds byte budget&#x27;);
+            text += decoder.decode(chunk.value, { stream: true });
+          }
+          text += decoder.decode();
+        } finally { reader.releaseLock(); }
+        controller.signal.throwIfAborted();
+        return decodeSnapshot(text);
+      } catch (error) {
+        controller.abort();
+        throw error;
+      } finally {
+        clearTimeout(timer);
+        active = null;
+      }
+    }
+  };
+}
+</code></pre></div>
+<p>A request has one AbortController, a three-second timer, and a64KiB response limit. The same signal applies to receiving headers and reading the body. The timer is cleared in finally for success, failure, and cancellation. Streaming reads enforce the byte budget even when Content-Length is absent or inaccurate. The decoder rejects non-JSON responses, malformed data, duplicate identities, unsupported integer syntax, and invalid domain ranges before the component replaces its snapshot. A failed read therefore preserves the last valid display state.</p>
+<p>The source uses lossless-json4.3.2's <code>parseNumber</code> option, verified against that installed package's type declarations and tests. Its README's earlier bigint example used a different property spelling at verification time; the checker and exact-integer test caught the mismatch. This is a practical reason to consult versioned APIs and executable evidence rather than copying an example blindly. See the <a href="https://github.com/josdejong/lossless-json">maintainer's documentation</a> alongside the pinned package.</p>
+<h2 id="the-local-same-origin-proxy">The local same-origin proxy</h2>
+<p>The browser requests <code>/api/snapshot</code> from its own origin4176. Vite forwards that one route to the Rust server on4116. A small middleware admits at most four upstream response lifetimes, rejects writes and body-bearing requests, and refuses an unexpected Origin header. The upstream HTTP agent bounds sockets to four, uses three-second network timeouts, and destroys an outgoing request if the client connection closes. These are local development boundaries. They do not provide production login, TLS termination, or protection against an already hostile local machine. The credential shown in source is a public demo-reader fixture.</p>
+<div class="code-wrap" data-source="experiments/svelte-bridge/vite.config.js" data-sha256="7085d3c79e10e9b78a8bc7176ddc182e81bcd473269bff68cb0727dabd430f19"><div class="code-label"><a href="./experiments/svelte-bridge/vite.config.js">experiments/svelte-bridge/vite.config.js</a></div><pre><code>import { defineConfig } from &#x27;vite&#x27;;
+import { Agent } from &#x27;node:http&#x27;;
+import { svelte } from &#x27;@sveltejs/vite-plugin-svelte&#x27;;
+
+// Local teaching proxy: one read-only route, at most four upstream requests.
+// A Vite development server is not a reviewed production deployment.
+export function snapshotAdmission() {
+  return {
+    name: &#x27;local-snapshot-admission&#x27;,
+    configureServer(server) {
+      let active = 0;
+      server.middlewares.use((request, response, next) =&gt; {
+        if (!request.url?.startsWith(&#x27;/api/&#x27;)) return next();
+        if (request.url !== &#x27;/api/snapshot&#x27;) { response.writeHead(404).end(); return; }
+        if (request.method !== &#x27;GET&#x27;) { response.writeHead(405, { Allow: &#x27;GET&#x27; }).end(); return; }
+        if (request.headers[&#x27;transfer-encoding&#x27;] || Number(request.headers[&#x27;content-length&#x27;] ?? 0) !== 0) { response.writeHead(400).end(); return; }
+        if (request.headers.origin &amp;&amp; request.headers.origin !== &#x27;http://127.0.0.1:4176&#x27;) { response.writeHead(403).end(); return; }
+        if (active &gt;= 4) { response.writeHead(429).end(); return; }
+        active += 1;
+        let released = false;
+        const release = () =&gt; { if (!released) { released = true; active -= 1; } };
+        response.once(&#x27;close&#x27;, release);
+        response.once(&#x27;finish&#x27;, release);
+        next();
+      });
+    }
+  };
+}
+export default defineConfig({
+  plugins: [snapshotAdmission(), svelte()],
+  server: {
+    host: &#x27;127.0.0.1&#x27;, port: 4176, strictPort: true,
+    proxy: { &#x27;^/api/snapshot$&#x27;: { target: &#x27;http://127.0.0.1:4116&#x27;, timeout: 3000, proxyTimeout: 3000,
+      agent: new Agent({ keepAlive: false, maxSockets: 4, maxTotalSockets: 4 }),
+      configure(proxy) {
+        proxy.on(&#x27;proxyReq&#x27;, (outbound, _request, response) =&gt; {
+          if (response.destroyed) outbound.destroy();
+          else response.once(&#x27;close&#x27;, () =&gt; outbound.destroy());
+        });
+      }
+    } }
+  }
+});
+</code></pre></div>
+<p>This proxy avoids requiring cross-origin access for the legitimate browser flow; it does not replace backend authorization. A native client can directly call4116. The strict endpoint and method rules limit what this particular local proxy forwards. Read the <a href="https://vite.dev/config/server-options#server-proxy">official Vite proxy documentation</a> before changing routing or host settings. The generated dist directory is a build artifact; its files alone do not implement the proxy.</p>
+<h2 id="deliberate-mistake-and-guided-change">Deliberate mistake and guided change</h2>
+<p><strong>Intentional failure to investigate:</strong> replace the custom decoder with ordinary JSON.parse and convert all numeric fields to Number. Run the large-sequence test. A page that displays rounded identifiers can look correct while corrupting a reconciliation or ordering decision. Restore the lossless boundary before continuing. Do not compensate by shortening the displayed number; formatting does not repair the value.</p>
+<p>For a guided increment, add a read-only column showing each quoted symbol's current whole-share position. Derive a lookup from the existing positions array, keep the current keys, and use zero when the symbol has no holding. Do not request one network response per table row. The acceptance criteria are: one snapshot request still supplies all rows; an empty position list displays zero; changing the filter does not trigger network traffic; whole-share quantities remain exact bigint values.</p>
+<details><summary>Hint1: keep it derived</summary><p>The lookup depends only on snapshot.positions. Compute it with a derived expression; do not synchronize a second mutable copy with an effect.</p></details>
+<details><summary>Hint2: preserve numeric meaning</summary><p>A map from symbol to quantity can return bigint or undefined. Use <code>0n</code> as the default and call toString for text.</p></details>
+<details><summary>Reference approach</summary><p>Create a derived Map from the position entries and read <code>(holdings.get(quote.symbol) ?? 0n).toString()</code> in the new cell. Add the corresponding column header with scope=col. For this bounded32-symbol snapshot, either a map or a linear find is reasonable; explain the difference in setup and lookup cost before claiming a performance benefit.</p></details>
+<h2 id="independent-practice-and-playbook-investigation">Independent practice and playbook investigation</h2>
+<p>Specification: add a user-controlled “watched symbols only” checkbox. It must combine with the existing text filter, remain local to the component, and distinguish an empty watchlist from no filter matches. Preserve the one-request budget. Provide a prediction, a minimal acceptance test for your pure filtering function, and an accessibility review of the control. Do not extend the server API for a calculation already supported by the snapshot.</p>
+<p>Incident evidence: a learner reports “Refresh failed; Rust lost the quote,” yet the old quote remains visible and the error contains HTTP503. Possible hypotheses are a committed-state loss, a temporarily unavailable backend, an overloaded proxy, or a stale frontend build. Distinguish them: inspect the server's exact snapshot response and event count using the reader fixture; check the client build/version; and reproduce the pure decoder with the captured synthetic response. If the server still returns the quote, that disproves state loss for that observation. A previous snapshot plus a visible error is intentional stale-state behavior, not a rollback.</p>
+<p>For the parser incident, retain two plausible hypotheses: the backend changed its schema, or the client called the wrong versioned parsing option. Compare the installed type declaration with the decoder's object key, then run a focused exact-integer test. The fix is the supported option and a regression, not weakening validation until the response appears accepted. State what remains untested: browser lifecycle timing, actual screen-reader announcements, and the complete proxy path are not established by Node unit tests.</p>
+<h2 id="engineering-decisions-evidence-and-limits">Engineering decisions, evidence, and limits</h2>
+<p>The bridge keeps server authority and uses a small read-only client because the learning objective is language interoperability. Manual refresh avoids introducing a second polling scheduler. One client request, four proxy admissions, bounded rows, and byte limits make resource reasoning visible. A maintained numeric parser is justified by the existing Rust integer contract; an alternative would be a versioned API that serializes selected integers as decimal strings. That alternative requires coordinated API evolution and tests, not a unilateral client assumption.</p>
+<p>Historical October 9 evidence (the exact older versions and logs remain in the linked manifest): svelte-check reports zero errors and zero warnings; nine Node tests cover exact integers, malformed contracts, response limits, request admission, cancellation, slow-body deadlines, late responses, proxy method/origin rules, and permit release. The Vite production build succeeds. The Svelte autofixer reports no issues or suggestions. npm's dependency audit reports no known advisories for the installed graph at verification time; that is not proof of absence of defects. <a href="verification/svelte-bridge.json">The evidence manifest</a> links exact versions, commands, initial failures and final logs.</p>
+<p>A separate October 9 <a href="verification/oct09-svelte-http-audit.json">real HTTP integration audit</a> passed eight acceptance groups across52 requests. It started owned Vite and Rust processes with a disposable journal, exercised the32-symbol budget, preserved the maximum u64 sequence through the proxy and actual JavaScript decoder, checked served entry/modules and read-only rejection, filled all four proxy slots to observe429, and injected a slow upstream to verify bounded failure and recovery. All owned processes were stopped. This verifies the development proxy/backend path and client module without opening a browser.</p>
+<p><a href="verification/browser-live.html">Earlier live Chrome checks</a> verified layout, filtering, refresh, cancellation and offline recovery. After the runtime update on October 17, the current dependencies passed nine Node tests, svelte-check with zero errors and warnings, the Vite production build, the npm advisory scan with zero known vulnerabilities, and all eight real HTTP acceptance groups across 52 requests. The official Svelte MCP autofixer reported no issues or suggestions. <a href="verification/oct17-resumed.html">The resumed verification report</a> links the exact logs, source hash and scoped results. These command checks do not claim a new rendered-component browser run. Independent review remains pending.</p>
+<aside><h2 id="when-you-get-stuck">When you get stuck</h2><p>From experiments/svelte-bridge, rerun <code>mise exec -- npm run check</code>, then <code>mise exec -- npm test</code>. If installation complains about Node, compare <code>mise exec -- node --version</code> with the pinned mise file. If the page reports a backend error, inspect the Rust process and use the reader fixture on /api/snapshot; never invent an empty successful response to hide the failure. For review, supply the minimal synthetic response, exact package versions, expected and observed statuses, and the smallest failing test. Do not include real credentials.</p></aside>
+<h2 id="mastery-check">Mastery check</h2>
+<p>Explain the distinction between a reactive calculation and an owned async operation. Show why integer loss must be prevented before ordinary Number conversion. Modify the watched-symbol filter without adding requests. Debug a timeout while preserving the last valid snapshot, and explain what aborting the client does and does not guarantee about server work. Finally, compare this client to the Leptos version using correctness, lifecycle clarity, team skills, and measured maintenance cost rather than language loyalty.</p>
+<h2 id="october-17-compatibility-decision">October 17 compatibility decision</h2><p>Node 26.12.0 is the latest Current release; Node 24.22.0 is latest LTS. This client now pins Current. The latest svelte-check 4.7.7 declares TypeScript ^5.0.0 or ^6.0.0, so this client uses 6.0.3. TypeScript 7.0.2 is newer but is outside that supported peer contract. No force or legacy-peer-deps override is used. The <a href="verification/versions-2026-10-17.json">publisher metadata ledger</a> records both versions and the restriction.</p><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="./playbook.html">Investigate with evidence</a> · <a href="./review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,14 @@
+[tools]
+rust = "1.99.1"
+node = "26.12.0"
+
+[env]
+CARGO_TARGET_DIR = "{{config_root}}/.local/native-target"
+
+[tasks.course]
+description = "Serve the offline Rust course on localhost:8000"
+run = "python3 scripts/serve.py"
+
+[tasks.verify]
+description = "Run the course's reproducible checks"
+run = "python3 scripts/verify.py"

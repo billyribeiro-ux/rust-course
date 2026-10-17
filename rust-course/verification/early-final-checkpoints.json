@@ -1,0 +1,199 @@
+{
+  "date": "2026-10-09",
+  "type": "author early/final source reconstruction and standalone lock verification",
+  "independent_review": "pending",
+  "checks": [
+    {
+      "command": "python3 scripts/start-checkpoint.py p01 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p01 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p01 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-01-checked-add-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p01 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p01-calculator-final-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p02 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p02 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p02 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-01-domain-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p02 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p02-journal-final-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p03 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p03 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p03 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-01-bounded-lines-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p03 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p03-logs-final-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p04 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p04 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p04 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-01-effective-port-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p04 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p04-config-final-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p05 01-token-spans --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p05 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p05 01-token-spans --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-01-token-spans-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p05 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p05-expressions-final-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p06 01-prefix-replay --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo generate-lockfile --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p06 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p06 01-prefix-replay --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-01-prefix-replay-locked/Cargo.toml",
+      "exit": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p06 final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- cargo metadata --offline --locked --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-locks-tx8ulz7n/p06-kv-final-locked/Cargo.toml",
+      "exit": 0
+    }
+  ]
+}

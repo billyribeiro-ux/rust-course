@@ -1,0 +1,1079 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Deterministic replay with exact domain values · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="07-replay" data-lesson="07-replay"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Deterministic replay with exact domain values</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 07 / Performance and unsafe Rust</div><h1>Deterministic replay with exact domain values</h1><p class="lead">Model events, fixed-point prices and bounded state so the same accepted stream reproduces the same result.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-7/07-performance.html">Measure a claim before optimizing</a></li></ul><ul><li>Use distinct IDs and exact fixed-point prices</li><li>Validate before mutation so rejections are transactional</li><li>Bound active state while streaming an unbounded-looking workload</li><li>Distinguish deterministic state from weak digest evidence</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#compaction">compaction</a> · <a href="../../glossary.html#deduplication">deduplication</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#idempotency">idempotency</a> · <a href="../../glossary.html#lifetime">lifetime</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p12">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-separate-a-domain-state-machine-from-its-transport">Purpose: separate a domain state machine from its transport</h2>
+<p>P12 replays synthetic placement and cancellation events into a bounded map of resting orders. It is not an exchange simulator, matching engine, trading strategy or model of profitability. That narrow purpose lets us focus on exact representation, sequencing and failure semantics. The core API receives an Event and either accepts a transition or rejects it without changing state. A CLI generates a deterministic stream and prints the resulting summary. A separate benchmark measures that same core. Keeping generation, state transitions and measurement distinct makes it possible to test each claim without depending on a network feed.</p>
+<h2 id="model-make-invalid-meanings-harder-to-mix">Model: make invalid meanings harder to mix</h2>
+<p>OrderId and EventId are separate newtypes even though both wrap u64. An order identifier locates a live order; an event sequence identifies the required next transition. Mixing them is a semantic bug that primitive integers alone would not reveal. Price stores integer ticks at a scale of ten thousand, so 12.34 becomes exactly 123400 ticks. Decimal parsing checks grammar, precision and bounds using integer arithmetic. It rejects signs, exponents, non-digits, zero and excessive precision. Display reconstructs a four-place decimal string. This is a chosen domain scale, not a universal representation for every financial instrument.</p>
+<h2 id="predict-state-and-rejection-behavior">Predict state and rejection behavior</h2>
+<p>Start with sequence one and place order seven. Submit sequence two with order seven again. Predict both the error and every state field afterward. The duplicate is rejected and the expected sequence remains two, allowing a corrected event with sequence two to be retried. Now cancel an absent order or exceed capacity. Those failures also leave state unchanged. Order IDs may be reused after their earlier order has been removed; the reference checks active duplicates rather than preserving a lifetime history of every ID. State this policy explicitly before extending the system.</p>
+<pre><code>cd rust-course/projects
+mise exec -- cargo run -p p12-replay -- 100003
+mise exec -- cargo test -p p12-replay rejection_is_transactional
+mise exec -- cargo test -p p12-replay injected_accounting_overflow
+mise exec -- cargo test --manifest-path scaffolds/p12-replay/Cargo.toml</code></pre>
+<h2 id="read-the-transition-boundary">Read the transition boundary</h2>
+<div class="code-wrap" data-source="projects/reference/p12-replay/src/lib.rs" data-sha256="09bbbdb34470f9826e9a2ffee38e9d08825791204cfaf5897928c36171c3bbef"><div class="code-label"><a href="../../projects/reference/p12-replay/src/lib.rs">projects/reference/p12-replay/src/lib.rs</a></div><pre><code>//! Deterministic synthetic resting-order replay; no trading or execution model.
+use std::{collections::BTreeMap, fmt};
+
+pub mod ticks;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub struct OrderId(pub u64);
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct EventId(pub u64);
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Price(u64);
+impl Price {
+    pub const SCALE: u64 = 10_000;
+    pub fn from_ticks(ticks: u64) -&gt; Result&lt;Self, Error&gt; {
+        if ticks == 0 || ticks &gt; 1_000_000_000_000 {
+            Err(Error::InvalidPrice)
+        } else {
+            Ok(Self(ticks))
+        }
+    }
+    pub fn ticks(self) -&gt; u64 {
+        self.0
+    }
+    pub fn parse(input: &amp;str) -&gt; Result&lt;Self, Error&gt; {
+        let (whole, fractional) = input.split_once(&#x27;.&#x27;).unwrap_or((input, &quot;&quot;));
+        if whole.is_empty()
+            || !whole.bytes().all(|b| b.is_ascii_digit())
+            || fractional.len() &gt; 4
+            || !fractional.bytes().all(|b| b.is_ascii_digit())
+        {
+            return Err(Error::InvalidPrice);
+        }
+        let whole = whole.parse::&lt;u64&gt;().map_err(|_| Error::InvalidPrice)?;
+        let mut fraction = if fractional.is_empty() {
+            0
+        } else {
+            fractional.parse::&lt;u64&gt;().map_err(|_| Error::InvalidPrice)?
+        };
+        for _ in fractional.len()..4 {
+            fraction *= 10;
+        }
+        Self::from_ticks(
+            whole
+                .checked_mul(Self::SCALE)
+                .and_then(|n| n.checked_add(fraction))
+                .ok_or(Error::InvalidPrice)?,
+        )
+    }
+}
+impl fmt::Display for Price {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        write!(f, &quot;{}.{:04}&quot;, self.0 / Self::SCALE, self.0 % Self::SCALE)
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Side {
+    Buy,
+    Sell,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Order {
+    pub side: Side,
+    pub price: Price,
+    pub quantity: u64,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Action {
+    Place { id: OrderId, order: Order },
+    Cancel { id: OrderId },
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Event {
+    pub sequence: EventId,
+    pub action: Action,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Error {
+    InvalidPrice,
+    InvalidQuantity,
+    InvalidLimit,
+    Sequence { expected: u64, received: u64 },
+    Duplicate(OrderId),
+    Missing(OrderId),
+    Capacity,
+    Overflow,
+}
+impl fmt::Display for Error {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        write!(f, &quot;{self:?}&quot;)
+    }
+}
+impl std::error::Error for Error {}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Replay {
+    orders: BTreeMap&lt;OrderId, Order&gt;,
+    next_sequence: u64,
+    capacity: usize,
+    accepted: u64,
+    /// Sum of submitted price ticks * quantity, not profit or traded volume.
+    submitted_notional_ticks: u128,
+}
+impl Replay {
+    pub fn new(capacity: usize) -&gt; Result&lt;Self, Error&gt; {
+        if capacity == 0 || capacity &gt; 4096 {
+            return Err(Error::InvalidLimit);
+        }
+        Ok(Self {
+            orders: BTreeMap::new(),
+            next_sequence: 1,
+            capacity,
+            accepted: 0,
+            submitted_notional_ticks: 0,
+        })
+    }
+    pub fn orders(&amp;self) -&gt; &amp;BTreeMap&lt;OrderId, Order&gt; {
+        &amp;self.orders
+    }
+    pub fn accepted(&amp;self) -&gt; u64 {
+        self.accepted
+    }
+    pub fn submitted_notional_ticks(&amp;self) -&gt; u128 {
+        self.submitted_notional_ticks
+    }
+    /// Validation precedes mutation: a rejected event leaves the entire state unchanged.
+    pub fn apply(&amp;mut self, event: Event) -&gt; Result&lt;(), Error&gt; {
+        if event.sequence.0 != self.next_sequence {
+            return Err(Error::Sequence {
+                expected: self.next_sequence,
+                received: event.sequence.0,
+            });
+        }
+        let next = self.next_sequence.checked_add(1).ok_or(Error::Overflow)?;
+        let accepted = self.accepted.checked_add(1).ok_or(Error::Overflow)?;
+        match event.action {
+            Action::Place { id, order } =&gt; {
+                if order.quantity == 0 || order.quantity &gt; 1_000_000_000 {
+                    return Err(Error::InvalidQuantity);
+                }
+                if self.orders.contains_key(&amp;id) {
+                    return Err(Error::Duplicate(id));
+                }
+                if self.orders.len() == self.capacity {
+                    return Err(Error::Capacity);
+                }
+                let notional = self
+                    .submitted_notional_ticks
+                    .checked_add(u128::from(order.price.0) * u128::from(order.quantity))
+                    .ok_or(Error::Overflow)?;
+                self.orders.insert(id, order);
+                self.submitted_notional_ticks = notional;
+            }
+            Action::Cancel { id } =&gt; {
+                if self.orders.remove(&amp;id).is_none() {
+                    return Err(Error::Missing(id));
+                }
+            }
+        }
+        self.next_sequence = next;
+        self.accepted = accepted;
+        Ok(())
+    }
+    /// Stable quick check, not a collision-free substitute for comparing complete states.
+    pub fn digest(&amp;self) -&gt; u64 {
+        let mut hash = 0xcbf2_9ce4_8422_2325u64;
+        let mut feed = |number: u64| {
+            for b in number.to_le_bytes() {
+                hash = (hash ^ u64::from(b)).wrapping_mul(0x100_0000_01b3);
+            }
+        };
+        feed(self.accepted);
+        feed(self.submitted_notional_ticks as u64);
+        feed((self.submitted_notional_ticks &gt;&gt; 64) as u64);
+        for (id, order) in &amp;self.orders {
+            feed(id.0);
+            feed(u64::from(order.side == Side::Sell));
+            feed(order.price.0);
+            feed(order.quantity);
+        }
+        hash
+    }
+}
+
+pub fn synthetic(count: usize) -&gt; Result&lt;impl Iterator&lt;Item = Event&gt;, Error&gt; {
+    if count &gt; 10_000_000 {
+        return Err(Error::InvalidLimit);
+    }
+    Ok((0..count).map(|index| {
+        let group = (index / 4) as u64;
+        let first = group * 2 + 1;
+        let action = match index % 4 {
+            0 =&gt; Action::Place {
+                id: OrderId(first),
+                order: Order {
+                    side: Side::Buy,
+                    price: Price(1_000_000 + group % 97),
+                    quantity: 10,
+                },
+            },
+            1 =&gt; Action::Place {
+                id: OrderId(first + 1),
+                order: Order {
+                    side: Side::Sell,
+                    price: Price(1_000_100 + group % 97),
+                    quantity: 12,
+                },
+            },
+            2 =&gt; Action::Cancel { id: OrderId(first) },
+            _ =&gt; Action::Cancel {
+                id: OrderId(first + 1),
+            },
+        };
+        Event {
+            sequence: EventId(index as u64 + 1),
+            action,
+        }
+    }))
+}
+pub fn run(count: usize) -&gt; Result&lt;Replay, Error&gt; {
+    let mut replay = Replay::new(4096)?;
+    for event in synthetic(count)? {
+        replay.apply(event)?;
+    }
+    Ok(replay)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn place(sequence: u64, id: u64) -&gt; Event {
+        Event {
+            sequence: EventId(sequence),
+            action: Action::Place {
+                id: OrderId(id),
+                order: Order {
+                    side: Side::Buy,
+                    price: Price::parse(&quot;12.3400&quot;).unwrap(),
+                    quantity: 3,
+                },
+            },
+        }
+    }
+    #[test]
+    fn exact_decimal_conversion_rejects_bad_inputs() {
+        assert_eq!(Price::parse(&quot;0.0001&quot;).unwrap().ticks(), 1);
+        assert_eq!(Price::parse(&quot;12.34&quot;).unwrap().to_string(), &quot;12.3400&quot;);
+        for bad in [
+            &quot;NaN&quot;,
+            &quot;-1&quot;,
+            &quot;1e3&quot;,
+            &quot;1.00001&quot;,
+            &quot;1.2.3&quot;,
+            &quot;0&quot;,
+            &quot;9999999999999999999999&quot;,
+        ] {
+            assert!(Price::parse(bad).is_err(), &quot;{bad}&quot;);
+        }
+    }
+    #[test]
+    fn replay_is_identical_including_full_state() {
+        assert_eq!(run(10_003).unwrap(), run(10_003).unwrap());
+    }
+    #[test]
+    fn rejection_is_transactional_and_corrected_event_can_retry() {
+        let mut r = Replay::new(3).unwrap();
+        r.apply(place(1, 7)).unwrap();
+        let before = r.clone();
+        assert_eq!(r.apply(place(2, 7)), Err(Error::Duplicate(OrderId(7))));
+        assert_eq!(r, before);
+        assert!(matches!(r.apply(place(4, 8)), Err(Error::Sequence { .. })));
+        assert_eq!(r, before);
+        r.apply(place(2, 8)).unwrap();
+    }
+    #[test]
+    fn capacity_and_missing_cancel_preserve_state() {
+        let mut r = Replay::new(1).unwrap();
+        r.apply(place(1, 1)).unwrap();
+        let before = r.clone();
+        assert_eq!(r.apply(place(2, 2)), Err(Error::Capacity));
+        assert_eq!(r, before);
+        assert_eq!(
+            r.apply(Event {
+                sequence: EventId(2),
+                action: Action::Cancel { id: OrderId(99) }
+            }),
+            Err(Error::Missing(OrderId(99)))
+        );
+        assert_eq!(r, before);
+        r.apply(Event {
+            sequence: EventId(2),
+            action: Action::Cancel { id: OrderId(1) },
+        })
+        .unwrap();
+        r.apply(place(3, 2)).unwrap();
+    }
+    #[test]
+    fn injected_accounting_overflow_does_not_partially_insert() {
+        let mut r = Replay::new(2).unwrap();
+        r.submitted_notional_ticks = u128::MAX;
+        let before = r.clone();
+        assert_eq!(r.apply(place(1, 1)), Err(Error::Overflow));
+        assert_eq!(r, before);
+    }
+    #[test]
+    fn injected_counter_overflow_preserves_complete_state() {
+        for overflow_sequence in [true, false] {
+            let mut r = Replay::new(2).unwrap();
+            r.apply(place(1, 7)).unwrap();
+            if overflow_sequence {
+                r.next_sequence = u64::MAX;
+            } else {
+                // This deliberately injected state exercises the defensive counter
+                // check; public construction keeps accepted and sequence related.
+                r.accepted = u64::MAX;
+            }
+            let before = r.clone();
+            for event in [
+                place(r.next_sequence, 8),
+                Event {
+                    sequence: EventId(r.next_sequence),
+                    action: Action::Cancel { id: OrderId(7) },
+                },
+            ] {
+                assert_eq!(r.apply(event), Err(Error::Overflow));
+                assert_eq!(r, before);
+            }
+        }
+    }
+    #[test]
+    fn synthetic_processing_keeps_live_state_bounded() {
+        let mut r = Replay::new(2).unwrap();
+        for event in synthetic(4000).unwrap() {
+            r.apply(event).unwrap();
+            assert!(r.orders.len() &lt;= 2);
+        }
+        assert!(r.orders.is_empty());
+    }
+}
+</code></pre></div>
+<p>apply first compares the event sequence with next_sequence and computes checked increments. For a placement, it validates quantity, duplicate status and capacity, then checks the new accumulated notional before inserting. Only after the operation succeeds does it publish the next sequence and accepted count. The cancellation branch removes an existing order; removing a missing key changes nothing and returns an error. The test clones the whole Replay before a rejected event and compares the complete state afterward. That assertion is stronger than checking only the number of orders.</p>
+<h2 id="exact-arithmetic-still-needs-overflow-policy">Exact arithmetic still needs overflow policy</h2>
+<p>Fixed-point integers avoid binary floating-point rounding for the chosen scale, but they do not make overflow impossible. Price and quantity have explicit limits. Their product is accumulated in u128 with checked_add. The submitted_notional_ticks field is a sum of submitted values, not executed volume or profit. The overflow test deliberately sets internal accounting to its maximum and attempts another placement. It asserts that overflow rejects the event without partially inserting the order or advancing sequence. This is failure injection aimed at a real boundary, even though the ordinary small synthetic workload will not approach it.</p>
+<h2 id="determinism-includes-ordering-and-inputs">Determinism includes ordering and inputs</h2>
+<p>The map is a BTreeMap, so iteration uses a defined key order. The generator derives every event from its index and does not read wall-clock time or random operating-system state. The core uses no concurrent mutation, floating-point accumulation or external I/O. Those choices make identical input streams produce identical full states under the stated semantics. The digest summarizes accepted count, notional and sorted live orders using a stable byte order, but it can collide and does not include every internal field. Use full equality for correctness tests and treat the digest as a convenient quick check.</p>
+<h2 id="playbook-investigation-equal-digests-unequal-behavior">Playbook investigation: equal digests, unequal behavior</h2>
+<p>You receive a report saying two implementations are equivalent because their benchmark digests match. The report omits rejection behavior and uses a count divisible by four, which leaves no active orders. Observations are therefore weaker than the conclusion. Propose competing hypotheses: both implementations are correct, one skips an invalid transition, or the workload fails to exercise the changed path. Construct a short stream ending with live orders and include duplicate, missing-cancel and out-of-order events. If either implementation changes state after rejection, that disproves equivalence even if the original benchmark digest matched.</p>
+<p>Choose another disproof experiment independently. One option is comparing complete state after every accepted prefix rather than only the final empty map. Another is changing an exact price by one tick and following its contribution through accounting. Record the earliest divergent transition so the investigation targets a small cause. The fix should restore the specified transition semantics and add a regression at that boundary; changing the digest until outputs match would merely hide the symptom.</p>
+<h2 id="guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</h2>
+<p>Complete the scaffold's price parser without converting through f64. Write a grammar table showing accepted and rejected inputs, including the maximum price and an overflowing decimal string. Then add an amendment event to your own replay implementation. Decide whether an amendment keeps order identity, how it affects accounting, and what happens when quantity is invalid. Write the before/after contract before code. Preserve atomic rejection with a candidate value or complete validation before mutation. Do not clone the entire map on every event merely to make transactional behavior easy unless measurement and simplicity justify that tradeoff.</p>
+<details><summary>Tiered hints and solution direction</summary><details><summary>Hint 1: choose the next observation</summary><p>parse the whole and fractional decimal parts separately.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>scale the fraction to four places only after checking its length, then combine using checked arithmetic.</p></details><details><summary>Worked solution</summary><p>For amendments, compute all fallible derived values first. The reference's apply method is small enough that validation can precede the single committed change. A regression should compare sequence, metrics and orders, not only the returned error variant.</p></details></details>
+<aside class="stuck"><h3>When you get stuck</h3><p>Reduce the stream to the earliest mismatching prefix and run one transactional-rejection test. Read checked_add, checked_mul and BTreeMap's ordering behavior. Ask for review with the exact event sequence, pre-state, expected post-state and actual post-state. State your identifier-reuse and amendment policies so reviewers can distinguish a bug from an unspecified rule.</p></aside>
+<h2 id="review-evidence-and-mastery">Review, evidence and mastery</h2>
+<p>Submit the price grammar, a transition table, adversarial event tests and a full-state comparison trace. You have mastered the project when you can explain deterministic behavior without relying on a hash, defend exact representation and overflow policy, and show that a rejected event leaves the system ready to process the corrected next event.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Current scope and invariants.</strong> The next sequence is exact, live order count is capped, fixed-point prices are validated, and rejected events preserve the entire replay state. All fallible accounting is checked before a placement is committed.</p><p><strong>Why this is the current recommended shape.</strong> Newtypes separate event and order IDs; a private Price representation prevents invalid ticks entering through safe constructors. Replay accounting stays private behind read-only getters, so callers cannot bypass transition validation by assigning metrics. Integer arithmetic expresses the chosen scale exactly. A BTreeMap gives stable iteration, generators stream events, and full-state comparisons accompany digest checks.</p><p><strong>Reasonable alternative and tradeoff.</strong> A hash map can offer different lookup costs, but deterministic output would need a separate ordering step and measurement on a representative workload. A mature decimal type is appropriate when varying scales or richer decimal operations become requirements. Neither abstraction is needed to express this fixed four-place bounded exercise clearly.</p><p><strong>Evidence and limits.</strong> Native reference tests were run through mise in the coordinated course verification; inspect the current verification record for exact results. Exact decimal grammar and limits; full-state deterministic replay; duplicate and sequence rejection; capacity and absent cancellation; injected accounting overflow; bounded generated live state. The supplied generator keeps only two live orders. A digest can collide and omits internal details; it is not an equivalence proof. Local benchmark samples include generation and exclude final digest/destruction. No universal timing claims are made.</p><p><strong>Requirement that would justify evolution.</strong> Revisit representation and benchmark workload when active-state size, persistence, out-of-order arrival or domain rules expand. This is a state-transition exercise, not a matching engine. Add an amendment only after specifying its accounting and identity semantics.</p><p>In your review, explain this choice in your own words, preserve the behavioral contract during changes, and name the evidence that would make you choose the alternative. Deliberately broken variants above are diagnostic exercises, never recommended implementation stages.</p></section><p class="evidence"><strong>Patch verification:</strong> the coordinated targeted suite passed after adding P06 write-failure and stale-compaction regressions and making P12 accounting private. The exact execution is recorded in verification/patch001-targeted.log; independent review remains pending.</p><section><h2 id="a-reproducible-run-starts-with-an-exact-cli-contract">A reproducible run starts with an exact CLI contract</h2><p>The replay command accepts zero arguments for 100003 generated events, or exactly one event count parsed as <code>usize</code>. The count therefore fits this target's pointer-sized unsigned integer; it is not a floating-point quantity. Extra arguments are rejected. Previously, reading only <code>nth(1)</code> let <code>3 extra</code> silently run three events, which could hide a mistyped benchmark or reproducibility command. The corrected parser checks arity before any replay work and handles non-UTF-8 text as an input error rather than panicking.</p><div class="code-wrap" data-source="projects/reference/p12-replay/src/main.rs" data-sha256="c6ea8a1c5d7ddd2741db1f286d57c8a72817802352b29b11a71b39d536013b34"><div class="code-label"><a href="../../projects/reference/p12-replay/src/main.rs">projects/reference/p12-replay/src/main.rs</a></div><pre><code>use std::{
+    io::{self, Write},
+    process::ExitCode,
+};
+
+fn count() -&gt; io::Result&lt;usize&gt; {
+    let mut args = std::env::args_os().skip(1);
+    let count = args.next();
+    if args.next().is_some() {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;usage: p12-replay [EVENT_COUNT]&quot;,
+        ));
+    }
+    let Some(count) = count else {
+        return Ok(100_003);
+    };
+    let count = count.to_str().ok_or_else(|| {
+        io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;event count must be valid UTF-8&quot;,
+        )
+    })?;
+    count.parse().map_err(|error| {
+        io::Error::new(
+            io::ErrorKind::InvalidInput,
+            format!(&quot;invalid event count: {error}&quot;),
+        )
+    })
+}
+
+fn run() -&gt; io::Result&lt;()&gt; {
+    let replay = p12_replay::run(count()?).map_err(io::Error::other)?;
+    let mut output = io::stdout().lock();
+    writeln!(
+        output,
+        &quot;events={} active={} submitted_notional_ticks={} digest={:016x}&quot;,
+        replay.accepted(),
+        replay.orders().len(),
+        replay.submitted_notional_ticks(),
+        replay.digest()
+    )?;
+    for (id, order) in replay.orders() {
+        writeln!(
+            output,
+            &quot;order={} {:?} price={} quantity={}&quot;,
+            id.0, order.side, order.price, order.quantity
+        )?;
+    }
+    output.flush()?;
+    Ok(())
+}
+
+fn main() -&gt; ExitCode {
+    match run() {
+        Ok(()) =&gt; ExitCode::SUCCESS,
+        Err(error) =&gt; {
+            let _ = writeln!(io::stderr().lock(), &quot;replay: {error}&quot;);
+            if error.kind() == io::ErrorKind::InvalidInput {
+                ExitCode::from(2)
+            } else {
+                ExitCode::FAILURE
+            }
+        }
+    }
+}
+</code></pre></div><p>Apply the playbook: hypothesis A says an extra token changes the generated stream; hypothesis B says the parser never inspects it. The before-fix process test observed successful output for <code>3 extra</code>, and source inspection identified the missing read. After the fix, the same request reports input failure with no replay output, while <code>3</code> still reports exactly three events. Run <code>mise exec -- cargo test --manifest-path projects/Cargo.toml -p p12-replay --test cli</code> from the course root. The test demonstrates an input-boundary correction, not faster replay or stronger event semantics.</p><p>Before reading the adapter below, propose a separate file-input mode and define its grammar, size limits, ownership and failure behavior before extending this parser. Do not treat a native file path as UTF-8 protocol text. The companion benchmark already validates all arguments and applies its own 1..=10000000 measurement budget. See <a href="../../verification/cli-boundary-followup.html">the before/after evidence</a> and <a href="https://doc.rust-lang.org/1.99.1/std/env/fn.args_os.html">the version-matched argument documentation</a>.</p></section><p><strong>Output is an I/O boundary too.</strong> The CLI writes through a locked <code>io::Write</code> handle and propagates ordinary stdout failures, including a pipe whose consumer has closed. Final stderr diagnostics are best effort: a second write failure must not replace the original failure with a panic. The process tests create an anonymous pipe and close its reading end before launching the child, so this experiment does not depend on a race with a shell command.</p><section><h2 id="read-synthetic-tick-files-through-a-bounded-pipeline">Read synthetic tick files through a bounded pipeline</h2><p>The generated order-state exercise above isolates transition costs. Now cross a real file boundary. A <em>tick</em> here is one synthetic observed price and quantity, not an order instruction or an execution. Its output is a per-symbol summary. Keeping the tick adapter separate avoids pretending that the previous place/cancel events were market-data rows. Both remain local, reproducible exercises with no broker, credentials or live market connection.</p><h3>Write the schema before the parser</h3><p>The first line must be exactly <code>event_id,timestamp_ms,symbol,price,quantity</code>. Every data row has exactly five comma-separated fields. This deliberately narrow format has no quoted fields, comments, embedded commas, spaces or byte-order mark. LF and CRLF line endings are accepted; the final line may omit its terminator. A blank data row is an error, while a header with no rows is a valid empty replay. The file is UTF-8 even though its filesystem path remains a native operating-system path.</p><ul><li><code>event_id</code>: decimal digits parsed as <code>u64</code>. The first accepted ID is 1; each next ID must increase by exactly one. Duplicate, missing, zero and out-of-order IDs are rejected. This is rejection, not deduplication or reordering.</li><li><code>timestamp_ms</code>: nonnegative <code>u64</code> milliseconds since the Unix epoch in this synthetic data model. Values cannot move backwards. Equal timestamps are ordered by event ID. We do not convert these integers into calendar dates, consult a wall clock, infer exchange timing or claim to validate real feeds.</li><li><code>symbol</code>: one through twelve ASCII uppercase letters. At most 64 distinct symbols are accepted by default.</li><li><code>price</code>: positive ordinary decimal text with at most four fractional digits, at most 100000000.0000. No sign, exponent or bare trailing decimal point is accepted. Existing <code>Price</code> stores units of 1/10000 exactly.</li><li><code>quantity</code>: decimal digits in 1..=1000000. It counts synthetic units. Notional is the exact sum of price ticks times quantity, not money earned or a trading return.</li></ul><p>Every line is limited to 256 bytes including its LF or CRLF terminator. The default event budget is 1000000 and can be lowered through the library. Batches hold at most 1024 parsed ticks; the default is 64. The file CLI uses a 4096-byte input buffer. Count, volume and notional additions use checked arithmetic even though the present input limits keep valid totals well below the integer maxima.</p><h3>Predict and run the supplied fixture</h3><p>Before running, calculate ALFA's total volume and notional from these rows. Will changing the batch size from one to two change its first/last price? Does BETA's timestamp tie with ALFA require sorting? Write the expected result first.</p><div class="code-wrap" data-source="projects/reference/p12-replay/fixtures/ticks.csv" data-sha256="e87ce3642cb8599e9f6675b5dd504c1bbdb16401c229578a3dc283b3c370ef5a"><div class="code-label"><a href="../../projects/reference/p12-replay/fixtures/ticks.csv">projects/reference/p12-replay/fixtures/ticks.csv</a></div><pre><code>event_id,timestamp_ms,symbol,price,quantity
+1,1700000000000,ALFA,100.0000,2
+2,1700000000000,BETA,50.5000,3
+3,1700000000001,ALFA,101.2500,1
+4,1700000000002,BETA,49.5000,2
+5,1700000000002,ALFA,99.5000,4
+</code></pre></div><pre><code>cd rust-course
+mise exec -- cargo run --locked --manifest-path projects/Cargo.toml -p p12-replay --bin tick_replay -- projects/reference/p12-replay/fixtures/ticks.csv 2
+mise exec -- cargo test --locked --manifest-path projects/Cargo.toml -p p12-replay --all-targets</code></pre><p>Working directory: the portable course root after the first command; omit that <code>cd</code> if already there. The output is labeled SIMULATED TICKS. It reports five events, ALFA volume 7 and notional 6992500 ticks, and BETA volume 5 and notional 2505000 ticks. ALFA first/last/low/high prices are 100.0000, 99.5000, 99.5000 and 101.2500. Batch sizes 1, 2, 64 and 1024 produce byte-identical fixture output in the executed process tests.</p><h3>Follow each boundary in the implementation</h3><div class="code-wrap" data-source="projects/reference/p12-replay/src/ticks.rs" data-sha256="9d0eb9c0e21651f99e8d00c66f59a6f87c549b7d768b463b9507eb0d68c5b1df"><div class="code-label"><a href="../../projects/reference/p12-replay/src/ticks.rs">projects/reference/p12-replay/src/ticks.rs</a></div><pre><code>//! Bounded synthetic CSV tick ingestion with exact, deterministic aggregates.
+//! This is a synchronous staged pipeline, not a concurrent execution claim.
+use crate::Price;
+use std::{
+    collections::BTreeMap,
+    error::Error,
+    fmt,
+    io::{self, BufRead, Read},
+};
+
+pub const HEADER: &amp;str = &quot;event_id,timestamp_ms,symbol,price,quantity&quot;;
+pub const MAX_LINE_BYTES: usize = 256;
+pub const MAX_EVENTS: usize = 1_000_000;
+pub const MAX_SYMBOLS: usize = 64;
+pub const MAX_BATCH: usize = 1024;
+
+#[derive(Debug)]
+pub enum TickError {
+    Io(io::Error),
+    InvalidConfig,
+    Header,
+    LineTooLong,
+    InvalidRow(&amp;&#x27;static str),
+    Sequence { expected: u64, received: u64 },
+    TimestampBackwards,
+    EventLimit,
+    SymbolLimit,
+    Overflow,
+    AtLine { line: usize, source: Box&lt;TickError&gt; },
+}
+impl fmt::Display for TickError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        match self {
+            Self::Io(error) =&gt; write!(f, &quot;input I/O failed: {error}&quot;),
+            Self::InvalidConfig =&gt; write!(
+                f,
+                &quot;batch, event and symbol limits must be within supported nonzero bounds&quot;
+            ),
+            Self::Header =&gt; write!(f, &quot;expected exact CSV header: {HEADER}&quot;),
+            Self::LineTooLong =&gt; write!(
+                f,
+                &quot;line exceeds {MAX_LINE_BYTES} bytes including its terminator&quot;
+            ),
+            Self::InvalidRow(reason) =&gt; write!(f, &quot;invalid tick: {reason}&quot;),
+            Self::Sequence { expected, received } =&gt; {
+                write!(f, &quot;expected event id {expected}, received {received}&quot;)
+            }
+            Self::TimestampBackwards =&gt; write!(f, &quot;timestamp moved backwards&quot;),
+            Self::EventLimit =&gt; write!(f, &quot;event budget exceeded&quot;),
+            Self::SymbolLimit =&gt; write!(f, &quot;symbol budget exceeded&quot;),
+            Self::Overflow =&gt; write!(f, &quot;aggregate overflow&quot;),
+            Self::AtLine { line, source } =&gt; write!(f, &quot;line {line}: {source}&quot;),
+        }
+    }
+}
+impl Error for TickError {
+    fn source(&amp;self) -&gt; Option&lt;&amp;(dyn Error + &#x27;static)&gt; {
+        match self {
+            Self::Io(error) =&gt; Some(error),
+            Self::AtLine { source, .. } =&gt; Some(source),
+            _ =&gt; None,
+        }
+    }
+}
+impl From&lt;io::Error&gt; for TickError {
+    fn from(error: io::Error) -&gt; Self {
+        Self::Io(error)
+    }
+}
+fn at_line(line: usize, source: TickError) -&gt; TickError {
+    TickError::AtLine {
+        line,
+        source: Box::new(source),
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+pub struct Limits {
+    pub batch: usize,
+    pub events: usize,
+    pub symbols: usize,
+}
+impl Default for Limits {
+    fn default() -&gt; Self {
+        Self {
+            batch: 64,
+            events: MAX_EVENTS,
+            symbols: MAX_SYMBOLS,
+        }
+    }
+}
+impl Limits {
+    fn validate(self) -&gt; Result&lt;Self, TickError&gt; {
+        if !(1..=MAX_BATCH).contains(&amp;self.batch)
+            || !(1..=MAX_EVENTS).contains(&amp;self.events)
+            || !(1..=MAX_SYMBOLS).contains(&amp;self.symbols)
+        {
+            return Err(TickError::InvalidConfig);
+        }
+        Ok(self)
+    }
+}
+
+#[derive(Debug)]
+struct Tick {
+    id: u64,
+    timestamp_ms: u64,
+    symbol: String,
+    price: Price,
+    quantity: u64,
+}
+
+fn unsigned(text: &amp;str) -&gt; Result&lt;u64, TickError&gt; {
+    if text.is_empty() || !text.bytes().all(|b| b.is_ascii_digit()) {
+        return Err(TickError::InvalidRow(
+            &quot;integer fields require decimal digits only&quot;,
+        ));
+    }
+    text.parse()
+        .map_err(|_| TickError::InvalidRow(&quot;integer exceeds u64&quot;))
+}
+fn parse(line: &amp;str) -&gt; Result&lt;Tick, TickError&gt; {
+    let mut fields = line.split(&#x27;,&#x27;);
+    let id = unsigned(
+        fields
+            .next()
+            .ok_or(TickError::InvalidRow(&quot;missing event id&quot;))?,
+    )?;
+    let timestamp_ms = unsigned(
+        fields
+            .next()
+            .ok_or(TickError::InvalidRow(&quot;missing timestamp&quot;))?,
+    )?;
+    let symbol = fields
+        .next()
+        .ok_or(TickError::InvalidRow(&quot;missing symbol&quot;))?;
+    if symbol.is_empty() || symbol.len() &gt; 12 || !symbol.bytes().all(|b| b.is_ascii_uppercase()) {
+        return Err(TickError::InvalidRow(
+            &quot;symbol requires 1..=12 ASCII uppercase letters&quot;,
+        ));
+    }
+    let price = fields
+        .next()
+        .ok_or(TickError::InvalidRow(&quot;missing price&quot;))?;
+    if price.ends_with(&#x27;.&#x27;) {
+        return Err(TickError::InvalidRow(&quot;fractional point requires digits&quot;));
+    }
+    let price = Price::parse(price).map_err(|_| {
+        TickError::InvalidRow(
+            &quot;price requires a positive decimal with at most four fractional digits&quot;,
+        )
+    })?;
+    let quantity = unsigned(
+        fields
+            .next()
+            .ok_or(TickError::InvalidRow(&quot;missing quantity&quot;))?,
+    )?;
+    if !(1..=1_000_000).contains(&amp;quantity) || fields.next().is_some() {
+        return Err(TickError::InvalidRow(
+            &quot;quantity must be 1..=1000000 and exactly five fields are required&quot;,
+        ));
+    }
+    Ok(Tick {
+        id,
+        timestamp_ms,
+        symbol: symbol.to_owned(),
+        price,
+        quantity,
+    })
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Aggregate {
+    pub count: u64,
+    pub volume: u64,
+    /// Exact sum of price ticks (1/10000 price unit) multiplied by quantity.
+    pub notional_ticks: u128,
+    pub first: Price,
+    pub last: Price,
+    pub low: Price,
+    pub high: Price,
+}
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Summary {
+    events: u64,
+    first_timestamp_ms: Option&lt;u64&gt;,
+    last_timestamp_ms: Option&lt;u64&gt;,
+    symbols: BTreeMap&lt;String, Aggregate&gt;,
+}
+impl Summary {
+    pub fn events(&amp;self) -&gt; u64 {
+        self.events
+    }
+    pub fn first_timestamp_ms(&amp;self) -&gt; Option&lt;u64&gt; {
+        self.first_timestamp_ms
+    }
+    pub fn last_timestamp_ms(&amp;self) -&gt; Option&lt;u64&gt; {
+        self.last_timestamp_ms
+    }
+    pub fn symbols(&amp;self) -&gt; &amp;BTreeMap&lt;String, Aggregate&gt; {
+        &amp;self.symbols
+    }
+
+    fn apply(&amp;mut self, tick: Tick, limits: Limits) -&gt; Result&lt;(), TickError&gt; {
+        let next = self.events.checked_add(1).ok_or(TickError::Overflow)?;
+        if tick.id != next {
+            return Err(TickError::Sequence {
+                expected: next,
+                received: tick.id,
+            });
+        }
+        if self.events &gt;= limits.events as u64 {
+            return Err(TickError::EventLimit);
+        }
+        if self
+            .last_timestamp_ms
+            .is_some_and(|last| tick.timestamp_ms &lt; last)
+        {
+            return Err(TickError::TimestampBackwards);
+        }
+        let prior = self.symbols.get(&amp;tick.symbol);
+        if prior.is_none() &amp;&amp; self.symbols.len() &gt;= limits.symbols {
+            return Err(TickError::SymbolLimit);
+        }
+        let notional = u128::from(tick.price.ticks())
+            .checked_mul(u128::from(tick.quantity))
+            .ok_or(TickError::Overflow)?;
+        let aggregate = match prior {
+            None =&gt; Aggregate {
+                count: 1,
+                volume: tick.quantity,
+                notional_ticks: notional,
+                first: tick.price,
+                last: tick.price,
+                low: tick.price,
+                high: tick.price,
+            },
+            Some(prior) =&gt; Aggregate {
+                count: prior.count.checked_add(1).ok_or(TickError::Overflow)?,
+                volume: prior
+                    .volume
+                    .checked_add(tick.quantity)
+                    .ok_or(TickError::Overflow)?,
+                notional_ticks: prior
+                    .notional_ticks
+                    .checked_add(notional)
+                    .ok_or(TickError::Overflow)?,
+                first: prior.first,
+                last: tick.price,
+                low: if tick.price.ticks() &lt; prior.low.ticks() {
+                    tick.price
+                } else {
+                    prior.low
+                },
+                high: if tick.price.ticks() &gt; prior.high.ticks() {
+                    tick.price
+                } else {
+                    prior.high
+                },
+            },
+        };
+        // All fallible domain checks precede mutation. No partial aggregate commits.
+        self.symbols.insert(tick.symbol, aggregate);
+        self.events = next;
+        self.first_timestamp_ms.get_or_insert(tick.timestamp_ms);
+        self.last_timestamp_ms = Some(tick.timestamp_ms);
+        Ok(())
+    }
+}
+
+fn line(reader: &amp;mut impl BufRead) -&gt; Result&lt;Option&lt;String&gt;, TickError&gt; {
+    let mut bytes = Vec::with_capacity(MAX_LINE_BYTES + 1);
+    // take bounds allocation even if the untrusted input never supplies a newline.
+    (&amp;mut *reader)
+        .take((MAX_LINE_BYTES + 1) as u64)
+        .read_until(b&#x27;\n&#x27;, &amp;mut bytes)?;
+    if bytes.is_empty() {
+        return Ok(None);
+    }
+    if bytes.len() &gt; MAX_LINE_BYTES {
+        return Err(TickError::LineTooLong);
+    }
+    if bytes.last() == Some(&amp;b&#x27;\n&#x27;) {
+        bytes.pop();
+        if bytes.last() == Some(&amp;b&#x27;\r&#x27;) {
+            bytes.pop();
+        }
+    }
+    String::from_utf8(bytes)
+        .map(Some)
+        .map_err(|_| TickError::InvalidRow(&quot;line must be valid UTF-8&quot;))
+}
+
+/// Consume one exact-header, bounded CSV stream. Returns no summary on any error.
+/// Peak retained state is at most batch parsed ticks plus symbols aggregates and
+/// one line retaining at most 257 input bytes, excluding buffering inside the
+/// supplied reader. Allocator overhead/capacity is not an exact physical RAM claim.
+pub fn replay(mut reader: impl BufRead, limits: Limits) -&gt; Result&lt;Summary, TickError&gt; {
+    let limits = limits.validate()?;
+    if line(&amp;mut reader)
+        .map_err(|error| at_line(1, error))?
+        .as_deref()
+        != Some(HEADER)
+    {
+        return Err(at_line(1, TickError::Header));
+    }
+    let mut summary = Summary::default();
+    let mut batch = Vec::with_capacity(limits.batch);
+    let mut line_number = 1;
+    let mut eof = false;
+    while !eof {
+        while batch.len() &lt; limits.batch {
+            line_number += 1;
+            match line(&amp;mut reader).map_err(|error| at_line(line_number, error))? {
+                None =&gt; {
+                    eof = true;
+                    break;
+                }
+                Some(text) =&gt; {
+                    if summary.events as usize + batch.len() &gt;= limits.events {
+                        return Err(at_line(line_number, TickError::EventLimit));
+                    }
+                    batch.push((
+                        line_number,
+                        parse(&amp;text).map_err(|error| at_line(line_number, error))?,
+                    ));
+                }
+            }
+        }
+        for (number, tick) in batch.drain(..) {
+            summary
+                .apply(tick, limits)
+                .map_err(|error| at_line(number, error))?;
+        }
+    }
+    Ok(summary)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    const FIXTURE: &amp;str = include_str!(&quot;../fixtures/ticks.csv&quot;);
+    fn read(text: &amp;str, limits: Limits) -&gt; Result&lt;Summary, TickError&gt; {
+        replay(text.as_bytes(), limits)
+    }
+    #[test]
+    fn fixture_aggregates_and_batch_boundaries_are_exact() {
+        let expected = read(
+            FIXTURE,
+            Limits {
+                batch: 1,
+                ..Limits::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(expected.events(), 5);
+        assert_eq!(expected.first_timestamp_ms(), Some(1_700_000_000_000));
+        assert_eq!(expected.last_timestamp_ms(), Some(1_700_000_000_002));
+        let a = &amp;expected.symbols()[&quot;ALFA&quot;];
+        assert_eq!((a.count, a.volume, a.notional_ticks), (3, 7, 6_992_500));
+        assert_eq!(
+            (
+                a.first.to_string(),
+                a.last.to_string(),
+                a.low.to_string(),
+                a.high.to_string()
+            ),
+            (
+                &quot;100.0000&quot;.into(),
+                &quot;99.5000&quot;.into(),
+                &quot;99.5000&quot;.into(),
+                &quot;101.2500&quot;.into()
+            )
+        );
+        assert_eq!(expected.symbols()[&quot;BETA&quot;].notional_ticks, 2_505_000);
+        for batch in [2, 3, 4, 5, 6, 1024] {
+            assert_eq!(
+                read(
+                    FIXTURE,
+                    Limits {
+                        batch,
+                        ..Limits::default()
+                    }
+                )
+                .unwrap(),
+                expected
+            );
+        }
+    }
+    #[test]
+    fn rejected_id_timestamp_symbol_and_overflow_leave_state_unchanged() {
+        let limits = Limits {
+            symbols: 1,
+            ..Limits::default()
+        };
+        let mut summary = Summary::default();
+        summary
+            .apply(parse(&quot;1,10,ALFA,1,2&quot;).unwrap(), limits)
+            .unwrap();
+        let original = summary.clone();
+        for row in [
+            &quot;1,10,ALFA,1,2&quot;,
+            &quot;3,10,ALFA,1,2&quot;,
+            &quot;2,9,ALFA,1,2&quot;,
+            &quot;2,10,BETA,1,2&quot;,
+        ] {
+            assert!(summary.apply(parse(row).unwrap(), limits).is_err());
+            assert_eq!(summary, original);
+        }
+        for field in [&quot;count&quot;, &quot;volume&quot;, &quot;notional&quot;] {
+            let mut summary = original.clone();
+            let a = summary.symbols.get_mut(&quot;ALFA&quot;).unwrap();
+            match field {
+                &quot;count&quot; =&gt; a.count = u64::MAX,
+                &quot;volume&quot; =&gt; a.volume = u64::MAX,
+                _ =&gt; a.notional_ticks = u128::MAX,
+            }
+            let before = summary.clone();
+            assert!(matches!(
+                summary.apply(parse(&quot;2,10,ALFA,1,2&quot;).unwrap(), limits),
+                Err(TickError::Overflow)
+            ));
+            assert_eq!(summary, before);
+        }
+    }
+    #[test]
+    fn grammar_rejects_ambiguous_rows_and_accepts_exact_price_limit() {
+        for row in [
+            &quot;&quot;,
+            &quot;1,0,ALFA,1,1,extra&quot;,
+            &quot;1,0,alfa,1,1&quot;,
+            &quot;1,0,A B,1,1&quot;,
+            &quot;1,0,ALFA,1.,1&quot;,
+            &quot;1,0,ALFA,1.00001,1&quot;,
+            &quot;1,0,ALFA,0,1&quot;,
+            &quot;1,0,ALFA,1,0&quot;,
+            &quot;1,0,ALFA,1,1000001&quot;,
+            &quot;1,+1,ALFA,1,1&quot;,
+            &quot;1,0,ALFA,1e2,1&quot;,
+            &quot;1,0,ALFA,1,18446744073709551616&quot;,
+        ] {
+            assert!(parse(row).is_err(), &quot;{row}&quot;);
+        }
+        assert_eq!(
+            parse(&quot;1,0,ALFA,100000000.0000,1000000&quot;)
+                .unwrap()
+                .price
+                .ticks(),
+            1_000_000_000_000
+        );
+        assert!(parse(&quot;1,0,ALFA,100000000.0001,1&quot;).is_err());
+    }
+    #[test]
+    fn exact_header_empty_stream_crlf_and_unterminated_last_row() {
+        assert!(read(&quot;&quot;, Limits::default()).is_err());
+        assert!(read(&quot;wrong\n&quot;, Limits::default()).is_err());
+        assert_eq!(read(HEADER, Limits::default()).unwrap().events(), 0);
+        let input = format!(&quot;{HEADER}\r\n1,0,ALFA,1,1&quot;);
+        assert_eq!(read(&amp;input, Limits::default()).unwrap().events(), 1);
+        assert!(read(&amp;format!(&quot;{HEADER}\n\n&quot;), Limits::default()).is_err());
+    }
+    #[test]
+    fn limits_are_enforced_instead_of_returning_partial_success() {
+        assert!(
+            read(
+                FIXTURE,
+                Limits {
+                    events: 4,
+                    ..Limits::default()
+                }
+            )
+            .is_err()
+        );
+        assert!(
+            read(
+                FIXTURE,
+                Limits {
+                    symbols: 1,
+                    ..Limits::default()
+                }
+            )
+            .is_err()
+        );
+        for limits in [
+            Limits {
+                batch: 0,
+                ..Limits::default()
+            },
+            Limits {
+                batch: 1025,
+                ..Limits::default()
+            },
+            Limits {
+                events: MAX_EVENTS + 1,
+                ..Limits::default()
+            },
+            Limits {
+                symbols: 65,
+                ..Limits::default()
+            },
+        ] {
+            assert!(matches!(
+                read(FIXTURE, limits),
+                Err(TickError::InvalidConfig)
+            ));
+        }
+        let long = format!(&quot;{HEADER}\n{}&quot;, &quot;1&quot;.repeat(MAX_LINE_BYTES + 1));
+        assert!(matches!(
+            read(&amp;long, Limits::default()),
+            Err(TickError::AtLine { line: 2, .. })
+        ));
+        let mut invalid = format!(&quot;{HEADER}\n&quot;).into_bytes();
+        invalid.push(0xff);
+        assert!(replay(invalid.as_slice(), Limits::default()).is_err());
+    }
+    #[test]
+    fn large_lazy_input_does_not_require_retaining_the_file() {
+        struct Generated {
+            id: usize,
+            buffer: std::io::Cursor&lt;Vec&lt;u8&gt;&gt;,
+            peak: usize,
+        }
+        impl Read for Generated {
+            fn read(&amp;mut self, out: &amp;mut [u8]) -&gt; io::Result&lt;usize&gt; {
+                if self.buffer.position() as usize == self.buffer.get_ref().len() {
+                    if self.id == 20_001 {
+                        return Ok(0);
+                    }
+                    let line = if self.id == 0 {
+                        format!(&quot;{HEADER}\n&quot;)
+                    } else {
+                        format!(&quot;{},0,ALFA,1.2500,2\n&quot;, self.id)
+                    };
+                    self.id += 1;
+                    self.peak = self.peak.max(line.len());
+                    self.buffer = std::io::Cursor::new(line.into_bytes());
+                }
+                self.buffer.read(out)
+            }
+        }
+        let mut generated = Generated {
+            id: 0,
+            buffer: std::io::Cursor::new(Vec::new()),
+            peak: 0,
+        };
+        let summary = replay(
+            io::BufReader::with_capacity(128, &amp;mut generated),
+            Limits {
+                batch: 3,
+                ..Limits::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(summary.events(), 20_000);
+        assert_eq!(summary.symbols()[&quot;ALFA&quot;].volume, 40_000);
+        assert_eq!(summary.symbols()[&quot;ALFA&quot;].notional_ticks, 500_000_000);
+        assert!(generated.peak &lt;= MAX_LINE_BYTES);
+    }
+    #[test]
+    fn input_errors_propagate_and_unterminated_stream_reads_are_bounded() {
+        struct Failure;
+        impl Read for Failure {
+            fn read(&amp;mut self, _: &amp;mut [u8]) -&gt; io::Result&lt;usize&gt; {
+                Err(io::Error::other(&quot;injected&quot;))
+            }
+        }
+        assert!(replay(io::BufReader::new(Failure), Limits::default()).is_err());
+        let mut endless = io::BufReader::with_capacity(16, io::repeat(b&#x27;x&#x27;));
+        assert!(matches!(line(&amp;mut endless), Err(TickError::LineTooLong)));
+    }
+}
+</code></pre></div><p><code>Limits::validate</code> prevents zero or excessive budgets before reading. <code>line</code> wraps the reader in <code>Read::take</code> before calling <code>read_until</code>; a newline-free input can therefore supply at most 257 retained bytes to this operation before rejection. Checking length only after an unrestricted <code>read_until</code> would permit unbounded growth. This bound concerns retained input bytes; allocator capacity, metadata and operating-system buffering are not an exact RAM measurement.</p><p><code>parse</code> validates the field count and each type before constructing a private <code>Tick</code>. The symbol becomes owned because its tick must survive reuse of the line buffer. This is a justified small ownership transfer. A borrowed symbol would require retaining the owning line across the batch, making that ownership structure more complex without serving this scope.</p><p><code>replay</code> fills one reusable vector and drains it in input order into <code>Summary::apply</code>. Draining preserves vector capacity. This is a synchronous staged pipeline: the producer stops reading whenever the batch is full, and there are no channels or spawned tasks. It bounds work retained between ingestion and aggregation without claiming parallel speed. The <code>BTreeMap</code> limits state to the admitted symbols and gives deterministic sorted report order. For N events, B batch capacity and S symbols, retained domain state is O(B + S), and aggregation is O(N log S), plus reading and bounded parsing work.</p><p><code>apply</code> checks the next ID, timestamp and symbol budget, computes a prospective aggregate with checked arithmetic, and only then mutates the map and counters. A rejected event leaves that summary unchanged. The public file replay returns either a whole successful summary or an error; the CLI prints no successful partial summary after an input error. It may have read and processed a prefix internally. Because batch parsing and application are distinct stages, malformed files can reveal different first diagnostics at different batch sizes; the contract promises rejection, not a batch-independent choice among multiple defects.</p><p>First and last refer to event order for that symbol. Low and high compare integer price ticks. A volume-weighted average would be the rational value <code>notional_ticks / volume</code>, still expressed in price ticks. This adapter retains the exact numerator and denominator rather than silently rounding a display value. A future display needs an explicit rounding rule.</p><div class="code-wrap" data-source="projects/reference/p12-replay/src/bin/tick_replay.rs" data-sha256="c3523db064d40b07721323242a7bdb7e5fa56d91fbc469ac8658395c50b5badc"><div class="code-label"><a href="../../projects/reference/p12-replay/src/bin/tick_replay.rs">projects/reference/p12-replay/src/bin/tick_replay.rs</a></div><pre><code>//! Replay an explicitly bounded synthetic tick fixture; no live-market integration.
+use p12_replay::ticks::{self, Limits};
+use std::{
+    fs::File,
+    io::{self, BufReader, Write},
+    path::PathBuf,
+    process::ExitCode,
+};
+
+fn run() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    let args: Vec&lt;_&gt; = std::env::args_os().skip(1).collect();
+    let [path, rest @ ..] = args.as_slice() else {
+        return Err(&quot;usage: tick_replay PATH [BATCH_SIZE 1..=1024]&quot;.into());
+    };
+    let batch = match rest {
+        [] =&gt; Limits::default().batch,
+        [batch] =&gt; batch
+            .to_str()
+            .ok_or(&quot;batch size must be UTF-8 integer text&quot;)?
+            .parse::&lt;usize&gt;()?,
+        _ =&gt; return Err(&quot;usage: tick_replay PATH [BATCH_SIZE 1..=1024]&quot;.into()),
+    };
+    if !(1..=ticks::MAX_BATCH).contains(&amp;batch) {
+        return Err(&quot;batch size must be 1..=1024&quot;.into());
+    }
+    let file = File::open(PathBuf::from(path))?;
+    let summary = ticks::replay(
+        BufReader::with_capacity(4096, file),
+        Limits {
+            batch,
+            ..Limits::default()
+        },
+    )?;
+    let mut output = io::stdout().lock();
+    writeln!(
+        output,
+        &quot;SIMULATED TICKS: events={} first_timestamp_ms={:?} last_timestamp_ms={:?}&quot;,
+        summary.events(),
+        summary.first_timestamp_ms(),
+        summary.last_timestamp_ms()
+    )?;
+    writeln!(
+        output,
+        &quot;symbol,count,volume,notional_ticks,first,last,low,high&quot;
+    )?;
+    for (symbol, a) in summary.symbols() {
+        writeln!(
+            output,
+            &quot;{symbol},{},{},{},{},{},{},{}&quot;,
+            a.count, a.volume, a.notional_ticks, a.first, a.last, a.low, a.high
+        )?;
+    }
+    output.flush()?;
+    Ok(())
+}
+fn main() -&gt; ExitCode {
+    match run() {
+        Ok(()) =&gt; ExitCode::SUCCESS,
+        Err(error) =&gt; {
+            // Errors are visible; a failed replay emits no successful partial report.
+            let _ = writeln!(io::stderr().lock(), &quot;tick replay: {error}&quot;);
+            ExitCode::FAILURE
+        }
+    }
+}
+</code></pre></div><h3>Guided project checkpoint</h3><p>Reconstruct a fresh final source copy from the course root. Read <code>fixtures/ticks.csv</code>, then trace header, bounded line, field conversion, bounded batch, summary and output in that order. Run the commands before changing the fixture. The helper refuses an existing destination.</p><pre><code>python3 scripts/start-checkpoint.py p12 final --destination learner-work/tick-investigation
+mise exec -- cargo test --locked --manifest-path learner-work/tick-investigation/Cargo.toml --all-targets
+mise exec -- cargo run --locked --manifest-path learner-work/tick-investigation/Cargo.toml --bin tick_replay -- learner-work/tick-investigation/fixtures/ticks.csv 2</code></pre><p>The preserved default binary remains the generated order replay, so existing <code>cargo run -- 3</code> commands still work. No dependency or lockfile resolution change was needed. The reconstructed final checkpoint was compiled and tested independently, including both binaries.</p><h3>Deliberate mistake and playbook investigation</h3><p>In the learner copy only, duplicate row 2. The intended result is a sequence error, not double-counted volume. Hypothesis A says equal timestamps make duplicates legitimate; hypothesis B says event identity controls admission independently of time. The original fixture already has tied timestamps and succeeds, while the duplicated ID is rejected. That comparison disproves A. Sorting rows by timestamp would hide neither a duplicate identity nor a gap, and silently dropping repeats would introduce a new idempotency contract the exercise has not specified.</p><p>The worked regression constructs one accepted tick and then tries a duplicate, a skipped ID, a backwards timestamp and a second symbol beyond a lowered limit. It compares the entire summary after every rejection. Separate fault-injection cases set internal counters near overflow and verify no partial mutation. Those injected states are intentionally outside normal bounded input; they exercise defensive arithmetic branches, not a claim that valid fixtures can reach them.</p><h3>Independent practice and progressively revealed review</h3><p>Add a VWAP display with an explicit tie-breaking rounding rule. Specify what happens for an empty replay. Then design, without implementing immediately, a deduplication policy that distinguishes an identical retried event from a conflicting event using the same ID. State how much history it retains and what happens after that history expires. Finally investigate whether batch size helps this file workload before changing its default.</p><details><summary>Hint 1: keep domain arithmetic exact</summary><p>Divide the integer notional by volume only at the display boundary. The remainder contains the information needed to decide rounding. Empty input has no symbol aggregate and therefore no VWAP.</p></details><details><summary>Hint 2: identity is not payload equality</summary><p>A set of IDs can reject repeats but cannot explain whether a repeated ID carries a changed symbol, price or quantity. Define conflict behavior before choosing retained data.</p></details><details><summary>Reference reasoning</summary><p>For a four-place display, compute quotient and remainder in price ticks. For round-half-up, increment the quotient when twice the remainder is at least the volume; use checked or sufficiently wide arithmetic and state that this differs from half-even. Return no value for zero volume. A bounded deduplication window requires a retained ID-to-content representation and a policy for older repeats; a digest alone adds a collision assumption. Benchmark equivalent successful inputs in release mode, compare complete aggregates and retain all samples. Larger batches add temporary owned values and may not improve throughput in a synchronous pipeline.</p></details><aside class="stuck"><h3>When you get stuck</h3><p>Read the reported line and reduce the file to its header plus the smallest prefix that still fails. Keep event IDs and the intended timestamp policy in the report. Compare <code>batch=1</code> with the failing batch size to locate parsing versus state transition, then inspect the test that challenges that boundary. Ask for review with the fixture bytes, expected full aggregate, exact command, actual error and one competing hypothesis. Do not request an optimization before confirming identical semantics.</p></aside><h3>Engineering decisions and evidence</h3><p>The standard library and the existing exact <code>Price</code> type suffice for this restricted format. A maintained CSV parser would be appropriate if quoted fields or broad CSV interoperability were required; it would still need an outer byte budget. Concurrent stages would require a measured bottleneck plus explicit queue, cancellation and task-ownership policies. Sorting an unbounded file would violate this adapter's retained-state contract; supporting out-of-order ticks needs a defined bounded reorder window or external storage.</p><p>The tests cover exact aggregates, batch boundary equivalence, grammar, CRLF and final-line behavior, row/budget rejection, duplicate and out-of-order IDs, backwards timestamps, unchanged state on rejected events, checked-overflow injection, an infinite newline-free reader, I/O failure, and a generated 20000-row stream that does not retain the file. This is evidence for the concrete resource design and invariants, not a measured RSS bound or tick-throughput claim. The existing order-event benchmark still measures its original generated workload; it does not measure CSV ingestion. See <a href="../../verification/tick-replay-followup.html">executed commands and limits</a>. Mastery requires explaining the order/identity/time distinction, making a justified schema change, preserving rejected-state invariants and producing your own reproducible investigation.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/std/collections/struct.BTreeMap.html">BTreeMap</a></li><li><a href="https://doc.rust-lang.org/std/primitive.u64.html#method.checked_mul">Checked integer arithmetic</a></li><li><a href="https://doc.rust-lang.org/book/ch20-03-advanced-types.html">Newtype pattern</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/env/fn.args_os.html">Rust 1.99 native process arguments</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/io/trait.Read.html#method.take">Rust 1.99 bounded Read::take</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/io/trait.BufRead.html#method.read_until">Rust 1.99 buffered read_until</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-7/07-performance.html">Previous: Measure a claim before optimizing</a><a href="../../lessons/stage-7/07-unsafe.html">Next: A small unsafe boundary with explicit invariants</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-separate-a-domain-state-machine-from-its-transport">Purpose: separate a domain state machine from its transport</a><a href="#model-make-invalid-meanings-harder-to-mix">Model: make invalid meanings harder to mix</a><a href="#predict-state-and-rejection-behavior">Predict state and rejection behavior</a><a href="#read-the-transition-boundary">Read the transition boundary</a><a href="#exact-arithmetic-still-needs-overflow-policy">Exact arithmetic still needs overflow policy</a><a href="#determinism-includes-ordering-and-inputs">Determinism includes ordering and inputs</a><a href="#playbook-investigation-equal-digests-unequal-behavior">Playbook investigation: equal digests, unequal behavior</a><a href="#guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</a><a href="#review-evidence-and-mastery">Review, evidence and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#a-reproducible-run-starts-with-an-exact-cli-contract">A reproducible run starts with an exact CLI contract</a><a href="#read-synthetic-tick-files-through-a-bounded-pipeline">Read synthetic tick files through a bounded pipeline</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

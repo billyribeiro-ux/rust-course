@@ -1,0 +1,5 @@
+$ cargo +1.99.1 run --locked --manifest-path projects/Cargo.toml -p core-rust-labs --example let_chains
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+    Blocking waiting for file lock on build directory
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.50s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native/debug/examples/let_chains`

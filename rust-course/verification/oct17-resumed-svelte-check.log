@@ -1,0 +1,10 @@
+$ mise exec -- npm run check
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge
+npm notice run rust-course-svelte-bridge@0.1.0 check
+npm notice run svelte-check --fail-on-warnings
+Loading svelte-check in workspace: /Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge
+Getting Svelte diagnostics...
+
+svelte-check found 0 errors and 0 warnings
+
+exit=0

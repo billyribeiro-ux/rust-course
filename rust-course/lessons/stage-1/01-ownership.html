@@ -1,0 +1,279 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Ownership as an API decision: borrow, move, or clone · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="01-ownership" data-lesson="01-ownership"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Ownership as an API decision: borrow, move, or clone</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 01 / Ownership and core Rust</div><h1>Ownership as an API decision: borrow, move, or clone</h1><p class="lead">Use a task title to connect ownership rules to the actual lifetime of stored data.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-0/00-calculator.html">Build a checked calculator with units and useful errors</a></li></ul><ul><li>Explain moves without calling them deep copies</li><li>Choose borrowed input and owned storage deliberately</li><li>Repair overlapping borrows by restructuring scope</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#borrow">borrow</a> · <a href="../../glossary.html#durability">durability</a> · <a href="../../glossary.html#edition">edition</a> · <a href="../../glossary.html#generic">generic</a> · <a href="../../glossary.html#iterator">iterator</a> · <a href="../../glossary.html#lifetime">lifetime</a> · <a href="../../glossary.html#mise">mise</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p02">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-a-journal-must-keep-data-after-input-disappears">Purpose: a journal must keep data after input disappears</h2>
+<p>A task journal accepts text from command-line arguments and keeps titles in a collection. The command argument buffer and the journal have different jobs and potentially different lifetimes. This makes ownership a practical design question: who is responsible for retaining the title&#x27;s allocation after the function returns? Do not begin with “how can I satisfy the borrow checker?” Begin with “which part of the program must keep this data?” The signature should express that answer.</p>
+<p>String owns a growable UTF-8 text buffer. &amp;str borrows a view into existing UTF-8 text. Moving a String transfers ownership of its allocation; it does not normally duplicate all the characters. Cloning creates another owned buffer and copies its contents. Borrowing lets code inspect existing data while the owner remains responsible for it. These three operations have different semantics even when the printed text looks identical. Avoid the inaccurate rule that Rust “always copies on assignment” or “never copies anything.”</p>
+<h2 id="predict-the-ownership-transition">Predict the ownership transition</h2>
+<p>In an isolated learner file, predict whether this compiles: let title = String::from(&quot;learn&quot;); let stored = title; println!(&quot;{title}&quot;);. Expected result: use-after-move error E0382. Ownership moved into stored, so title cannot then be used as an owner. The bytes did not disappear; the old binding lost permission to access the value. Replacing the move with let stored = &amp;title permits both reads, provided the borrow does not outlive title.</p>
+<p>Run the supplied intentional error from rust-course/exercises/foundations. This fixture is supposed to fail and is not part of the reference workspace tests. Compare the primary code with expected-errors.json rather than expecting the entire English message to remain identical forever.</p>
+<pre><code>mkdir -p /tmp/rust-course-diagnostics
+mise exec -- rustc --edition=2024 --emit=metadata --out-dir /tmp/rust-course-diagnostics 01-use-after-move.rs</code></pre>
+<h2 id="guided-checkpoint-store-one-intentional-copy">Guided checkpoint: store one intentional copy</h2>
+<p>Read Journal::add. Its title argument is &amp;str, which means callers can supply a string literal, a borrowed String, or another string slice without surrendering ownership. The method validates the text, chooses an identifier, and then uses to_owned when constructing Task. That allocation is intentional: the journal must retain its own title after add returns. A clone here has an explanation. Adding clones throughout the caller just to silence diagnostics would obscure the design.</p>
+<p>Task::title returns &amp;str borrowed from self. A reader can inspect the title without allocating another buffer. Journal::tasks returns a slice of tasks rather than the whole mutable Vec, preserving control over additions and state changes. Follow one title through these boundaries: borrowed incoming text, owned stored text, borrowed outgoing view. Draw the owners and views, and mark the point at which each view stops being used.</p>
+<div class="code-wrap" data-source="projects/reference/p02-journal/src/lib.rs" data-sha256="cde61b40ff54acfc7db0217c9996e9b2745f8312a4307a8d6fb00e17dd1cf706"><div class="code-label"><a href="../../projects/reference/p02-journal/src/lib.rs">projects/reference/p02-journal/src/lib.rs</a></div><pre><code>//! A small versioned task journal. Titles are UTF-8, single-line, 1–200 bytes.
+//! The storage format is `TASKS\t1` followed by tab-separated id/status/title rows.
+//! ```
+//! use task_journal::Journal;
+//! let mut journal = Journal::default();
+//! let id = journal.add(&quot;Learn borrowing&quot;)?;
+//! journal.complete(id)?;
+//! let restored = Journal::decode(&amp;journal.encode())?;
+//! assert_eq!(restored.tasks(), journal.tasks());
+//! # Ok::&lt;(), task_journal::Error&gt;(())
+//! ```
+use std::{
+    collections::HashSet,
+    fmt,
+    fs::{self, File, OpenOptions},
+    io::{self, Read, Write},
+    path::Path,
+};
+const MAX_FILE_BYTES: u64 = 1_048_576;
+const MAX_TASKS: usize = 10_000;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Status {
+    Open,
+    Done,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Task {
+    id: u64,
+    title: String,
+    status: Status,
+}
+impl Task {
+    pub fn id(&amp;self) -&gt; u64 {
+        self.id
+    }
+    pub fn title(&amp;self) -&gt; &amp;str {
+        &amp;self.title
+    }
+    pub fn status(&amp;self) -&gt; Status {
+        self.status
+    }
+}
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Journal {
+    tasks: Vec&lt;Task&gt;,
+}
+#[derive(Debug)]
+pub enum Error {
+    Invalid(String),
+    NotFound(u64),
+    Io(io::Error),
+}
+impl fmt::Display for Error {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        match self {
+            Self::Invalid(s) =&gt; write!(f, &quot;invalid journal: {s}&quot;),
+            Self::NotFound(id) =&gt; write!(f, &quot;task {id} does not exist&quot;),
+            Self::Io(e) =&gt; write!(f, &quot;storage: {e}&quot;),
+        }
+    }
+}
+impl std::error::Error for Error {
+    fn source(&amp;self) -&gt; Option&lt;&amp;(dyn std::error::Error + &#x27;static)&gt; {
+        if let Self::Io(e) = self {
+            Some(e)
+        } else {
+            None
+        }
+    }
+}
+impl From&lt;io::Error&gt; for Error {
+    fn from(e: io::Error) -&gt; Self {
+        Self::Io(e)
+    }
+}
+fn validate_title(title: &amp;str) -&gt; Result&lt;(), Error&gt; {
+    if title.trim().is_empty() || title.len() &gt; 200 || title.chars().any(char::is_control) {
+        return Err(Error::Invalid(
+            &quot;title must contain 1–200 bytes and no control characters&quot;.into(),
+        ));
+    }
+    Ok(())
+}
+impl Journal {
+    pub fn tasks(&amp;self) -&gt; &amp;[Task] {
+        &amp;self.tasks
+    }
+    pub fn add(&amp;mut self, title: &amp;str) -&gt; Result&lt;u64, Error&gt; {
+        validate_title(title)?;
+        if self.tasks.len() &gt;= MAX_TASKS {
+            return Err(Error::Invalid(&quot;task limit reached&quot;.into()));
+        }
+        let id = self
+            .tasks
+            .iter()
+            .map(|t| t.id)
+            .max()
+            .unwrap_or(0)
+            .checked_add(1)
+            .ok_or_else(|| Error::Invalid(&quot;identifier space exhausted&quot;.into()))?;
+        self.tasks.push(Task {
+            id,
+            title: title.to_owned(),
+            status: Status::Open,
+        });
+        Ok(id)
+    }
+    pub fn complete(&amp;mut self, id: u64) -&gt; Result&lt;(), Error&gt; {
+        let task = self
+            .tasks
+            .iter_mut()
+            .find(|t| t.id == id)
+            .ok_or(Error::NotFound(id))?;
+        task.status = Status::Done;
+        Ok(())
+    }
+    pub fn remove(&amp;mut self, id: u64) -&gt; Result&lt;(), Error&gt; {
+        let position = self
+            .tasks
+            .iter()
+            .position(|t| t.id == id)
+            .ok_or(Error::NotFound(id))?;
+        self.tasks.remove(position);
+        Ok(())
+    }
+    pub fn encode(&amp;self) -&gt; String {
+        let mut output = String::from(&quot;TASKS\t1\n&quot;);
+        for task in &amp;self.tasks {
+            let status = match task.status {
+                Status::Open =&gt; &quot;open&quot;,
+                Status::Done =&gt; &quot;done&quot;,
+            };
+            use std::fmt::Write;
+            writeln!(output, &quot;{}\t{status}\t{}&quot;, task.id, task.title)
+                .expect(&quot;writing String cannot fail&quot;);
+        }
+        output
+    }
+    pub fn decode(input: &amp;str) -&gt; Result&lt;Self, Error&gt; {
+        if input.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let mut lines = input.lines();
+        if lines.next() != Some(&quot;TASKS\t1&quot;) {
+            return Err(Error::Invalid(
+                &quot;unsupported or missing format header&quot;.into(),
+            ));
+        }
+        let mut journal = Self::default();
+        let mut seen = HashSet::new();
+        for (offset, row) in lines.enumerate() {
+            let fail = || Error::Invalid(format!(&quot;malformed row {}&quot;, offset + 2));
+            let columns: Vec&lt;&amp;str&gt; = row.split(&#x27;\t&#x27;).collect();
+            let [id, status, title] = columns.as_slice() else {
+                return Err(fail());
+            };
+            let id: u64 = id.parse().map_err(|_| fail())?;
+            if id == 0 || !seen.insert(id) || journal.tasks.len() &gt;= MAX_TASKS {
+                return Err(fail());
+            }
+            let status = match *status {
+                &quot;open&quot; =&gt; Status::Open,
+                &quot;done&quot; =&gt; Status::Done,
+                _ =&gt; return Err(fail()),
+            };
+            validate_title(title)?;
+            journal.tasks.push(Task {
+                id,
+                title: (*title).to_owned(),
+                status,
+            });
+        }
+        Ok(journal)
+    }
+    /// A missing path starts a new journal. Other read errors are preserved.
+    pub fn load(path: &amp;Path) -&gt; Result&lt;Self, Error&gt; {
+        let file = match File::open(path) {
+            Ok(file) =&gt; file,
+            Err(e) if e.kind() == io::ErrorKind::NotFound =&gt; return Ok(Self::default()),
+            Err(e) =&gt; return Err(e.into()),
+        };
+        let mut bytes = Vec::new();
+        file.take(MAX_FILE_BYTES + 1).read_to_end(&amp;mut bytes)?;
+        if bytes.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let text =
+            std::str::from_utf8(&amp;bytes).map_err(|_| Error::Invalid(&quot;file is not UTF-8&quot;.into()))?;
+        Self::decode(text)
+    }
+    /// Writes a sibling temporary file then renames it. Designed for one writer.
+    /// No locking or parent-directory fsync: not a database durability guarantee.
+    pub fn save(&amp;self, path: &amp;Path) -&gt; Result&lt;(), Error&gt; {
+        let bytes = self.encode();
+        if bytes.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let mut temporary_name = path.as_os_str().to_os_string();
+        temporary_name.push(format!(&quot;.{}.tmp&quot;, std::process::id()));
+        let temporary = std::path::PathBuf::from(temporary_name);
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&amp;temporary)?;
+        let result = (|| -&gt; io::Result&lt;()&gt; {
+            file.write_all(bytes.as_bytes())?;
+            file.sync_all()?;
+            drop(file);
+            fs::rename(&amp;temporary, path)
+        })();
+        if result.is_err() {
+            let _ = fs::remove_file(&amp;temporary);
+        }
+        result.map_err(Error::from)
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn round_trip_and_transitions() {
+        let mut j = Journal::default();
+        let a = j.add(&quot;read 🦀&quot;).unwrap();
+        let b = j.add(&quot;write tests&quot;).unwrap();
+        j.complete(a).unwrap();
+        j.complete(a).unwrap();
+        j.remove(b).unwrap();
+        assert_eq!(Journal::decode(&amp;j.encode()).unwrap(), j);
+        assert_eq!(j.tasks()[0].status(), Status::Done);
+        assert!(matches!(j.complete(99), Err(Error::NotFound(99))));
+    }
+    #[test]
+    fn rejects_corruption_without_partial_success() {
+        for input in [
+            &quot;TASKS\t2\n&quot;,
+            &quot;TASKS\t1\n1\topen\tx\n1\tdone\ty\n&quot;,
+            &quot;TASKS\t1\n0\topen\tx\n&quot;,
+            &quot;TASKS\t1\n1\tmaybe\tx\n&quot;,
+            &quot;TASKS\t1\n1\topen\t\n&quot;,
+        ] {
+            assert!(Journal::decode(input).is_err(), &quot;{input}&quot;);
+        }
+        let mut j = Journal::default();
+        assert!(j.add(&quot; &quot;).is_err());
+        assert!(j.add(&quot;one\ntwo&quot;).is_err());
+        assert!(j.tasks().is_empty());
+    }
+    #[test]
+    fn id_overflow_is_an_error() {
+        let mut j = Journal::decode(&quot;TASKS\t1\n18446744073709551615\topen\tx\n&quot;).unwrap();
+        assert!(j.add(&quot;next&quot;).is_err());
+    }
+}
+</code></pre></div>
+<pre><code>mise exec -- cargo test -p task-journal round_trip_and_transitions
+mise exec -- cargo run -p task-journal -- reference/p02-journal/fixtures/tasks-v1.txt list</code></pre>
+<h2 id="mutation-and-the-useful-exclusivity-rule">Mutation and the useful exclusivity rule</h2>
+<p>A mutable reference grants exclusive access for the duration of that borrow. You cannot keep two active mutable references to the same collection and use both later. The crucial word is active: the compiler often ends a borrow at its last use rather than at the enclosing closing brace. Read the actual sequence of uses instead of assuming every reference lasts to the end of a function. The second supplied fixture deliberately overlaps two mutable views of the same Vec.</p>
+<p>In Journal::complete, iter_mut finds one task and gives exclusive access to that task while its status changes. The method then returns, ending that access before another caller can mutate the journal. This is a small, local ownership story. If an implementation instead returns a mutable Task and then tries to push another task while holding it, Vec reallocation and overlapping access become part of the problem. Prefer completing the mutation inside the method when the caller does not need a long-lived view.</p>
+<h2 id="playbook-a-borrow-error-after-adding-a-task">Playbook: a borrow error after adding a task</h2>
+<p>Observation: code that saves a borrowed title, pushes a new task, and then prints the saved title is rejected. Hypothesis A: Rust forbids printing borrowed text. Hypothesis B: the saved view overlaps mutation of its owning collection. Distinguishing experiment: print the title before the push, leaving the same borrowed type and the same push. Expected result: the borrow ends at its last use, and the reordered sequence can compile. That disproves A and supports B for this control flow.</p>
+<p>The smallest sound fix depends on the requirement. If the output must occur before mutation, reordering is enough. If a snapshot must survive mutation, an intentional owned copy is appropriate. If the caller only needs an identifier, store that small value and look up the task again afterward. There is no universal “always clone” or “never clone” repair. Ask an AI reviewer to compare these three requirements and explain the allocation and lifetime tradeoffs before accepting a patch.</p>
+<h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Add a search method in your learner journal that returns borrowed titles containing a query. Decide whether the result should be a Vec of borrowed slices or an iterator. Either can be clear at this stage. Write a test that keeps the journal alive while reading results. Then intentionally try to return those views from a function that constructs a local journal. Explain why the returned references would have no living owner. Repair that second function by returning owned strings if the caller really needs independent results.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>underline every String and every &amp;str, then name the owner for each borrowed slice.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>find the last use of a reference around the reported mutable operation.</p></details><details><summary>Worked solution</summary><p>accept title: &amp;str, validate it, construct title: title.to_owned(), and expose fn title(&amp;self) -&gt; &amp;str. This creates ownership exactly where persistence is required. A focused review request is “Does this allocation serve a storage requirement, or can the borrow end earlier?” Include the call site because signatures alone may hide the lifetime conflict.</p></details>
+<h2 id="recommended-design-and-alternatives-and-mastery">Recommended design and alternatives and mastery</h2>
+<p>Accepting String and storing it is sound when the API intentionally transfers ownership. The reference accepts &amp;str because callers may keep their input and the storage boundary can make one explicit owned copy. A generic Into&lt;String&gt; constructor can later support both transfer and conversion, but it should be introduced for demonstrated caller needs. Judge these alternatives by allocation, retention, and call-site clarity rather than by the number of generic parameters.</p>
+<p>Mastery is the ability to repair both a move error and an overlapping borrow error while explaining the resulting data lifetime. Compiler acceptance establishes that the checked ownership rules hold for safe code in that program. It does not prove task validation, file durability, or performance. Keep those concerns separate so memory safety becomes a reliable foundation rather than an excuse to skip other evidence.</p><h2 id="explore-the-model">Explore the model</h2><section class="widget" data-widget="ownership" aria-label="Ownership and borrow trace"><h3>Ownership and borrow trace</h3><p>Conceptual teaching model: this trace does not show physical memory placement, prove a scheduler property, or implement consensus. Read the state explanation after each action.</p><div class="widget-visual" aria-hidden="true"></div><p data-output aria-live="polite"></p><button data-action="next">Next state</button><button data-action="reset">Reset</button><noscript>JavaScript is disabled. The lesson above contains the equivalent explanation; this optional state trace needs JavaScript.</noscript></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/book/ch04-01-what-is-ownership.html">Ownership</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch04-02-references-and-borrowing.html">References and borrowing</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch04-03-slices.html">String slices</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-0/00-conversions.html">Previous: Convert fractional lengths with an honest numeric contract</a><a href="../../lessons/stage-1/01-modeling.html">Next: Model valid task states and make invalid transitions visible</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-a-journal-must-keep-data-after-input-disappears">Purpose: a journal must keep data after input disappears</a><a href="#predict-the-ownership-transition">Predict the ownership transition</a><a href="#guided-checkpoint-store-one-intentional-copy">Guided checkpoint: store one intentional copy</a><a href="#mutation-and-the-useful-exclusivity-rule">Mutation and the useful exclusivity rule</a><a href="#playbook-a-borrow-error-after-adding-a-task">Playbook: a borrow error after adding a task</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#recommended-design-and-alternatives-and-mastery">Recommended design and alternatives and mastery</a><a href="#explore-the-model">Explore the model</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,561 @@
+{
+  "date": "2026-10-17T11:25:29.245482+00:00",
+  "toolchain": "1.99.1",
+  "mode": "extras",
+  "refreshed_locks": false,
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/experiments/p07-rayon/Cargo.toml",
+        "--locked"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "clippy",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/experiments/p07-rayon/Cargo.toml",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "test",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/no-std/Cargo.toml",
+        "--locked"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "clippy",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/no-std/Cargo.toml",
+        "--locked",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p11-console/Cargo.toml",
+        "--locked",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p01-calculator/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p02-journal/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p03-logs/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p04-config/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p05-expressions/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p06-kv/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p07-indexer/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p08-monitor/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p09-chat/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p10-issues/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p12-replay/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p13-unsafe/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p14-scheduler/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p15-replication/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p16-workbench/Cargo.toml",
+        "--locked",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/01-use-after-move.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0382",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/02-aliasing.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0499",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/03-local-reference.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0515",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/04-nonexhaustive.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0004",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/05-missing-trait.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0277",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/systems/borrow_after_pop.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0502",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/systems/rc_thread.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0277",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/systems/thread_borrow.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0373",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/systems/uninit_read.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0133",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/orphan.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0117",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/dyn.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0038",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--emit=metadata",
+        "--out-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/concurrency/pinned_get_mut.rs"
+      ],
+      "exit_code": 1,
+      "expected_exit": "nonzero",
+      "expected_text": "E0277",
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--test",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/services/partial-read-broken.rs",
+        "-o",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx/broken"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx/broken"
+      ],
+      "exit_code": 101,
+      "expected_exit": 101,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.1",
+        "--edition=2024",
+        "--test",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/services/partial-read-solution.rs",
+        "-o",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx/solution"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-diagnostics-hotvcadx/solution"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    }
+  ],
+  "log": "oct17-extras.log",
+  "passed": true,
+  "limits": "Scaffolds are learner assignments: compilation is checked, TODO acceptance tests are intentionally unsolved. Database and browser execution are separate."
+}

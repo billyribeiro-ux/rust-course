@@ -1,0 +1,30 @@
+   Compiling proc-macro2 v1.0.107
+error: failed to link or copy `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/quote-93fb0e6a010b2f89/build_script_build-93fb0e6a010b2f89` to `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/quote-93fb0e6a010b2f89/build-script-build`
+
+Caused by:
+  Operation not permitted (os error 1)
+warning: build failed, waiting for other jobs to finish...
+error: failed to link or copy `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/libc-17681317f7e930c6/build_script_build-17681317f7e930c6` to `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/libc-17681317f7e930c6/build-script-build`
+
+Caused by:
+  Operation not permitted (os error 1)
+error: failed to link or copy `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/serde_core-c46b83de2dca5b42/build_script_build-c46b83de2dca5b42` to `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/serde_core-c46b83de2dca5b42/build-script-build`
+
+Caused by:
+  Operation not permitted (os error 1)
+error: failed to link or copy `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/httparse-b5a57e4cf64373ae/build_script_build-b5a57e4cf64373ae` to `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/httparse-b5a57e4cf64373ae/build-script-build`
+
+Caused by:
+  Operation not permitted (os error 1)
+error: failed to link or copy `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/zmij-f08e288227415805/build_script_build-f08e288227415805` to `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/zmij-f08e288227415805/build-script-build`
+
+Caused by:
+  Operation not permitted (os error 1)
+error: failed to link or copy `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/serde-874dca7c8956a039/build_script_build-874dca7c8956a039` to `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/serde-874dca7c8956a039/build-script-build`
+
+Caused by:
+  Operation not permitted (os error 1)
+error: failed to link or copy `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/serde_json-c7dd331f4bb7281f/build_script_build-c7dd331f4bb7281f` to `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/build/serde_json-c7dd331f4bb7281f/build-script-build`
+
+Caused by:
+  Operation not permitted (os error 1)

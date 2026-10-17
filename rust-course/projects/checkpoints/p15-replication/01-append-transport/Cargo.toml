@@ -1,0 +1,8 @@
+[package]
+name = "checkpoint-p15-replication-01-append-transport"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+publish = false
+
+[workspace]

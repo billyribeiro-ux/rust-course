@@ -1,0 +1,1496 @@
+{
+  "schema_version": 1,
+  "rows": [
+    {
+      "objective": "Terminal navigation, files, relative paths and reading tool output",
+      "lessons": [
+        "00-terminal",
+        "00-workspace"
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "projects": [
+        "p01"
+      ],
+      "verification": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Git working tree, changes, commits and preserving learner work",
+      "lessons": [
+        "00-workspace"
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "projects": [
+        "p01"
+      ],
+      "verification": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "mise, Cargo, rustup, compilation, dependencies, lockfiles and workspace structure",
+      "lessons": [
+        "00-workspace"
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "projects": [
+        "p01"
+      ],
+      "verification": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Functions, values, expressions, control flow and problem decomposition",
+      "lessons": [
+        "00-programs",
+        "00-calculator"
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "projects": [
+        "p01"
+      ],
+      "verification": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Binary and decimal representation, scalar types, checked overflow and floating-point limits",
+      "lessons": [
+        "00-values",
+        "00-conversions",
+        "00-programs"
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "projects": [
+        "p01"
+      ],
+      "verification": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Validated CLI input, unit conversion, arithmetic contracts and meaningful tests",
+      "lessons": [
+        "00-calculator",
+        "00-conversions"
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "projects": [
+        "p01"
+      ],
+      "verification": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "rustfmt, Clippy, compiler diagnostics and the limits of tool acceptance",
+      "lessons": [
+        "00-workspace",
+        "00-calculator"
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "projects": [
+        "p01"
+      ],
+      "verification": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Bindings, mutability, moves and ownership-driven APIs",
+      "lessons": [
+        "01-ownership",
+        "01-modeling"
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Borrow scopes, shared and exclusive references, slices and lifetime needs",
+      "lessons": [
+        "01-ownership",
+        "02-lifetimes"
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Stack and heap as a conceptual model, with allocation and placement limits",
+      "lessons": [
+        "01-ownership",
+        "03-raii"
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Strings, UTF-8 byte boundaries and bounded text processing",
+      "lessons": [
+        "01-ownership",
+        "01-io",
+        "01-logs"
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log",
+        "verification/log-search-followup.json"
+      ],
+      "scope": "Includes case-sensitive literal search over valid UTF-8 records; no case folding or Unicode normalization. Chunk-boundary and normalization-difference tests support this policy; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Structs, enums, pattern matching, Option and Result",
+      "lessons": [
+        "01-modeling"
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Tuples, arrays, slices, Vec, HashMap and deterministic output order",
+      "lessons": [
+        "01-collections"
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Task validation, state transitions, a versioned file format and save failure limits",
+      "lessons": [
+        "01-journal"
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Buffered streaming I/O, structured parse errors, CLI contracts and memory bounds",
+      "lessons": [
+        "01-io",
+        "01-logs"
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log",
+        "verification/log-search-followup.json"
+      ],
+      "scope": "P03 streams summary and literal matches with fixed counters and an explicit CLI byte budget. A generated 67,109,888-byte input uses one 1KiB source record and a 257-byte reader; structural retention evidence, not an OS peak-memory measurement. Read/write/partial-output failures and CLI contracts are tested."
+    },
+    {
+      "objective": "Iterator laziness, closures and readable pipelines",
+      "lessons": [
+        "01-logs",
+        "02-conversions"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p02",
+        "p03"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Modules, visibility, crate paths, documentation examples and API evolution",
+      "lessons": [
+        "02-conversions",
+        "02-config"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p04",
+        "p05"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Error design, standard error traits, context and redaction",
+      "lessons": [
+        "02-config",
+        "02-conversions"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p04",
+        "p05"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Generics, traits, static and dynamic dispatch",
+      "lessons": [
+        "02-traits",
+        "07-allocation-dispatch"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p04",
+        "p05"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Concrete lifetimes, borrowed versus owned configuration and avoiding unnecessary lifetime complexity",
+      "lessons": [
+        "02-lifetimes",
+        "02-config"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p04",
+        "p05"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "From, Into, TryFrom, TryInto, standard traits and invariant-preserving newtypes",
+      "lessons": [
+        "02-conversions"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p04",
+        "p05"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Layered settings, validation, secret redaction and documented library contracts",
+      "lessons": [
+        "02-config"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p04",
+        "p05"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Tokenization, recursive ASTs, Box, precedence, associativity and source spans",
+      "lessons": [
+        "02-parser",
+        "02-evaluator"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p04",
+        "p05"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Parser algorithmic cost, malicious-depth limits and semantic property checks",
+      "lessons": [
+        "02-parser",
+        "02-evaluator"
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "projects": [
+        "p04",
+        "p05"
+      ],
+      "verification": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/check-tests.log"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Unit, integration and doc tests, fixtures and deterministic test design",
+      "lessons": [
+        "03-tests",
+        "02-conversions"
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "projects": [
+        "p05",
+        "p06"
+      ],
+      "verification": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Property tests, finite domains, fuzzing oracles, minimization and regressions",
+      "lessons": [
+        "02-evaluator",
+        "03-fuzz"
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "projects": [
+        "p05",
+        "p06"
+      ],
+      "verification": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json",
+        "verification/fuzz-expression.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Smart pointers, Drop, RAII and destruction ownership",
+      "lessons": [
+        "03-raii"
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "projects": [
+        "p05",
+        "p06"
+      ],
+      "verification": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Cell, RefCell, runtime borrowing, Rc, Weak and cycle decisions",
+      "lessons": [
+        "03-interior"
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "projects": [
+        "p05",
+        "p06"
+      ],
+      "verification": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Collection contracts, append-only log design, replay and checksums",
+      "lessons": [
+        "03-log-store"
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "projects": [
+        "p05",
+        "p06"
+      ],
+      "verification": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Partial tails, corruption, compaction, flush versus durability and crash windows",
+      "lessons": [
+        "03-recovery"
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "projects": [
+        "p05",
+        "p06"
+      ],
+      "verification": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "OS threads, scoped ownership, channels, Send and Sync",
+      "lessons": [
+        "04-threads"
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "projects": [
+        "p07",
+        "p08"
+      ],
+      "verification": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Mutexes, lock order, deadlocks, races versus data races",
+      "lessons": [
+        "04-threads",
+        "04-atomics"
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "projects": [
+        "p07",
+        "p08"
+      ],
+      "verification": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Atomic read-modify-write, Relaxed, release/acquire and SeqCst limits",
+      "lessons": [
+        "04-atomics"
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "projects": [
+        "p07",
+        "p08"
+      ],
+      "verification": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Bounded file work, cancellation, progress, deterministic aggregation and throughput",
+      "lessons": [
+        "04-indexer"
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "projects": [
+        "p07",
+        "p08"
+      ],
+      "verification": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json",
+        "verification/indexer-progress-followup.html"
+      ],
+      "scope": "P07 coordinator callback and CLI report bounded per-file progress with tested cancellation/failure accounting; existing throughput experiments are separate measured evidence. No progress timing guarantee is asserted."
+    },
+    {
+      "objective": "Serial versus threads and parallel tools; CPU versus I/O work",
+      "lessons": [
+        "04-indexer",
+        "04-futures",
+        "04-parallel-tools"
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "projects": [
+        "p07",
+        "p08"
+      ],
+      "verification": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json",
+        "verification/rayon-comparison.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Async/await, futures, task scheduling, wakeups and Tokio",
+      "lessons": [
+        "04-futures"
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "projects": [
+        "p07",
+        "p08"
+      ],
+      "verification": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Pin, Unpin, retained futures, absolute deadlines and cancellation safety",
+      "lessons": [
+        "04-pinning"
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "projects": [
+        "p07",
+        "p08"
+      ],
+      "verification": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Bounded health checks, local failure injection, retry budgets and graceful shutdown",
+      "lessons": [
+        "04-monitor"
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "projects": [
+        "p07",
+        "p08"
+      ],
+      "verification": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "TCP byte streams, framing, disconnects and protocol validation",
+      "lessons": [
+        "05-protocols",
+        "05-chat"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Message limits, slow consumers, bounded service resources and shutdown ownership",
+      "lessons": [
+        "05-chat"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "HTTP methods/statuses, JSON, schema contracts and API boundaries",
+      "lessons": [
+        "05-http"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Axum extractors, middleware ordering, request validation and structured errors",
+      "lessons": [
+        "05-http",
+        "05-web-boundaries"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Authentication versus authorization, cookies, bearer credentials, CSRF, CORS and TLS",
+      "lessons": [
+        "05-web-boundaries"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Local protocol and HTTP/SQL boundaries are tested. Real identity-provider integration, browser CSRF enforcement and TLS termination are design exercises; no production authentication is claimed."
+    },
+    {
+      "objective": "SQL, indexes, parameterized queries, pool limits and pagination",
+      "lessons": [
+        "05-sql",
+        "05-tracker"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Transactions, isolation, optimistic revision checks and tenant authorization",
+      "lessons": [
+        "05-sql",
+        "05-tracker"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "SQLx verified queries, offline metadata and live-schema limitations",
+      "lessons": [
+        "05-tracker"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Migrations and integration tests against isolated PostgreSQL",
+      "lessons": [
+        "05-tracker"
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "projects": [
+        "p09",
+        "p10"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "HTML, CSS, DOM, events, semantic controls, forms and responsive accessibility",
+      "lessons": [
+        "06-browser"
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "projects": [
+        "p11"
+      ],
+      "verification": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "WASM constraints, network boundaries, rendering modes and hydration",
+      "lessons": [
+        "06-state",
+        "06-boundaries"
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "projects": [
+        "p11"
+      ],
+      "verification": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "Leptos ownership/state model and compatible stable framework choice",
+      "lessons": [
+        "06-state",
+        "06-console"
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "projects": [
+        "p11"
+      ],
+      "verification": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "Loading/error/empty states, filters, keyboard interaction and status updates",
+      "lessons": [
+        "06-console"
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "projects": [
+        "p11"
+      ],
+      "verification": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "Uncertain mutations, stable IDs, reconciliation and browser lifecycle limits",
+      "lessons": [
+        "06-console",
+        "06-boundaries"
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "projects": [
+        "p11"
+      ],
+      "verification": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "Optional framework-neutral Svelte 5 bridge",
+      "lessons": [
+        "06-boundaries"
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "projects": [
+        "p11"
+      ],
+      "verification": [
+        "verification/svelte-bridge.json"
+      ],
+      "scope": "Optional runnable Svelte 5.57.2 client with exact integer decoding and bounded read requests; compatible Vite build and nine Node tests executed. Leptos is the main path. No SvelteKit is used. Browser interaction remains unverified."
+    },
+    {
+      "objective": "Profiling, benchmark design, allocation counts, working sets and honest speed claims",
+      "lessons": [
+        "07-layout",
+        "07-allocation-dispatch",
+        "07-performance"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Data layout, cache locality, AoS/SoA and measured tradeoffs",
+      "lessons": [
+        "07-layout"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Static/dynamic dispatch, borrowed/owned parsing and qualified zero-copy claims",
+      "lessons": [
+        "07-allocation-dispatch"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Algorithm selection, pipeline backpressure, async bottlenecks and overload",
+      "lessons": [
+        "07-performance",
+        "07-replay"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Fixed-point arithmetic, event order, bounded replay and deterministic aggregation",
+      "lessons": [
+        "07-replay"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Safe baseline, unsafe validity/alignment/aliasing/initialization and Drop contracts",
+      "lessons": [
+        "07-unsafe",
+        "07-auditing"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Fixed capacity, zero-sized types, bounds, overflow and panic safety",
+      "lessons": [
+        "07-unsafe"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Unsafe auditing and applicable Miri evidence versus soundness proofs",
+      "lessons": [
+        "07-auditing"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Pattern ergonomics, coherence/orphan rules and dyn compatibility",
+      "lessons": [
+        "07-traits"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Associated types, higher-ranked trait bounds, advanced lifetimes and const generics",
+      "lessons": [
+        "07-traits"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Declarative/procedural macros, hygiene, evaluation counts and library compatibility",
+      "lessons": [
+        "07-macros"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "FFI ABI/ownership/unwinding and a small safe wrapper",
+      "lessons": [
+        "07-ffi"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "no_std, allocation and embedded target concepts",
+      "lessons": [
+        "07-ffi"
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "projects": [
+        "p12",
+        "p13"
+      ],
+      "verification": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "scope": "Specialization: no_std is checked on the host; no board support, MMIO, interrupts or embedded executable is verified."
+    },
+    {
+      "objective": "Process boundaries, partial failure, idempotency and uncertain outcomes",
+      "lessons": [
+        "08-delivery"
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "projects": [
+        "p14",
+        "p15"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "At-least-once delivery, deduplication, transactional outbox and external effects",
+      "lessons": [
+        "08-delivery",
+        "08-scheduler"
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "projects": [
+        "p14",
+        "p15"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Persistent jobs, leases, clock assumptions, bounded workers and retry policy",
+      "lessons": [
+        "08-scheduler"
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "projects": [
+        "p14",
+        "p15"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Cancellation semantics, fencing, crash recovery and duplicate execution",
+      "lessons": [
+        "08-scheduler"
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "projects": [
+        "p14",
+        "p15"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Deterministic replicas, drops, delays, partitions and restarts",
+      "lessons": [
+        "08-replication"
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "projects": [
+        "p14",
+        "p15"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Narrow safety/liveness properties and consensus limitations",
+      "lessons": [
+        "08-replication"
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "projects": [
+        "p14",
+        "p15"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Observability, SLOs, configuration, deployment, rollback and operational debugging",
+      "lessons": [
+        "08-operations"
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "projects": [
+        "p14",
+        "p15"
+      ],
+      "verification": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Modular full-stack application, watchlists, charts and synthetic streams",
+      "lessons": [
+        "09-workbench"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p16"
+      ],
+      "verification": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Simulated order invariants, position ledger, cents, timestamps and event IDs",
+      "lessons": [
+        "09-domain"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p16"
+      ],
+      "verification": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Duplicate/out-of-order events, history, replay and persistent jobs",
+      "lessons": [
+        "09-domain",
+        "09-workbench"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p16"
+      ],
+      "verification": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Authorization, failed transactions, migrations and restart recovery",
+      "lessons": [
+        "09-workbench"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p16"
+      ],
+      "verification": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Reconnects, slow clients, overload, cancellation and observability",
+      "lessons": [
+        "09-workbench",
+        "09-review"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p16"
+      ],
+      "verification": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Architecture alternatives, reproducible load, measured performance and runbook",
+      "lessons": [
+        "09-review"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p16"
+      ],
+      "verification": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Independent specification change, incident, design review and performance investigation",
+      "lessons": [
+        "09-review"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p16"
+      ],
+      "verification": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Investigation loop: observations, reproduction, boundaries, hypotheses, experiments, sound fixes and evidence",
+      "lessons": [
+        "00-terminal",
+        "01-ownership",
+        "03-fuzz",
+        "04-pinning",
+        "05-web-boundaries",
+        "09-review"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p01",
+        "p02",
+        "p03",
+        "p04",
+        "p05",
+        "p06",
+        "p07",
+        "p08",
+        "p09",
+        "p10",
+        "p11",
+        "p12",
+        "p13",
+        "p14",
+        "p15",
+        "p16"
+      ],
+      "verification": [
+        "verification/instructional-audit.json"
+      ],
+      "scope": "Every authored lesson includes a topic-specific playbook application; the final assignments require independent decisions and explanation. Author audit cannot establish learner competence."
+    },
+    {
+      "objective": "Design loop: constraints, unknowns, invariants, prototypes and incremental end-to-end slices",
+      "lessons": [
+        "00-calculator",
+        "02-config",
+        "04-indexer",
+        "09-review"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p01",
+        "p04",
+        "p07",
+        "p16"
+      ],
+      "verification": [
+        "verification/instructional-audit.json"
+      ],
+      "scope": "Practice uses the downloadable design template and project engineering decisions. Human design review remains pending."
+    },
+    {
+      "objective": "Responsible AI use: explanations, competing hypotheses, reviewed diffs, verification and independent explanation",
+      "lessons": [
+        "00-terminal",
+        "09-review"
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "projects": [
+        "p01",
+        "p16"
+      ],
+      "verification": [
+        "verification/instructional-audit.json"
+      ],
+      "scope": "The learner must defend the result independently; copied solutions or passing builds alone do not satisfy the rubric."
+    }
+  ]
+}

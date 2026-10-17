@@ -1,0 +1,264 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Cell and RefCell: shared ownership with checked access · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="03-interior" data-lesson="03-interior"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Cell and RefCell: shared ownership with checked access</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 03 / Testing and durable storage</div><h1>Cell and RefCell: shared ownership with checked access</h1><p class="lead">Give two synchronous callbacks one bounded audit buffer, then investigate dynamic borrow conflicts, snapshots, and guard cleanup.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-3/03-raii.html">Resource ownership and the failure path</a></li></ul><ul><li>Separate Rc shared ownership from Cell and RefCell mutation mechanisms.</li><li>Return ordinary errors for reachable dynamic borrow conflicts.</li><li>Trace RefCell guard lifetime through nested callbacks and unwinding.</li><li>Justify interior mutability against exclusive ownership and a new cross-thread requirement.</li><li>Distinguish strong and weak ownership, handle failed upgrades, and identify reference-count cycles in a proposed callback graph.</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#async">async</a> · <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#borrow">borrow</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#drop">drop</a> · <a href="../../glossary.html#future">future</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p06">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-share-one-small-state-without-hiding-the-ownership-cost">Purpose: share one small state without hiding the ownership cost</h2>
+<p>Suppose two synchronous callbacks need to retain handles to the same local audit buffer. They record short messages and can temporarily disable recording. A single exclusive owner passing <code>&amp;mut Vec</code> would be the simplest design if the callbacks did not need independently retained handles. Here that lifetime requirement is explicit, so the lab uses reference-counted ownership and controlled interior mutability. This is a single-threaded example; concurrency remains a separate design problem.</p>
+<p>The buffer stores at most four messages, each one through 64 UTF-8 bytes with no control characters. Every call validates its message, even when recording is disabled. A valid disabled call returns <code>Ok(false)</code>; an accepted record returns <code>Ok(true)</code>. Invalid input, a full buffer, and a conflicting runtime borrow are distinct errors. These rules keep the example small while making the hard questions observable.</p>
+<h2 id="plain-model-ownership-and-permission-to-mutate-are-different">Plain model: ownership and permission to mutate are different</h2>
+<p><code>Rc</code> supplies shared ownership within one thread. Cloning its handle adds another owner of the same allocation; it does not clone the inner vector of messages. The inner allocation remains alive while any strong owner remains. Shared ownership alone does not permit arbitrary mutation through a shared reference. That distinction matters: an ownership wrapper answers “who keeps this alive?” while a mutation mechanism answers “when may the contents change?”</p>
+<p><code>Cell&lt;bool&gt;</code> stores the enabled flag. Reading with <code>get</code> copies a small Boolean out; setting replaces that value. The API does not lend an ordinary reference to the inner Boolean that could be invalidated by a later replacement. This fits a small Copy value. <code>RefCell&lt;Vec&lt;String&gt;&gt;</code> instead provides checked temporary access to a larger non-Copy value. It tracks shared and exclusive borrows at runtime while preserving the essential rule that mutable access cannot coexist with another active access to the same contents.</p>
+<p>This is called <strong>interior mutability</strong>: an API can mutate controlled contents through <code>&amp;self</code>. It is not a compiler escape hatch. Safe standard-library APIs enforce the relevant rules, and the compiler still constrains how returned guards and references are used. <code>RefCell</code> does not become a thread-safe lock, and wrapping it in an atomic reference counter would not automatically fix that limitation. The lesson's compile-fail doctest makes the single-threaded boundary explicit.</p>
+<h2 id="prediction-a-callback-tries-to-write-while-reading">Prediction: a callback tries to write while reading</h2>
+<p>The first callback records “first callback”; the second records “second callback.” An observer then reads both messages while trying to record a third through another handle. Predict whether the third record succeeds, blocks, panics, or returns an error. Finally disable recording and submit a valid message. Does disabled recording mean an invalid message is now accepted? Write the expected result category and resulting message list for each step.</p>
+<pre><code class="language-sh">mise exec -- cargo run -p core-rust-labs --example interior
+mise exec -- cargo test -p core-rust-labs interior::
+mise exec -- cargo test -p core-rust-labs --doc</code></pre>
+<p>Run from <code>projects</code>. The observer sees two messages. The reentrant write returns <code>Err(Borrowed)</code>. The later valid disabled call returns false, and the snapshot still has the original two messages. There is no thread waiting for another thread here. The conflict is caused by an observer's still-live shared borrow during a nested call.</p>
+<h2 id="read-the-complete-safe-implementation">Read the complete safe implementation</h2>
+<div class="code-wrap" data-source="projects/reference/p18-core-labs/src/interior.rs" data-sha256="1efd1bc706c6341b5ff1e3819ce63b497bb04d139f400db0b305c6087d954698"><div class="code-label"><a href="../../projects/reference/p18-core-labs/src/interior.rs">projects/reference/p18-core-labs/src/interior.rs</a></div><pre><code>use std::cell::{Cell, RefCell};
+use std::fmt;
+use std::rc::{Rc, Weak};
+
+pub const MAX_MESSAGES: usize = 4;
+pub const MAX_MESSAGE_BYTES: usize = 64;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AuditError {
+    InvalidMessage,
+    Full,
+    Borrowed,
+}
+impl fmt::Display for AuditError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        f.write_str(match self {
+            Self::InvalidMessage =&gt; &quot;message must contain 1 to 64 bytes and no control characters&quot;,
+            Self::Full =&gt; &quot;audit buffer is full&quot;,
+            Self::Borrowed =&gt; &quot;audit buffer is already borrowed by an observer&quot;,
+        })
+    }
+}
+impl std::error::Error for AuditError {}
+
+#[derive(Debug)]
+struct Inner {
+    enabled: Cell&lt;bool&gt;,
+    messages: RefCell&lt;Vec&lt;String&gt;&gt;,
+}
+
+/// Two synchronous callbacks can retain handles to one bounded audit buffer.
+/// This deliberately single-threaded handle is not a cross-thread synchronization primitive.
+///
+/// ```compile_fail
+/// let audit = core_rust_labs::interior::SharedAudit::default();
+/// std::thread::spawn(move || audit.record(&quot;moved to another thread&quot;));
+/// ```
+#[derive(Debug, Clone)]
+pub struct SharedAudit {
+    inner: Rc&lt;Inner&gt;,
+}
+
+/// A non-owning observer: retaining this handle does not retain the messages.
+#[derive(Debug, Clone)]
+pub struct WeakAudit {
+    inner: Weak&lt;Inner&gt;,
+}
+impl WeakAudit {
+    /// A successful upgrade owns the buffer until the returned handle is dropped.
+    pub fn upgrade(&amp;self) -&gt; Option&lt;SharedAudit&gt; {
+        self.inner.upgrade().map(|inner| SharedAudit { inner })
+    }
+}
+impl Default for SharedAudit {
+    fn default() -&gt; Self {
+        Self {
+            inner: Rc::new(Inner {
+                enabled: Cell::new(true),
+                messages: RefCell::new(Vec::new()),
+            }),
+        }
+    }
+}
+impl SharedAudit {
+    pub fn downgrade(&amp;self) -&gt; WeakAudit {
+        WeakAudit {
+            inner: Rc::downgrade(&amp;self.inner),
+        }
+    }
+
+    pub fn set_enabled(&amp;self, enabled: bool) {
+        self.inner.enabled.set(enabled);
+    }
+
+    /// Validate all calls, including disabled ones. Ok(false) means valid but disabled.
+    /// Rejections do not add a message. No user callback runs while mutably borrowed.
+    pub fn record(&amp;self, message: &amp;str) -&gt; Result&lt;bool, AuditError&gt; {
+        if message.is_empty()
+            || message.len() &gt; MAX_MESSAGE_BYTES
+            || message.chars().any(char::is_control)
+        {
+            return Err(AuditError::InvalidMessage);
+        }
+        if !self.inner.enabled.get() {
+            return Ok(false);
+        }
+        let mut messages = self
+            .inner
+            .messages
+            .try_borrow_mut()
+            .map_err(|_| AuditError::Borrowed)?;
+        if messages.len() == MAX_MESSAGES {
+            return Err(AuditError::Full);
+        }
+        messages.push(message.to_owned());
+        Ok(true)
+    }
+
+    /// The observation callback runs under a shared borrow. Reentrant writes return Borrowed.
+    /// Keep callbacks brief; this is synchronous observation, not an async lock.
+    pub fn with_messages&lt;R&gt;(&amp;self, inspect: impl FnOnce(&amp;[String]) -&gt; R) -&gt; Result&lt;R, AuditError&gt; {
+        let messages = self
+            .inner
+            .messages
+            .try_borrow()
+            .map_err(|_| AuditError::Borrowed)?;
+        Ok(inspect(&amp;messages))
+    }
+
+    /// An owned snapshot is bounded by MAX_MESSAGES and MAX_MESSAGE_BYTES.
+    pub fn snapshot(&amp;self) -&gt; Result&lt;Vec&lt;String&gt;, AuditError&gt; {
+        self.with_messages(|messages| messages.to_vec())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn handles_share_state_and_disabled_is_distinct_from_invalid() {
+        let audit = SharedAudit::default();
+        let other = audit.clone();
+        assert_eq!(audit.record(&quot;opened&quot;), Ok(true));
+        other.set_enabled(false);
+        assert_eq!(audit.record(&quot;paused&quot;), Ok(false));
+        assert_eq!(audit.record(&quot;&quot;), Err(AuditError::InvalidMessage));
+        other.set_enabled(true);
+        drop(audit);
+        assert_eq!(other.record(&quot;resumed&quot;), Ok(true));
+        assert_eq!(other.snapshot().unwrap(), [&quot;opened&quot;, &quot;resumed&quot;]);
+    }
+
+    #[test]
+    fn full_or_invalid_input_preserves_messages() {
+        let audit = SharedAudit::default();
+        for _ in 0..MAX_MESSAGES {
+            audit.record(&quot;entry&quot;).unwrap();
+        }
+        let before = audit.snapshot().unwrap();
+        assert_eq!(audit.record(&quot;extra&quot;), Err(AuditError::Full));
+        for bad in [
+            String::new(),
+            &quot;x&quot;.repeat(MAX_MESSAGE_BYTES + 1),
+            &quot;bad\nline&quot;.into(),
+        ] {
+            assert_eq!(audit.record(&amp;bad), Err(AuditError::InvalidMessage));
+        }
+        assert_eq!(audit.snapshot().unwrap(), before);
+    }
+
+    #[test]
+    fn reentrant_write_is_an_error_then_guard_release_allows_progress() {
+        let audit = SharedAudit::default();
+        audit.record(&quot;before&quot;).unwrap();
+        let observed = audit.with_messages(|messages| {
+            assert_eq!(audit.record(&quot;during&quot;), Err(AuditError::Borrowed));
+            messages.len()
+        });
+        assert_eq!(observed, Ok(1));
+        assert_eq!(audit.record(&quot;after&quot;), Ok(true));
+        assert_eq!(audit.snapshot().unwrap(), [&quot;before&quot;, &quot;after&quot;]);
+    }
+
+    #[test]
+    fn unwinding_releases_the_observer_guard() {
+        let audit = SharedAudit::default();
+        let failure = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let _ = audit.with_messages(|_| panic!(&quot;deliberate observer failure&quot;));
+        }));
+        assert!(failure.is_err());
+        assert_eq!(audit.record(&quot;after unwind&quot;), Ok(true));
+    }
+
+    #[test]
+    fn weak_observer_does_not_keep_the_buffer_alive() {
+        let first = SharedAudit::default();
+        first.record(&quot;retained by strong handles&quot;).unwrap();
+        let second = first.clone();
+        let observer = first.downgrade();
+        drop(first);
+        assert_eq!(observer.upgrade().unwrap().snapshot().unwrap().len(), 1);
+        drop(second);
+        assert!(observer.upgrade().is_none());
+    }
+}
+</code></pre></div>
+<div class="code-wrap" data-source="projects/reference/p18-core-labs/examples/interior.rs" data-sha256="6f5dd40a9fcbfa616c36b4c838f69344accdfd9603452c2ce1b457dc2a31714f"><div class="code-label"><a href="../../projects/reference/p18-core-labs/examples/interior.rs">projects/reference/p18-core-labs/examples/interior.rs</a></div><pre><code>use core_rust_labs::interior::{AuditError, SharedAudit};
+
+fn main() -&gt; Result&lt;(), AuditError&gt; {
+    let first_callback = SharedAudit::default();
+    let second_callback = first_callback.clone();
+    let observer = first_callback.downgrade();
+    first_callback.record(&quot;first callback&quot;)?;
+    second_callback.record(&quot;second callback&quot;)?;
+    first_callback.with_messages(|messages| {
+        println!(&quot;observed messages: {}&quot;, messages.len());
+        println!(
+            &quot;reentrant write: {:?}&quot;,
+            second_callback.record(&quot;while observing&quot;)
+        );
+    })?;
+    first_callback.set_enabled(false);
+    println!(
+        &quot;recorded while disabled: {}&quot;,
+        second_callback.record(&quot;ignored&quot;)?
+    );
+    println!(&quot;snapshot: {:?}&quot;, first_callback.snapshot()?);
+    drop(first_callback);
+    drop(second_callback);
+    println!(
+        &quot;observer can still upgrade: {}&quot;,
+        observer.upgrade().is_some()
+    );
+    Ok(())
+}
+</code></pre></div>
+<p><code>SharedAudit</code> exposes methods while its <code>Inner</code> fields remain private. <code>Default</code> constructs a fresh enabled buffer. Deriving Clone for the outer handle clones the Rc, deliberately sharing the same Inner. The name “shared” therefore describes an actual observable relationship, verified by a test that disables recording through one handle and records through another. Dropping one handle does not invalidate the other owner.</p>
+<p><code>record</code> validates text before any buffer mutation. It then reads the Cell flag. If disabled, it returns without requesting a mutable vector borrow. Otherwise <code>try_borrow_mut</code> obtains a guard or reports a conflict. Mapping that conflict into <code>AuditError::Borrowed</code> makes it part of the method's normal Result contract. Only after checking capacity does the function allocate its owned message and push it. A rejected operation leaves the existing message list intact.</p>
+<p>The local <code>messages</code> guard dereferences to the vector for its operations. Its Drop releases the runtime borrow when the scope ends, including an ordinary early return. This connects directly to the RAII lesson: a guard's lifetime is the permission interval. Keeping the guard alive longer than necessary can prevent useful work even though every operation remains memory-safe. Do not infer the interval only from where the programmer last thinks about the variable; inspect its actual scope and uses.</p>
+<h2 id="observation-snapshots-and-callback-contracts">Observation, snapshots, and callback contracts</h2>
+<p><code>with_messages</code> accepts <code>impl FnOnce(&amp;[String]) -&gt; R</code>. The caller supplies one computation over a borrowed view, and the method returns that computation's result. FnOnce is sufficient because the callback is invoked once. The shared borrow guard stays alive while it runs. Calling <code>record</code> inside that callback therefore cannot obtain the exclusive borrow, and our fallible API reports the conflict. The observer should be short and synchronous; this is not an async synchronization primitive.</p>
+<p><code>snapshot</code> uses the same observation boundary to clone the bounded messages into an owned vector. A snapshot costs allocations, but the caller can then process it after the shared borrow ends. That is a reasonable alternative when downstream work may call back into the logger. Avoid declaring either approach universally superior. Borrowed observation avoids the copy but constrains reentrancy; owned observation buys independent lifetime with an explicit bounded cost.</p>
+<p>A callback panic is not one of record's ordinary error outcomes. The dedicated test deliberately panics inside observation, catches that unwind in the test harness, and then records successfully. This checks guard cleanup during unwinding. It does not promise rollback of every effect a callback performed before panicking, and a build configured to abort on panic would not continue. Production logic should not use caught panic as its routine borrowing-control protocol.</p>
+<h2 id="weak-observers-and-ownership-cycles">Weak observers and ownership cycles</h2><p>Sometimes a callback registration should find a buffer only while another part of the program owns it. Retaining a strong <code>SharedAudit</code> would extend the buffer lifetime. <code>WeakAudit</code> instead holds <code>Weak&lt;Inner&gt;</code>: a non-owning link created with <code>Rc::downgrade</code>. Its <code>upgrade</code> method returns <code>Option&lt;SharedAudit&gt;</code>. <code>Some</code> gives the caller a new strong owner; <code>None</code> means all strong owners have already gone away. The weak allocation bookkeeping can remain until weak handles disappear, but the messages themselves are dropped when the final strong owner disappears. A weak handle is therefore not a borrowed reference that you can dereference indefinitely.</p><p>Predict the final line of the example before running it. Both callback handles are explicitly dropped, so the observer prints <code>false</code>. In the lifetime test, dropping the first owner still permits an upgrade because the second owner exists. The temporary upgraded handle is dropped at the end of its assertion statement. Only then do we drop the second owner and require <code>None</code>. If you save that upgraded handle in a local variable, you have introduced another strong owner; an unexpected successful later upgrade would be explained by that ownership fact. Record a diagram of live handles before concluding that Weak leaked the buffer.</p><p>A reference-count cycle arises when object A strongly owns B and B strongly owns A. Removing outside handles leaves each count nonzero; reference counting alone cannot infer that the cycle is unreachable. Our buffer contains strings, not stored callbacks or parent links, so this implementation has no such cycle. If a future observer registry stores callbacks that capture the buffer strongly, that new graph requires review. Prefer a clear owner and a weak back-reference when the observer must not extend the owner lifetime; require the callback to handle a failed upgrade. Weak is not a universal repair: an edge that represents real required ownership must remain strong. Draw the graph and state who is responsible for keeping each object alive.</p><p>Independent lifetime investigation: change only your copied example to retain a successful upgrade, drop the two original handles, and predict the next upgrade. Then drop the retained handle and repeat. Competing hypotheses are “the observer owns the messages” and “the retained upgrade owns them.” The second experiment distinguishes them. Submit the two lifetime diagrams and observed results. This directly exercises the lifecycle contract without adding an unrelated graph framework to a four-message buffer.</p><h2 id="guided-checkpoint-with-complete-reconstruction">Guided checkpoint with complete reconstruction</h2>
+<p>From the course root, create a fresh standalone copy. The helper copies the actual module and runnable example, writes a manifest with no external dependencies, and refuses to overwrite an existing name. The result is a complete checkpoint, not an uncompiled sketch.</p>
+<pre><code class="language-sh">python3 projects/reference/p18-core-labs/reconstruct.py interior --name interior-lab
+cd learner-work/interior-lab
+mise exec -- cargo run --example interior
+mise exec -- cargo test</code></pre>
+<p>Build an ownership table with one row per handle and mark which inner allocation it keeps alive. Then build a borrow timeline: no guard, shared observer guard, attempted exclusive record guard, shared guard dropped, successful exclusive guard. Reproduce that timeline using the named reentrant-write test. Next add a second shared observation inside the first and predict that it can succeed because two read borrows are compatible. Keep the mutation rejection test unchanged.</p>
+<p>Finally, use an owned snapshot in your learner example, let the observation return, and then record a message while iterating the independent snapshot. This is a complete alternative checkpoint: same stored messages at snapshot time, different lifetime of the observed data, no active RefCell borrow during later recording. Compare the resulting live log and the older snapshot explicitly. A snapshot is not automatically refreshed when the shared buffer changes.</p>
+<h2 id="intentional-mistake-replacing-an-ordinary-error-with-a-panic">Intentional mistake: replacing an ordinary error with a panic</h2>
+<p>In a disposable learner edit, replace <code>try_borrow_mut</code> and its error mapping with <code>borrow_mut</code>. Predict the reentrant-write test. The infallible-looking API panics on the conflicting borrow, so a caller expecting <code>Err(Borrowed)</code> no longer receives the promised outcome. Run that one test and restore the original fallible call. The lesson is not that borrow_mut is always forbidden; it is inappropriate where a reachable caller behavior is documented as an ordinary error.</p>
+<p>A different deliberate mistake is holding a mutable guard and then invoking arbitrary user callbacks before releasing it. That enlarges the reentrancy surface and makes the permission interval harder to reason about. Our record method calls no user callback while mutably borrowed. Review this structural choice before proposing broad panic handling or a larger wrapper hierarchy.</p>
+<h2 id="playbook-investigation-two-owners-copied-my-messages">Playbook investigation: “two owners copied my messages”</h2>
+<p>You see identical messages through two handles and suspect that Clone copied the vector. Competing hypotheses are independent copied storage and shared storage behind two ownership handles. Disable recording through the first handle, attempt a valid record through the second, then re-enable through the second. If the setting affects both handles and a later record is visible from both, the independent-copy explanation is disproved. A test that only compares their initial contents could not distinguish those designs.</p>
+<p>Next investigate a Borrowed error. A plausible but incorrect diagnosis is that another operating-system thread still holds a lock. Reproduce it with one thread and a nested observation callback. The same error without spawning any thread disproves that diagnosis. The fix can shorten the observation scope or use a bounded snapshot before reentrant work. Record the chosen change and the cost it introduces, using the <a href="../../playbook.html">central playbook</a>. Do not replace Rc with Arc without a genuine cross-thread ownership requirement.</p>
+<h2 id="independent-practice-and-tiered-hints">Independent practice and tiered hints</h2>
+<p>Add a fallible <code>drain</code> operation that transfers all retained messages to an owned vector and leaves the live buffer empty. Decide whether draining while disabled is allowed; the flag currently controls recording, not observation. Require Borrowed when a shared observer is active, and require the old messages to remain intact after that rejection. Test an empty buffer, a full buffer, a blocked drain, a successful drain, and recording again afterward. This is an extension beyond the supplied baseline.</p>
+<details><summary>Hint 1: identify the permission needed</summary><p>Moving messages out changes the vector, so a shared borrow is insufficient. Obtain a fallible mutable guard before changing the state. Disabled recording need not prevent an explicitly separate maintenance operation.</p></details>
+<details><summary>Hint 2: preserve ownership without cloning</summary><p>Once exclusive access exists, consider <code>std::mem::take</code> on the vector. It replaces the stored vector with its default empty value and returns the previously owned one. No message-by-message clone is required.</p></details>
+<details><summary>Reference approach after your attempt</summary><p>The operation can map try_borrow_mut failure to Borrowed, take the vector, and return it. Document the enabled-flag policy before testing. A rejected borrow does not execute the take, so the original buffer survives. Returning an owned vector also prevents callers from retaining a reference into a buffer that will later be reused. This direction still requires your own implementation and tests.</p></details>
+<h2 id="engineering-decisions-evidence-and-mastery">Engineering decisions, evidence, and mastery</h2>
+<p>One small Cell fits an independent Copy flag; one RefCell protects the vector; Rc satisfies the two-callback lifetime requirement; private fields keep validation and bounds centralized. Plain exclusive ownership is the preferable alternative when independently retained handles are unnecessary. A cross-thread requirement would call for a new ownership and synchronization design, with Send/Sync, contention, cancellation, and shutdown review. Merely exchanging wrapper names is not an architecture.</p>
+<p>Four native tests exercise shared identity, bounds and rejection preservation, reentrancy, and guard cleanup on unwind. A compile-fail doctest rejects transferring this Rc-backed handle into a spawned thread. See the <a href="../../verification/core-labs-tests.log">actual test evidence</a>. Tests cover chosen traces; they do not prove every callback is well-behaved. Author verification and independent review are separate, and no browser behavior is claimed.</p>
+<p>For mastery, explain which wrapper supplies ownership, which supplies access checking, and why a dynamic borrow conflict can happen in one thread. Implement drain under your stated flag policy, demonstrate rejected-state preservation, and compare an observation callback with an owned snapshot. Your review should defend the shared requirement itself, not only the syntax that made the compiler accept it.</p>
+<aside><h3>When you get stuck</h3><p>Draw guard start and drop points before changing wrappers. Run <code>mise exec -- cargo test interior::tests::reentrant_write_is_an_error_then_guard_release_allows_progress</code>. Read the pinned RefCell try_borrow and guard documentation. Ask for review with one ownership diagram, one nested call sequence, the expected error, and a concrete experiment distinguishing shared storage from a copied snapshot.</p></aside>
+<h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/cell/index.html">Rust 1.99: Cell and interior mutability</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/cell/struct.Cell.html">Rust 1.99: Cell</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/cell/struct.RefCell.html">Rust 1.99: RefCell fallible borrowing</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/rc/struct.Rc.html">Rust 1.99: Rc ownership</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/ops/trait.FnOnce.html">Rust 1.99: FnOnce</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/mem/fn.take.html">Rust 1.99: mem::take</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/rc/struct.Weak.html">Rust 1.99.1 standard library: rc::Weak</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-3/03-raii.html">Previous: Resource ownership and the failure path</a><a href="../../lessons/stage-3/03-log-store.html">Next: Design an append-only record protocol</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-share-one-small-state-without-hiding-the-ownership-cost">Purpose: share one small state without hiding the ownership cost</a><a href="#plain-model-ownership-and-permission-to-mutate-are-different">Plain model: ownership and permission to mutate are different</a><a href="#prediction-a-callback-tries-to-write-while-reading">Prediction: a callback tries to write while reading</a><a href="#read-the-complete-safe-implementation">Read the complete safe implementation</a><a href="#observation-snapshots-and-callback-contracts">Observation, snapshots, and callback contracts</a><a href="#weak-observers-and-ownership-cycles">Weak observers and ownership cycles</a><a href="#guided-checkpoint-with-complete-reconstruction">Guided checkpoint with complete reconstruction</a><a href="#intentional-mistake-replacing-an-ordinary-error-with-a-panic">Intentional mistake: replacing an ordinary error with a panic</a><a href="#playbook-investigation-two-owners-copied-my-messages">Playbook investigation: “two owners copied my messages”</a><a href="#independent-practice-and-tiered-hints">Independent practice and tiered hints</a><a href="#engineering-decisions-evidence-and-mastery">Engineering decisions, evidence, and mastery</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

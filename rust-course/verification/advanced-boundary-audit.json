@@ -1,0 +1,344 @@
+{
+  "date": "2026-10-09",
+  "result": "passed",
+  "scope": "Narrow author-side curriculum/source boundary audit for P05, P09, P13 and P15",
+  "independent_review": "pending",
+  "browser_or_network_access_used": false,
+  "toolchain": "mise-managed Rust 1.99.0; Tokio 1.53.2 from the existing lockfile",
+  "production_code_changed": false,
+  "production_prefix_comparison": [
+    {
+      "path": "projects/reference/p05-expressions/src/lib.rs",
+      "matches_archive_non_test_prefix": true
+    },
+    {
+      "path": "projects/reference/p09-chat/src/lib.rs",
+      "matches_archive_non_test_prefix": true
+    },
+    {
+      "path": "projects/reference/p15-replication/src/lib.rs",
+      "matches_archive_non_test_prefix": true
+    }
+  ],
+  "modified_files": [
+    {
+      "path": "projects/reference/p05-expressions/src/lib.rs",
+      "sha256": "8e7449135dc5f8c100168994ddac2d4ddd4702d4dcbe861a107049bba00f227b"
+    },
+    {
+      "path": "projects/reference/p09-chat/src/lib.rs",
+      "sha256": "1f322946fa98308738a98ad2f812b729c2d73f1a00723a3cc1340150dba65f8e"
+    },
+    {
+      "path": "projects/reference/p15-replication/src/lib.rs",
+      "sha256": "1c0ae747a6f7f689cf8df6659200f27809cd7052ed9e1e23994554e460019694"
+    },
+    {
+      "path": "authoring/systems.json",
+      "sha256": "71b106a7417c0d3ae10feb8d1390c4acc8a065af360601cfd0294700a11e8422"
+    },
+    {
+      "path": "authoring/assessments-fragment.html",
+      "sha256": "8bdca025c1d2995c9c4529d3d103b8a11ce7e9179ade7813cdb716324c757ce1"
+    }
+  ],
+  "lesson_ids_modified": [
+    "07-unsafe",
+    "07-auditing"
+  ],
+  "assessment_modified": "P13 only in canonical assessments-fragment.html; rendered assessment is refreshed by the course renderer",
+  "findings": [
+    {
+      "id": "P05-resource-boundaries",
+      "classification": "evidence gap closed; no implementation defect",
+      "before": "Existing over-limit tests asserted only is_err, so they could not identify which guard fired or establish accepted exact boundaries.",
+      "change": "Two tests isolate exact source/token ceilings and distinguish parser recursion from constructed AST depth.",
+      "observed": "4096 bytes accepted; 4097 rejected with whole-input source-limit span. A valid 512-token balanced expression evaluates to -128; token 513 is rejected at 512..513. Sixty-three parenthesis pairs plus the top-level call use 64 recursion levels and produce AST depth 1; the next pair fails with nesting limit at 64..65. A flat 64-leaf sum produces AST depth 64 and value 64; leaf 65 fails with AST-depth error at 127..128.",
+      "curriculum_note": "The phrase recursion limit 64 counts the initial call, not 64 nested pairs. Resource rejection is not a claim that the arithmetic expression is mathematically invalid. Existing finite integer properties correctly identify their bounded independent arithmetic oracle; no universal-proof or random-fuzz claim was found."
+    },
+    {
+      "id": "P09-codec-boundaries",
+      "classification": "evidence gap closed; no implementation defect",
+      "before": "Fragmented and invalid frames were tested, but an exact-limit multibyte payload adjacent to a second frame and retention across partial-prefix polling were not isolated.",
+      "change": "Two memory-only async tests, without listeners, wall-clock sleeps or shortened service deadlines.",
+      "observed": "A 1024-byte payload containing 512 two-byte characters followed immediately by another frame decodes as two exact messages. A 1025-byte writer input fails before any output mutation; its reader prefix fails without requiring a body. A decoder polled after only two header bytes resumes from the same saved future and yields \u00e9 after the remaining bytes arrive.",
+      "curriculum_note": "The pinned future test establishes the ownership pattern in isolation; it is not a slow-socket or end-to-end shutdown test. Source review confirms the final service retains the same reader future, disconnects on a broadcast receive error, owns connection tasks in JoinSet, and releases permits with task lifetime. Existing prose correctly separates channel lag from application disconnects and socket-buffer behavior. Capacity 32 is already a power of two, consistent with Tokio rounding."
+    },
+    {
+      "id": "P13-contract-language",
+      "classification": "concrete explanatory ambiguity and evidence overclaim corrected",
+      "before": "The model said prefix from zero through len, which could be read inclusively. The assessment asked to prove through tests that safe access could not expose the suffix. Source links used unversioned standard-library URLs.",
+      "change": "07-unsafe now explicitly says half-open 0..len with len excluded; P13 assessment distinguishes demonstrated test boundaries from the invariant argument. Both unsafe lessons use Rust 1.99.0 std URLs and include allocation-byte-extent reasoning supported by installed primary docs.",
+      "observed": "All four unsafe expressions were reviewed against initialization, alignment, length, allocation extent, aliasing, lifetime and cleanup obligations. The byte-extent argument follows from one live array object and private len <= N; no extra debug assertion is needed. No production change or additional dynamic run was justified.",
+      "reused_evidence": [
+        "release-followup.json",
+        "miri-component.log",
+        "miri-tests.log",
+        "miri-setup.log"
+      ],
+      "curriculum_note": "Native/optimized/Miri results concern executed cases; they do not constitute independent acceptance or universal soundness. Assessment explicitly advises against arbitrary native execution of undefined behavior."
+    },
+    {
+      "id": "P15-commit-hole",
+      "classification": "evidence gap closed; no implementation defect",
+      "before": "Finite schedule tests covered partitions/restarts/loss and conflicts but did not isolate a later acknowledgment arriving before an earlier index, with repeated same-node acknowledgments.",
+      "change": "One test reorders legitimate queued acknowledgments after delivering two leader appends to follower one.",
+      "observed": "Delivering the index-1 acknowledgment three times leaves committed at zero and the acknowledging set exactly {0,1}. Delivering index-0 acknowledgment then advances the contiguous committed prefix to two while follower two remains empty. Prefix safety is checked after each delivered acknowledgment.",
+      "curriculum_note": "This supports unique-node accounting and contiguous commitment in the fixed-leader model. Public state/queue mutation and invalid node indices are explicitly outside the reference adversarial-input contract; the proposed assessment driver must validate them. No claim of Raft, malicious-node safety, real disk durability or exhaustive model checking was found."
+    }
+  ],
+  "targeted_checks": [
+    {
+      "package": "expression-language",
+      "test": "exact_byte_and_token_limits_have_distinct_diagnostics",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "expression-language",
+        "--lib",
+        "tests::exact_byte_and_token_limits_have_distinct_diagnostics",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exit_code": 101,
+      "attempt": "initial failure: external build directory denied before compilation"
+    },
+    {
+      "package": "expression-language",
+      "test": "exact_byte_and_token_limits_have_distinct_diagnostics",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--config",
+        "build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "expression-language",
+        "--lib",
+        "tests::exact_byte_and_token_limits_have_distinct_diagnostics",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "attempt": "approved retry; per-command build-dir also fixed to existing native cache",
+      "passed": 1
+    },
+    {
+      "package": "expression-language",
+      "test": "recursive_nesting_and_constructed_tree_depth_are_separate_limits",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--config",
+        "build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "expression-language",
+        "--lib",
+        "tests::recursive_nesting_and_constructed_tree_depth_are_separate_limits",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "passed": 1
+    },
+    {
+      "package": "p09-chat",
+      "test": "coalesced_frames_obey_the_exact_byte_boundary",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--config",
+        "build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "p09-chat",
+        "--lib",
+        "tests::coalesced_frames_obey_the_exact_byte_boundary",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "passed": 1
+    },
+    {
+      "package": "p09-chat",
+      "test": "retaining_the_same_future_preserves_partial_prefix_progress",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--config",
+        "build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "p09-chat",
+        "--lib",
+        "tests::retaining_the_same_future_preserves_partial_prefix_progress",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "passed": 1
+    },
+    {
+      "package": "p15-replication",
+      "test": "later_and_duplicate_acknowledgments_do_not_skip_a_commit_hole",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--config",
+        "build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "p15-replication",
+        "--lib",
+        "tests::later_and_duplicate_acknowledgments_do_not_skip_a_commit_hole",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exit_code": 0,
+      "passed": 1
+    }
+  ],
+  "strict_clippy": {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "clippy",
+      "--config",
+      "build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"",
+      "--locked",
+      "--manifest-path",
+      "rust-course/projects/Cargo.toml",
+      "--target-dir",
+      ".course-cache/native",
+      "-p",
+      "expression-language",
+      "-p",
+      "p09-chat",
+      "-p",
+      "p15-replication",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "log": "advanced-boundary-clippy.log"
+  },
+  "local_primary_sources": [
+    {
+      "provider": "Installed primary Rust 1.99.0 documentation",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/primitive.str.html",
+      "sha256": "912596d9c052c16d834aa595bd2b1a35b853de9b733fc95e5e3d5a686447ad06",
+      "canonical_url": "https://doc.rust-lang.org/1.99.0/std/primitive.str.html#method.len",
+      "supports": "str length is bytes; byte spans must preserve UTF-8 boundaries."
+    },
+    {
+      "provider": "Installed primary Rust 1.99.0 documentation",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/mem/union.MaybeUninit.html",
+      "sha256": "9e375916f60138896cd496b18907f31755292b2183e6647c0d3f81b57aebf04f",
+      "canonical_url": "https://doc.rust-lang.org/1.99.0/std/mem/union.MaybeUninit.html",
+      "supports": "Storage is not initialized T; layout and initialization obligations remain explicit."
+    },
+    {
+      "provider": "Installed primary Rust 1.99.0 documentation",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/slice/fn.from_raw_parts_mut.html",
+      "sha256": "631094759d13dfa8724fc8b1ef28d59163a1d05cab21a6bf4e346a4c188fa148",
+      "canonical_url": "https://doc.rust-lang.org/1.99.0/std/slice/fn.from_raw_parts_mut.html",
+      "supports": "Mutable slices require initialized values, aligned/non-null pointer, exclusive access, valid lifetime, one allocation and bounded nonwrapping byte extent."
+    },
+    {
+      "provider": "Installed primary Rust 1.99.0 documentation",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/reference/behavior-considered-undefined.html",
+      "sha256": "2a999a9465128b0c2aa1bddc241def35ffdde13cb5f3f6ff396d6e6891142506",
+      "canonical_url": "https://doc.rust-lang.org/1.99.0/reference/behavior-considered-undefined.html#undefined.dangling.alloc-limit",
+      "supports": "Valid Rust value/allocation dynamic size cannot exceed isize::MAX."
+    },
+    {
+      "provider": "Installed primary Rust 1.99.0 documentation",
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/collections/btree_set/struct.BTreeSet.html",
+      "sha256": "a4f17fa11196cd23fbe360e8c430f97d1cff01a45dc1899a2ff485549634e091",
+      "canonical_url": "https://doc.rust-lang.org/1.99.0/std/collections/btree_set/struct.BTreeSet.html#method.insert",
+      "supports": "An equal set member is not inserted a second time; distinct node identities determine cardinality."
+    },
+    {
+      "provider": "Cached primary Tokio 1.53.2 crate source documentation",
+      "local_path": "/Users/billyribeiro/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.2/src/io/util/async_read_ext.rs",
+      "sha256": "6eb2798a19bb4fa43eae940421c8b9b664bf2b655a0e87facd773fc594846718",
+      "canonical_url": "https://docs.rs/tokio/1.53.2/tokio/io/trait.AsyncReadExt.html",
+      "supports": "read_exact consumes exactly the needed bytes on success; read_exact/read_u32 are not cancellation-safe when a future is dropped after partial progress."
+    },
+    {
+      "provider": "Cached primary Tokio 1.53.2 crate source documentation",
+      "local_path": "/Users/billyribeiro/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tokio-1.53.2/src/sync/broadcast.rs",
+      "sha256": "7e293ef49e417cc89fd1d6043082b5f92a514f644ce8f735cbe0a39a18dacd44",
+      "canonical_url": "https://docs.rs/tokio/1.53.2/tokio/sync/broadcast/index.html",
+      "supports": "Capacity rounds upward to a power of two; lag reports loss and moves the cursor, but application code decides whether to disconnect."
+    }
+  ],
+  "environment_incident": {
+    "observed": "First check failed before compilation because Cargo attempted ~/.cargo/build-shared/debug/.cargo-build-lock, denied by the sandbox despite --target-dir.",
+    "resolution": "Approved retry succeeded with per-command build.build-dir pointing to the existing .course-cache/native. Every subsequent check specified both directories. No global configuration was changed.",
+    "initial_error_preserved": "advanced-boundary-tests.log"
+  },
+  "limits": [
+    "Only the five new tests were executed in this audit; prior applicable runs were reused rather than repeated blindly.",
+    "The memory codec test does not measure a real slow socket, the two-second write deadline, or the thirty-second read deadline.",
+    "P13 source was unchanged; earlier Miri and optimized evidence was reused, not rerun or relabeled as new evidence.",
+    "P15 explores a chosen valid-message schedule, not every schedule, external packet, or arbitrary public-state mutation.",
+    "Tests are author verification. Independent review and browser acceptance remain separate."
+  ]
+}

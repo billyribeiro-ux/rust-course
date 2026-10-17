@@ -1,0 +1,85 @@
+mise by @jdx – installing 1 tool
+mise cargo:cargo-fuzz@0.13.2     Updating crates.io index
+mise cargo:cargo-fuzz@0.13.2  Downloading crates ...
+mise cargo:cargo-fuzz@0.13.2   Downloaded cargo-fuzz v0.13.2
+mise cargo:cargo-fuzz@0.13.2   Installing cargo-fuzz v0.13.2
+mise cargo:cargo-fuzz@0.13.2 warning: default toolchain implicitly overridden with `1.99.0-aarch64-apple-darwin` by environment variable
+mise cargo:cargo-fuzz@0.13.2   |
+mise cargo:cargo-fuzz@0.13.2   = help: use `cargo +stable install` if you meant to use the stable toolchain
+mise cargo:cargo-fuzz@0.13.2   = note: rustup selects the toolchain based on the parent environment and not the environment of the package being installed
+mise cargo:cargo-fuzz@0.13.2     Updating crates.io index
+mise cargo:cargo-fuzz@0.13.2     Updating crates.io index
+mise cargo:cargo-fuzz@0.13.2  Downloading crates ...
+mise cargo:cargo-fuzz@0.13.2   Downloaded current_platform v0.2.0
+mise cargo:cargo-fuzz@0.13.2   Downloaded winnow v1.0.3
+mise cargo:cargo-fuzz@0.13.2    Compiling serde_core v1.0.228
+mise cargo:cargo-fuzz@0.13.2    Compiling proc-macro2 v1.0.106
+mise cargo:cargo-fuzz@0.13.2    Compiling quote v1.0.45
+mise cargo:cargo-fuzz@0.13.2    Compiling unicode-ident v1.0.24
+mise cargo:cargo-fuzz@0.13.2    Compiling libc v0.2.186
+mise cargo:cargo-fuzz@0.13.2    Compiling crossbeam-utils v0.8.21
+mise cargo:cargo-fuzz@0.13.2    Compiling utf8parse v0.2.2
+mise cargo:cargo-fuzz@0.13.2    Compiling zmij v1.0.21
+mise cargo:cargo-fuzz@0.13.2    Compiling anstyle-query v1.1.5
+mise cargo:cargo-fuzz@0.13.2    Compiling anstyle v1.0.14
+mise cargo:cargo-fuzz@0.13.2    Compiling thiserror v2.0.18
+mise cargo:cargo-fuzz@0.13.2    Compiling rustix v1.1.4
+mise cargo:cargo-fuzz@0.13.2    Compiling serde_json v1.0.150
+mise cargo:cargo-fuzz@0.13.2    Compiling getrandom v0.4.2
+mise cargo:cargo-fuzz@0.13.2    Compiling serde v1.0.228
+mise cargo:cargo-fuzz@0.13.2    Compiling rayon-core v1.13.0
+mise cargo:cargo-fuzz@0.13.2    Compiling camino v1.2.2
+mise cargo:cargo-fuzz@0.13.2    Compiling is_terminal_polyfill v1.70.2
+mise cargo:cargo-fuzz@0.13.2    Compiling colorchoice v1.0.5
+mise cargo:cargo-fuzz@0.13.2    Compiling memchr v2.8.0
+mise cargo:cargo-fuzz@0.13.2    Compiling itoa v1.0.18
+mise cargo:cargo-fuzz@0.13.2    Compiling winnow v1.0.3
+mise cargo:cargo-fuzz@0.13.2    Compiling bitflags v2.11.1
+mise cargo:cargo-fuzz@0.13.2    Compiling cfg-if v1.0.4
+mise cargo:cargo-fuzz@0.13.2    Compiling current_platform v0.2.0
+mise cargo:cargo-fuzz@0.13.2    Compiling heck v0.5.0
+mise cargo:cargo-fuzz@0.13.2    Compiling strsim v0.11.1
+mise cargo:cargo-fuzz@0.13.2    Compiling clap_lex v1.1.0
+mise cargo:cargo-fuzz@0.13.2    Compiling anyhow v1.0.102
+mise cargo:cargo-fuzz@0.13.2    Compiling toml_writer v1.1.1+spec-1.1.0
+mise cargo:cargo-fuzz@0.13.2    Compiling once_cell v1.21.4
+mise cargo:cargo-fuzz@0.13.2    Compiling anstyle-parse v1.0.0
+mise cargo:cargo-fuzz@0.13.2    Compiling either v1.16.0
+mise cargo:cargo-fuzz@0.13.2    Compiling fastrand v2.4.1
+mise cargo:cargo-fuzz@0.13.2    Compiling anstream v1.0.0
+mise cargo:cargo-fuzz@0.13.2    Compiling toml_parser v1.1.2+spec-1.1.0
+mise cargo:cargo-fuzz@0.13.2    Compiling clap_builder v4.6.0
+mise ░░░░░░░░░░░░░░░░ 0/1 · 3.0s
+  cargo:cargo-fuzz@0.13.2  installing  3.0s
+mise cargo:cargo-fuzz@0.13.2    Compiling crossbeam-epoch v0.9.18
+mise cargo:cargo-fuzz@0.13.2    Compiling crossbeam-deque v0.8.6
+mise cargo:cargo-fuzz@0.13.2    Compiling rayon v1.12.0
+mise cargo:cargo-fuzz@0.13.2    Compiling semver v1.0.28
+mise cargo:cargo-fuzz@0.13.2    Compiling toml_datetime v1.1.1+spec-1.1.0
+mise cargo:cargo-fuzz@0.13.2    Compiling serde_spanned v1.1.1
+mise cargo:cargo-fuzz@0.13.2    Compiling cargo-platform v0.3.3
+mise cargo:cargo-fuzz@0.13.2    Compiling syn v2.0.117
+mise cargo:cargo-fuzz@0.13.2    Compiling toml v1.1.2+spec-1.1.0
+mise cargo:cargo-fuzz@0.13.2    Compiling rustc_version v0.4.1
+mise cargo:cargo-fuzz@0.13.2    Compiling errno v0.3.14
+mise cargo:cargo-fuzz@0.13.2    Compiling num_cpus v1.17.0
+mise cargo:cargo-fuzz@0.13.2    Compiling tempfile v3.27.0
+mise cargo:cargo-fuzz@0.13.2    Compiling thiserror-impl v2.0.18
+mise cargo:cargo-fuzz@0.13.2    Compiling serde_derive v1.0.228
+mise cargo:cargo-fuzz@0.13.2    Compiling clap_derive v4.6.1
+mise cargo:cargo-fuzz@0.13.2    Compiling clap v4.6.1
+mise ░░░░░░░░░░░░░░░░ 0/1 · 6.0s
+  cargo:cargo-fuzz@0.13.2  installing  6.0s
+mise cargo:cargo-fuzz@0.13.2    Compiling cargo_metadata v0.23.1
+mise cargo:cargo-fuzz@0.13.2    Compiling cargo-fuzz v0.13.2
+mise ░░░░░░░░░░░░░░░░ 0/1 · 9.0s
+  cargo:cargo-fuzz@0.13.2  installing  9.0s
+mise cargo:cargo-fuzz@0.13.2     Finished `release` profile [optimized] target(s) in 9.03s
+mise cargo:cargo-fuzz@0.13.2   Installing /Users/billyribeiro/.local/share/mise/installs/cargo-cargo-fuzz/0.13.2/bin/cargo-fuzz
+mise cargo:cargo-fuzz@0.13.2    Installed package `cargo-fuzz v0.13.2` (executable `cargo-fuzz`)
+mise cargo:cargo-fuzz@0.13.2 warning: be sure to add `/Users/billyribeiro/.local/share/mise/installs/cargo-cargo-fuzz/0.13.2/bin` to your PATH to be able to run the installed binaries
+mise ✓ cargo:cargo-fuzz@0.13.2  9.1s
+mise ████████████████ 1/1 · installed 1 tool in 9.1s
+mise WARN  cargo:cargo-fuzz installed but not activated — it is not in any config file.
+To install and activate, run:
+  mise use cargo:cargo-fuzz

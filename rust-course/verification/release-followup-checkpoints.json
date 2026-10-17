@@ -1,0 +1,1430 @@
+{
+  "date": "2026-10-09",
+  "scope": "Exact review archive; no compilation or browser interaction",
+  "archive": "/Users/billyribeiro/Desktop/rust-course/rust-course-review.zip",
+  "archive_sha256": "6365e960ae7077affceadc8881b2ecd3b24643a11f859e8bc2a18c8f574631df",
+  "archive_bytes": 1636730,
+  "work_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+  "independent_review": "pending",
+  "checks": [
+    {
+      "project": "p01-calculator",
+      "checkpoint": "01-checked-add",
+      "source": "projects/checkpoints/p01-calculator/01-checked-add",
+      "lockfile": "projects/checkpoints/p01-calculator/locks/01-checked-add.Cargo.lock",
+      "lock_sha256": "56b8a40a356416a1ecd586dcee4f0778cfd3f13c15983781a54c890c80bca1af",
+      "source_manifest_sha256": "ce014636360d0537c4e37fc349e90255a4416d223d1023cbe1dc1fe879216876",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p01-calculator",
+        "01-checked-add",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/01-checked-add"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/01-checked-add/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p01-calculator-01-checked-add-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p01-calculator"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p01-calculator",
+      "checkpoint": "final",
+      "source": "projects/reference/p01-calculator",
+      "lockfile": "projects/checkpoints/p01-calculator/locks/final.Cargo.lock",
+      "lock_sha256": "e6ec7dd3fb6235b5a532e97ef9621c3060d4fdd73f7f17cbc36e33f18b818175",
+      "source_manifest_sha256": "5e70f9be759c4cd054f80f022a7be32a140fb7859443cd1d37ae8006891f7861",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p01-calculator",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p01-calculator-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "workshop-calculator"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p02-journal",
+      "checkpoint": "01-domain",
+      "source": "projects/checkpoints/p02-journal/01-domain",
+      "lockfile": "projects/checkpoints/p02-journal/locks/01-domain.Cargo.lock",
+      "lock_sha256": "1bbe5cc60df2319486b3ef175df46d8e726c7d66d1182a5b54e3ccae0b3e05c8",
+      "source_manifest_sha256": "1b2c6fa511dd3ed404e7cb430dd5e76bac9fbc3a52f1edb438bd1209a2bfe40c",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p02-journal",
+        "01-domain",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/01-domain"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/01-domain/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p02-journal-01-domain-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p02-journal"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p02-journal",
+      "checkpoint": "final",
+      "source": "projects/reference/p02-journal",
+      "lockfile": "projects/checkpoints/p02-journal/locks/final.Cargo.lock",
+      "lock_sha256": "576f9cdba7b75103a2513a8c1af4e5f4f9b0015805f5ab8804898f100e8a07ca",
+      "source_manifest_sha256": "65ec1be6459077614d5e291e810c4043c7c2586d0c3ada891196547ac52d29af",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p02-journal",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p02-journal-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "task-journal"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p03-logs",
+      "checkpoint": "01-bounded-lines",
+      "source": "projects/checkpoints/p03-logs/01-bounded-lines",
+      "lockfile": "projects/checkpoints/p03-logs/locks/01-bounded-lines.Cargo.lock",
+      "lock_sha256": "2a53595ff7176f838dc42e320592c93ab7fbc745b561206668c31c7e530992a4",
+      "source_manifest_sha256": "d6c23dc35e6d9327ab478a84829f16a8e4c03d830b86046de0b2655f8dd17ae2",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p03-logs",
+        "01-bounded-lines",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/01-bounded-lines"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/01-bounded-lines/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p03-logs-01-bounded-lines-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p03-logs"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p03-logs",
+      "checkpoint": "final",
+      "source": "projects/reference/p03-logs",
+      "lockfile": "projects/checkpoints/p03-logs/locks/final.Cargo.lock",
+      "lock_sha256": "0faa178bb39620a50849bc4d027803bba81fad4a2ee326148143528350e28133",
+      "source_manifest_sha256": "48fb694691918d5196492373e0db7917617a159a595de0cc2f5b95a9916f43be",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p03-logs",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p03-logs-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "log-detective"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p04-config",
+      "checkpoint": "01-effective-port",
+      "source": "projects/checkpoints/p04-config/01-effective-port",
+      "lockfile": "projects/checkpoints/p04-config/locks/01-effective-port.Cargo.lock",
+      "lock_sha256": "bfc94ebe044ed123165d801e1e111e22b0f479dbe2a0a5dd8bf31f00c8c320d0",
+      "source_manifest_sha256": "d5c41c53bf6ee40acd3087c5973217c2f1db858c03ae7b37af53f0f403628419",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p04-config",
+        "01-effective-port",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/01-effective-port"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/01-effective-port/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p04-config-01-effective-port-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p04-config"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p04-config",
+      "checkpoint": "final",
+      "source": "projects/reference/p04-config",
+      "lockfile": "projects/checkpoints/p04-config/locks/final.Cargo.lock",
+      "lock_sha256": "75ab1a038fd7a8abb67004fef0be2c65883ab46ffe57c99f8eab209282a4210f",
+      "source_manifest_sha256": "9879462dc5fb2e72bd7c727cfb778eaf7e72a2899d84ebd8fb65f0ac09498b36",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p04-config",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p04-config-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "typed-config"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p05-expressions",
+      "checkpoint": "01-token-spans",
+      "source": "projects/checkpoints/p05-expressions/01-token-spans",
+      "lockfile": "projects/checkpoints/p05-expressions/locks/01-token-spans.Cargo.lock",
+      "lock_sha256": "53bfc88aeec1913749274528a27d1c4dadc54577b3c3074993ea04e0f9137349",
+      "source_manifest_sha256": "29f304ae62b6d1cab247b02e00fcc244f9e015e96490f8655e6d7251f6b81b5a",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p05-expressions",
+        "01-token-spans",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/01-token-spans"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/01-token-spans/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p05-expressions-01-token-spans-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p05-expressions"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p05-expressions",
+      "checkpoint": "final",
+      "source": "projects/reference/p05-expressions",
+      "lockfile": "projects/checkpoints/p05-expressions/locks/final.Cargo.lock",
+      "lock_sha256": "754a819ab0f90dc573fcf2c771319b7c3b1528c0000b214a7a16f5ed896d0556",
+      "source_manifest_sha256": "68d9981883729249a0820098599bf6a2d0d1ea65364f98550c07e99d0bddb0a0",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p05-expressions",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p05-expressions-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "expression-language"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p06-kv",
+      "checkpoint": "01-prefix-replay",
+      "source": "projects/checkpoints/p06-kv/01-prefix-replay",
+      "lockfile": "projects/checkpoints/p06-kv/locks/01-prefix-replay.Cargo.lock",
+      "lock_sha256": "4cb0d2e001d70a210d4813d70295863f0d3d2e658d7abc62ab1143c0600c0f84",
+      "source_manifest_sha256": "2ca4f0683d41608ad223585fd919ac57d3c9180f28df3c6dbe8e90740cf3e3eb",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p06-kv",
+        "01-prefix-replay",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/01-prefix-replay"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/01-prefix-replay/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p06-kv-01-prefix-replay-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p06-kv"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p06-kv",
+      "checkpoint": "final",
+      "source": "projects/reference/p06-kv",
+      "lockfile": "projects/checkpoints/p06-kv/locks/final.Cargo.lock",
+      "lock_sha256": "373298cc06fd0ded9b0c3049c8e561ff47fb16a733c8044b79a0c35b8f85cc7d",
+      "source_manifest_sha256": "fd7cd9ab5ed3cf1192213eadf14390dc33e6b95143113806a9755d04b3faab84",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p06-kv",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p06-kv-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "p06-kv"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p07-indexer",
+      "checkpoint": "01-streaming",
+      "source": "projects/checkpoints/p07-indexer/01-streaming",
+      "lockfile": "projects/checkpoints/p07-indexer/locks/01-streaming.Cargo.lock",
+      "lock_sha256": "6d475e71b7ccfa52ea85e489afd4f369571e6b9ea490bd13216df8ae69be2e30",
+      "source_manifest_sha256": "3e915089aaee18412aa023fa953887be0845403df76c56c4d3e7d927e17f6b96",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "01-streaming",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/01-streaming"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/01-streaming/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p07-indexer-01-streaming-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p07-streaming"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p07-indexer",
+      "checkpoint": "final",
+      "source": "projects/reference/p07-indexer",
+      "lockfile": "projects/checkpoints/p07-indexer/locks/final.Cargo.lock",
+      "lock_sha256": "13b4acffe35dd78ac9aae36da1d3a2ede3caa616140e01a654903081b864695a",
+      "source_manifest_sha256": "a33ab352f06431754cdd484b3fa2263b78d1127c2af13049db4dd45c5873fa45",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p07-indexer-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "p07-indexer"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p08-monitor",
+      "checkpoint": "01-budget",
+      "source": "projects/checkpoints/p08-monitor/01-budget",
+      "lockfile": "projects/checkpoints/p08-monitor/locks/01-budget.Cargo.lock",
+      "lock_sha256": "abddc6e6c924e27b337248a56fa73f288aee619bfa1038741e5aaa4652bdf5d1",
+      "source_manifest_sha256": "e4838c5a1b5ccd4fa08ac3e6cdd79650e00baebda4c6067b4815767770cf0b07",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "01-budget",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/01-budget"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/01-budget/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p08-monitor-01-budget-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p08-budget"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p08-monitor",
+      "checkpoint": "final",
+      "source": "projects/reference/p08-monitor",
+      "lockfile": "projects/checkpoints/p08-monitor/locks/final.Cargo.lock",
+      "lock_sha256": "03d4e49555014eb0e8e2ebc667871bdba2079f58d1c5f3eb4e3d091799e8309e",
+      "source_manifest_sha256": "c3761ce056b094a14ee497fbe31c72ec0fbb520cdfea39d87e830811715b3be6",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p08-monitor-final-metadata.json",
+      "resolved_packages": 17,
+      "local_packages": [
+        "p08-monitor"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p09-chat",
+      "checkpoint": "00-scaffold",
+      "source": "projects/scaffolds/p09-chat",
+      "lockfile": "projects/checkpoints/p09-chat/locks/00-scaffold.Cargo.lock",
+      "lock_sha256": "d9be14277648b12f85bdf25ba0f3c80bc6423534c14a4595b47be0cf42b68481",
+      "source_manifest_sha256": "96fce064749907a75fbe33d85e666296a3a9828f74a70b836879ce1da1e18d42",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/00-scaffold"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/00-scaffold/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p09-chat-00-scaffold-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "learner-p09-chat"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p09-chat",
+      "checkpoint": "01-framing",
+      "source": "projects/checkpoints/p09-chat/01-framing",
+      "lockfile": "projects/checkpoints/p09-chat/locks/01-framing.Cargo.lock",
+      "lock_sha256": "b5c60f21ebb9149ca5055caddb463b51a090da68f333cd6c443069b55de2783a",
+      "source_manifest_sha256": "b03be58ccea01ad20dab9cbb9f5cc4bc1eb5d2c3f186816175bcbaaf2413d1ba",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "01-framing",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/01-framing"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/01-framing/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p09-chat-01-framing-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p09-chat-01-framing"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p09-chat",
+      "checkpoint": "final",
+      "source": "projects/reference/p09-chat",
+      "lockfile": "projects/checkpoints/p09-chat/locks/final.Cargo.lock",
+      "lock_sha256": "5acb52f5dd7c629f3ffd7f2f9da80ad5dab16fea7454b3ef52b15d7fb2d0ba7f",
+      "source_manifest_sha256": "12cea83bc9feb3ce6d5e5b907659e362c1dfc958c0b48470029e3d9f5a0e2966",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p09-chat-final-metadata.json",
+      "resolved_packages": 17,
+      "local_packages": [
+        "p09-chat"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "00-scaffold",
+      "source": "projects/scaffolds/p10-issues",
+      "lockfile": "projects/checkpoints/p10-issues/locks/00-scaffold.Cargo.lock",
+      "lock_sha256": "536cd7d3a770a914ba4b85ad21e24c7bee9c3a4d43c612c41f5958965a9a2753",
+      "source_manifest_sha256": "21daffe8c2e4d1db43b57339732945116ea2c76fc24930a6a891dd3b41083d7b",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/00-scaffold"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/00-scaffold/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p10-issues-00-scaffold-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "learner-p10-issues"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "01-http-validation",
+      "source": "projects/checkpoints/p10-issues/01-http-validation",
+      "lockfile": "projects/checkpoints/p10-issues/locks/01-http-validation.Cargo.lock",
+      "lock_sha256": "c9b7e789ec3ab83e7df160eac88411b6ce3770b39572178e8d8067ef4bfbe122",
+      "source_manifest_sha256": "96619792d7db9681e9d379e4cdfb31dcc4fa9926fca6a796030ff70fcec54a0b",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "01-http-validation",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/01-http-validation"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/01-http-validation/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p10-issues-01-http-validation-metadata.json",
+      "resolved_packages": 52,
+      "local_packages": [
+        "checkpoint-p10-issues-01-http-validation"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "final",
+      "source": "projects/reference/p10-issues",
+      "lockfile": "projects/checkpoints/p10-issues/locks/final.Cargo.lock",
+      "lock_sha256": "4e8aa1f3abfd36eb941db5610b94f6cf7a7afc8b7d06d13afd42b8e372ffd9fa",
+      "source_manifest_sha256": "f673d6db3869ec1e5e0fe19f1a154c98286fa89cdeab8721c237bc9fdd153995",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p10-issues-final-metadata.json",
+      "resolved_packages": 162,
+      "local_packages": [
+        "p10-issues"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p11-console",
+      "checkpoint": "01-local-state",
+      "source": "projects/scaffolds/p11-console",
+      "lockfile": "projects/scaffolds/p11-console/Cargo.lock",
+      "lock_sha256": "c14207d4e2215a95a1783fa33cd6f13750789d302617dbf42a2604b9647650b4",
+      "source_manifest_sha256": "54acab28ac267a2ccb9e56a163786752ff39e18e36e97da875dbb39725e2068d",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p11-console",
+        "01-local-state",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/01-local-state"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/01-local-state/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p11-console-01-local-state-metadata.json",
+      "resolved_packages": 180,
+      "local_packages": [
+        "console-learner"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p11-console",
+      "checkpoint": "final",
+      "source": "projects/ui-console",
+      "lockfile": "projects/ui-console/Cargo.lock",
+      "lock_sha256": "db251aa9540c3a30936e4c68e0d4687ef1a2728864c0f585c5bb3c03cb2c645e",
+      "source_manifest_sha256": "f5bf98d4651e2a4893e7720f5a9c0d8f5993b32adfcefede55ff28ee4464f57b",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p11-console",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p11-console-final-metadata.json",
+      "resolved_packages": 184,
+      "local_packages": [
+        "course-ui-model",
+        "operations-console"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p12-replay",
+      "checkpoint": "01-price",
+      "source": "projects/checkpoints/p12-replay/01-price",
+      "lockfile": "projects/checkpoints/p12-replay/locks/01-price.Cargo.lock",
+      "lock_sha256": "2c7f776c906042f35bae01f69f6511accdf030bea77c1a5abe07805a90eb3a28",
+      "source_manifest_sha256": "42fd179cf8ce70efefd4519220c42dd8b294afe53a3c8022b9be8047f932bac3",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "01-price",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/01-price"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/01-price/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p12-replay-01-price-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p12-price"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p12-replay",
+      "checkpoint": "final",
+      "source": "projects/reference/p12-replay",
+      "lockfile": "projects/checkpoints/p12-replay/locks/final.Cargo.lock",
+      "lock_sha256": "fa4396d97af800fdc6aef416873a3390f7785509f0108b350c408f2fe6283493",
+      "source_manifest_sha256": "307e8431b1cc4526e19a0ec41a7e5c7e16d22e38e248182c07ccb340886431d0",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p12-replay-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "p12-replay"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p13-unsafe",
+      "checkpoint": "01-safe-slots",
+      "source": "projects/checkpoints/p13-unsafe/01-safe-slots",
+      "lockfile": "projects/checkpoints/p13-unsafe/locks/01-safe-slots.Cargo.lock",
+      "lock_sha256": "33b95f77f0d27bea725b3992aab556356989f50181ddcd087f4e1efc69afe219",
+      "source_manifest_sha256": "1c2009e66c48d3ed4ab9d8089e58df47f3904e26334f8a8d79277a2918ec96bc",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "01-safe-slots",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/01-safe-slots"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/01-safe-slots/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p13-unsafe-01-safe-slots-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p13-safe-slots"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p13-unsafe",
+      "checkpoint": "final",
+      "source": "projects/reference/p13-unsafe",
+      "lockfile": "projects/checkpoints/p13-unsafe/locks/final.Cargo.lock",
+      "lock_sha256": "fd41f63638339c4b775919b0c50df5ed3864dde3fb47c9f13afd07e96ea8e55b",
+      "source_manifest_sha256": "8f2b3db591cb913f8d6c5ef40530aa9167a2f08d0e9d77f64599aa4ff4bf4e0d",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p13-unsafe-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "p13-unsafe"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "00-scaffold",
+      "source": "projects/scaffolds/p14-scheduler",
+      "lockfile": "projects/checkpoints/p14-scheduler/locks/00-scaffold.Cargo.lock",
+      "lock_sha256": "b4aa862daac72023975826571272b3bbcfc25a2bdcf196a3862465af5f1a40a6",
+      "source_manifest_sha256": "6438891e7f6a74e7bda58d49290c8dce10fdb3fea44c1566f24ecbb066d6cee9",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/00-scaffold"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/00-scaffold/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p14-scheduler-00-scaffold-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "learner-p14-scheduler"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "01-lease-model",
+      "source": "projects/checkpoints/p14-scheduler/01-lease-model",
+      "lockfile": "projects/checkpoints/p14-scheduler/locks/01-lease-model.Cargo.lock",
+      "lock_sha256": "dff0822432ca94e29bc6b7f988b98abf2985d2b88c7f17e6acaff289e00ac494",
+      "source_manifest_sha256": "1276bb9645ec350615bca83b2d8590d3a19bc5688fd9ecf81589a9a00ab6247f",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "01-lease-model",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/01-lease-model"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/01-lease-model/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p14-scheduler-01-lease-model-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p14-scheduler-01-lease-model"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "final",
+      "source": "projects/reference/p14-scheduler",
+      "lockfile": "projects/checkpoints/p14-scheduler/locks/final.Cargo.lock",
+      "lock_sha256": "aa225a5f3365790a2c222d3fdec331c44927ed67969454eb56fb623c57d98a1d",
+      "source_manifest_sha256": "49e4f4eb69ac2d880cad472ecb521797b46e16c07dc66c0650dbcef65ea4633f",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p14-scheduler-final-metadata.json",
+      "resolved_packages": 162,
+      "local_packages": [
+        "p14-scheduler"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "00-scaffold",
+      "source": "projects/scaffolds/p15-replication",
+      "lockfile": "projects/checkpoints/p15-replication/locks/00-scaffold.Cargo.lock",
+      "lock_sha256": "1380c97ced89e2e8aa644d561915de0f9e3b36f4153094b8410063c11dc7ce2a",
+      "source_manifest_sha256": "20f043600b0f909b2295920a95e7ac83649bd7a698bf1ee3d80ec69624140aec",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/00-scaffold"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/00-scaffold/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p15-replication-00-scaffold-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "learner-p15-replication"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "01-append-transport",
+      "source": "projects/checkpoints/p15-replication/01-append-transport",
+      "lockfile": "projects/checkpoints/p15-replication/locks/01-append-transport.Cargo.lock",
+      "lock_sha256": "4e7de02a6470a26df84ba00097dd0db62b1e1d7106520effab5c46683ac49341",
+      "source_manifest_sha256": "4f1f7037e0507b8b51687ee44af31469578a702f83825269b58f98aaea4ff367",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "01-append-transport",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/01-append-transport"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/01-append-transport/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p15-replication-01-append-transport-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p15-replication-01-append-transport"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "final",
+      "source": "projects/reference/p15-replication",
+      "lockfile": "projects/checkpoints/p15-replication/locks/final.Cargo.lock",
+      "lock_sha256": "c72bb61edc76f040a950b3a4971107ae6ece7f380607eb203743e338b3d0c1cd",
+      "source_manifest_sha256": "ed4e732b4fca42beb63a83001282b78bfca57a0e9c0f8965d9edff4ff5d037b7",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p15-replication-final-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "p15-replication"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "00-scaffold",
+      "source": "projects/scaffolds/p16-workbench",
+      "lockfile": "projects/checkpoints/p16-workbench/locks/00-scaffold.Cargo.lock",
+      "lock_sha256": "1b4cdd98add265e4b9c6251d3d11f1fec84bd1d00fb24dc1a453746ce4e3dad1",
+      "source_manifest_sha256": "513df4e6f2000e960afc9f1736e7e4d3d54577de463bd3f921ea9ed048e87644",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "00-scaffold",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/00-scaffold"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/00-scaffold/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p16-workbench-00-scaffold-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "learner-p16-workbench"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "01-order-domain",
+      "source": "projects/checkpoints/p16-workbench/01-order-domain",
+      "lockfile": "projects/checkpoints/p16-workbench/locks/01-order-domain.Cargo.lock",
+      "lock_sha256": "6aa428412175c3653aedd74bbedeedce99b4ff5d8d683f17a42964705e7a787e",
+      "source_manifest_sha256": "fbd991ead8accbe04c2a4e27891b1ba138d103fb448140d31b3627826bb37df8",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "01-order-domain",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/01-order-domain"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/01-order-domain/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p16-workbench-01-order-domain-metadata.json",
+      "resolved_packages": 1,
+      "local_packages": [
+        "checkpoint-p16-workbench-01-order-domain"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "final",
+      "source": "projects/reference/p16-workbench",
+      "lockfile": "projects/checkpoints/p16-workbench/locks/final.Cargo.lock",
+      "lock_sha256": "72b1168a3433bdfa1c803bd1290913e1e1e93cfdb6747c6506cfc24f9d05aeb0",
+      "source_manifest_sha256": "6856a440e4c4637f8718b3bfeba8b4237297b37d510284270fbff97912ffdee2",
+      "helper_command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/final"
+      ],
+      "metadata_command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/final/Cargo.toml"
+      ],
+      "metadata_stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p16-workbench-final-metadata.json",
+      "resolved_packages": 54,
+      "local_packages": [
+        "p16-workbench"
+      ],
+      "path_dependencies_contained": true,
+      "lock_unchanged": true,
+      "reference_dependency_versions_match": true,
+      "result": "passed"
+    }
+  ],
+  "archive_members": 656,
+  "lesson_count": 57,
+  "checkpoint_project_count": 16,
+  "checkpoint_count": 37,
+  "result": "passed",
+  "limitations": [
+    "Metadata proves locked resolution and path containment, not compilation or runtime behavior.",
+    "The toolchain was invoked through the already configured outer mise environment; no new global trust configuration was written.",
+    "Archive hash identifies the exact input snapshot; later source/test/evidence edits require repackaging.",
+    "Source and raw metadata copies remain in the reported outer cache; no build output was duplicated."
+  ]
+}

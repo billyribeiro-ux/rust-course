@@ -1,0 +1,137 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Macros generate code, not correctness · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="07-macros" data-lesson="07-macros"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Macros generate code, not correctness</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 07 / Performance and unsafe Rust</div><h1>Macros generate code, not correctness</h1><p class="lead">Build and inspect one declarative macro and one narrowly scoped derive.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-7/07-auditing.html">Audit cleanup, panics and evidence limits</a></li></ul><ul><li>Distinguish declarative and procedural macros</li><li>Reason about evaluation count, hygiene and generated bounds</li><li>Review compile-time dependencies and API evolution</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#crate">crate</a> · <a href="../../glossary.html#generic">generic</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#ownership">ownership</a> · <a href="../../glossary.html#panic">panic</a> · <a href="../../glossary.html#struct">struct</a> · <a href="../../glossary.html#trait">trait</a> · <a href="../../glossary.html#wasm">WASM</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p13">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-remove-repetition-without-hiding-the-contract">Purpose: remove repetition without hiding the contract</h2><p>Macros are useful when the repeated structure is syntax rather than an ordinary runtime value. A derive can produce an implementation for a declared type. A declarative macro can accept a repeated list of expressions. Neither mechanism makes the generated code correct by definition. It creates another source of code that must be read and tested.</p>
+<h2 id="plain-model-transformation-before-ordinary-checking">Plain model: transformation before ordinary checking</h2><p>A declarative macro matches tokens against patterns and expands to Rust syntax. A procedural macro is compiled host code that consumes and returns token streams. The compiler then checks the expanded program. Procedural macros are build-time dependencies capable of executing code during compilation, so dependency review matters even when the final program has a small runtime surface.</p><p>Use a function when a function expresses the need. A function has ordinary parameter types, return types and call behavior. Use a macro only when its syntax or generated implementation provides a concrete benefit. Our checked_sum example accepts any number of expressions and emits a checked accumulation. The TypeName-like derive implements one small, stable trait without duplicating generic parameter handling at every type.</p>
+<h2 id="predict-evaluation-count">Predict evaluation count</h2><p>A macro invocation supplies two expressions that each increment a counter. What must be true for the counter to end at two rather than four? If the first addition overflows, should the second supplied expression still be evaluated? Predict the current reference's explicit policy before reading it.</p><details><summary>Prediction explained</summary><p>The macro stores each supplied expression in a local before using it, so each is evaluated once, left to right. It still evaluates later expressions after an earlier overflow because expansion contains those let statements. The arithmetic result remains None. That evaluation policy is part of the API; a short-circuit alternative could be valid but must be documented and tested.</p></details>
+<h2 id="run-the-macro-lab">Run the macro lab</h2><p>Working directory <code>projects/</code>: <code>mise exec -- cargo test -p rust-specializations macro_once_and_overflow</code>. Inspect <code>checked_sum!</code> in the actual source. The test checks both the returned sum and the side-effect count, so it guards a property that a result-only test would miss.</p><details><summary>Source with both macro consumer and trait examples</summary><div class="code-wrap" data-source="projects/reference/p17-specializations/src/lib.rs" data-sha256="67fbe34da034f5620976fe99b92c8f21d66c96ea6e6a37ba94fea1b710283740"><div class="code-label"><a href="../../projects/reference/p17-specializations/src/lib.rs">projects/reference/p17-specializations/src/lib.rs</a></div><pre><code>//! Focused specialization examples. None is required to write every Rust application.
+use std::ffi::c_int;
+pub trait KindName {
+    fn kind_name() -&gt; &amp;&#x27;static str;
+}
+#[derive(course_kind_derive::KindName)]
+pub struct Packet&lt;T, const N: usize&gt; {
+    pub values: [T; N],
+}
+
+/// A higher-ranked bound: the callback works for every input lifetime.
+/// ```
+/// use rust_specializations::with_first;
+/// assert_eq!(with_first(&quot;alpha beta&quot;, |s|s.split_whitespace().next().unwrap_or(&quot;&quot;)), &quot;alpha&quot;);
+/// ```
+pub fn with_first&lt;&#x27;a, F&gt;(input: &amp;&#x27;a str, select: F) -&gt; &amp;&#x27;a str
+where
+    F: for&lt;&#x27;b&gt; Fn(&amp;&#x27;b str) -&gt; &amp;&#x27;b str,
+{
+    select(input)
+}
+
+/// The associated output is fixed by each implementor.
+pub trait Source {
+    type Item;
+    fn next_item(&amp;mut self) -&gt; Option&lt;Self::Item&gt;;
+}
+pub struct Countdown(pub u8);
+impl Source for Countdown {
+    type Item = u8;
+    fn next_item(&amp;mut self) -&gt; Option&lt;u8&gt; {
+        let value = self.0.checked_sub(1)?;
+        self.0 = value;
+        Some(value)
+    }
+}
+pub fn drain(source: &amp;mut dyn Source&lt;Item = u8&gt;) -&gt; Vec&lt;u8&gt; {
+    let mut out = Vec::new();
+    while let Some(item) = source.next_item() {
+        out.push(item);
+    }
+    out
+}
+
+/// Each supplied expression is evaluated exactly once, left to right.
+#[macro_export]
+macro_rules! checked_sum {
+    ($($value:expr),* $(,)?) =&gt; {{
+        let mut total=Some(0i64);
+        $(let next: i64=$value; total=total.and_then(|old|old.checked_add(next));)*
+        total
+    }};
+}
+
+unsafe extern &quot;C&quot; {
+    fn abs(value: c_int) -&gt; c_int;
+}
+/// A narrow C ABI example. Prefer `i32::checked_abs` in ordinary Rust code.
+/// Returns None for the only input whose C absolute value is not representable.
+pub fn c_checked_abs(value: c_int) -&gt; Option&lt;c_int&gt; {
+    if value == c_int::MIN {
+        return None;
+    }
+    // SAFETY: abs has the declared C ABI, has no pointer/lifetime contract,
+    // and its result is representable because INT_MIN was excluded above.
+    Some(unsafe { abs(value) })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn generic_derive_retains_parameters() {
+        assert_eq!(Packet::&lt;u8, 4&gt;::kind_name(), &quot;Packet&quot;);
+        let p = Packet { values: [1; 0] };
+        assert!(p.values.is_empty());
+    }
+    #[test]
+    fn trait_object_associated_item() {
+        assert_eq!(drain(&amp;mut Countdown(3)), [2, 1, 0]);
+    }
+    #[test]
+    fn macro_once_and_overflow() {
+        let mut n = 0;
+        assert_eq!(
+            checked_sum!(
+                {
+                    n += 1;
+                    n
+                },
+                {
+                    n += 1;
+                    n
+                }
+            ),
+            Some(3)
+        );
+        assert_eq!(n, 2);
+        assert_eq!(checked_sum!(i64::MAX, 1), None);
+    }
+    #[test]
+    fn ffi_boundary() {
+        for x in [-2, 0, 1, i32::MAX, i32::MIN] {
+            assert_eq!(c_checked_abs(x), x.checked_abs());
+        }
+    }
+}
+</code></pre></div></details>
+<h2 id="read-the-declarative-expansion">Read the declarative expansion</h2><p><code>$value:expr</code> matches one expression. The repetition accepts comma-separated expressions and an optional trailing comma. Double braces make the result a block expression with its own local names. Each next value is constrained to i64. <code>and_then</code> combines a prior successful total with checked addition. It preserves None after overflow without wrapping or panicking.</p><p>Macro hygiene helps prevent accidental interaction between generated local bindings and caller names, but it is not a universal promise about every path. Exported macros should use deliberate paths, often <code>$crate</code> for their own crate's items. Our example uses no helper items beyond language and standard prelude names. If you generalize it, test expansion in a separate consumer crate rather than only inside the defining module.</p>
+<h2 id="the-procedural-derive">The procedural derive</h2><div class="code-wrap" data-source="projects/reference/p17-derive/src/lib.rs" data-sha256="2001c7c7c188e8e559469f7a784aba89352fa79bf25be1ecac1ffe0407392b27"><div class="code-label"><a href="../../projects/reference/p17-derive/src/lib.rs">projects/reference/p17-derive/src/lib.rs</a></div><pre><code>//! A deliberately small derive: generated code implements the caller&#x27;s KindName trait.
+use proc_macro::TokenStream;
+use quote::quote;
+use syn::{DeriveInput, parse_macro_input};
+#[proc_macro_derive(KindName)]
+pub fn kind_name(input: TokenStream) -&gt; TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = &amp;input.ident;
+    let (impl_generics, type_generics, where_clause) = input.generics.split_for_impl();
+    quote! {
+        impl #impl_generics crate::KindName for #name #type_generics #where_clause {
+            fn kind_name() -&gt; &amp;&#x27;static str { stringify!(#name) }
+        }
+    }
+    .into()
+}
+</code></pre></div><p>The crate has <code>proc-macro = true</code> and runs on the compiler host, even when the consuming crate targets WASM. The maintained syn parser converts tokens into a DeriveInput. This avoids inventing a partial Rust parser. quote constructs output tokens while preserving Rust identifiers. <code>split_for_impl</code> separates declaration parameters, use-site arguments and where clauses; omitting those would break generic consumers.</p><p>The generated implementation names <code>crate::KindName</code>. This is an intentional lab contract: the consuming crate defines that trait at its root. A reusable published derive should usually target a documented companion trait crate and account for renamed dependencies. The explicit restriction is more honest than claiming a tiny derive is universally portable.</p>
+<h2 id="deliberate-mistake-repeating-an-expression">Deliberate mistake: repeating an expression</h2><p>In a learner copy, use the supplied expression twice in an expansion, such as once to log and once to add. Run the side-effect test. A macro can type-check while changing how many times the caller's operation runs. The sound correction binds the expression once and reuses the value or reference according to its ownership needs. Do not merely remove the failing test.</p>
+<h2 id="guided-checkpoint">Guided checkpoint</h2><p>First run the handwritten KindName implementation on a simple struct. Then replace that exact implementation with the derive and preserve the same observable test. Next test Packet&lt;T, N&gt; so generic arguments and const parameters pass through. Finally add a where-constrained type. Each step expands the supported syntax with a concrete test; it does not claim to support arbitrary advanced syntax by inspection alone.</p>
+<h2 id="independent-work-and-tiered-hints">Independent work and tiered hints</h2><p>Add a documented empty invocation behavior to checked_sum, then test a caller variable named total. Design a compile-fail consumer where the required trait is absent and explain whether the resulting diagnostic is clear enough. Propose one improvement without hiding errors behind a catch-all panic.</p><details><summary>Hint 1</summary><p>The identity value for a sum is zero, but the output type should remain explicit. The macro's local variable should not mutate the caller's similarly named variable.</p></details><details><summary>Hint 2</summary><p>Generated code errors point into expansion or invocation spans. A procedural macro can report a structured syn error for unsupported input rather than panicking.</p></details><details><summary>Reference direction</summary><p>Specify Some(0i64) for no values and assert the caller's total is unchanged after a nonempty call. If the derive's trait path is part of the supported contract, document it next to installation instructions. A fuller library can accept a helper attribute naming the trait path and parse it with syn; that is a new requirement, not a reason to complicate this lab preemptively.</p></details>
+<h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p>The procedural macro depends on exact syn 3.0.9 and quote 1.0.47 because parsing Rust syntax and preserving token structure are concrete requirements. The ordinary runtime examples remain standard-library based. Tests cover single evaluation, overflow, generic and const parameter preservation. A downstream compile-fail test would add evidence about diagnostics; the manifest must not imply one ran unless its command is recorded. An ordinary function is the preferred alternative when token-level flexibility is unnecessary.</p>
+<h2 id="playbook-investigation-the-derive-breaks-only-generic-types">Playbook investigation: the derive breaks only generic types</h2><p>Observed: a unit struct derives successfully, but Packet&lt;u8,4&gt; fails with missing generics. Hypothesis A: derives cannot support const generics. Hypothesis B: the expansion discarded type arguments. Write the equivalent handwritten impl. If it compiles, A is disproved. Inspect generated syntax or the quote expression and restore the split generic pieces. Re-run both simple and generic cases; fixing one must not silently narrow the other.</p>
+<h2 id="when-you-get-stuck">When you get stuck</h2><details><summary>Reduce the generated program</summary><p>Write the expansion you expect as ordinary Rust in a temporary test crate. Compile it before debugging token construction. Provide the input, expected expansion and earliest compiler error to a reviewer. Prefer current official macro documentation over random examples using an incompatible syn major version.</p></details><h2 id="mastery-check">Mastery check</h2><p>Explain evaluation order, ownership and the trait-path limitation without reading the macro body. Diagnose a double-evaluation defect and justify whether a new request belongs in a function, a declarative macro or a derive. Passing the expansion test is one piece of that judgment.</p>
+<h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/reference/macros-by-example.html">Macros by example</a></li><li><a href="https://doc.rust-lang.org/1.99.1/reference/procedural-macros.html">Procedural macros</a></li><li><a href="https://docs.rs/syn/3.0.9/syn/">syn 3.0.9</a></li><li><a href="https://docs.rs/quote/1.0.47/quote/">quote 1.0.47</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-7/07-traits.html">Previous: Advanced trait boundaries without accidental complexity</a><a href="../../lessons/stage-7/07-ffi.html">Next: Foreign interfaces and environments without std</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-remove-repetition-without-hiding-the-contract">Purpose: remove repetition without hiding the contract</a><a href="#plain-model-transformation-before-ordinary-checking">Plain model: transformation before ordinary checking</a><a href="#predict-evaluation-count">Predict evaluation count</a><a href="#run-the-macro-lab">Run the macro lab</a><a href="#read-the-declarative-expansion">Read the declarative expansion</a><a href="#the-procedural-derive">The procedural derive</a><a href="#deliberate-mistake-repeating-an-expression">Deliberate mistake: repeating an expression</a><a href="#guided-checkpoint">Guided checkpoint</a><a href="#independent-work-and-tiered-hints">Independent work and tiered hints</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#playbook-investigation-the-derive-breaks-only-generic-types">Playbook investigation: the derive breaks only generic types</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#mastery-check">Mastery check</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

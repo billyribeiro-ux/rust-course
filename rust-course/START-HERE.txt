@@ -1,0 +1,8 @@
+RUST WORKSHOP — LOCAL REVIEW DRAFT
+Open index.html, or from this folder:
+  mise trust
+  mise install
+  mise run course
+Then visit http://127.0.0.1:8000/
+Read README.html for source copying, builds, disk control and evidence.
+All instructional material is in HTML. Independent review is pending.

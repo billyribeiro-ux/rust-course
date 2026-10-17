@@ -1,0 +1,207 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Values, expressions, and choosing arithmetic behavior · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="00-values" data-lesson="00-values"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Values, expressions, and choosing arithmetic behavior</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 00 / Tool foundations</div><h1>Values, expressions, and choosing arithmetic behavior</h1><p class="lead">Build a reliable integer model before adding parsing and units.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-0/00-programs.html">Your first Rust programs: values, functions, choices, and loops</a></li></ul><ul><li>Distinguish bindings, values, types, and expressions</li><li>Choose checked arithmetic deliberately</li><li>Use boundary examples to explain overflow and division</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#panic">panic</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p01">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-make-numbers-mean-something">Purpose: make numbers mean something</h2>
+<p>A calculator is small enough to understand completely and rich enough to expose important design choices. Its numbers are signed 64-bit integers. That means a finite representable range, exact integer results within that range, and a need to define behavior when the mathematical result does not fit. Saying “it adds numbers” is not a complete contract. Decide whether to reject overflow, wrap, saturate, or use an arbitrary-precision representation. This project rejects overflow because silently changing a measurement would mislead its user.</p>
+<p>A binding gives a name to a value. The type determines what operations are available and what those operations mean. let count = 3_i64 creates an i64 value and an immutable binding. let mut permits assigning a new value through that binding; it does not make an integer infinitely large. Shadowing creates another binding, potentially with a different type. Use shadowing for a clear transformation, such as text to parsed quantity, and mutation for state that changes over time. These are design choices with different explanations.</p>
+<h2 id="runnable-model-and-prediction">Runnable model and prediction</h2>
+<p>Run these cases from rust-course/projects. Before running them, write the expected value or error and explain whether parsing, arithmetic, or formatting should decide it. Quoting the star protects it from shell expansion. The double dash forwards arguments to the binary.</p>
+<pre><code>mise exec -- cargo run -p workshop-calculator -- -7 / 2
+mise exec -- cargo run -p workshop-calculator -- 9223372036854775807 + 1
+mise exec -- cargo run -p workshop-calculator -- 8 &#x27;*&#x27; -3</code></pre>
+<p>Expected results are -3, an overflow error, and -24. Integer division truncates toward zero; it does not round to the nearest integer or compute a floating-point decimal. A value that prints as -3 is therefore correct for this contract. If the product required physical measurements with fractions, changing the numeric model would be a requirements decision, not merely a display adjustment. Give every surprising result a contract before judging it.</p>
+<p>An expression evaluates to a value. A block can be an expression when its final expression is not followed by a semicolon. For example, let doubled = { let base = 4; base * 2 }; binds 8. Adding a semicolon after base * 2 changes the block result to (), the unit value. Unit means the expression provides no useful payload; it is not the same thing as a quantity&#x27;s meters or seconds. Rust uses similar English words for different concepts, so read the type in context.</p>
+<h2 id="guided-checkpoint-preserve-the-failure">Guided checkpoint: preserve the failure</h2>
+<p>Read Quantity::apply in the reference. checked_add returns Some(result) or None. The code converts None into CalcError::Overflow with ok_or, keeping the reason a calculation failed available to its caller. Returning zero instead would make failure indistinguishable from a real zero result. Panicking would hand ordinary user input to a mechanism intended for a violated program assumption. Result is the appropriate shape when the caller should choose how to report a recoverable failure.</p>
+<div class="code-wrap" data-source="projects/reference/p01-calculator/src/lib.rs" data-sha256="f79ed74a2fa6e0c52162f61dbaa45f9df4b919b90c9b748bd90b189cb832115a"><div class="code-label"><a href="../../projects/reference/p01-calculator/src/lib.rs">projects/reference/p01-calculator/src/lib.rs</a></div><pre><code>//! Checked integer arithmetic with a deliberately small unit system.
+//! ```
+//! use workshop_calculator::calculate;
+//! let result = calculate(&quot;12m&quot;, &quot;+&quot;, &quot;3m&quot;)?;
+//! assert_eq!(result.to_string(), &quot;15m&quot;);
+//! assert!(calculate(&quot;12m&quot;, &quot;+&quot;, &quot;3s&quot;).is_err());
+//! # Ok::&lt;(), workshop_calculator::CalcError&gt;(())
+//! ```
+use std::{fmt, str::FromStr};
+
+pub mod conversion;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Unit {
+    Scalar,
+    Meters,
+    Seconds,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Quantity {
+    pub value: i64,
+    pub unit: Unit,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum CalcError {
+    InvalidNumber,
+    UnknownOperator,
+    IncompatibleUnits,
+    Overflow,
+    DivisionByZero,
+}
+impl fmt::Display for CalcError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        f.write_str(match self {
+            Self::InvalidNumber =&gt; &quot;expected an integer optionally followed by m or s&quot;,
+            Self::UnknownOperator =&gt; &quot;operator must be +, -, *, or /&quot;,
+            Self::IncompatibleUnits =&gt; &quot;units do not support this operation&quot;,
+            Self::Overflow =&gt; &quot;result is outside the i64 range&quot;,
+            Self::DivisionByZero =&gt; &quot;cannot divide by zero&quot;,
+        })
+    }
+}
+impl std::error::Error for CalcError {}
+impl FromStr for Quantity {
+    type Err = CalcError;
+    fn from_str(input: &amp;str) -&gt; Result&lt;Self, Self::Err&gt; {
+        let (number, unit) = if let Some(s) = input.strip_suffix(&#x27;m&#x27;) {
+            (s, Unit::Meters)
+        } else if let Some(s) = input.strip_suffix(&#x27;s&#x27;) {
+            (s, Unit::Seconds)
+        } else {
+            (input, Unit::Scalar)
+        };
+        if number.is_empty() || number.trim() != number {
+            return Err(CalcError::InvalidNumber);
+        }
+        Ok(Self {
+            value: number.parse().map_err(|_| CalcError::InvalidNumber)?,
+            unit,
+        })
+    }
+}
+impl fmt::Display for Quantity {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        let suffix = match self.unit {
+            Unit::Scalar =&gt; &quot;&quot;,
+            Unit::Meters =&gt; &quot;m&quot;,
+            Unit::Seconds =&gt; &quot;s&quot;,
+        };
+        write!(f, &quot;{}{suffix}&quot;, self.value)
+    }
+}
+impl Quantity {
+    /// Integer division truncates toward zero. Products of two non-scalar units
+    /// are deliberately unsupported; this is not a full dimensional algebra.
+    pub fn apply(self, op: &amp;str, rhs: Self) -&gt; Result&lt;Self, CalcError&gt; {
+        use CalcError::*;
+        let (value, unit) = match op {
+            &quot;+&quot; | &quot;-&quot; =&gt; {
+                if self.unit != rhs.unit {
+                    return Err(IncompatibleUnits);
+                }
+                (
+                    if op == &quot;+&quot; {
+                        self.value.checked_add(rhs.value)
+                    } else {
+                        self.value.checked_sub(rhs.value)
+                    },
+                    self.unit,
+                )
+            }
+            &quot;*&quot; =&gt; {
+                let unit = if self.unit == Unit::Scalar {
+                    rhs.unit
+                } else if rhs.unit == Unit::Scalar {
+                    self.unit
+                } else {
+                    return Err(IncompatibleUnits);
+                };
+                (self.value.checked_mul(rhs.value), unit)
+            }
+            &quot;/&quot; =&gt; {
+                let unit = if rhs.unit == Unit::Scalar {
+                    self.unit
+                } else if self.unit == rhs.unit {
+                    Unit::Scalar
+                } else {
+                    return Err(IncompatibleUnits);
+                };
+                if rhs.value == 0 {
+                    return Err(DivisionByZero);
+                }
+                (self.value.checked_div(rhs.value), unit)
+            }
+            _ =&gt; return Err(UnknownOperator),
+        };
+        Ok(Self {
+            value: value.ok_or(Overflow)?,
+            unit,
+        })
+    }
+}
+pub fn calculate(left: &amp;str, operator: &amp;str, right: &amp;str) -&gt; Result&lt;Quantity, CalcError&gt; {
+    left.parse::&lt;Quantity&gt;()?.apply(operator, right.parse()?)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn units_and_integer_division() {
+        for (a, op, b, out) in [
+            (&quot;12m&quot;, &quot;+&quot;, &quot;3m&quot;, &quot;15m&quot;),
+            (&quot;3&quot;, &quot;*&quot;, &quot;4s&quot;, &quot;12s&quot;),
+            (&quot;7m&quot;, &quot;/&quot;, &quot;2m&quot;, &quot;3&quot;),
+            (&quot;-7&quot;, &quot;/&quot;, &quot;2&quot;, &quot;-3&quot;),
+        ] {
+            assert_eq!(calculate(a, op, b).unwrap().to_string(), out);
+        }
+    }
+    #[test]
+    fn recoverable_errors() {
+        assert_eq!(
+            calculate(&quot;1m&quot;, &quot;+&quot;, &quot;1s&quot;),
+            Err(CalcError::IncompatibleUnits)
+        );
+        assert_eq!(
+            calculate(&quot;2m&quot;, &quot;*&quot;, &quot;2m&quot;),
+            Err(CalcError::IncompatibleUnits)
+        );
+        assert_eq!(calculate(&quot;1&quot;, &quot;/&quot;, &quot;0&quot;), Err(CalcError::DivisionByZero));
+        assert_eq!(
+            calculate(&quot;9223372036854775807&quot;, &quot;+&quot;, &quot;1&quot;),
+            Err(CalcError::Overflow)
+        );
+        assert_eq!(
+            calculate(&quot;-9223372036854775808&quot;, &quot;/&quot;, &quot;-1&quot;),
+            Err(CalcError::Overflow)
+        );
+        assert_eq!(calculate(&quot;1.5&quot;, &quot;+&quot;, &quot;2&quot;), Err(CalcError::InvalidNumber));
+    }
+    #[test]
+    fn exhaustive_small_addition_commutes() {
+        for a in -20..=20 {
+            for b in -20..=20 {
+                let a = Quantity {
+                    value: a,
+                    unit: Unit::Meters,
+                };
+                let b = Quantity {
+                    value: b,
+                    unit: Unit::Meters,
+                };
+                assert_eq!(a.apply(&quot;+&quot;, b), b.apply(&quot;+&quot;, a));
+            }
+        }
+    }
+}
+</code></pre></div>
+<p>Complete the calculator scaffold one operation at a time. First parse signed scalar integers and support checked addition, returning a Result from the first runnable checkpoint. Make an ordinary successful-addition test pass, then add the maximum-plus-one assertion and verify it returns Overflow through the same checked implementation. Only after both work should you add units. This sequence creates a feedback loop in which a failure has a small likely cause. The full reference is a worked checkpoint; compare control flow after your own attempt rather than typing it without predictions.</p>
+<h2 id="intentional-mistake-debug-success-is-not-a-policy">Intentional mistake: debug success is not a policy</h2>
+<p>Temporarily write an isolated expression using ordinary addition of two runtime i64 values. A tempting claim is that Rust always panics on overflow. Overflow behavior depends on operation and compiler settings; debug checks are not a substitute for your public arithmetic contract. Do not teach a release-only behavior accidentally. checked_add expresses the choice directly and keeps it consistent across build profiles. Restore the scaffold to checked operations after observing the experiment.</p>
+<p>Another tempting mistake is checking only a divisor equal to zero. i64::MIN divided by -1 also cannot fit in i64. The reference checks zero separately for its specific error and uses checked_div to detect the remaining overflow. Designing distinct errors does not require duplicating all arithmetic implementation details. Let a documented primitive enforce the range boundary.</p>
+<h2 id="playbook-application-a-surprising-negative-quotient">Playbook application: a surprising negative quotient</h2>
+<p>Observation: -7 divided by 2 produces -3. Hypothesis A: the parser lost the minus sign. Hypothesis B: the program performs integer division with truncation toward zero. A distinguishing experiment is -8 divided by 2, followed by -7 multiplied by 1. Expected results are -4 and -7. Those results disprove the lost-sign explanation for these inputs while fitting B. Inspect checked_div documentation to connect the evidence to a specified rule. Changing output formatting would not repair a numeric-model mismatch.</p>
+<p>For your investigation, record where information could first diverge: command arguments, parsed numeric values, arithmetic result, or formatted text. If you add temporary debug output, print to standard error and remove it after the experiment. One-factor experiments become less useful when you simultaneously change the type, parser, and operation. Ask AI to explain both candidate models and predict each experiment, then compare its claims with the actual command output.</p>
+<h2 id="reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</h2><p>This complete early checkpoint parses two scalar values and performs checked addition. It deliberately precedes units, other operators, and the CLI argument boundary. The <a href="../../projects/checkpoints/p01-calculator/index.html">checkpoint contract and source</a> are separately preserved. From the course root, run:</p><pre><code class="language-sh">python3 scripts/start-checkpoint.py p01 01-checked-add
+cd learner-work/checkpoints/p01-calculator/01-checked-add
+mise exec -- cargo test
+mise exec -- cargo run</code></pre><p>The helper refuses an existing destination; choose a new explicit destination if you already have work there. This is a complete guided comparison checkpoint, not evidence that you independently implemented the project. Make predictions, inspect each boundary test, then carry the next requirement into your own source. A separately named <code>final</code> checkpoint reconstructs the current complete reference without pretending it is this earlier milestone. Exact reconstruction and test commands are recorded in <a href="../../verification/early-checkpoints.log">the author check log</a>.</p><h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Add table-driven cases for negative addition, zero multiplication, equal negative operands, i64 minimum subtraction, and minimum divided by -1. For every case, name the contract being tested. Then explain why adding 1 to an unsigned maximum differs from parsing a negative number into an unsigned type: the first concerns arithmetic, the second input representation. Do not merge these into a vague “bad number” story in your design notes.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>inspect the exact method return type with the standard-library documentation.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>write a match over Some and None before using combinators.</p></details><details><summary>Worked solution</summary><p>self.value.checked_add(rhs.value).ok_or(CalcError::Overflow) preserves either the exact result or the explicit domain error. A useful review request is “Here are my boundary cases; which arithmetic failure can still escape as a panic?” Include the relevant branch, not the entire repository.</p></details>
+<h2 id="recommended-design-and-alternatives">Recommended design and alternatives</h2>
+<p>A clear match expression is a good first implementation. Using ok_or becomes idiomatic when it shortens a direct Option-to-Result conversion without hiding a decision. Using several nested combinators merely to avoid local names is not an improvement. The reference&#x27;s intermediate unit and value variables make the two independent questions visible: is this operation dimensionally permitted, and does its numeric result fit?</p>
+<p>Mastery means explaining the value of every expression in one successful and one failing path, including the Result wrapper. Passing tests over a few small numbers is evidence about those cases. Boundary tests add evidence about representational edges, but still do not prove every property over every i64. You should be able to identify a missing case and justify why it matters before claiming the calculator is complete.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/book/ch03-02-data-types.html">Rust data types</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch03-03-how-functions-work.html">Functions and expressions</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.i64.html#method.checked_add">i64 checked operations</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-0/00-programs.html">Previous: Your first Rust programs: values, functions, choices, and loops</a><a href="../../lessons/stage-0/00-calculator.html">Next: Build a checked calculator with units and useful errors</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-make-numbers-mean-something">Purpose: make numbers mean something</a><a href="#runnable-model-and-prediction">Runnable model and prediction</a><a href="#guided-checkpoint-preserve-the-failure">Guided checkpoint: preserve the failure</a><a href="#intentional-mistake-debug-success-is-not-a-policy">Intentional mistake: debug success is not a policy</a><a href="#playbook-application-a-surprising-negative-quotient">Playbook application: a surprising negative quotient</a><a href="#reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#recommended-design-and-alternatives">Recommended design and alternatives</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

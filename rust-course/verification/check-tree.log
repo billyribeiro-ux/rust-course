@@ -1,0 +1,115 @@
+$ mise exec -- cargo tree --workspace --depth 2 --locked --manifest-path projects/Cargo.toml
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native
+concurrency-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs)
+└── tokio v1.53.3
+    ├── bytes v1.12.1
+    ├── libc v0.2.191
+    ├── mio v1.2.4
+    ├── pin-project-lite v0.2.17
+    ├── signal-hook-registry v1.4.8
+    ├── socket2 v0.6.5
+    └── tokio-macros v2.7.2 (proc-macro)
+[dev-dependencies]
+└── tokio v1.53.3 (*)
+
+core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs)
+
+course-kind-derive v0.1.0 (proc-macro) (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive)
+├── quote v1.0.47
+│   └── proc-macro2 v1.0.107
+└── syn v3.0.9
+    ├── proc-macro2 v1.0.107 (*)
+    ├── quote v1.0.47 (*)
+    └── unicode-ident v1.0.27
+
+course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+├── serde v1.0.229
+│   ├── serde_core v1.0.229
+│   └── serde_derive v1.0.229 (proc-macro)
+└── serde_json v1.0.154
+    ├── itoa v1.0.18
+    ├── memchr v2.8.3
+    ├── serde_core v1.0.229
+    └── zmij v1.0.23
+
+expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+
+log-detective v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs)
+
+p06-kv v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv)
+
+p07-indexer v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer)
+
+p08-monitor v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor)
+└── tokio v1.53.3 (*)
+
+p09-chat v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat)
+└── tokio v1.53.3 (*)
+
+p10-issues v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues)
+├── axum v0.8.9
+│   ├── axum-core v0.5.6
+│   ├── bytes v1.12.1
+│   ├── form_urlencoded v1.2.2
+│   ├── futures-util v0.3.34
+│   ├── http v1.5.0
+│   ├── http-body v1.1.0
+│   ├── http-body-util v0.1.5
+│   ├── hyper v1.12.0
+│   ├── hyper-util v0.1.21
+│   ├── itoa v1.0.18
+│   ├── matchit v0.8.4
+│   ├── memchr v2.8.3
+│   ├── mime v0.3.17
+│   ├── percent-encoding v2.3.2
+│   ├── pin-project-lite v0.2.17
+│   ├── serde_core v1.0.229
+│   ├── serde_json v1.0.154 (*)
+│   ├── serde_path_to_error v0.1.20
+│   ├── serde_urlencoded v0.7.1
+│   ├── sync_wrapper v1.0.2
+│   ├── tokio v1.53.3 (*)
+│   ├── tower v0.5.3
+│   ├── tower-layer v0.3.3
+│   ├── tower-service v0.3.3
+│   └── tracing v0.1.44
+├── serde v1.0.229 (*)
+├── serde_json v1.0.154 (*)
+├── sqlx v0.9.0
+│   ├── sqlx-core v0.9.0
+│   ├── sqlx-macros v0.9.0 (proc-macro)
+│   └── sqlx-postgres v0.9.0
+└── tokio v1.53.3 (*)
+[dev-dependencies]
+└── tower v0.5.3 (*)
+
+p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay)
+
+p13-unsafe v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe)
+
+p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+├── axum v0.8.9 (*)
+├── serde v1.0.229 (*)
+├── serde_json v1.0.154 (*)
+├── sqlx v0.9.0 (*)
+└── tokio v1.53.3 (*)
+
+p15-replication v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication)
+
+p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+├── axum v0.8.9 (*)
+├── serde v1.0.229 (*)
+├── serde_json v1.0.154 (*)
+└── tokio v1.53.3 (*)
+[dev-dependencies]
+└── tower v0.5.3 (*)
+
+rust-specializations v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations)
+└── course-kind-derive v0.1.0 (proc-macro) (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive) (*)
+
+task-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal)
+
+typed-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config)
+
+workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)

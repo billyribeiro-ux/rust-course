@@ -1,0 +1,119 @@
+[
+  {
+    "path": "exercises/foundations/01-use-after-move.rs",
+    "kind": "compile-failure",
+    "expected": "E0382",
+    "reason": "value borrowed after ownership transfer",
+    "solution": "Borrow title when only reading it; move only when the callee needs ownership."
+  },
+  {
+    "path": "exercises/foundations/02-aliasing.rs",
+    "kind": "compile-failure",
+    "expected": "E0499",
+    "reason": "two overlapping exclusive borrows",
+    "solution": "End the first mutable borrow before making the second; no clone is needed."
+  },
+  {
+    "path": "exercises/foundations/03-local-reference.rs",
+    "kind": "compile-failure",
+    "expected": "E0515",
+    "reason": "returned reference outlives local owner",
+    "solution": "Return String ownership or borrow caller-owned input; a lifetime label cannot extend storage."
+  },
+  {
+    "path": "exercises/foundations/04-nonexhaustive.rs",
+    "kind": "compile-failure",
+    "expected": "E0004",
+    "reason": "one enum state not handled",
+    "solution": "Add the Done arm explicitly and decide its behavior."
+  },
+  {
+    "path": "exercises/foundations/05-missing-trait.rs",
+    "kind": "compile-failure",
+    "expected": "E0277",
+    "reason": "generic operation lacks a required trait bound",
+    "solution": "Require T: std::fmt::Display, because the body needs that capability."
+  },
+  {
+    "path": "exercises/systems/borrow_after_pop.rs",
+    "kind": "compile-failure",
+    "expected": "E0502",
+    "reason": "",
+    "solution": "See the linked lesson and primary compiler diagnostic."
+  },
+  {
+    "path": "exercises/systems/rc_thread.rs",
+    "kind": "compile-failure",
+    "expected": "E0277",
+    "reason": "",
+    "solution": "See the linked lesson and primary compiler diagnostic."
+  },
+  {
+    "path": "exercises/systems/thread_borrow.rs",
+    "kind": "compile-failure",
+    "expected": "E0373",
+    "reason": "",
+    "solution": "See the linked lesson and primary compiler diagnostic."
+  },
+  {
+    "path": "exercises/systems/uninit_read.rs",
+    "kind": "compile-failure",
+    "expected": "E0133",
+    "reason": "",
+    "solution": "See the linked lesson and primary compiler diagnostic."
+  },
+  {
+    "path": "exercises/specializations/orphan.rs",
+    "kind": "compile-failure",
+    "expected": "E0117",
+    "reason": "",
+    "solution": "See the linked lesson and primary compiler diagnostic."
+  },
+  {
+    "path": "exercises/specializations/dyn.rs",
+    "kind": "compile-failure",
+    "expected": "E0038",
+    "reason": "",
+    "solution": "See the linked lesson and primary compiler diagnostic."
+  },
+  {
+    "path": "exercises/concurrency/pinned_get_mut.rs",
+    "kind": "compile-failure",
+    "expected": "E0277",
+    "reason": "",
+    "solution": "Use the pinned API of a type that requires address stability; ordinary values that do not need pinning should use ordinary mutable references."
+  },
+  {
+    "path": "exercises/concurrency/racy_reservation.rs",
+    "kind": "intentional-logic-failure",
+    "expected": "accepted=2 remaining=0",
+    "reason": "",
+    "solution": "The recommended Budget API performs the reservation as a single compare-exchange update; stronger ordering cannot turn separate load and store operations into that update."
+  },
+  {
+    "path": "exercises/services/partial-read-broken.rs",
+    "kind": "runtime-test-failure",
+    "expected": "test a_frame_is_not_one_read fails: left h, right hello",
+    "solution": "exercises/services/partial-read-solution.rs",
+    "compile_expected": "success"
+  },
+  {
+    "path": "projects/reference/p16-workbench/src/lib.rs:Store rustdoc",
+    "kind": "rustdoc-compile-fail",
+    "expected": "E0616 private field: callers cannot mutate persisted engine directly",
+    "verification": "mise exec -- cargo test -p p16-workbench --doc",
+    "solution": "Use Store::commit for mutation and Store::snapshot for read-only access."
+  },
+  {
+    "path": "projects/reference/p18-core-labs/src/interior.rs",
+    "kind": "rustdoc-compile-fail",
+    "expected": "Rc<RefCell<_>> is not Send; it cannot move into an OS worker",
+    "solution": "Keep the single-threaded model local, or choose a justified synchronized cross-thread design."
+  },
+  {
+    "path": "experiments/expression-fuzz/fuzz_targets/bad_oracle.rs",
+    "kind": "intentional-fuzz-oracle-failure",
+    "expected": "The public seed 2+\ud83e\udd80 produces a 4-byte character span; the deliberately false 1-byte assertion fails.",
+    "solution": "Validate byte ranges and UTF-8 boundaries instead of assuming one byte per character."
+  }
+]

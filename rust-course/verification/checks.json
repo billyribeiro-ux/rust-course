@@ -1,0 +1,243 @@
+{
+  "date": "2026-10-17T11:29:29.176809+00:00",
+  "target_dir": "../.course-cache/oct17-native",
+  "build_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native",
+  "checks": [
+    {
+      "name": "toolchain",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "-Vv"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.063,
+      "log": "check-toolchain.log",
+      "passed": true
+    },
+    {
+      "name": "mise",
+      "command": [
+        "mise",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.016,
+      "log": "check-mise.log",
+      "passed": true
+    },
+    {
+      "name": "format",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--all",
+        "--check"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.178,
+      "log": "check-format.log",
+      "passed": true
+    },
+    {
+      "name": "tests",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--workspace",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "../.course-cache/oct17-native"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 40.227,
+      "log": "check-tests.log",
+      "passed": true
+    },
+    {
+      "name": "check",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "../.course-cache/oct17-native"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 6.951,
+      "log": "check-check.log",
+      "passed": true
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "../.course-cache/oct17-native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 1.712,
+      "log": "check-clippy.log",
+      "passed": true
+    },
+    {
+      "name": "docs",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "doc",
+        "--workspace",
+        "--no-deps",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "../.course-cache/oct17-native"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 7.515,
+      "log": "check-docs.log",
+      "passed": true
+    },
+    {
+      "name": "tree",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "tree",
+        "--workspace",
+        "--depth",
+        "2",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.101,
+      "log": "check-tree.log",
+      "passed": true
+    },
+    {
+      "name": "node",
+      "command": [
+        "mise",
+        "exec",
+        "node@26.12.0",
+        "--",
+        "node",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.113,
+      "log": "check-node.log",
+      "passed": true
+    },
+    {
+      "name": "javascript",
+      "command": [
+        "mise",
+        "exec",
+        "node@26.12.0",
+        "--",
+        "node",
+        "--check",
+        "assets/course.js"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.131,
+      "log": "check-javascript.log",
+      "passed": true
+    },
+    {
+      "name": "progress-data-syntax",
+      "command": [
+        "mise",
+        "exec",
+        "node@26.12.0",
+        "--",
+        "node",
+        "--check",
+        "assets/progress-data.js"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.083,
+      "log": "check-progress-data-syntax.log",
+      "passed": true
+    },
+    {
+      "name": "progress-data-tests",
+      "command": [
+        "mise",
+        "exec",
+        "node@26.12.0",
+        "--",
+        "node",
+        "--test",
+        "verification/progress-data.test.cjs"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.241,
+      "log": "check-progress-data-tests.log",
+      "passed": true
+    },
+    {
+      "name": "site",
+      "command": [
+        "python3",
+        "scripts/verify-site.py"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "seconds": 0.521,
+      "log": "check-site.log",
+      "passed": true
+    }
+  ]
+}

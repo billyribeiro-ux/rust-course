@@ -1,0 +1,99 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>A reproducible first run and a method for getting unstuck · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="00-terminal" data-lesson="00-terminal"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / A reproducible first run and a method for getting unstuck</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 00 / Tool foundations</div><h1>A reproducible first run and a method for getting unstuck</h1><p class="lead">Use mise, Cargo, and a nine-step investigation to distinguish shell, compiler, and program failures.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul></ul><ul><li>Verify the active toolchain without changing a global default</li><li>Read commands as a chain of boundaries</li><li>Record an evidence-based investigation</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#mise">mise</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p01">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-and-the-first-useful-model">Purpose and the first useful model</h2>
+<p>Your first deliverable is a reproducible calculator run, accompanied by an investigation that another learner can repeat. A terminal command is a request to several programs. The shell first divides text into arguments. mise chooses tools from project configuration. Cargo selects a package, builds it if necessary, and starts a binary. The binary parses the arguments that survive those earlier steps. A failure at one boundary can resemble a failure somewhere else. Learning the boundaries gives you a way to solve unfamiliar problems without memorizing every diagnostic.</p>
+<p>This course uses mise. The course mise.toml pins Rust 1.99.1, the stable point release announced on October 15, 2026. Begin in the course root, the folder containing index.html, mise.toml, scripts and projects; its folder name may differ from rust-course. The <a href="../../README.html">launch guide</a> lists the mise, Python 3.11+, Git and native development-tool prerequisites. Open and inspect mise.toml before trusting it: it selects the pinned Rust version, a shared local build directory, and local Python tasks. Then run the setup and version commands below. rustup may be the underlying mechanism used to manage the Rust toolchain; it is not a reason to change your global default. The matching rust-toolchain.toml records the same version for Rust-aware tools. If these disagree, stop to inspect configuration instead of updating dependencies until the error disappears.</p>
+<pre><code>pwd
+ls
+mise trust
+mise install
+mise exec -- rustc --version
+mise exec -- cargo --version
+cd projects
+mise exec -- cargo run -p workshop-calculator -- 12m + 3m</code></pre>
+<p>The final line should print 15m. Cargo may also print compilation messages to standard error. The double dash ends Cargo&#x27;s arguments; the following three arguments belong to the calculator. A successful command is evidence that this package builds and this case works. It does not establish that every project, every boundary case, or an arbitrary future Rust version works. Keep that distinction visible in your notes from the beginning.</p>
+<h2 id="prediction-before-running">Prediction before running</h2>
+<p>Predict what happens if the command omits Cargo&#x27;s double dash: mise exec -- cargo run -p workshop-calculator 12m + 3m. Does the calculator receive three operands, report an unknown operator, or fail to start? Write both your answer and which program you think produces the error. Then run the command. Expected result: Cargo rejects the unexpected arguments before the calculator starts. The operand text never reaches our program. This is why a calculator patch cannot fix this particular reproduction.</p>
+<p>Now predict the result of the correctly separated command with 12m + 3s. Expected result: the binary starts, prints a units error to standard error, and exits unsuccessfully. Cargo did its job. Our domain deliberately rejects adding a length and a time. A nonzero exit is sometimes the correct implementation of the requested behavior. The first question is always what behavior the contract requires.</p>
+<h2 id="the-problem-solving-playbook-a-worked-investigation">The problem-solving playbook: a worked investigation</h2><p>Keep the <a href="../../playbook.html">playbook reference</a> beside your terminal. The following investigation models its complete loop; later lessons remove some of the prompts so you choose the next experiment yourself.</p>
+<p>Step 1 — state expected and actual behavior precisely. Expected: three calculator arguments produce 15m. Actual for the missing-separator command: Cargo reports an unexpected argument; no quantity is printed. Avoid writing only “Rust is broken.” That phrase hides both the action and the observable difference.</p>
+<p>Step 2 — reproduce with exact context. Record the working directory rust-course/projects, the full command, the output, and the output of mise exec -- rustc --version. The intended version begins with rustc 1.99.1. If yours differs, that is an observation, not permission to assume it caused the argument error. Record the active Cargo version too. Reproduction is a controlled description, not a collection of screenshots with missing context.</p>
+<p>Step 3 — locate the boundary. The message names Cargo&#x27;s command syntax, so investigate Cargo-to-binary argument forwarding. Step 4 — read evidence rather than only the last line. Cargo help describes the separator before executable arguments. The reference binary expects exactly three arguments after its own executable name. These facts narrow the search before any source edit.</p>
+<p>Step 5 — separate competing hypotheses. Hypothesis A: the toolchain cannot compile the project. Hypothesis B: arguments are being interpreted by Cargo. A remains plausible until a normal run builds; B predicts that inserting one separator will change which program responds. We have not yet proved either hypothesis merely by naming it.</p>
+<p>Step 6 — make one distinguishing experiment. Add only the double dash and keep package, directory, operands, and tool version constant. Expected experimental result: the normal command builds or reuses its build and prints 15m. This disproves A as the explanation for this reproduction, while supporting B. It does not prove that the installation can never fail for another package.</p>
+<p>Step 7 — apply the smallest sound fix. Correct the documented invocation; do not rewrite argument parsing to accommodate an argument list that never arrived. Step 8 — regress and state limits. Run the good addition, an incompatible-unit case, and the package tests. These checks cover routing into the binary and some calculator contracts, not arbitrary shell quoting or operating-system behavior.</p>
+<p>Step 9 — capture the result. Write a short note: “Missing Cargo separator; observed Cargo argument rejection; changed only --; calculator then produced 15m; recorded Rust 1.99.1; package tests still need to be run or their actual result attached.” Distinguish an expected example from a command you actually executed. This habit makes your later debugging notes usable evidence.</p>
+<h2 id="guided-checkpoint">Guided checkpoint</h2>
+<p>Read the small entry point below. Identify where argument count becomes a usage error, where calculation errors become exit code 1, and where success becomes exit code 0. Trace 12m + 3m through those branches on paper before running the test command. The library is responsible for quantities; the entry point is responsible for interaction with a process. Keeping those responsibilities separate allows unit tests without launching a terminal.</p>
+<div class="code-wrap" data-source="projects/reference/p01-calculator/src/main.rs" data-sha256="7484e3e7b8adf4d6dcc2c48fd3feb2fd1487dadb4e71e50d4764f734544d56fc"><div class="code-label"><a href="../../projects/reference/p01-calculator/src/main.rs">projects/reference/p01-calculator/src/main.rs</a></div><pre><code>use std::{
+    io::{self, Write},
+    process::ExitCode,
+};
+fn run() -&gt; io::Result&lt;ExitCode&gt; {
+    let args = std::env::args_os()
+        .skip(1)
+        .map(|value| value.into_string())
+        .collect::&lt;Result&lt;Vec&lt;_&gt;, _&gt;&gt;();
+    let mut stdout = io::stdout().lock();
+    let mut stderr = io::stderr().lock();
+    let Ok(args) = args else {
+        writeln!(stderr, &quot;calculator: arguments must be valid UTF-8 text&quot;)?;
+        return Ok(ExitCode::from(2));
+    };
+    let [left, op, right] = args.as_slice() else {
+        writeln!(
+            stderr,
+            &quot;usage: workshop-calculator &lt;integer[m|s]&gt; &lt;+|-|*|/&gt; &lt;integer[m|s]&gt;&quot;
+        )?;
+        writeln!(
+            stderr,
+            &quot;       workshop-calculator convert &lt;finite-number&gt;&lt;mm|cm|m|km&gt; &lt;mm|cm|m|km&gt;&quot;
+        )?;
+        return Ok(ExitCode::from(2));
+    };
+    if left == &quot;convert&quot; {
+        return match workshop_calculator::conversion::convert(op, right) {
+            Ok(length) =&gt; {
+                writeln!(
+                    stdout,
+                    &quot;approximately {}{}&quot;,
+                    length.value(),
+                    length.unit().symbol()
+                )?;
+                stdout.flush()?;
+                Ok(ExitCode::SUCCESS)
+            }
+            Err(error) =&gt; {
+                writeln!(stderr, &quot;conversion: {error}&quot;)?;
+                Ok(ExitCode::FAILURE)
+            }
+        };
+    }
+    match workshop_calculator::calculate(left, op, right) {
+        Ok(value) =&gt; {
+            writeln!(stdout, &quot;{value}&quot;)?;
+            stdout.flush()?;
+            Ok(ExitCode::SUCCESS)
+        }
+        Err(error) =&gt; {
+            writeln!(stderr, &quot;calculator: {error}&quot;)?;
+            Ok(ExitCode::FAILURE)
+        }
+    }
+}
+fn main() -&gt; ExitCode {
+    match run() {
+        Ok(code) =&gt; code,
+        Err(error) =&gt; {
+            // Diagnostic output is best effort; its failure cannot restore stdout.
+            let _ = writeln!(io::stderr().lock(), &quot;calculator output: {error}&quot;);
+            ExitCode::FAILURE
+        }
+    }
+}
+</code></pre></div>
+<pre><code>mise exec -- cargo test -p workshop-calculator
+mise exec -- cargo run -p workshop-calculator -- 12m + 3s</code></pre>
+<h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Make a three-row evidence table for a good invocation, missing operand, and division by zero. Record producing component, expected exit status, actual status, and output stream. Quote multiplication as &#x27;*&#x27; so the shell does not expand it into filenames. A review request should include the exact command and a single disputed conclusion: “I think the shell expanded the star before Cargo; what experiment would distinguish that from a parser error?”</p>
+<details><summary>Hint 1: choose the next observation</summary><p>count argument boundaries before reading calculator internals.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>compare the CLI integration test with the command that failed.</p></details><details><summary>Worked solution</summary><p>use mise exec -- cargo run -p workshop-calculator -- 4 &#x27;*&#x27; 3. The quotes are interpreted by the shell and the binary receives the one-character operator. A request to AI should ask for competing explanations and a distinguishing experiment before requesting a patch; verify the proposed command against help and observed output.</p></details>
+<h2 id="review-and-mastery-evidence">Review and mastery evidence</h2>
+<p>The recommended workflow records the responsible program, the changed factor, and the reason the corrected invocation works. Reading Cargo help is the right abstraction for argument forwarding; an argument-parsing dependency would solve a different problem inside the binary. An alternative is to run the already-built executable directly when isolating Cargo from process behavior, while remembering to rebuild after source changes. Choose that experiment when the build/launch boundary is uncertain.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://blog.rust-lang.org/2026/10/15/Rust-1.99.1/">Rust 1.99.1 release</a></li><li><a href="https://doc.rust-lang.org/cargo/commands/cargo-run.html">Cargo run reference</a></li><li><a href="https://mise.jdx.dev/lang/rust.html">mise Rust tools</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-0/00-workspace.html">Next: Files, terminal navigation, and a reviewed Git snapshot</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-and-the-first-useful-model">Purpose and the first useful model</a><a href="#prediction-before-running">Prediction before running</a><a href="#the-problem-solving-playbook-a-worked-investigation">The problem-solving playbook: a worked investigation</a><a href="#guided-checkpoint">Guided checkpoint</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#review-and-mastery-evidence">Review and mastery evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

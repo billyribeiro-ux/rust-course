@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p07-indexer",
+  "checkpoints": [
+    {
+      "id": "01-streaming",
+      "title": "Stream a bounded reader before adding workers",
+      "source": "projects/checkpoints/p07-indexer/01-streaming",
+      "contract": "Fixed-size reads preserve word state and unterminated final lines; at most budget plus one bytes are consumed; ordinary IO failures propagate.",
+      "commands": [
+        "cargo test --locked",
+        "cargo run --locked"
+      ],
+      "lockfile": "projects/checkpoints/p07-indexer/locks/01-streaming.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete verified reference",
+      "source": "projects/reference/p07-indexer",
+      "contract": "Complete bounded indexer with deterministic final results and synchronous coordinator-owned per-file progress; initial/result/final snapshots distinguish indexed, oversized, failed, cancelled, unreturned and unsubmitted work. CLI progress uses stderr. Cancellation remains cooperative and no timing guarantee is claimed. Materializes a new standalone copy without changing immutable source.",
+      "commands": [
+        "cargo test --locked --all-targets"
+      ],
+      "lockfile": "projects/checkpoints/p07-indexer/locks/final.Cargo.lock"
+    }
+  ]
+}

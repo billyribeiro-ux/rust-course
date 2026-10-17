@@ -1,0 +1,23 @@
+$ mise exec -- npm test
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge
+npm notice run rust-course-svelte-bridge@0.1.0 test
+npm notice run node --test tests/*.test.js
+✔ i64 and u64 are decoded exactly and money stays fixed point (1.036042ms)
+✔ wrong envelopes, duplicate symbols, floats and oversized integers fail (0.308209ms)
+✔ GET uses exact local reader fixture and releases ownership after success (13.072ms)
+✔ HTTP errors and oversized response bodies are explicit (0.748791ms)
+✔ only one request is admitted; cancellation ends ownership (0.220167ms)
+✔ deadline aborts a slow body as well as initial fetch (5.548167ms)
+✔ a response arriving after cancellation is never accepted (0.405583ms)
+✔ proxy allows only the intended body-free read boundary (0.447458ms)
+✔ four admissions, rejection, and exactly-once permit release (0.141416ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 352.717958
+
+exit=0

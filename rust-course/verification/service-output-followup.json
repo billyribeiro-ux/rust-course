@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-09",
+  "independent_review": "pending",
+  "commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "build",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "p09-chat",
+        "-p",
+        "p10-issues",
+        "-p",
+        "p13-unsafe",
+        "-p",
+        "p14-scheduler",
+        "-p",
+        "p15-replication",
+        "-p",
+        "p16-workbench"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:16:28.812985+00:00",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "verification/service-output-followup.py",
+        "--bin-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "started_utc": "2026-10-09T19:16:31.124428+00:00",
+      "exit_code": 0
+    }
+  ],
+  "status": "passed",
+  "real_process_checks": 10,
+  "process_evidence": "verification/service-output-process-checks.json",
+  "process_reproducer": "verification/service-output-followup.py",
+  "source_sha256": {
+    "projects/reference/p09-chat/src/main.rs": "21c5beb717738260324e5c9fc75c91983288764987d3fdade09377d5cdb02124",
+    "projects/reference/p10-issues/src/main.rs": "ccfc10f0d8a5c3d6fb30dfb45c413384a73bd049731dd539efd2f1126e6609a7",
+    "projects/reference/p13-unsafe/src/main.rs": "a495092a13f377aea390ae3a68d1e07d23858c31a6ae98b39fc436a5c073744a",
+    "projects/reference/p14-scheduler/src/main.rs": "e4962cbbc9dd98ff36ef3f21f9ecd14f3e32184237deb3eba373961d68d76b4e",
+    "projects/reference/p15-replication/src/main.rs": "d31d93eccbcb8a60c895fb36aa85a42551ac3cd0766d97715db52ceed4051e57",
+    "projects/reference/p16-workbench/src/main.rs": "982ccc8f510eb4216a25eee8f219a4942c10391b7d52d90dd3811cbd1d972435"
+  },
+  "rustc": "1.99.0 via mise",
+  "scope": "Entry-point output and lifecycle changes only; P13 unsafe library unchanged.",
+  "limits": [
+    "No browser execution or independent acceptance.",
+    "Database-backed services were not connected; URL failure checks exit before connection.",
+    "SIGINT checks cover the executed graceful paths, not forced OS crashes or every accept error.",
+    "The process bounds are test timeouts, not operational service guarantees.",
+    "P13 unsafe library source is unchanged; this check does not replace the recorded Miri evidence.",
+    "P14 best-effort worker diagnostic failures were source-reviewed and compiled; no private-database worker sink-failure execution in this report yet.",
+    "Required output uses synchronous std::io::Write; a slow blocking sink has no hard deadline."
+  ],
+  "author_observed_checks": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p09-chat",
+        "-p",
+        "p10-issues",
+        "-p",
+        "p13-unsafe",
+        "-p",
+        "p14-scheduler",
+        "-p",
+        "p15-replication",
+        "-p",
+        "p16-workbench"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--locked",
+        "--all-targets",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "p09-chat",
+        "-p",
+        "p10-issues",
+        "-p",
+        "p13-unsafe",
+        "-p",
+        "p14-scheduler",
+        "-p",
+        "p15-replication",
+        "-p",
+        "p16-workbench",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "env": {
+        "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      },
+      "exit_code": 0
+    }
+  ],
+  "primary_sources": [
+    {
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/macro.println.html",
+      "url": "https://doc.rust-lang.org/1.99.0/std/macro.println.html",
+      "sha256": "b0a03d4a560de3014c4c9177a8d580bed329d374c152194bd034c6999cbac376"
+    },
+    {
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/io/trait.Write.html",
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/trait.Write.html",
+      "sha256": "94483f38e85993952298cef6ca2d5bffc59cc4ad361889926d2ba03a53fda470"
+    },
+    {
+      "local_path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/src/std/process.rs.html",
+      "url": "https://doc.rust-lang.org/1.99.0/src/std/process.rs.html",
+      "sha256": "ed4f9cab868908b49cd9e3dec7c67ec3f7a53bf35a0dc21ea51cf31fbca4e113"
+    }
+  ]
+}

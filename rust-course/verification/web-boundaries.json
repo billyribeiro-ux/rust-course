@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-09",
+  "lesson": "05-web-boundaries",
+  "authored": true,
+  "author_instructional_review": "complete",
+  "independent_review": "pending",
+  "code_verified": true,
+  "checks": [
+    {
+      "command": "mise exec -- cargo test --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p10-issues --test web_boundaries",
+      "result": "passed",
+      "tests": 6,
+      "log": "web-boundaries-tests.log"
+    },
+    {
+      "command": "mise exec -- cargo clippy --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p10-issues --test web_boundaries -- -D warnings",
+      "result": "passed",
+      "log": "web-boundaries-clippy.log"
+    },
+    {
+      "command": "mise exec -- cargo test --manifest-path rust-course/projects/scaffolds/p09-chat/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/scaffolds",
+      "result": "passed",
+      "tests": 2,
+      "log": "chat-scaffold-final.log"
+    }
+  ],
+  "limits": [
+    "In-process HTTP tests verify service behavior, not browser CORS/cookie enforcement or TLS handshakes.",
+    "The standalone scaffold verifies only bounded frame encoding, not an entire chat service.",
+    "Runtime capstone audit is recorded separately in final-runtime-audit.json."
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "check": "node --input-type=module --check on actual inline module",
+  "passed": true,
+  "scope": "syntax plus author inspection of dynamic import catch; runtime browser unverified",
+  "fix": "Missing generated WASM package now leaves visible build instructions and caught import failure; static import previously prevented handler execution."
+}

@@ -1,0 +1,865 @@
+{
+  "status": "measured_locally",
+  "independent_review": "pending",
+  "metadata": {
+    "measured_at_utc": "2026-10-09T05:14:19.033143+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "profile": "release (Cargo default optimized profile; no custom release override)",
+    "background_load": "uncontrolled shared workstation; no CPU isolation or frequency locking",
+    "sample_design": "two warmups per variant plus one untimed reference; seven paired trials with alternating order; no randomized order; full result comparisons excluded from timing",
+    "rustc": {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "-Vv"
+      ],
+      "exit_code": 0,
+      "stdout": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+      "stderr": ""
+    },
+    "cargo": {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "cargo 1.99.0 (5f94df478 2026-08-27)\n",
+      "stderr": ""
+    },
+    "cpu": {
+      "command": [
+        "sysctl",
+        "-n",
+        "machdep.cpu.brand_string"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "sysctl: sysctl fmt -1 1024 1: Operation not permitted\n"
+    },
+    "logical_cpus": {
+      "command": [
+        "sysctl",
+        "-n",
+        "hw.logicalcpu"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "sysctl: sysctl fmt -1 1024 1: Operation not permitted\n"
+    },
+    "memory_bytes": {
+      "command": [
+        "sysctl",
+        "-n",
+        "hw.memsize"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "sysctl: sysctl fmt -1 1024 1: Operation not permitted\n"
+    },
+    "os": {
+      "command": [
+        "sw_vers",
+        "-productVersion"
+      ],
+      "exit_code": 0,
+      "stdout": "26.6.2\n",
+      "stderr": ""
+    },
+    "power": {
+      "command": [
+        "pmset",
+        "-g",
+        "batt"
+      ],
+      "exit_code": 0,
+      "stdout": "Now drawing from 'AC Power'\n",
+      "stderr": ""
+    },
+    "hardware": {
+      "command": [
+        "sysctl",
+        "-n",
+        "machdep.cpu.brand_string",
+        "hw.logicalcpu",
+        "hw.memsize"
+      ],
+      "exit_code": 0,
+      "cpu_model": "Apple M3 Ultra",
+      "logical_cpus": 28,
+      "memory_bytes": 103079215104,
+      "collection_note": "Initial sandboxed sysctl attempts were denied. An approved read after the timed runs returned these values; timing samples were not rerun."
+    }
+  },
+  "commands": [
+    [
+      ".course-cache/native/release/benchmark",
+      "1000003"
+    ],
+    [
+      ".course-cache/native/release/indexer-benchmark",
+      ".course-cache/benchmark-fixtures"
+    ]
+  ],
+  "raw_log": "verification/benchmarks.log",
+  "benchmark_correctness_log": "verification/benchmark-correctness.log",
+  "method": {
+    "warmups_per_variant": 2,
+    "untimed_reference_runs_per_project": 1,
+    "samples_per_variant": 7,
+    "order": "alternating pairs",
+    "clock": "std::time::Instant",
+    "correctness": "P12 exact derived PartialEq on full Replay; P07 equality on complete entries plus submitted and cancelled; peak_workers reported separately as expected-changing instrumentation",
+    "timed_p12": "generation and replay, including creation/reuse of bounded 1024-event batch; comparisons and printing excluded",
+    "timed_p07": "path vector clone, thread creation, file open/read/count, bounded result collection, sorting; fixture generation, comparisons, printing excluded",
+    "workload_p12": {
+      "events": 1000003,
+      "peak_live_orders": 2,
+      "final_live_orders": 1,
+      "max_batch_events": 1024
+    },
+    "workload_p07": {
+      "files": 64,
+      "bytes_per_file": 131072,
+      "total_bytes": 8388608,
+      "workers": [
+        1,
+        4
+      ],
+      "queue": 8,
+      "cache": "warm after reference and two warmups per variant"
+    }
+  },
+  "raw_samples": {
+    "stream": [
+      {
+        "sample": 1,
+        "position": 1,
+        "elapsed_ns": 8906375,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 2,
+        "position": 2,
+        "elapsed_ns": 8833083,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 3,
+        "position": 1,
+        "elapsed_ns": 8907500,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 4,
+        "position": 2,
+        "elapsed_ns": 8277750,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 5,
+        "position": 1,
+        "elapsed_ns": 8267750,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 6,
+        "position": 2,
+        "elapsed_ns": 8805084,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 7,
+        "position": 1,
+        "elapsed_ns": 8754625,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      }
+    ],
+    "batch1024": [
+      {
+        "sample": 1,
+        "position": 2,
+        "elapsed_ns": 9639500,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 2,
+        "position": 1,
+        "elapsed_ns": 9683875,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 3,
+        "position": 2,
+        "elapsed_ns": 9579000,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 4,
+        "position": 1,
+        "elapsed_ns": 9176709,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 5,
+        "position": 2,
+        "elapsed_ns": 8900833,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 6,
+        "position": 1,
+        "elapsed_ns": 9143291,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      },
+      {
+        "sample": 7,
+        "position": 2,
+        "elapsed_ns": 9574042,
+        "remaining_fields": [
+          "1000003",
+          "1",
+          "299064b0e2d240df",
+          "true"
+        ]
+      }
+    ],
+    "workers1": [
+      {
+        "sample": 1,
+        "position": 1,
+        "elapsed_ns": 11358250,
+        "remaining_fields": [
+          "64",
+          "64",
+          "1",
+          "true"
+        ]
+      },
+      {
+        "sample": 2,
+        "position": 2,
+        "elapsed_ns": 11308042,
+        "remaining_fields": [
+          "64",
+          "64",
+          "1",
+          "true"
+        ]
+      },
+      {
+        "sample": 3,
+        "position": 1,
+        "elapsed_ns": 11335500,
+        "remaining_fields": [
+          "64",
+          "64",
+          "1",
+          "true"
+        ]
+      },
+      {
+        "sample": 4,
+        "position": 2,
+        "elapsed_ns": 11234208,
+        "remaining_fields": [
+          "64",
+          "64",
+          "1",
+          "true"
+        ]
+      },
+      {
+        "sample": 5,
+        "position": 1,
+        "elapsed_ns": 11281750,
+        "remaining_fields": [
+          "64",
+          "64",
+          "1",
+          "true"
+        ]
+      },
+      {
+        "sample": 6,
+        "position": 2,
+        "elapsed_ns": 11481375,
+        "remaining_fields": [
+          "64",
+          "64",
+          "1",
+          "true"
+        ]
+      },
+      {
+        "sample": 7,
+        "position": 1,
+        "elapsed_ns": 11395083,
+        "remaining_fields": [
+          "64",
+          "64",
+          "1",
+          "true"
+        ]
+      }
+    ],
+    "workers4": [
+      {
+        "sample": 1,
+        "position": 2,
+        "elapsed_ns": 3307417,
+        "remaining_fields": [
+          "64",
+          "64",
+          "4",
+          "true"
+        ]
+      },
+      {
+        "sample": 2,
+        "position": 1,
+        "elapsed_ns": 3177750,
+        "remaining_fields": [
+          "64",
+          "64",
+          "4",
+          "true"
+        ]
+      },
+      {
+        "sample": 3,
+        "position": 2,
+        "elapsed_ns": 3295042,
+        "remaining_fields": [
+          "64",
+          "64",
+          "4",
+          "true"
+        ]
+      },
+      {
+        "sample": 4,
+        "position": 1,
+        "elapsed_ns": 3276125,
+        "remaining_fields": [
+          "64",
+          "64",
+          "4",
+          "true"
+        ]
+      },
+      {
+        "sample": 5,
+        "position": 2,
+        "elapsed_ns": 3395917,
+        "remaining_fields": [
+          "64",
+          "64",
+          "4",
+          "true"
+        ]
+      },
+      {
+        "sample": 6,
+        "position": 1,
+        "elapsed_ns": 3282542,
+        "remaining_fields": [
+          "64",
+          "64",
+          "4",
+          "true"
+        ]
+      },
+      {
+        "sample": 7,
+        "position": 2,
+        "elapsed_ns": 3280584,
+        "remaining_fields": [
+          "64",
+          "64",
+          "4",
+          "true"
+        ]
+      }
+    ]
+  },
+  "statistics": {
+    "stream": {
+      "samples_ns": [
+        8906375,
+        8833083,
+        8907500,
+        8277750,
+        8267750,
+        8805084,
+        8754625
+      ],
+      "min_ns": 8267750,
+      "median_ns": 8805084,
+      "max_ns": 8907500,
+      "mean_ns": 8678881
+    },
+    "batch1024": {
+      "samples_ns": [
+        9639500,
+        9683875,
+        9579000,
+        9176709,
+        8900833,
+        9143291,
+        9574042
+      ],
+      "min_ns": 8900833,
+      "median_ns": 9574042,
+      "max_ns": 9683875,
+      "mean_ns": 9385321.42857143
+    },
+    "workers1": {
+      "samples_ns": [
+        11358250,
+        11308042,
+        11335500,
+        11234208,
+        11281750,
+        11481375,
+        11395083
+      ],
+      "min_ns": 11234208,
+      "median_ns": 11335500,
+      "max_ns": 11481375,
+      "mean_ns": 11342029.714285715
+    },
+    "workers4": {
+      "samples_ns": [
+        3307417,
+        3177750,
+        3295042,
+        3276125,
+        3395917,
+        3282542,
+        3280584
+      ],
+      "min_ns": 3177750,
+      "median_ns": 3282542,
+      "max_ns": 3395917,
+      "mean_ns": 3287911
+    }
+  },
+  "ratios": {
+    "batch_over_stream_median_time": 1.0873311373292975,
+    "one_over_four_workers_median_time": 3.4532688386013035
+  },
+  "fixture": {
+    "directory": ".course-cache/benchmark-fixtures/indexer-v1-88641-1791522859697013000",
+    "generator_source": "projects/reference/p07-indexer/src/bin/indexer-benchmark.rs",
+    "generator_version": "indexer-v1",
+    "manifest_sha256": "5bc5bf45ca215109e68c2dbf96e516536ce330725db6424db2ecd86729f382cf",
+    "files": [
+      {
+        "name": "file-00.txt",
+        "bytes": 131072,
+        "sha256": "28c99eac9ff775b33ed264af7342d56aed806591bd9f6f15a8875cc7ecd353c1"
+      },
+      {
+        "name": "file-01.txt",
+        "bytes": 131072,
+        "sha256": "7018e950350880813ed4c84abc88ac2f3d8e669503b47c931d4cf996bf6666b0"
+      },
+      {
+        "name": "file-02.txt",
+        "bytes": 131072,
+        "sha256": "441633247381943fa34147421f9780caaa45ae3ffe8fb22fda057fd84a0e518f"
+      },
+      {
+        "name": "file-03.txt",
+        "bytes": 131072,
+        "sha256": "dc14fa7c2b04e5e951d8a03d316ac79287f45143c05b69dd17ccacdbe0ac434c"
+      },
+      {
+        "name": "file-04.txt",
+        "bytes": 131072,
+        "sha256": "ba563a111a162b30e1c7aafcfe48edbdb4cd5321766ae016ba578499a75b017e"
+      },
+      {
+        "name": "file-05.txt",
+        "bytes": 131072,
+        "sha256": "154efe571db1d022339d6401506d07979ddbf44a580edf15bd1f1fc51be14521"
+      },
+      {
+        "name": "file-06.txt",
+        "bytes": 131072,
+        "sha256": "6cecc2a80be480d5ab528ee5e5afa28284d5a04772e3bb92d9e6b0dcf83248a3"
+      },
+      {
+        "name": "file-07.txt",
+        "bytes": 131072,
+        "sha256": "8b0065ee564cca8086997ac300e907a67e74d97ac795c2b020cbd1ad92343695"
+      },
+      {
+        "name": "file-08.txt",
+        "bytes": 131072,
+        "sha256": "46747ef7322416b72223483b450c21f2c0ac31e8796e539ff69f097e06dc39b6"
+      },
+      {
+        "name": "file-09.txt",
+        "bytes": 131072,
+        "sha256": "7f86f65cadc4d8d8e8c8ac8aa43e4a3d2f9aa837b1903468e31c68fba12507b4"
+      },
+      {
+        "name": "file-10.txt",
+        "bytes": 131072,
+        "sha256": "d7bf0827b7169b68da5c644d4da66d07cfb1e836e2a76ee6b26d4955ca93151d"
+      },
+      {
+        "name": "file-11.txt",
+        "bytes": 131072,
+        "sha256": "a17df276dbe1f7759f97914d95ce65da9954837345b15c019e397f7822f24421"
+      },
+      {
+        "name": "file-12.txt",
+        "bytes": 131072,
+        "sha256": "d61074191c6bc68bba52aef7f458841fcb0b4182dee90e3bc082987fd48c6777"
+      },
+      {
+        "name": "file-13.txt",
+        "bytes": 131072,
+        "sha256": "af30f5b726ff95ac24ac365ec7505ece091e9b63900d547cc606f084755b2af6"
+      },
+      {
+        "name": "file-14.txt",
+        "bytes": 131072,
+        "sha256": "809094f2619af76eb695129a864e6a325b88a80a979dd195eeac71ddddbc600e"
+      },
+      {
+        "name": "file-15.txt",
+        "bytes": 131072,
+        "sha256": "b25d64b3cf19f8ef92049b8fdf7027ae89d89b9b74e8558f07d8d94372cd15ad"
+      },
+      {
+        "name": "file-16.txt",
+        "bytes": 131072,
+        "sha256": "3bf6dea81d1d878327fbef386f3b5ba3e8830daf192d61fe1bf540e7f2cc74cd"
+      },
+      {
+        "name": "file-17.txt",
+        "bytes": 131072,
+        "sha256": "8edf4d29ebc733c3a21723ea3efb6e6f95c79dec450271dc56ed2f25a370b5dd"
+      },
+      {
+        "name": "file-18.txt",
+        "bytes": 131072,
+        "sha256": "3b19bca191258e771457a4efe6fbd92653c0b01951bdfff624368b440843a46d"
+      },
+      {
+        "name": "file-19.txt",
+        "bytes": 131072,
+        "sha256": "1393cb8d4e059be1789916ce677af1ebdf0acda33757442e2363380d2f3b3e0e"
+      },
+      {
+        "name": "file-20.txt",
+        "bytes": 131072,
+        "sha256": "e2c95ff833961047ae1ed402a8ef4c1101bee539466bf42dc8f8e8d4a89785e0"
+      },
+      {
+        "name": "file-21.txt",
+        "bytes": 131072,
+        "sha256": "f2e420b4539e3d6c6dfc7474b3768759d1b2193aa16f136381af99a822fc883b"
+      },
+      {
+        "name": "file-22.txt",
+        "bytes": 131072,
+        "sha256": "e658468c6b4464065daafb678fb9f8015a6b9b5c117af933bfd2a56e916df5bd"
+      },
+      {
+        "name": "file-23.txt",
+        "bytes": 131072,
+        "sha256": "a21e6e50a8062602c6f1f667fd8e6041389d9f7824d48ce890792b08c61300d1"
+      },
+      {
+        "name": "file-24.txt",
+        "bytes": 131072,
+        "sha256": "e4dd523ddacb3b48e298c1ccd7f41eb946fd703043d1118d26fb0d0aa5f3c117"
+      },
+      {
+        "name": "file-25.txt",
+        "bytes": 131072,
+        "sha256": "dfc18b94e9c3f300f2722943096835f657acb426a4d4d08133fc5e2b3f073e46"
+      },
+      {
+        "name": "file-26.txt",
+        "bytes": 131072,
+        "sha256": "29cf807c8a1640ddabc4cf6e5e05ecc7c3684f38b4821244c2d846f85b1c88d1"
+      },
+      {
+        "name": "file-27.txt",
+        "bytes": 131072,
+        "sha256": "ec3983df78842f00724115db6d3c2a3590bd8e7052677bb7749ea463a37b6c2f"
+      },
+      {
+        "name": "file-28.txt",
+        "bytes": 131072,
+        "sha256": "dd1dad7d21738032dc93e925d70e20ab76bb39b21a84f45fada9d288b3cba0a0"
+      },
+      {
+        "name": "file-29.txt",
+        "bytes": 131072,
+        "sha256": "6fdeae31b497e63b834b651a05421e1c909d7eec5b0e2cc5d96aba7f02f8ff80"
+      },
+      {
+        "name": "file-30.txt",
+        "bytes": 131072,
+        "sha256": "3d27994c68be8bd7bd4728d35610f43f9af485c4ee84550eee4853965df9f44e"
+      },
+      {
+        "name": "file-31.txt",
+        "bytes": 131072,
+        "sha256": "1d4b25b2932810f91b9b9565c99271ac9347eb54c3da0b71203a9f0b0fcdc2eb"
+      },
+      {
+        "name": "file-32.txt",
+        "bytes": 131072,
+        "sha256": "112e5bf41956f2eaacc6e6cb779cf3d415128e77f51dddf84924b9e30fb82493"
+      },
+      {
+        "name": "file-33.txt",
+        "bytes": 131072,
+        "sha256": "dbf1fc18629f8eb99a6c598d68493afb8f9c17ae277668441d0dc0d1ebb22ba5"
+      },
+      {
+        "name": "file-34.txt",
+        "bytes": 131072,
+        "sha256": "12c19d9e34bb64a202358f93fbf2675802a87a8aa96d5391bd9cc925620209a5"
+      },
+      {
+        "name": "file-35.txt",
+        "bytes": 131072,
+        "sha256": "7fe9f21041c189b57ade2a2ebfc8dfce50766365c0390f3b51ae701e45a52d92"
+      },
+      {
+        "name": "file-36.txt",
+        "bytes": 131072,
+        "sha256": "36f06e9d92e3aa8aa6ce29071b59513908d96f89b21941a82f351a495412c524"
+      },
+      {
+        "name": "file-37.txt",
+        "bytes": 131072,
+        "sha256": "7bbd5b934b2aeecd9866d69fe0e71d69d2257806c9f153ef31ab96c08895c27e"
+      },
+      {
+        "name": "file-38.txt",
+        "bytes": 131072,
+        "sha256": "0ead6fa20b5e3d2cbbf28bf742e0321c547f483fc5c119ef93ea70e6f93be4de"
+      },
+      {
+        "name": "file-39.txt",
+        "bytes": 131072,
+        "sha256": "5676ed629c631bf2fc14bd0fcdda49c1efbe2133fc14b290dfeb6975f2d4b214"
+      },
+      {
+        "name": "file-40.txt",
+        "bytes": 131072,
+        "sha256": "390d1e4609d4b3504cec26029f275a05f2842653ccab6b1fac841da0179f5067"
+      },
+      {
+        "name": "file-41.txt",
+        "bytes": 131072,
+        "sha256": "7329b8e6210f2115cc22acd7badcfb86d5099f43b58edea131fddad7cd901c64"
+      },
+      {
+        "name": "file-42.txt",
+        "bytes": 131072,
+        "sha256": "21401e4b3a21c570ad72b575a4ab1d469f57c172df0119e7934a9559121c3d3c"
+      },
+      {
+        "name": "file-43.txt",
+        "bytes": 131072,
+        "sha256": "31be35c47442b105b18b759303aa87d4c303a58edf00f8ffac754cad8fb5c0fc"
+      },
+      {
+        "name": "file-44.txt",
+        "bytes": 131072,
+        "sha256": "be29823d3caba1545fc59b6a98b0034b5b91f49a8ecbfb2d31a89ceee85261fe"
+      },
+      {
+        "name": "file-45.txt",
+        "bytes": 131072,
+        "sha256": "056cf8c90d03d72afcd5fe678b1d7b5cddd414ab078b1a6e1f7eef2518f0f2e4"
+      },
+      {
+        "name": "file-46.txt",
+        "bytes": 131072,
+        "sha256": "6d5df458bcb58fdf4cb90b1c800b23fd6f5d8ab24c94c63e822742e538ab770a"
+      },
+      {
+        "name": "file-47.txt",
+        "bytes": 131072,
+        "sha256": "e7fe45db89b03e89ef5942b93dfb1ac7b2bb48b80eef4bc87580d1bed5035506"
+      },
+      {
+        "name": "file-48.txt",
+        "bytes": 131072,
+        "sha256": "f2e18a0e982e7662b0ea30214245e98e9d43758ec476be81f82caa585047a71a"
+      },
+      {
+        "name": "file-49.txt",
+        "bytes": 131072,
+        "sha256": "ceb7984b3ffb169bf231cde95dcd8a45ca6298d9bd4f9f494db47a8535a74390"
+      },
+      {
+        "name": "file-50.txt",
+        "bytes": 131072,
+        "sha256": "63b3cc38a75c7000726a374d4cece85fe2259975221235473dedd8086b44ac02"
+      },
+      {
+        "name": "file-51.txt",
+        "bytes": 131072,
+        "sha256": "41d3bffc808c7c5c26d54f1495a70ff7553fb03f72df6e56a1708c5af7810d7d"
+      },
+      {
+        "name": "file-52.txt",
+        "bytes": 131072,
+        "sha256": "4ee866daeb35dd5765c9c664786d2e3f536c03bf6fb681a61aa33810e3e7569f"
+      },
+      {
+        "name": "file-53.txt",
+        "bytes": 131072,
+        "sha256": "36fd7df35bf6a411db44b82e0f522113a135d136f6b4718cff376dea228d0c9e"
+      },
+      {
+        "name": "file-54.txt",
+        "bytes": 131072,
+        "sha256": "2e856273919d38fdf6252cd75a1199222e7d56241319ef43ed38db777038d856"
+      },
+      {
+        "name": "file-55.txt",
+        "bytes": 131072,
+        "sha256": "10ff39d7e0555cc796d2f5c58ed138055e5936f8893a51109474f0e1c8984486"
+      },
+      {
+        "name": "file-56.txt",
+        "bytes": 131072,
+        "sha256": "4880fc7d3a4076db027c4d382e569855aafdc3667449c25446818629edaadc8a"
+      },
+      {
+        "name": "file-57.txt",
+        "bytes": 131072,
+        "sha256": "259706f7e30fd6c416b6336c8acadb0142a351b913316df50060df131f111929"
+      },
+      {
+        "name": "file-58.txt",
+        "bytes": 131072,
+        "sha256": "1c0306d51f9fd5ee6623d19bfb4e4de5d20fac11aa773fc3f2c2a8f557742a45"
+      },
+      {
+        "name": "file-59.txt",
+        "bytes": 131072,
+        "sha256": "1fa58ff69d2f7e1710aeb4661a5ca82505b3cb78917dfd3b6301ed23a04d95d2"
+      },
+      {
+        "name": "file-60.txt",
+        "bytes": 131072,
+        "sha256": "ee47a4aaa4da6fcd5e293657cfb0e42d829839f4296984e2cb9b758ba71cf9f0"
+      },
+      {
+        "name": "file-61.txt",
+        "bytes": 131072,
+        "sha256": "236f708637f7805f3281cf521c452bad61ea1f189d7fa8b5a6e10f915a9a43b3"
+      },
+      {
+        "name": "file-62.txt",
+        "bytes": 131072,
+        "sha256": "b726237aae9c15773c3e3dff5f04b2463754077221d34250a8c03ff8ae683b60"
+      },
+      {
+        "name": "file-63.txt",
+        "bytes": 131072,
+        "sha256": "09c762ba7cd5635d1c64eeaa0d679af1fbe492c4c9204efe45ff6256bc26a843"
+      }
+    ],
+    "retained": true,
+    "cleanup_status": "not removed; measured cache fixture retained, no reclaimed-space claim"
+  },
+  "limits": [
+    "Single machine and short bounded workloads; these medians are local observations, not universal speedups.",
+    "P07 results reflect warm filesystem cache and substantial per-byte CPU work; they do not establish cold-storage throughput.",
+    "Order alternates but is not randomized; 7 pairs provide limited information about noise.",
+    "No allocator count, peak RSS, CPU profile, or scheduler trace was collected.",
+    "P12 same final state is checked after every sample; digest is only a reported aid, not the equivalence criterion."
+  ],
+  "validation": {
+    "release_build": "passed for both packages and bins",
+    "batch_boundary_test": "passed for 0,1,2,3,4,1023,1024,1025,2049,10003 events",
+    "clippy_command": "mise exec -- cargo clippy --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p07-indexer -p p12-replay --bins -- -D warnings",
+    "clippy_exit_code": 0
+  }
+}

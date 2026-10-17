@@ -1,0 +1,1047 @@
+{
+  "date": "2026-10-17T11:21:20.684624+00:00",
+  "toolchain": "1.99.1",
+  "mode": "checkpoints",
+  "refreshed_locks": true,
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p01-calculator",
+        "01-checked-add",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/01-checked-add"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/01-checked-add/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p01-calculator",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p02-journal",
+        "01-domain",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/01-domain"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/01-domain/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p02-journal",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p03-logs",
+        "01-bounded-lines",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/01-bounded-lines"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/01-bounded-lines/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p03-logs",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p04-config",
+        "01-effective-port",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/01-effective-port"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/01-effective-port/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p04-config",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p05-expressions",
+        "01-token-spans",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/01-token-spans"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/01-token-spans/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p05-expressions",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p06-kv",
+        "01-prefix-replay",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/01-prefix-replay"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/01-prefix-replay/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p06-kv",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "01-streaming",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/01-streaming"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/01-streaming/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "01-budget",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/01-budget"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/01-budget/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/00-scaffold/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "01-framing",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/01-framing"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/01-framing/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/00-scaffold/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "01-http-validation",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/01-http-validation"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/01-http-validation/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p11-console",
+        "01-local-state",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/01-local-state"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/01-local-state/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p11-console",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "01-price",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/01-price"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/01-price/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "01-safe-slots",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/01-safe-slots"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/01-safe-slots/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/00-scaffold/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "01-lease-model",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/01-lease-model"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/01-lease-model/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/00-scaffold/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "01-append-transport",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/01-append-transport"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/01-append-transport/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/00-scaffold"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/00-scaffold/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "01-order-domain",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/01-order-domain"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/01-order-domain/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/final"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/final/Cargo.toml",
+        "--offline"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    }
+  ],
+  "log": "oct17-checkpoints-locks.log",
+  "passed": true,
+  "limits": "Scaffolds are learner assignments: compilation is checked, TODO acceptance tests are intentionally unsolved. Database and browser execution are separate."
+}

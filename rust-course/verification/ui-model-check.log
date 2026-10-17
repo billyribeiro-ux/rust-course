@@ -1,0 +1,9 @@
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.151
+    Checking memchr v2.8.3
+   Compiling syn v3.0.6
+   Compiling serde_derive v1.0.229
+    Checking serde v1.0.229
+    Checking course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.70s

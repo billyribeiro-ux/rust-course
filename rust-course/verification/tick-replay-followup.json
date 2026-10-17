@@ -1,0 +1,275 @@
+{
+  "verified_at": "2026-10-09T19:15:18.584289+00:00",
+  "toolchain": "Rust 1.99.0 via mise",
+  "authored": true,
+  "author_self_review_complete": true,
+  "code_verified": true,
+  "independent_review": "pending",
+  "scope": "Bounded file input of synthetic ticks and deterministic exact per-symbol aggregates; original generated order-state replay and benchmark preserved.",
+  "schema": {
+    "header": "event_id,timestamp_ms,symbol,price,quantity",
+    "event_id": "u64 decimal; consecutive from 1; duplicates/gaps/out-of-order reject",
+    "timestamp_ms": "u64 decimal Unix-epoch milliseconds in synthetic model; nondecreasing, ties ordered by event ID; no calendar-date validation",
+    "symbol": "1..=12 uppercase ASCII letters",
+    "price": "positive decimal at most 4 fractional places, at most 100000000.0000; exact scale 10000",
+    "quantity": "1..=1000000 integer",
+    "format": "UTF-8 LF/CRLF; exact header; five fields, no quoting/comments/space/BOM; optional unterminated last line; blank data row rejected"
+  },
+  "bounds": {
+    "line_bytes_including_terminator": 256,
+    "retained_line_input_max_on_rejection": 257,
+    "batch_default": 64,
+    "batch_max": 1024,
+    "events_max": 1000000,
+    "symbols_max": 64,
+    "cli_reader_buffer_bytes": 4096
+  },
+  "verification": {
+    "combined_p06_p08_p12_all_targets_test_entries": 53,
+    "p12_reconstructed_all_targets_tests": 26,
+    "new_tick_tests": 11,
+    "strict_clippy": "passed",
+    "format": "passed",
+    "reconstructed_default_binary": "preserved and run with 3 events",
+    "fixture_tick_binary": "run with batch 2; exact expected ALFA/BETA aggregates",
+    "reconstruction_lockfile": "--locked passes with current final lockfile; no dependency/manifest resolution changes"
+  },
+  "commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--all-targets"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "p06-kv",
+        "-p",
+        "p08-monitor",
+        "-p",
+        "p12-replay",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-checkpoint.py",
+        "p12",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12/Cargo.toml",
+        "--all-targets"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "run",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12/Cargo.toml",
+        "--bin",
+        "tick_replay",
+        "--",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12/fixtures/ticks.csv",
+        "2"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "run",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-p12-tick-checkpoint-fxqzeccd/p12/Cargo.toml",
+        "--",
+        "3"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/trait.Read.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/io/trait.Read.html",
+      "sha256": "6f70d786c833a9135c4a743f7f5b056a102f05906034d3cf7d5819d14e38032b",
+      "verification": "Read installed Rust 1.99.0 rust-docs component."
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/trait.BufRead.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/io/trait.BufRead.html",
+      "sha256": "bad01559148e22729208690a858f0a279b3b595c32539dd6ab18a6ddfac05d8a",
+      "verification": "Read installed Rust 1.99.0 rust-docs component."
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/fn.pipe.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/io/fn.pipe.html",
+      "sha256": "340a41ca5d3fa181808fd0fd513ed02cc8cfa03cff35a33b518116673ac3f683",
+      "verification": "Read installed Rust 1.99.0 rust-docs component."
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/trait.Write.html",
+      "local_source": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/io/trait.Write.html",
+      "sha256": "94483f38e85993952298cef6ca2d5bffc59cc4ad361889926d2ba03a53fda470",
+      "verification": "Read installed Rust 1.99.0 rust-docs component."
+    }
+  ],
+  "affected_lessons": [
+    "07-replay"
+  ],
+  "changed_files": [
+    {
+      "path": "projects/reference/p12-replay/src/lib.rs",
+      "sha256": "09bbbdb34470f9826e9a2ffee38e9d08825791204cfaf5897928c36171c3bbef"
+    },
+    {
+      "path": "projects/reference/p12-replay/src/ticks.rs",
+      "sha256": "9d0eb9c0e21651f99e8d00c66f59a6f87c549b7d768b463b9507eb0d68c5b1df"
+    },
+    {
+      "path": "projects/reference/p12-replay/src/bin/tick_replay.rs",
+      "sha256": "4b39fc0f4df1095d705d7bc90e93f9a137be15fc08d8980c15aba2417e83758c"
+    },
+    {
+      "path": "projects/reference/p12-replay/tests/tick_cli.rs",
+      "sha256": "741778f6a39c0c40fe63bac16269e680396e6cf765f0494bc2a8d2070b963b9b"
+    },
+    {
+      "path": "projects/reference/p12-replay/fixtures/ticks.csv",
+      "sha256": "e87ce3642cb8599e9f6675b5dd504c1bbdb16401c229578a3dc283b3c370ef5a"
+    },
+    {
+      "path": "projects/reference/p12-replay/decisions.html",
+      "sha256": "8aee12557a7ea61221f23ae947c27b5fcbe5aba8540e219fb9b6ef083a0b15ab"
+    },
+    {
+      "path": "projects/checkpoints/p12-replay/checkpoint.json",
+      "sha256": "1232ed037890b98680d488d01ce3ba4a31ae68ff7f510d192ae487b466d042ff"
+    },
+    {
+      "path": "projects/scaffolds/p12-replay/instructions.html",
+      "sha256": "d5a7ec2ee9d5a6d5e9d16cab22066f48364d94733355ed3813947db79b12d919"
+    },
+    {
+      "path": "authoring/systems.json",
+      "sha256": "371a74ae05cd9f2a88105e21031531fcba9dc02c1f45ce714218300641a998e5"
+    }
+  ],
+  "limitations": [
+    "Synchronous staged pipeline; no concurrency or speedup claimed.",
+    "No measured RSS or CSV throughput; prior generated-order benchmarks do not measure this file adapter.",
+    "No reordering, deduplication, quoted CSV, general-feed interoperability or real trading.",
+    "Invalid files can reveal different first diagnostics at different batch sizes because parsing and application are separate stages; every failure returns no successful summary.",
+    "Windows execution not performed; native arbitrary-byte filenames depend on filesystem support.",
+    "No browser inspection by this audit.",
+    "Source inclusions require coordinated course rendering and correspondence checks."
+  ]
+}

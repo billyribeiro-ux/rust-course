@@ -1,0 +1,363 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Partial failure, idempotency, and the outbox · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="08-delivery" data-lesson="08-delivery"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Partial failure, idempotency, and the outbox</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 08 / Distributed behavior</div><h1>Partial failure, idempotency, and the outbox</h1><p class="lead">Reason about work that can happen even when its acknowledgment is lost.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-5/05-tracker.html">An issue API you can test at its boundaries</a></li></ul><ul><li>Distinguish operation outcome from observed response</li><li>Design idempotency keys and conflict rules</li><li>Explain transactional outbox and external-effect limits</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#deduplication">deduplication</a> · <a href="../../glossary.html#idempotency">idempotency</a> · <a href="../../glossary.html#invariant">invariant</a> · <a href="../../glossary.html#lease">lease</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#transaction">transaction</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p14">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-retry-without-accidental-duplication">Purpose: retry without accidental duplication</h2><p>A report job reaches a worker, the worker writes its result, and the acknowledgment disappears. The caller sees a timeout. Should it retry? The important fact is not that the timeout occurred; it is that the caller cannot tell whether the work happened. Distributed engineering starts with this gap between reality and observation. Rust's memory safety cannot remove it.</p>
+<h2 id="plain-english-model">Plain-English model</h2><p><em>At-least-once delivery</em> allows repeated delivery while aiming to avoid permanent loss under stated recovery assumptions. <em>At-most-once</em> avoids repeated attempts but may lose work. Neither phrase alone defines how an external action behaves. <em>Idempotency</em> means repeating an operation with the same logical identity produces the same intended effect rather than an additional effect. It is a property of the operation and its storage boundary, not a property supplied automatically by HTTP or a queue.</p>
+<p>Our scheduler assigns a bounded textual job ID. Submitting the same ID and same payload is accepted as a retry. Reusing the ID with a different payload is a conflict. A unique database key makes simultaneous duplicate submissions meet at a single storage constraint. A local in-memory “seen IDs” set would forget history after restart. A payload hash can be useful, but the project stores and compares the bounded payload directly so the teaching model does not need to invent a hashing protocol.</p>
+<h2 id="prediction-where-is-the-atomic-boundary">Prediction: where is the atomic boundary?</h2><p>A worker sends an email, then writes “done” to PostgreSQL. It crashes between those actions. On restart, the job is delivered again. Does a unique jobs table row guarantee the recipient sees only one email?</p><details><summary>Answer</summary><p>No. The external mail system and our database did not share a transaction. The recipient may receive two messages. A downstream idempotency contract, a deduplicating effect store, or a business rule tolerating duplicates is required. Merely naming a job “exactly once” changes nothing.</p></details>
+<h2 id="small-runnable-evidence">Small runnable evidence</h2><p>The scheduler's integration test enqueues the same job twice, rejects a conflicting payload, expires a lease, redelivers it, rejects a stale completion, and commits one database effect. It uses an explicit logical timestamp, so the failure schedule is deterministic rather than dependent on sleeping. First read the test and predict each returned boolean.</p>
+<div class="code-wrap" data-source="projects/reference/p14-scheduler/tests/postgres.rs" data-sha256="ff899dc9b968defb7fa5ee2b405f2db93f95357103c11413691f878635e1b9a5"><div class="code-label"><a href="../../projects/reference/p14-scheduler/tests/postgres.rs">projects/reference/p14-scheduler/tests/postgres.rs</a></div><pre><code>mod support;
+// Tests share disposable teaching tables; serialize within this test executable.
+static DATABASE_TEST_LOCK: tokio::sync::Mutex&lt;()&gt; = tokio::sync::Mutex::const_new(());
+
+#[tokio::test]
+#[ignore = &quot;requires isolated COURSE_SCHEDULER_TEST_DATABASE_URL&quot;]
+async fn crash_redelivery_fencing_dedup_cancellation() {
+    use p14_scheduler::*;
+    let _fixture_guard = DATABASE_TEST_LOCK.lock().await;
+    let pool = support::isolated_pool(
+        &quot;COURSE_SCHEDULER_TEST_DATABASE_URL&quot;,
+        &quot;rust_course_test_scheduler&quot;,
+    )
+    .await;
+    sqlx::migrate!().run(&amp;pool).await.unwrap();
+    sqlx::raw_sql(&quot;TRUNCATE job_effects,jobs&quot;)
+        .execute(&amp;pool)
+        .await
+        .unwrap();
+    assert!(enqueue(&amp;pool, &quot;a&quot;, &quot;report&quot;).await.unwrap());
+    assert!(!enqueue(&amp;pool, &quot;a&quot;, &quot;report&quot;).await.unwrap());
+    assert!(enqueue(&amp;pool, &quot;a&quot;, &quot;other&quot;).await.is_err());
+    let stale = claim(&amp;pool, 0).await.unwrap().unwrap();
+    assert!(claim(&amp;pool, 1).await.unwrap().is_none());
+    // Worker disappears; the simulated clock advances past its lease.
+    let fresh = claim(&amp;pool, LEASE_MS).await.unwrap().unwrap();
+    assert!(fresh.token &gt; stale.token);
+    assert!(!complete(&amp;pool, &amp;stale, LEASE_MS + 1).await.unwrap());
+    assert!(complete(&amp;pool, &amp;fresh, LEASE_MS + 1).await.unwrap());
+    assert!(!complete(&amp;pool, &amp;fresh, LEASE_MS + 2).await.unwrap());
+    let count: i64 = sqlx::query_scalar(&quot;SELECT count(*) FROM job_effects&quot;)
+        .fetch_one(&amp;pool)
+        .await
+        .unwrap();
+    assert_eq!(count, 1);
+    enqueue(&amp;pool, &quot;b&quot;, &quot;cancel&quot;).await.unwrap();
+    let b = claim(&amp;pool, 10_000).await.unwrap().unwrap();
+    assert!(cancel(&amp;pool, &quot;b&quot;).await.unwrap());
+    assert!(!complete(&amp;pool, &amp;b, 10_001).await.unwrap());
+    enqueue(&amp;pool, &quot;c&quot;, &quot;retry&quot;).await.unwrap();
+    let c = claim(&amp;pool, 20_000).await.unwrap().unwrap();
+    assert!(fail(&amp;pool, &amp;c, 20_001).await.unwrap());
+    assert!(claim(&amp;pool, 20_002).await.unwrap().is_none());
+    assert_eq!(claim(&amp;pool, 22_001).await.unwrap().unwrap().attempts, 2);
+    enqueue(&amp;pool, &quot;d&quot;, &quot;concurrent claim&quot;).await.unwrap();
+    let (a, b) = tokio::join!(claim(&amp;pool, 0), claim(&amp;pool, 0));
+    assert_eq!(
+        usize::from(a.unwrap().is_some()) + usize::from(b.unwrap().is_some()),
+        1
+    );
+    // Fill only this explicitly disposable database to the retained-job budget.
+    sqlx::query(
+        &quot;INSERT INTO jobs(id,payload) SELECT &#x27;budget-&#x27;||n,&#x27;fixture&#x27; FROM generate_series(1,10000-(SELECT count(*) FROM jobs)) n&quot;,
+    )
+    .execute(&amp;pool)
+    .await
+    .unwrap();
+    assert!(
+        matches!(enqueue(&amp;pool,&quot;over-budget&quot;,&quot;fixture&quot;).await,Err(sqlx::Error::Protocol(message)) if message==&quot;queue budget reached&quot;)
+    );
+    assert!(!enqueue(&amp;pool, &quot;a&quot;, &quot;report&quot;).await.unwrap());
+    pool.close().await;
+}
+
+#[tokio::test]
+#[ignore = &quot;requires isolated COURSE_SCHEDULER_TEST_DATABASE_URL&quot;]
+async fn lease_fields_cannot_rewrite_durable_payload_or_retry_count() {
+    use p14_scheduler::*;
+    let _fixture_guard = DATABASE_TEST_LOCK.lock().await;
+    let pool = support::isolated_pool(
+        &quot;COURSE_SCHEDULER_TEST_DATABASE_URL&quot;,
+        &quot;rust_course_test_scheduler&quot;,
+    )
+    .await;
+    sqlx::migrate!().run(&amp;pool).await.unwrap();
+    // The shared fixture mutex excludes the other database test during table reset.
+    sqlx::raw_sql(&quot;TRUNCATE job_effects,jobs&quot;)
+        .execute(&amp;pool)
+        .await
+        .unwrap();
+    enqueue(&amp;pool, &quot;immutable&quot;, &quot;durable payload&quot;)
+        .await
+        .unwrap();
+    let mut lease = claim(&amp;pool, 0).await.unwrap().unwrap();
+    lease.payload = &quot;caller substitution&quot;.into();
+    assert!(complete(&amp;pool, &amp;lease, 1).await.unwrap());
+    let effect: String =
+        sqlx::query_scalar(&quot;SELECT payload FROM job_effects WHERE job_id=&#x27;immutable&#x27;&quot;)
+            .fetch_one(&amp;pool)
+            .await
+            .unwrap();
+    assert_eq!(effect, &quot;durable payload&quot;);
+    enqueue(&amp;pool, &quot;retry-authority&quot;, &quot;retry input&quot;)
+        .await
+        .unwrap();
+    let mut lease = claim(&amp;pool, 10_000).await.unwrap().unwrap();
+    assert_eq!(lease.attempts, 1);
+    lease.attempts = 3;
+    assert!(fail(&amp;pool, &amp;lease, 10_001).await.unwrap());
+    assert!(claim(&amp;pool, 12_000).await.unwrap().is_none());
+    let second = claim(&amp;pool, 12_001).await.unwrap().unwrap();
+    assert_eq!(second.attempts, 2);
+    // Expiry without a reclaim also removes authority; cancellation revokes a current token.
+    assert!(!complete(&amp;pool, &amp;second, 17_001).await.unwrap());
+    assert!(!fail(&amp;pool, &amp;second, 17_001).await.unwrap());
+    let third = claim(&amp;pool, 17_001).await.unwrap().unwrap();
+    assert_eq!(third.attempts, 3);
+    assert!(claim(&amp;pool, 22_001).await.unwrap().is_none());
+    let status: String = sqlx::query_scalar(&quot;SELECT status FROM jobs WHERE id=&#x27;retry-authority&#x27;&quot;)
+        .fetch_one(&amp;pool)
+        .await
+        .unwrap();
+    assert_eq!(status, &quot;dead&quot;);
+    // Inject an effect constraint failure after authority validation. The transaction
+    // must leave both effect and completion uncommitted. Remove only this test constraint.
+    enqueue(&amp;pool, &quot;atomic-effect&quot;, &quot;fail-transaction&quot;)
+        .await
+        .unwrap();
+    let lease = claim(&amp;pool, 30_000).await.unwrap().unwrap();
+    sqlx::raw_sql(&quot;ALTER TABLE job_effects ADD CONSTRAINT course_injected_failure CHECK(payload &lt;&gt; &#x27;fail-transaction&#x27;)&quot;)
+        .execute(&amp;pool).await.unwrap();
+    let outcome = complete(&amp;pool, &amp;lease, 30_001).await;
+    sqlx::raw_sql(&quot;ALTER TABLE job_effects DROP CONSTRAINT course_injected_failure&quot;)
+        .execute(&amp;pool)
+        .await
+        .unwrap();
+    assert!(outcome.is_err());
+    let status: String = sqlx::query_scalar(&quot;SELECT status FROM jobs WHERE id=&#x27;atomic-effect&#x27;&quot;)
+        .fetch_one(&amp;pool)
+        .await
+        .unwrap();
+    let effects: i64 =
+        sqlx::query_scalar(&quot;SELECT count(*) FROM job_effects WHERE job_id=&#x27;atomic-effect&#x27;&quot;)
+            .fetch_one(&amp;pool)
+            .await
+            .unwrap();
+    assert_eq!(status, &quot;running&quot;);
+    assert_eq!(effects, 0);
+    assert!(complete(&amp;pool, &amp;lease, 30_002).await.unwrap());
+    pool.close().await;
+}
+
+#[tokio::test]
+#[ignore = &quot;requires isolated COURSE_SCHEDULER_TEST_DATABASE_URL&quot;]
+async fn completion_samples_clock_after_waiting_for_its_row_lock() {
+    use p14_scheduler::*;
+    use std::sync::{
+        Arc,
+        atomic::{AtomicI64, Ordering},
+    };
+    let _fixture_guard = DATABASE_TEST_LOCK.lock().await;
+    let pool = support::isolated_pool(
+        &quot;COURSE_SCHEDULER_TEST_DATABASE_URL&quot;,
+        &quot;rust_course_test_scheduler&quot;,
+    )
+    .await;
+    sqlx::migrate!().run(&amp;pool).await.unwrap();
+    sqlx::raw_sql(&quot;TRUNCATE job_effects,jobs&quot;)
+        .execute(&amp;pool)
+        .await
+        .unwrap();
+    enqueue(&amp;pool, &quot;delayed-lock&quot;, &quot;clock fixture&quot;)
+        .await
+        .unwrap();
+    let lease = claim(&amp;pool, 0).await.unwrap().unwrap();
+    let mut blocker = pool.begin().await.unwrap();
+    sqlx::query(&quot;SELECT id FROM jobs WHERE id=&#x27;delayed-lock&#x27; FOR UPDATE&quot;)
+        .fetch_one(&amp;mut *blocker)
+        .await
+        .unwrap();
+    let logical_clock = Arc::new(AtomicI64::new(1));
+    let worker_clock = Arc::clone(&amp;logical_clock);
+    let worker_pool = pool.clone();
+    let worker = tokio::spawn(async move {
+        complete_with_clock(&amp;worker_pool, &amp;lease, move || {
+            Ok(worker_clock.load(Ordering::SeqCst))
+        })
+        .await
+    });
+    // Observe the actual PostgreSQL lock wait, not a guessed sleep duration.
+    let observed_wait = tokio::time::timeout(std::time::Duration::from_secs(2), async {
+        loop {
+            let waiting: bool = sqlx::query_scalar(&quot;SELECT EXISTS(SELECT 1 FROM pg_locks l JOIN pg_stat_activity a USING(pid) WHERE NOT l.granted AND l.pid&lt;&gt;pg_backend_pid() AND a.datname=current_database())&quot;)
+                .fetch_one(&amp;pool).await.unwrap();
+            if waiting { break; }
+            tokio::task::yield_now().await;
+        }
+    }).await;
+    // Advance past expiry while the worker demonstrably cannot yet lock the row.
+    logical_clock.store(LEASE_MS, Ordering::SeqCst);
+    blocker.rollback().await.unwrap();
+    let applied = worker.await.unwrap().unwrap();
+    assert!(
+        observed_wait.is_ok(),
+        &quot;worker did not reach the controlled row-lock wait&quot;
+    );
+    assert!(
+        !applied,
+        &quot;pre-wait time must not authorize an expired lease&quot;
+    );
+    let effects: i64 = sqlx::query_scalar(&quot;SELECT count(*) FROM job_effects&quot;)
+        .fetch_one(&amp;pool)
+        .await
+        .unwrap();
+    assert_eq!(effects, 0);
+    pool.close().await;
+}
+</code></pre></div><pre><code>createdb rust_course_test_scheduler
+export COURSE_SCHEDULER_TEST_DATABASE_URL="postgresql:///rust_course_test_scheduler?host=/tmp&amp;user=$USER"
+mise exec -- cargo test -p p14-scheduler --test postgres -- --ignored</code></pre>
+<h2 id="guided-implementation">Guided implementation</h2><p>Implement <code>enqueue</code> before the worker. The function starts an admission transaction and acquires a transaction-scoped advisory lock. It first looks up the logical ID and compares any stored payload, returning false only for an exact retry. Otherwise it checks the retained-row budget, inserts the unique ID and payload, and commits. The lock serializes the count-and-insert decision across callers; the unique key remains a durable invariant. The caller can then distinguish newly accepted work from an already known command without creating another durable row. Add tests for empty IDs, oversized IDs, and a conflicting payload before introducing concurrent workers.</p>
+<p>Next inspect <code>complete</code>. It locks the job, verifies status, lease token, and lease expiry at the authority decision, reads the immutable payload from that locked durable row, inserts into <code>job_effects</code> under a unique job key, and marks the job done in the same transaction. This demonstrates one database-local deduplicated effect. It does not generalize automatically to sending money, publishing to a broker, or invoking an external HTTP endpoint.</p>
+<h2 id="the-transactional-outbox-pattern">The transactional outbox pattern</h2><p>An outbox is a table of events written in the same transaction as a domain change. A relay later reads unpublished entries and delivers them. If the relay crashes after delivery but before marking an entry delivered, the event can be sent again. Consumers therefore still need idempotency or deduplication. The gain is avoiding the gap where a domain change commits but the intent to publish is lost. The reference scheduler's effect table illustrates transactional coupling; it does not include a production outbox relay. Implementing one is an independent extension with its own acceptance criteria.</p>
+<h2 id="deliberate-mistake-and-independent-practice">Deliberate mistake and independent practice</h2><p>Replace the database uniqueness rule with a HashSet initialized when the worker starts. Demonstrate that a restart permits a duplicate effect. Then design an outbox entry containing event ID, aggregate ID, payload version, and payload. Specify how long deduplication records must live and what happens when a caller retries after retention expires.</p><details><summary>Hint 1</summary><p>Draw every durable write and every external action on separate vertical process lines.</p></details><details><summary>Hint 2</summary><p>Mark crash points before and after each arrow. Ask what survives and what the next process can observe.</p></details><details><summary>Reference reasoning</summary><p>Store outbox intent with the domain transaction, retry relay delivery with the same event ID, and have the consumer transaction insert a deduplication record together with its own domain effect. Retention is part of the contract: forgetting an ID reopens the possibility of an old retry becoming a new effect. Long retention has storage and privacy costs.</p></details>
+<h2 id="review-and-evidence">Review and evidence</h2><p>A rejected retry design catches every error and retries immediately. A careful design classifies retryable conditions, caps attempts, delays repeated work, and preserves logical identity. The current scheduler demonstrates bounded attempts and a deterministic delay; randomized jitter for large fleets is an extension. Tests establish selected duplicate and stale-worker behaviors in PostgreSQL. They do not prove behavior under every database failover or uncertain external response.</p>
+<h2 id="playbook-investigation">Playbook investigation</h2><p>Observation: a report exists twice, yet the queue dashboard shows one completed job. A plausible hypothesis is duplicate enqueue. Inspect job IDs and attempt tokens. If both effects share one job ID but came from two lease attempts, duplicate enqueue is disproven. Reproduce a crash after the external effect and before completion. The fix belongs at the effect boundary, not merely at submission. Record what downstream idempotency guarantees are available and which failure window remains if none exist.</p>
+<h2 id="mastery-check">Mastery check</h2><p>Explain why an acknowledgment is evidence of an observed outcome, not the outcome itself. Draw an outbox timeline with a duplicate-delivery crash window. Implement a deduplicated effect with a conflicting-payload rule and defend the retention policy without copying the reference.</p>
+<aside class="callout"><h2 id="when-you-get-stuck">When you get stuck</h2><p>Run the single scheduler integration test with its dedicated URL, then inspect <code>jobs</code> and <code>job_effects</code> in that database. Label every proposed retry with its logical ID. Ask for review using a failure timeline and the exact transaction boundaries, not only the phrase “exactly once.”</p></aside><section><h2 id="reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</h2><p>Working directory: course root. This creates a complete separate source tree; it refuses an existing destination. Run the checkpoint tests before following the guided edits. The <a href="../../projects/checkpoints/p14-scheduler/index.html">checkpoint contract and engineering decisions</a> state exactly which features exist.</p><pre><code>python3 scripts/start-checkpoint.py p14 01-lease-model
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p14-scheduler/01-lease-model/Cargo.toml</code></pre><p>To compare an earlier milestone with the final reference, reconstruct each ID into a different directory. The final database integration checks still require the explicitly isolated database described in this lesson; ordinary cargo test does not execute ignored database tests.</p></section><section><h2 id="complete-earlier-milestone-source">Complete earlier milestone source</h2><p>Time is supplied as a nondecreasing logical tick. Compare the current token and deadline before allowing completion. Observe how exact enqueue retries remain successful when admission is full.</p><div class="code-wrap" data-source="projects/checkpoints/p14-scheduler/01-lease-model/src/lib.rs" data-sha256="8628340a9d5ed761cdf30cae2f85c2017fef7c0ff5f077ac041686fee75ddc5f"><div class="code-label"><a href="../../projects/checkpoints/p14-scheduler/01-lease-model/src/lib.rs">projects/checkpoints/p14-scheduler/01-lease-model/src/lib.rs</a></div><pre><code>//! Deterministic, in-memory lease model. Time is an injected logical tick.
+//! No persistence, OS worker, external effects, or clock guarantee is implemented.
+use std::collections::{BTreeMap, BTreeSet};
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum State {
+    Queued,
+    Running { token: u64, expires: u64 },
+    Done,
+    Cancelled,
+    Failed,
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct Job {
+    payload: String,
+    state: State,
+    attempts: u8,
+    token: u64,
+}
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
+pub struct Queue {
+    jobs: BTreeMap&lt;String, Job&gt;,
+    effects: BTreeSet&lt;String&gt;,
+}
+impl Queue {
+    pub fn enqueue(&amp;mut self, id: &amp;str, payload: &amp;str) -&gt; Result&lt;bool, &amp;&#x27;static str&gt; {
+        if id.is_empty() || id.len() &gt; 64 || payload.len() &gt; 256 {
+            return Err(&quot;input budget&quot;);
+        }
+        if let Some(job) = self.jobs.get(id) {
+            return if job.payload == payload {
+                Ok(false)
+            } else {
+                Err(&quot;identity conflict&quot;)
+            };
+        }
+        if self.jobs.len() &gt;= 16 {
+            return Err(&quot;retained job budget&quot;);
+        }
+        self.jobs.insert(
+            id.into(),
+            Job {
+                payload: payload.into(),
+                state: State::Queued,
+                attempts: 0,
+                token: 0,
+            },
+        );
+        Ok(true)
+    }
+    pub fn claim(&amp;mut self, id: &amp;str, now: u64) -&gt; Result&lt;u64, &amp;&#x27;static str&gt; {
+        let job = self.jobs.get_mut(id).ok_or(&quot;missing job&quot;)?;
+        if !matches!(job.state, State::Queued)
+            &amp;&amp; !matches!(job.state,State::Running{expires,..}if expires&lt;=now)
+        {
+            return Err(&quot;not eligible&quot;);
+        }
+        if job.attempts &gt;= 3 {
+            job.state = State::Failed;
+            return Err(&quot;attempt budget exhausted&quot;);
+        }
+        let expires = now.checked_add(10).ok_or(&quot;clock overflow&quot;)?;
+        let token = job.token.checked_add(1).ok_or(&quot;token overflow&quot;)?;
+        job.token = token;
+        job.attempts += 1;
+        job.state = State::Running { token, expires };
+        Ok(token)
+    }
+    pub fn complete(&amp;mut self, id: &amp;str, token: u64, now: u64) -&gt; Result&lt;bool, &amp;&#x27;static str&gt; {
+        let job = self.jobs.get_mut(id).ok_or(&quot;missing job&quot;)?;
+        if !matches!(job.state,State::Running{token:current,expires}if current==token&amp;&amp;now&lt;expires)
+        {
+            return Err(&quot;stale or expired authority&quot;);
+        }
+        let inserted = self.effects.insert(id.into());
+        job.state = State::Done;
+        Ok(inserted)
+    }
+    pub fn cancel(&amp;mut self, id: &amp;str) -&gt; Result&lt;(), &amp;&#x27;static str&gt; {
+        let job = self.jobs.get_mut(id).ok_or(&quot;missing job&quot;)?;
+        if matches!(job.state, State::Done | State::Failed) {
+            return Err(&quot;already terminal&quot;);
+        }
+        job.state = State::Cancelled;
+        Ok(())
+    }
+    pub fn effects(&amp;self) -&gt; usize {
+        self.effects.len()
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn expiry_redelivers_and_fences_old_worker() {
+        let mut q = Queue::default();
+        q.enqueue(&quot;a&quot;, &quot;work&quot;).unwrap();
+        let first = q.claim(&quot;a&quot;, 0).unwrap();
+        assert!(q.claim(&quot;a&quot;, 9).is_err());
+        let second = q.claim(&quot;a&quot;, 10).unwrap();
+        assert_ne!(first, second);
+        assert!(q.complete(&quot;a&quot;, first, 11).is_err());
+        assert!(q.complete(&quot;a&quot;, second, 11).unwrap());
+        assert!(q.complete(&quot;a&quot;, second, 12).is_err());
+        assert_eq!(q.effects(), 1);
+    }
+    #[test]
+    fn retry_conflict_and_capacity() {
+        let mut q = Queue::default();
+        for n in 0..16 {
+            q.enqueue(&amp;format!(&quot;j{n}&quot;), &quot;same&quot;).unwrap();
+        }
+        assert!(!q.enqueue(&quot;j0&quot;, &quot;same&quot;).unwrap());
+        assert!(q.enqueue(&quot;j0&quot;, &quot;changed&quot;).is_err());
+        assert!(q.enqueue(&quot;j17&quot;, &quot;same&quot;).is_err());
+    }
+    #[test]
+    fn cancellation_revokes_completion() {
+        let mut q = Queue::default();
+        q.enqueue(&quot;a&quot;, &quot;work&quot;).unwrap();
+        let token = q.claim(&quot;a&quot;, 0).unwrap();
+        q.cancel(&quot;a&quot;).unwrap();
+        assert!(q.complete(&quot;a&quot;, token, 1).is_err());
+        assert_eq!(q.effects(), 0);
+    }
+    #[test]
+    fn bad_clock_does_not_partially_claim() {
+        let mut q = Queue::default();
+        q.enqueue(&quot;a&quot;, &quot;work&quot;).unwrap();
+        let before = q.clone();
+        assert!(q.claim(&quot;a&quot;, u64::MAX).is_err());
+        assert_eq!(q, before);
+        for now in [0, 10, 20] {
+            q.claim(&quot;a&quot;, now).unwrap();
+        }
+        assert!(q.claim(&quot;a&quot;, 30).is_err());
+        assert_eq!(q.jobs[&quot;a&quot;].state, State::Failed);
+    }
+}
+</code></pre></div></section><h2 id="authority-is-not-every-field-in-a-returned-value">Authority is not every field in a returned value</h2><p>Lease is an owned observation returned to a worker. Its public payload and attempts fields are convenient for display, but callers can modify them. Completion must read the payload from the locked database row; retry delay must use the persisted attempt count. A focused test keeps the correct ID and token while substituting a payload and changing attempts from 1 to 3. The reference still writes the original payload and schedules the first-failure delay. Before the correction, the substituted payload became the durable effect. This disproves the tempting claim that checking a token makes every field beside it authoritative.</p><p>The same test injects a constraint failure during effect insertion and verifies that no effect appears and the job remains running. Removing the fixture constraint permits completion under the still-current lease. This is evidence for the actual database-local transaction boundary; it does not test an external email or outbox relay. Independent review of the implementation remains pending.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://www.postgresql.org/docs/18/tutorial-transactions.html">PostgreSQL transactions</a></li><li><a href="https://www.rfc-editor.org/rfc/rfc9110.html#name-idempotent-methods">HTTP idempotent methods</a></li><li><a href="https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf">End-to-end arguments original paper</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-7/07-ffi.html">Previous: Foreign interfaces and environments without std</a><a href="../../lessons/stage-8/08-scheduler.html">Next: Leases, retries, cancellation, and recovery</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-retry-without-accidental-duplication">Purpose: retry without accidental duplication</a><a href="#plain-english-model">Plain-English model</a><a href="#prediction-where-is-the-atomic-boundary">Prediction: where is the atomic boundary?</a><a href="#small-runnable-evidence">Small runnable evidence</a><a href="#guided-implementation">Guided implementation</a><a href="#the-transactional-outbox-pattern">The transactional outbox pattern</a><a href="#deliberate-mistake-and-independent-practice">Deliberate mistake and independent practice</a><a href="#review-and-evidence">Review and evidence</a><a href="#playbook-investigation">Playbook investigation</a><a href="#mastery-check">Mastery check</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</a><a href="#complete-earlier-milestone-source">Complete earlier milestone source</a><a href="#authority-is-not-every-field-in-a-returned-value">Authority is not every field in a returned value</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,533 @@
+{
+  "as_of": "2026-10-17",
+  "retrieved_at": "2026-10-17T11:08:55.883728+00:00",
+  "policy": "Highest published stable version on or before cutoff; excludes prereleases and currently yanked crates. Registry snapshots cannot prove past yank status.",
+  "packages": [
+    {
+      "kind": "crate",
+      "name": "axum",
+      "declared_versions": [
+        "=0.8.9"
+      ],
+      "latest_stable": {
+        "version": "0.8.9",
+        "published": "2026-04-14T07:55:20.258398Z",
+        "rust_version": "1.80"
+      },
+      "source": "https://crates.io/api/v1/crates/axum",
+      "snapshot": "versions-2026-10-17/crate-axum.json",
+      "sha256": "61eeea6a41e172a71e802ffe7afcf67947427b93b11ec6b0cd85abf0074bcd36",
+      "original_declared_versions": [
+        "=0.8.9"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "cargo-audit",
+      "declared_versions": [],
+      "latest_stable": {
+        "version": "0.22.2",
+        "published": "2026-06-05T12:33:04.440539Z",
+        "rust_version": "1.88"
+      },
+      "source": "https://crates.io/api/v1/crates/cargo-audit",
+      "snapshot": "versions-2026-10-17/crate-cargo-audit.json",
+      "sha256": "346b2a9977607af10ab4cbd24fa713a7c28210cbd9e5930f4a914b31497791db",
+      "original_declared_versions": []
+    },
+    {
+      "kind": "crate",
+      "name": "cargo-fuzz",
+      "declared_versions": [],
+      "latest_stable": {
+        "version": "0.13.2",
+        "published": "2026-06-09T18:37:27.158092Z",
+        "rust_version": null
+      },
+      "source": "https://crates.io/api/v1/crates/cargo-fuzz",
+      "snapshot": "versions-2026-10-17/crate-cargo-fuzz.json",
+      "sha256": "6e831f4904fd81ca4604683da4e22bd1d4db55048e5b6f2fa635d9f19621a8dc",
+      "original_declared_versions": []
+    },
+    {
+      "kind": "crate",
+      "name": "gloo-net",
+      "declared_versions": [
+        "=0.7.0"
+      ],
+      "latest_stable": {
+        "version": "0.7.0",
+        "published": "2026-03-25T12:02:52.892443Z",
+        "rust_version": "1.82"
+      },
+      "source": "https://crates.io/api/v1/crates/gloo-net",
+      "snapshot": "versions-2026-10-17/crate-gloo-net.json",
+      "sha256": "ccee2eea134f5e2a8e1e27ff57eb2f1dd6215dc9b587bc9c56a85f2bb1191b33",
+      "original_declared_versions": [
+        "=0.7.0"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "gloo-timers",
+      "declared_versions": [
+        "=0.4.0"
+      ],
+      "latest_stable": {
+        "version": "0.4.0",
+        "published": "2026-03-25T12:05:58.320867Z",
+        "rust_version": "1.82"
+      },
+      "source": "https://crates.io/api/v1/crates/gloo-timers",
+      "snapshot": "versions-2026-10-17/crate-gloo-timers.json",
+      "sha256": "ee3359fda818223d14f6968050ae3d6b943ebd30adc57029fdcac8cd423b4d06",
+      "original_declared_versions": [
+        "=0.4.0"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "leptos",
+      "declared_versions": [
+        "=0.8.22"
+      ],
+      "latest_stable": {
+        "version": "0.8.22",
+        "published": "2026-10-05T13:28:16.443095Z",
+        "rust_version": "1.88"
+      },
+      "source": "https://crates.io/api/v1/crates/leptos",
+      "snapshot": "versions-2026-10-17/crate-leptos.json",
+      "sha256": "f91424a5aa31ae52e990976db78fe309ff9cf824399b062afa3a1d2afa95710e",
+      "original_declared_versions": [
+        "=0.8.22"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "libfuzzer-sys",
+      "declared_versions": [
+        "=0.4.13"
+      ],
+      "latest_stable": {
+        "version": "0.4.13",
+        "published": "2026-06-04T18:55:34.718132Z",
+        "rust_version": null
+      },
+      "source": "https://crates.io/api/v1/crates/libfuzzer-sys",
+      "snapshot": "versions-2026-10-17/crate-libfuzzer-sys.json",
+      "sha256": "216b67a292240532e7c3e245e203bf07c076124069b8df59879d0a96aa85cfff",
+      "original_declared_versions": [
+        "=0.4.13"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "quote",
+      "declared_versions": [
+        "=1.0.47"
+      ],
+      "latest_stable": {
+        "version": "1.0.47",
+        "published": "2026-07-19T00:16:57.083778Z",
+        "rust_version": "1.71"
+      },
+      "source": "https://crates.io/api/v1/crates/quote",
+      "snapshot": "versions-2026-10-17/crate-quote.json",
+      "sha256": "bf1eaf220c9436a5f13a4f04ee4aeccf404492e7e3ac47271ed6fc901456a9bf",
+      "original_declared_versions": [
+        "=1.0.47"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "rayon",
+      "declared_versions": [
+        "=1.12.0"
+      ],
+      "latest_stable": {
+        "version": "1.12.0",
+        "published": "2026-04-14T00:56:56.454086Z",
+        "rust_version": "1.80"
+      },
+      "source": "https://crates.io/api/v1/crates/rayon",
+      "snapshot": "versions-2026-10-17/crate-rayon.json",
+      "sha256": "ef53472ca8aa522eea5ea0fb89783de88f47da10a74cbb6580e6d3a0dcfd37dd",
+      "original_declared_versions": [
+        "=1.12.0"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "serde",
+      "declared_versions": [
+        "=1.0.229"
+      ],
+      "latest_stable": {
+        "version": "1.0.229",
+        "published": "2026-07-18T23:05:13.266456Z",
+        "rust_version": "1.56"
+      },
+      "source": "https://crates.io/api/v1/crates/serde",
+      "snapshot": "versions-2026-10-17/crate-serde.json",
+      "sha256": "29472353441ba30129fbd4e7739822a84388723f0adc7ae7942bc31439b8bc27",
+      "original_declared_versions": [
+        "=1.0.229"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "serde_json",
+      "declared_versions": [
+        "=1.0.154"
+      ],
+      "latest_stable": {
+        "version": "1.0.154",
+        "published": "2026-10-11T15:31:46.076577Z",
+        "rust_version": "1.71"
+      },
+      "source": "https://crates.io/api/v1/crates/serde_json",
+      "snapshot": "versions-2026-10-17/crate-serde_json.json",
+      "sha256": "bbef9127eb5506714b25b1d421dced5ab512f278a1cb1dded22e0b867824bd84",
+      "original_declared_versions": [
+        "=1.0.151"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "sqlx",
+      "declared_versions": [
+        "=0.9.0"
+      ],
+      "latest_stable": {
+        "version": "0.9.0",
+        "published": "2026-05-21T17:35:53.403466Z",
+        "rust_version": "1.94.0"
+      },
+      "source": "https://crates.io/api/v1/crates/sqlx",
+      "snapshot": "versions-2026-10-17/crate-sqlx.json",
+      "sha256": "641a2c2dd0f81bd05c43a67ab1d3a941136ecd3304e67715d07f89155c53ed9e",
+      "original_declared_versions": [
+        "=0.9.0"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "sqlx-cli",
+      "declared_versions": [],
+      "latest_stable": {
+        "version": "0.9.0",
+        "published": "2026-05-21T17:36:43.111954Z",
+        "rust_version": "1.94.0"
+      },
+      "source": "https://crates.io/api/v1/crates/sqlx-cli",
+      "snapshot": "versions-2026-10-17/crate-sqlx-cli.json",
+      "sha256": "8b3dd070462d98ce90180068e7f727dc361637ae8bbdda42c830490e712b434b",
+      "original_declared_versions": []
+    },
+    {
+      "kind": "crate",
+      "name": "syn",
+      "declared_versions": [
+        "=3.0.9"
+      ],
+      "latest_stable": {
+        "version": "3.0.9",
+        "published": "2026-10-12T15:04:09.212573Z",
+        "rust_version": "1.71"
+      },
+      "source": "https://crates.io/api/v1/crates/syn",
+      "snapshot": "versions-2026-10-17/crate-syn.json",
+      "sha256": "9e7ab4f11ea9d1a52ae3059b9d803964e2a566139c712448886985d8c0ec15f1",
+      "original_declared_versions": [
+        "=2.0.119"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "tokio",
+      "declared_versions": [
+        "=1.53.3"
+      ],
+      "latest_stable": {
+        "version": "1.53.3",
+        "published": "2026-10-13T20:51:46.498182Z",
+        "rust_version": "1.71"
+      },
+      "source": "https://crates.io/api/v1/crates/tokio",
+      "snapshot": "versions-2026-10-17/crate-tokio.json",
+      "sha256": "7d8448ec91326beefb8d7bb85caeade6da833946ca8949a32d9904253e0cd07d",
+      "original_declared_versions": [
+        "=1.53.2"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "tower",
+      "declared_versions": [
+        "=0.5.3"
+      ],
+      "latest_stable": {
+        "version": "0.5.3",
+        "published": "2026-01-12T18:43:05.227461Z",
+        "rust_version": "1.64.0"
+      },
+      "source": "https://crates.io/api/v1/crates/tower",
+      "snapshot": "versions-2026-10-17/crate-tower.json",
+      "sha256": "e76aea1a5bb0c018306b4018f272c338f9e5a8859f6aa8f638cc4ab875d2813f",
+      "original_declared_versions": [
+        "=0.5.3"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "uuid",
+      "declared_versions": [
+        "=1.28.0"
+      ],
+      "latest_stable": {
+        "version": "1.28.0",
+        "published": "2026-10-10T00:02:40.455859Z",
+        "rust_version": "1.89.0"
+      },
+      "source": "https://crates.io/api/v1/crates/uuid",
+      "snapshot": "versions-2026-10-17/crate-uuid.json",
+      "sha256": "a61f06a46711b16c551a6b366d60ad4add983735f9f7f66774b3425ec5bee925",
+      "original_declared_versions": [
+        "=1.27.0"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "wasm-bindgen",
+      "declared_versions": [
+        "=0.2.129"
+      ],
+      "latest_stable": {
+        "version": "0.2.129",
+        "published": "2026-09-25T07:13:40.367031Z",
+        "rust_version": "1.81"
+      },
+      "source": "https://crates.io/api/v1/crates/wasm-bindgen",
+      "snapshot": "versions-2026-10-17/crate-wasm-bindgen.json",
+      "sha256": "47c974c3a2ae63d3d1dbc3fbe80dfbab8a6199ac00cafdedbb2c39c677a8ac9c",
+      "original_declared_versions": [
+        "=0.2.129"
+      ]
+    },
+    {
+      "kind": "crate",
+      "name": "wasm-bindgen-cli",
+      "declared_versions": [],
+      "latest_stable": {
+        "version": "0.2.129",
+        "published": "2026-09-25T07:13:50.788214Z",
+        "rust_version": "1.86"
+      },
+      "source": "https://crates.io/api/v1/crates/wasm-bindgen-cli",
+      "snapshot": "versions-2026-10-17/crate-wasm-bindgen-cli.json",
+      "sha256": "bfbc76516dfdb97a77d321f7727c00521335353e4a56536d213f4cd4f851a949",
+      "original_declared_versions": []
+    },
+    {
+      "kind": "crate",
+      "name": "web-sys",
+      "declared_versions": [
+        "=0.3.106"
+      ],
+      "latest_stable": {
+        "version": "0.3.106",
+        "published": "2026-09-25T07:13:44.661972Z",
+        "rust_version": "1.81"
+      },
+      "source": "https://crates.io/api/v1/crates/web-sys",
+      "snapshot": "versions-2026-10-17/crate-web-sys.json",
+      "sha256": "e0ea2ba2559bb3085ec4f7bc6a86e872d10ed476f8f6e61b0eac9e09bc832589",
+      "original_declared_versions": [
+        "=0.3.106"
+      ]
+    },
+    {
+      "kind": "github",
+      "name": "jdx/mise",
+      "declared_versions": [],
+      "latest_stable": {
+        "version": "v2026.10.12",
+        "published": "2026-10-16T18:19:41Z",
+        "release_url": "https://github.com/jdx/mise/releases/tag/v2026.10.12"
+      },
+      "source": "https://api.github.com/repos/jdx/mise/releases?per_page=100",
+      "snapshot": "versions-2026-10-17/github-jdx_mise.json",
+      "sha256": "ba30faaedd95afdbb1a54c71baa8f7e67b23acb33673d3dd0bbeeafdd1f2113e",
+      "original_declared_versions": []
+    },
+    {
+      "kind": "node",
+      "name": "node",
+      "declared_versions": [],
+      "latest_stable": {
+        "version": "v26.12.0",
+        "published": "2026-10-14",
+        "lts": false
+      },
+      "source": "https://nodejs.org/dist/index.json",
+      "snapshot": "versions-2026-10-17/node-node.json",
+      "sha256": "b52f521b8e24898364b74f03596afef1f97c1448014df7c2b5ebdcd2b69ca4a9",
+      "latest_lts": {
+        "version": "v24.22.0",
+        "published": "2026-10-14",
+        "lts": "Krypton"
+      },
+      "original_declared_versions": []
+    },
+    {
+      "kind": "npm",
+      "name": "@sveltejs/vite-plugin-svelte",
+      "declared_versions": [
+        "7.3.1"
+      ],
+      "latest_stable": {
+        "version": "7.3.1",
+        "published": "2026-09-23T10:38:42.922Z",
+        "engines": {
+          "node": "^20.19 || ^22.12 || >=24"
+        },
+        "peer_dependencies": {
+          "vite": "^8.0.0-beta.7 || ^8.0.0",
+          "svelte": "^5.46.4"
+        }
+      },
+      "source": "https://registry.npmjs.org/%40sveltejs%2Fvite-plugin-svelte",
+      "snapshot": "versions-2026-10-17/npm-sveltejs_vite-plugin-svelte.json",
+      "sha256": "9809ff79923f9e595d4b179bd729a1664d72fcdb7912fa811c8ce704adfe8d11",
+      "original_declared_versions": [
+        "7.3.1"
+      ]
+    },
+    {
+      "kind": "npm",
+      "name": "lossless-json",
+      "declared_versions": [
+        "4.3.2"
+      ],
+      "latest_stable": {
+        "version": "4.3.2",
+        "published": "2026-10-16T09:56:09.421Z",
+        "engines": null,
+        "peer_dependencies": null
+      },
+      "source": "https://registry.npmjs.org/lossless-json",
+      "snapshot": "versions-2026-10-17/npm-lossless-json.json",
+      "sha256": "d55bc44eaf73909a968d7823e8fc9a8ea1c2775cf4cead3d78de997f01be6fc3",
+      "original_declared_versions": [
+        "4.3.1"
+      ]
+    },
+    {
+      "kind": "npm",
+      "name": "svelte",
+      "declared_versions": [
+        "5.57.2"
+      ],
+      "latest_stable": {
+        "version": "5.57.2",
+        "published": "2026-10-06T14:24:31.209Z",
+        "engines": {
+          "node": ">=18"
+        },
+        "peer_dependencies": null
+      },
+      "source": "https://registry.npmjs.org/svelte",
+      "snapshot": "versions-2026-10-17/npm-svelte.json",
+      "sha256": "afe7938f625da51a5c794c8ea150317d453b0ddd4e0da184dc1b8bd0b0e19f65",
+      "original_declared_versions": [
+        "5.57.2"
+      ]
+    },
+    {
+      "kind": "npm",
+      "name": "svelte-check",
+      "declared_versions": [
+        "4.7.7"
+      ],
+      "latest_stable": {
+        "version": "4.7.7",
+        "published": "2026-10-16T13:24:22.381Z",
+        "engines": {
+          "node": ">= 18.0.0"
+        },
+        "peer_dependencies": {
+          "svelte": "^4.0.0 || ^5.0.0-next.0",
+          "typescript": "^5.0.0 || ^6.0.0"
+        }
+      },
+      "source": "https://registry.npmjs.org/svelte-check",
+      "snapshot": "versions-2026-10-17/npm-svelte-check.json",
+      "sha256": "1a3a2003a0baabc21d2f2845bcec373194df7a4ae2370a704cc7a3d9bd2e9e0b",
+      "original_declared_versions": [
+        "4.7.6"
+      ]
+    },
+    {
+      "kind": "npm",
+      "name": "typescript",
+      "declared_versions": [
+        "6.0.3"
+      ],
+      "latest_stable": {
+        "version": "7.0.2",
+        "published": "2026-07-08T15:55:18.431Z",
+        "engines": {
+          "node": ">=16.20.0"
+        },
+        "peer_dependencies": null
+      },
+      "source": "https://registry.npmjs.org/typescript",
+      "snapshot": "versions-2026-10-17/npm-typescript.json",
+      "sha256": "f52b0192c34e55756b69ba34ffaa4645d64c20844062931e1b441e2bf3fa2716",
+      "original_declared_versions": [
+        "6.0.3"
+      ],
+      "compatibility_exception": {
+        "selected": "6.0.3",
+        "latest": "7.0.2",
+        "reason": "svelte-check 4.7.7 declares peer typescript ^5.0.0 || ^6.0.0; no force override",
+        "source": "https://registry.npmjs.org/svelte-check/4.7.7"
+      }
+    },
+    {
+      "kind": "npm",
+      "name": "vite",
+      "declared_versions": [
+        "8.3.4"
+      ],
+      "latest_stable": {
+        "version": "8.3.4",
+        "published": "2026-10-08T12:07:04.441Z",
+        "engines": {
+          "node": "^20.19.0 || >=22.12.0"
+        },
+        "peer_dependencies": {
+          "tsx": "^4.8.1",
+          "jiti": ">=1.21.0",
+          "less": "^4.0.0",
+          "sass": "^1.70.0",
+          "yaml": "^2.4.2",
+          "stylus": ">=0.54.8",
+          "terser": "^5.16.0",
+          "esbuild": "^0.27.0 || ^0.28.0",
+          "sugarss": "^5.0.0",
+          "@types/node": "^20.19.0 || >=22.12.0",
+          "sass-embedded": "^1.70.0",
+          "@vitejs/devtools": "^0.7.1"
+        }
+      },
+      "source": "https://registry.npmjs.org/vite",
+      "snapshot": "versions-2026-10-17/npm-vite.json",
+      "sha256": "d6121df12481dca3457a8b1b904d6ffdff0b04f574576d2641a7e6c81aa67b92",
+      "original_declared_versions": [
+        "8.3.4"
+      ]
+    }
+  ]
+}

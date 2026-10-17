@@ -1,0 +1,20 @@
+paste v1.0.15 (proc-macro)
+├── either_of v0.1.9
+│   ├── leptos v0.8.22
+│   │   └── operations-console v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console)
+│   └── tachys v0.2.19
+│       ├── leptos v0.8.22 (*)
+│       ├── leptos_dom v0.8.8
+│       │   └── leptos v0.8.22 (*)
+│       └── leptos_server v0.8.8
+│           └── leptos v0.8.22 (*)
+├── leptos v0.8.22 (*)
+├── reactive_graph v0.2.15
+│   ├── leptos v0.8.22 (*)
+│   ├── leptos_dom v0.8.8 (*)
+│   ├── leptos_server v0.8.8 (*)
+│   ├── reactive_stores v0.4.4
+│   │   └── tachys v0.2.19 (*)
+│   └── tachys v0.2.19 (*)
+├── reactive_stores v0.4.4 (*)
+└── tachys v0.2.19 (*)

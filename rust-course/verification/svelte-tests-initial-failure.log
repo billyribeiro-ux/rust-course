@@ -1,0 +1,40 @@
+npm notice run rust-course-svelte-bridge@0.1.0 test
+npm notice run node --test tests/*.test.js
+✖ i64 and u64 are decoded exactly and money stays fixed point (0.835084ms)
+✔ wrong envelopes, duplicate symbols, floats and oversized integers fail (0.341958ms)
+✖ GET uses exact local reader fixture and releases ownership after success (11.7165ms)
+✔ HTTP errors and oversized response bodies are explicit (0.373792ms)
+✔ only one request is admitted; cancellation ends ownership (0.170208ms)
+✔ deadline aborts a slow body as well as initial fetch (5.224791ms)
+✔ a response arriving after cancellation is never accepted (0.287125ms)
+✔ proxy allows only the intended body-free read boundary (0.387875ms)
+✔ four admissions, rejection, and exactly-once permit release (0.120042ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 7
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 205.625875
+
+✖ failing tests:
+
+test at tests/client.test.js:6:1
+✖ i64 and u64 are decoded exactly and money stays fixed point (0.835084ms)
+  Error: Invalid snapshot envelope
+      at decodeSnapshot (file:///Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/src/client.js:28:53)
+      at TestContext.<anonymous> (file:///Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/tests/client.test.js:7:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at tests/client.test.js:20:1
+✖ GET uses exact local reader fixture and releases ownership after success (11.7165ms)
+  Error: Invalid snapshot envelope
+      at decodeSnapshot (file:///Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/src/client.js:28:53)
+      at Object.load (file:///Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/src/client.js:84:16)
+      at async TestContext.<anonymous> (file:///Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/tests/client.test.js:30:17)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-09T18:08:15.208546+00:00",
+  "baseline_test_counts": {
+    "passed": 159,
+    "failed": 0,
+    "ignored": 4
+  },
+  "baseline_checks": "12/12 passed",
+  "authored_lessons": 57,
+  "lesson_prose_word_count": 84938,
+  "main_projects": 16,
+  "complete_source_checkpoints": 37,
+  "required_objective_groups": 83,
+  "native_toolchain": "Rust/Cargo 1.99.0 via mise",
+  "wasm": "Leptos reference and reconstructed learner/final clients compiled with strict Clippy and wasm-bindgen; selected assets served by HTTP",
+  "database": "Four PostgreSQL test entries ignored in ordinary Cargo test: three scheduler tests passed in a fresh isolated cluster in services-spec-audit; unchanged issue tracker test passed in the earlier isolated PostgreSQL run.",
+  "miri": "Seven fixed-capacity unsafe-component tests passed under nightly-2026-10-08; reference unsafe source unchanged",
+  "fuzz": "10,000-input bounded ASAN campaign; deliberate false oracle reproduced and manually reduced; not exhaustive coverage",
+  "http_runtime": "11 acceptance groups passed; 252 requests in the latest rebuilt-binary run",
+  "browser": "Blocked by saved localhost permission; no alternate browser attempted",
+  "independent_review": "pending",
+  "dependency_review": "Native/UI/fuzz/Rayon locks have no known vulnerabilities at recorded scan. UI paste1.0.15 unmaintained advisory remains. Optional Svelte audit has no known advisories.",
+  "scope": "Author-team verification, not independent acceptance or learner competence",
+  "optional_Svelte": "Nine unit tests, Svelte check, Vite build, autofixer, dependency audit, and eight real HTTP groups/52 requests passed. Browser DOM interaction unverified.",
+  "baseline_count_scope": "Cargo test entries, including one P06 helper that is a no-op in the parent runner; not a count of independent correctness claims.",
+  "rust_mcp": "Direct configured server: workspace discovery, frozen metadata and targeted Cargo check passed. Live session wrapper still returns Unexpected response type; CLI fallback available.",
+  "additional_followup": {
+    "persistence": "Fixed P06 relative-path compaction bug; regression failed before fix and passed after. Exact P16 journal bounds and integrity limitations tested.",
+    "release": "41 optimized tests and 3 doctests passed; new P05/P12 overflow coverage.",
+    "portability": "All 37 checkpoints reconstructed from previous frozen archive and complete offline locked graphs resolved. Final archive is repackaged with current source and separately checked.",
+    "reader": "Five pure data-validation tests passed; source fixes for long-note import, unreadable-progress preservation, download fallback and keyboard controls. Real-browser behavior remains blocked."
+  },
+  "latest_continuation": {
+    "cold_start": "Fixed six documentation/setup issues;18 scoped command checks passed, with intentional scaffold failures distinguished.",
+    "services": "Authoritative durable lease fields, clock sampled after row lock, rollback and HTTP authorization/status regressions passed.",
+    "console": "Replay retains exact identity and ticks after uncertain responses; seven native model tests and strict WASM build/Clippy passed.",
+    "advanced": "Five precise parser/protocol/replication boundary tests passed; unsafe evidence language corrected.",
+    "verification_cache": "Helper commands explicitly select the intermediate build directory; newly observed global build-dir config is preserved.",
+    "browser": "Saved localhost access remains unresolved. Access to settings app was also denied; no workaround attempted."
+  }
+}

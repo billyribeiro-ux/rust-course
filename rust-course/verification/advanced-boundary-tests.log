@@ -1,0 +1,59 @@
+$ mise exec -- cargo test --locked --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p expression-language --lib tests::exact_byte_and_token_limits_have_distinct_diagnostics -- --exact --nocapture
+error: failed to open: /Users/billyribeiro/.cargo/build-shared/debug/.cargo-build-lock
+
+Caused by:
+  Operation not permitted (os error 1)
+exit_code=101
+$ mise exec -- cargo test --config 'build.build-dir="/Users/billyribeiro/Desktop/rust-course/.course-cache/native"' --locked --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p expression-language --lib tests::exact_byte_and_token_limits_have_distinct_diagnostics -- --exact --nocapture
+Approved retry output:
+   Compiling expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.55s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/expression_language-60ed30f7d14de4c8)
+
+running 1 test
+test tests::exact_byte_and_token_limits_have_distinct_diagnostics ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+exit_code=0
+$ mise exec -- cargo test --config 'build.build-dir="/Users/billyribeiro/Desktop/rust-course/.course-cache/native"' --locked --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p expression-language --lib tests::recursive_nesting_and_constructed_tree_depth_are_separate_limits -- --exact --nocapture
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/expression_language-60ed30f7d14de4c8)
+
+running 1 test
+test tests::recursive_nesting_and_constructed_tree_depth_are_separate_limits ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+exit_code=0
+$ mise exec -- cargo test --config 'build.build-dir="/Users/billyribeiro/Desktop/rust-course/.course-cache/native"' --locked --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p09-chat --lib tests::coalesced_frames_obey_the_exact_byte_boundary -- --exact --nocapture
+   Compiling p09-chat v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.88s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p09_chat-14d074b20a6d5c71)
+
+running 1 test
+test tests::coalesced_frames_obey_the_exact_byte_boundary ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+exit_code=0
+$ mise exec -- cargo test --config 'build.build-dir="/Users/billyribeiro/Desktop/rust-course/.course-cache/native"' --locked --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p09-chat --lib tests::retaining_the_same_future_preserves_partial_prefix_progress -- --exact --nocapture
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p09_chat-14d074b20a6d5c71)
+
+running 1 test
+test tests::retaining_the_same_future_preserves_partial_prefix_progress ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+exit_code=0
+$ mise exec -- cargo test --config 'build.build-dir="/Users/billyribeiro/Desktop/rust-course/.course-cache/native"' --locked --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p15-replication --lib tests::later_and_duplicate_acknowledgments_do_not_skip_a_commit_hole -- --exact --nocapture
+   Compiling p15-replication v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.40s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p15_replication-381f24b501e27e9e)
+
+running 1 test
+test tests::later_and_duplicate_acknowledgments_do_not_skip_a_commit_hole ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+exit_code=0

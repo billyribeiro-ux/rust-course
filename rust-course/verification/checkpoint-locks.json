@@ -1,0 +1,276 @@
+{
+  "result": "passed",
+  "checks": [
+    {
+      "project": "p09-chat",
+      "checkpoint": "00-scaffold",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/00-scaffold/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p09-chat",
+      "checkpoint": "01-framing",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/01-framing/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p09-chat",
+      "checkpoint": "final",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p09-chat/final/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "00-scaffold",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/00-scaffold/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "01-http-validation",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/01-http-validation/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "final",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p10-issues/final/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "00-scaffold",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/00-scaffold/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "01-lease-model",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/01-lease-model/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "final",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p14-scheduler/final/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "00-scaffold",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/00-scaffold/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "01-append-transport",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/01-append-transport/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "final",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p15-replication/final/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "00-scaffold",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/00-scaffold/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "01-order-domain",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/01-order-domain/Cargo.toml"
+      ],
+      "result": "passed"
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "final",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-locked-checkpoints-w6bgry_0/locked/p16-workbench/final/Cargo.toml"
+      ],
+      "result": "passed"
+    }
+  ],
+  "scope": "All15 service checkpoints resolve immediately under --offline --locked after fresh reconstruction; compilation evidence is services-checkpoints.json."
+}

@@ -1,0 +1,249 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Leases, retries, cancellation, and recovery · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="08-scheduler" data-lesson="08-scheduler"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Leases, retries, cancellation, and recovery</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 08 / Distributed behavior</div><h1>Leases, retries, cancellation, and recovery</h1><p class="lead">Build a durable local queue with explicit stale-worker behavior.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-8/08-delivery.html">Partial failure, idempotency, and the outbox</a></li></ul><ul><li>Use lease tokens to reject stale completion</li><li>Bound execution and retries</li><li>Specify clock and cancellation assumptions</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#authentication">authentication</a> · <a href="../../glossary.html#authorization">authorization</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#deduplication">deduplication</a> · <a href="../../glossary.html#future">future</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p14">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="specification-before-implementation">Specification before implementation</h2><p>Build a queue backed by PostgreSQL. A job has an immutable ID and payload, a state, an attempt count, a lease token, a next-attempt time, and a lease deadline. At most one local worker executes at a time. Claiming a job increments its token and attempt count. A lease lasts five seconds. After three failed or abandoned attempts the job becomes dead. A stale worker must not record completion. Cancellation revokes a pending or running lease, but cannot undo an external action that already occurred.</p>
+<h2 id="plain-english-model-temporary-authority">Plain-English model: temporary authority</h2><p>A lease is permission that expires. It is useful because a crashed process cannot voluntarily return its work. After the deadline, another worker may claim the same job. This creates an overlap risk: the original worker may be slow rather than dead. A <em>fencing token</em> is a monotonically increasing identifier that lets a resource reject an older owner. Our completion transaction compares the job's current token with the worker's token. An external service would need to enforce a corresponding rule or an idempotency contract; our database check cannot control an unrelated process.</p>
+<p>The scheduler uses millisecond timestamps in an explicit time domain. Deterministic tests pass logical times to complete; complete_with_clock instead receives a clock function and calls it after acquiring the job row lock. The binary passes now_ms, so pool and row-lock waits cannot preserve an earlier unexpired timestamp for the authority decision. Claim time is sampled before its database operation, which can shorten the useful lease if admission waits. Neither path models multiple machines with skewed clocks. A real multi-host lease design should use a clearly chosen time authority and define clock-jump behavior. A lease timestamp is not the same thing as a duration measured by a monotonic timer.</p>
+<h2 id="prediction">Prediction</h2><p>Worker A claims job J with token1 at time0. A pauses. At time5,000, B claims J with token2. A wakes at5,001 and tries to complete. Which worker may commit the effect? What if A already sent an email before pausing?</p><details><summary>Answer</summary><p>Only token2 matches current authority, so A's database completion returns false. That prevents stale database mutation. It cannot retract an email already sent. The two questions belong to different effect boundaries, which is why lease ownership and idempotency both matter.</p></details>
+<h2 id="runnable-checkpoint">Runnable checkpoint</h2><p>The migration creates jobs and a database-local effect table. The binary starts a loopback API and one owned worker. It is intentionally small enough that you can trace every transition. Use a scheduler-specific database because its migration sequence is independent from the issue tracker.</p>
+<div class="code-wrap" data-source="projects/reference/p14-scheduler/migrations/0001_jobs.sql" data-sha256="200085324d71715ffd2bfb6bb68142c87ba7e43790027a33de32fc9f5c62a161"><div class="code-label"><a href="../../projects/reference/p14-scheduler/migrations/0001_jobs.sql">projects/reference/p14-scheduler/migrations/0001_jobs.sql</a></div><pre><code>CREATE TABLE jobs (
+ id TEXT PRIMARY KEY CHECK(length(id) BETWEEN 1 AND 80),
+ payload TEXT NOT NULL CHECK(length(payload) BETWEEN 1 AND 1000),
+ status TEXT NOT NULL DEFAULT &#x27;queued&#x27; CHECK(status IN (&#x27;queued&#x27;,&#x27;running&#x27;,&#x27;done&#x27;,&#x27;cancelled&#x27;,&#x27;dead&#x27;)),
+ attempts INTEGER NOT NULL DEFAULT 0,
+ token BIGINT NOT NULL DEFAULT 0,
+ due BIGINT NOT NULL DEFAULT 0,
+ lease_until BIGINT NOT NULL DEFAULT 0
+);
+CREATE INDEX ready_jobs ON jobs(status,due,lease_until);
+CREATE TABLE job_effects (job_id TEXT PRIMARY KEY REFERENCES jobs(id), payload TEXT NOT NULL);
+</code></pre></div><pre><code>createdb rust_course_scheduler
+export SCHEDULER_DATABASE_URL="postgresql:///rust_course_scheduler?host=/tmp&amp;user=$USER"
+mise exec -- cargo run -p p14-scheduler
+# Another terminal:
+curl -H "Authorization: Bearer demo-operator" -H "Content-Type: application/json" -d '{"id":"report-1","payload":"synthetic report"}' http://127.0.0.1:4114/jobs</code></pre>
+<p>Expected output includes the job ID, lease token, and whether the effect transaction committed. Submitting the identical payload again returns <code>inserted:false</code>. The public fixture credential is an authorization teaching aid, not deployable authentication.</p>
+<h2 id="guided-implementation-and-unfamiliar-sql">Guided implementation and unfamiliar SQL</h2><p>Implement enqueue with its serialized admission budget and duplicate semantics first. Then implement claim as a single update whose subquery chooses the earliest eligible row. <code>FOR UPDATE SKIP LOCKED</code> lets concurrent claimers skip already locked candidates instead of all waiting on the same job. It does not by itself guarantee fairness. The UPDATE records the new authority and returns a typed Lease. A JoinHandle owns the worker task; shutdown signals it and awaits its completion.</p>
+<div class="code-wrap" data-source="projects/reference/p14-scheduler/src/lib.rs" data-sha256="47cc3be1cd5a9f1626c0c5285cb39b6f639039ae157b5dd60779e07bc1c61887"><div class="code-label"><a href="../../projects/reference/p14-scheduler/src/lib.rs">projects/reference/p14-scheduler/src/lib.rs</a></div><pre><code>//! At-least-once leases; one idempotent database effect, not arbitrary exactly-once work.
+use serde::Serialize;
+use sqlx::{PgPool, Row};
+pub const LEASE_MS: i64 = 5_000;
+#[derive(Debug, Clone, Serialize, sqlx::FromRow)]
+pub struct Lease {
+    pub id: String,
+    pub payload: String,
+    pub token: i64,
+    pub attempts: i32,
+}
+pub async fn enqueue(pool: &amp;PgPool, id: &amp;str, payload: &amp;str) -&gt; Result&lt;bool, sqlx::Error&gt; {
+    if id.is_empty() || id.len() &gt; 80 || payload.is_empty() || payload.len() &gt; 1000 {
+        return Err(sqlx::Error::Protocol(&quot;invalid job input&quot;.into()));
+    }
+    let mut tx = pool.begin().await?;
+    // Serialize admission only, so concurrent insertions cannot exceed the durable budget.
+    sqlx::query(&quot;SELECT pg_advisory_xact_lock(14001)&quot;)
+        .execute(&amp;mut *tx)
+        .await?;
+    if let Some(existing) = sqlx::query_scalar::&lt;_, String&gt;(&quot;SELECT payload FROM jobs WHERE id=$1&quot;)
+        .bind(id)
+        .fetch_optional(&amp;mut *tx)
+        .await?
+    {
+        if existing != payload {
+            return Err(sqlx::Error::Protocol(
+                &quot;id reused with different payload&quot;.into(),
+            ));
+        }
+        return Ok(false);
+    }
+    let count: i64 = sqlx::query_scalar(&quot;SELECT count(*) FROM jobs&quot;)
+        .fetch_one(&amp;mut *tx)
+        .await?;
+    if count &gt;= 10_000 {
+        return Err(sqlx::Error::Protocol(&quot;queue budget reached&quot;.into()));
+    }
+    sqlx::query(&quot;INSERT INTO jobs(id,payload) VALUES($1,$2)&quot;)
+        .bind(id)
+        .bind(payload)
+        .execute(&amp;mut *tx)
+        .await?;
+    tx.commit().await?;
+    Ok(true)
+}
+
+pub async fn claim(pool: &amp;PgPool, now: i64) -&gt; Result&lt;Option&lt;Lease&gt;, sqlx::Error&gt; {
+    // One atomic statement claims the oldest eligible job, skipping locked candidates.
+    sqlx::query(
+        &quot;UPDATE jobs SET status=&#x27;dead&#x27; WHERE status=&#x27;running&#x27; AND lease_until&lt;=$1 AND attempts&gt;=3&quot;,
+    )
+    .bind(now)
+    .execute(pool)
+    .await?;
+    sqlx::query_as::&lt;_,Lease&gt;(&quot;UPDATE jobs SET status=&#x27;running&#x27;,attempts=attempts+1,token=token+1,lease_until=$2 WHERE id=(SELECT id FROM jobs WHERE status IN (&#x27;queued&#x27;,&#x27;running&#x27;) AND due&lt;=$1 AND lease_until&lt;=$1 AND attempts&lt;3 ORDER BY due,id FOR UPDATE SKIP LOCKED LIMIT 1) RETURNING id,payload,token,attempts&quot;).bind(now).bind(now.saturating_add(LEASE_MS)).fetch_optional(pool).await
+}
+/// Complete at an explicitly supplied logical time (deterministic models/tests).
+pub async fn complete(pool: &amp;PgPool, lease: &amp;Lease, now: i64) -&gt; Result&lt;bool, sqlx::Error&gt; {
+    complete_with_clock(pool, lease, || Ok(now)).await
+}
+/// Sample the clock after acquiring the job row lock, before accepting authority.
+/// The clock must use the same time domain as claim. This is not a clock-skew remedy.
+pub async fn complete_with_clock(
+    pool: &amp;PgPool,
+    lease: &amp;Lease,
+    clock: impl FnOnce() -&gt; Result&lt;i64, &amp;&#x27;static str&gt;,
+) -&gt; Result&lt;bool, sqlx::Error&gt; {
+    let mut tx = pool.begin().await?;
+    let row =
+        sqlx::query(&quot;SELECT status,token,lease_until,payload FROM jobs WHERE id=$1 FOR UPDATE&quot;)
+            .bind(&amp;lease.id)
+            .fetch_one(&amp;mut *tx)
+            .await?;
+    let now = clock().map_err(|message| sqlx::Error::Protocol(message.into()))?;
+    if row.get::&lt;String, _&gt;(&quot;status&quot;) != &quot;running&quot;
+        || row.get::&lt;i64, _&gt;(&quot;token&quot;) != lease.token
+        || row.get::&lt;i64, _&gt;(&quot;lease_until&quot;) &lt;= now
+    {
+        return Ok(false);
+    }
+    sqlx::query(
+        &quot;INSERT INTO job_effects(job_id,payload) VALUES($1,$2) ON CONFLICT(job_id) DO NOTHING&quot;,
+    )
+    .bind(&amp;lease.id)
+    // The returned lease is caller-owned; durable input remains authoritative.
+    .bind(row.get::&lt;String, _&gt;(&quot;payload&quot;))
+    .execute(&amp;mut *tx)
+    .await?;
+    sqlx::query(&quot;UPDATE jobs SET status=&#x27;done&#x27; WHERE id=$1&quot;)
+        .bind(&amp;lease.id)
+        .execute(&amp;mut *tx)
+        .await?;
+    tx.commit().await?;
+    Ok(true)
+}
+/// Retry at a supplied logical time; the live worker does not use this model API.
+/// A real external-effect worker needs an explicit clock/expiry policy at its effect boundary.
+pub async fn fail(pool: &amp;PgPool, lease: &amp;Lease, now: i64) -&gt; Result&lt;bool, sqlx::Error&gt; {
+    // Derive backoff from the persisted attempt count, not mutable lease metadata.
+    // Numeric arithmetic plus LEAST preserves saturation at the i64 timestamp limit.
+    let result = sqlx::query(&quot;UPDATE jobs SET status=CASE WHEN attempts&gt;=3 THEN &#x27;dead&#x27; ELSE &#x27;queued&#x27; END,due=LEAST(9223372036854775807::numeric,$3::bigint::numeric+(1000::bigint &lt;&lt; LEAST(GREATEST(attempts,0),3)))::bigint,lease_until=0 WHERE id=$1 AND token=$2 AND status=&#x27;running&#x27; AND lease_until&gt;$3&quot;)
+        .bind(&amp;lease.id)
+        .bind(lease.token)
+        .bind(now)
+        .execute(pool)
+        .await?;
+    Ok(result.rows_affected() == 1)
+}
+/// Cancellation revokes the lease. It cannot undo an external action already performed.
+pub async fn cancel(pool: &amp;PgPool, id: &amp;str) -&gt; Result&lt;bool, sqlx::Error&gt; {
+    Ok(sqlx::query(&quot;UPDATE jobs SET status=&#x27;cancelled&#x27;,token=token+1 WHERE id=$1 AND status IN (&#x27;queued&#x27;,&#x27;running&#x27;)&quot;).bind(id).execute(pool).await?.rows_affected()==1)
+}
+pub fn now_ms() -&gt; Result&lt;i64, &amp;&#x27;static str&gt; {
+    let elapsed = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_err(|_| &quot;system clock predates Unix epoch&quot;)?;
+    i64::try_from(elapsed.as_millis()).map_err(|_| &quot;system clock exceeds timestamp representation&quot;)
+}
+
+pub mod http;
+</code></pre></div>
+<p>Failure schedules the next attempt using a capped exponential delay. The reference has one worker, at most three attempts per job, and an admission cap of10,000 retained job rows. Enqueue takes a transaction-scoped advisory lock before checking capacity and inserting, so concurrent submissions cannot race past the limit. Exact retries still succeed at capacity; new jobs receive429. This simple serialized admission decision favors a checkable local budget over maximum enqueue throughput. Completed rows retain identity history; an archival and retention policy is required before this budget fills. The HTTP body and payload are separately bounded. A bounded execution count alone would not bound lifetime storage.</p>
+<h2 id="deliberate-mistake">Deliberate mistake</h2><p>Remove the token comparison from completion in a learner copy. The stale-worker assertion must fail. Next remove the lease deadline comparison while keeping the token. A worker whose lease has expired at the authority decision but has not yet been reclaimed could now be accepted. Decide whether that is acceptable in your specification; the reference deliberately rejects it. The row remains locked across the accepted database effect and completion; this does not promise that the eventual transaction commit occurs before the wall-clock deadline. These are application races, not Rust data races, so safe Rust still compiles.</p>
+<h2 id="independent-practice">Independent practice</h2><p>Implement a paused state and replace the fixed retained-row budget with a reviewed retention policy. Specify whether paused jobs retain leases and whether cancellation wins against a completion transaction already holding the row lock. Then design a heartbeat renewal operation that cannot revive an expired lease. Use a deterministic timestamp in tests and avoid sleeping to “make the race happen.”</p><details><summary>Hint 1</summary><p>Write a transition table with source state, required token, time condition, destination, and durable writes.</p></details><details><summary>Hint 2</summary><p>A renewal must compare both token and unexpired deadline atomically. Updating only by job ID lets old workers steal authority back.</p></details><details><summary>Reference reasoning</summary><p>Renew with a conditional UPDATE requiring running status, the same token, and a deadline greater than now. Decide a maximum total lease age to stop permanent extension. For queue admission, make the limit race-safe with a serialized admission counter or another explicit transactional mechanism; a count-then-insert outside a transaction is insufficient.</p></details>
+<h2 id="review-and-evidence">Review and evidence</h2><p>A deliberately incomplete design uses only a boolean running flag and has no crash recovery rule. The reference records enough state to recover authority after a crash. The database test demonstrates expiry, redelivery, stale rejection, one database effect, cancellation, and retry delay. It does not test arbitrary external effects, distributed clock skew, or sustained queue growth. Cancellation is best understood as a request that prevents future accepted completion under this database protocol, not as time travel.</p>
+<h2 id="playbook-investigation">Playbook investigation</h2><p>Observation: jobs remain running longer than five seconds. Misleading evidence: the worker logged a successful claim. Hypotheses include no new claim scan, clock rollback, a long transaction, or an incorrect deadline comparison. Inspect persisted timestamps and run claim with a controlled later timestamp in the isolated test. If it recovers immediately, the durable transition logic works for that case and “corrupted job row” is disproven. Trace the worker's next polling point and clock source. Keep the fix narrow and document what happens during a future clock jump.</p>
+<h2 id="mastery-check">Mastery check</h2><p>Implement heartbeat renewal without the reference, prove a stale token cannot renew, and explain why the same token rule must be checked at the resource that performs the effect. Provide one intentionally failing test that demonstrates the old design's defect.</p>
+<aside class="callout"><h2 id="when-you-get-stuck">When you get stuck</h2><p>Run the scheduler PostgreSQL test explicitly. Query the isolated jobs row for status, attempts, token, due, and lease_until. Compare those observations with your transition table. In a review request include both worker timelines and the effect boundary; a timestamp alone does not explain authority.</p></aside><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Scope and invariants:</strong> one local worker; at-least-once leases; three attempts maximum;10,000 retained jobs; exact duplicate submission is harmless; current token and unexpired authority are required for completion. The only reference effect is a database row committed with completion. <strong>Why this design:</strong> PostgreSQL supplies durable uniqueness, locks, and atomic updates, while an explicit token makes stale-worker behavior testable. The admission advisory lock serializes only the small local queue's count-and-insert decision. <strong>Concrete habits:</strong> preserve logical IDs; reject conflicting payloads; use deterministic times in tests; propagate invalid system-clock errors instead of silently inventing a timestamp.</p><p><strong>Alternative:</strong> a dedicated broker can supply delivery operations, but the application still owns effect idempotency and retention. A transactional counter can avoid repeatedly counting retained rows when measured enqueue throughput justifies more complexity. <strong>Evidence:</strong> actual database tests exercise expiry, fencing, cancellation, retries, deduplication, and full-budget admission. No external exactly-once guarantee or multi-host clock result is claimed. <strong>Evolution threshold:</strong> before multiple hosts, define a time authority, fair work selection, heartbeat limits, deployment connection/rate budgets, retention, and downstream effect contracts.</p><p>The API also admits at most16 handlers and imposes a five-second request/body deadline. Its runtime pool uses a three-second acquisition timeout and per-connection PostgreSQL statement timeout, so a worker blocked on database work has a finite statement wait before it can observe shutdown. The tests use isolated test pools; these operational settings are visible in the executable rather than asserted as database-server global configuration. A timeout remains an uncertain outcome; preserve the logical job ID when reconciling.</p><section><h2 id="reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</h2><p>Working directory: course root. This creates a complete separate source tree; it refuses an existing destination. Run the checkpoint tests before following the guided edits. The <a href="../../projects/checkpoints/p14-scheduler/index.html">checkpoint contract and engineering decisions</a> state exactly which features exist.</p><pre><code>python3 scripts/start-checkpoint.py p14 final
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p14-scheduler/final/Cargo.toml</code></pre><p>To compare an earlier milestone with the final reference, reconstruct each ID into a different directory. The final database integration checks still require the explicitly isolated database described in this lesson; ordinary cargo test does not execute ignored database tests.</p></section><h2 id="investigate-a-lease-that-aged-while-waiting">Investigate a lease that aged while waiting</h2><p>Observation: a worker started completion before its lease expired but waited for a database row lock. A tempting hypothesis is that the fencing token alone makes the old timestamp safe. The delayed-lock test holds the row in another transaction, waits until PostgreSQL reports an actual blocked lock request, advances the injected clock to expiry, and releases the row. Completion returns false and produces no effect. It would wrongly accept if it sampled time before waiting. No guessed sleep is used to establish the interleaving.</p><p>The post-lock clock sample is the authority decision time, not a claim about every later hardware write. Once accepted, the same transaction retains the lock while writing the database effect. Clock rollback, multi-host time authority and external effects still need additional contracts. complete(pool, lease, now) and fail(pool, lease, now) remain logical-time APIs for deterministic models. The live worker does not call fail; its local database effect is attempted immediately and an uncertain storage failure leaves the job to expire. For completion, deployed workers should use the clock callback path rather than taking a stale timestamp before an asynchronous wait.</p><p>The conditional retry UPDATE computes its delay from the stored attempts column. A bounded integer shift gives 2,000, 4,000 and 8,000 milliseconds; the third failure becomes dead. The numeric intermediate and upper clamp prevent overflowing the signed timestamp on addition. Read the <a href="https://www.postgresql.org/docs/18/functions-math.html">PostgreSQL 18 integer operator documentation</a> and identify which cast preserves integer semantics. This arithmetic is part of an atomic predicate/update, not a Rust value supplied by the worker.</p><h2 id="test-the-api-boundary-before-database-work">Test the API boundary before database work</h2><p>The reusable router is in src/http.rs; main owns the pool, worker and shutdown. The loopback test supplies a lazy pool, sends real HTTP requests, and checks absent/unknown fixture identity, invalid inputs, malformed JSON, body limits and health. Denied mutations return before any database query. A public fixture token is still not production authentication, and a healthy route still does not prove database readiness.</p><pre><code>mise exec -- cargo test -p p14-scheduler --test http
+# With the explicitly isolated scheduler test URL:
+mise exec -- cargo test -p p14-scheduler --test postgres -- --ignored</code></pre><p>The database test executable serializes its fixtures with a mutex because they share disposable teaching tables. Do not start another copy against the same fixture database concurrently. The author verification used a fresh Unix-socket-only PostgreSQL cluster and removed it after shutdown; it did not alter an existing database.</p><div class="code-wrap" data-source="projects/reference/p14-scheduler/tests/http.rs" data-sha256="1b97419644fbf01483cd72e459f8c337ba6c491ec38932dcc971f103e85ac1fe"><div class="code-label"><a href="../../projects/reference/p14-scheduler/tests/http.rs">projects/reference/p14-scheduler/tests/http.rs</a></div><pre><code>//! Real loopback route checks use a lazy pool and never contact PostgreSQL.
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+#[tokio::test]
+async fn authorization_and_input_rejection_precede_database_work() {
+    let pool = sqlx::postgres::PgPoolOptions::new()
+        .max_connections(1)
+        .acquire_timeout(std::time::Duration::from_millis(20))
+        .connect_lazy(&quot;postgresql://localhost:9/unused_fixture&quot;)
+        .unwrap();
+    let listener = tokio::net::TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let (stop, stopped) = tokio::sync::oneshot::channel();
+    let server = tokio::spawn(async move {
+        axum::serve(listener, p14_scheduler::http::router(pool))
+            .with_graceful_shutdown(async {
+                let _ = stopped.await;
+            })
+            .await
+            .unwrap();
+    });
+    let cases = [
+        (
+            &quot;POST&quot;,
+            &quot;/jobs&quot;,
+            &quot;&quot;,
+            r#&quot;{&quot;id&quot;:&quot;a&quot;,&quot;payload&quot;:&quot;work&quot;}&quot;#.to_owned(),
+            401,
+        ),
+        (
+            &quot;POST&quot;,
+            &quot;/jobs&quot;,
+            &quot;Bearer demo-reader&quot;,
+            r#&quot;{&quot;id&quot;:&quot;a&quot;,&quot;payload&quot;:&quot;work&quot;}&quot;#.to_owned(),
+            401,
+        ),
+        (&quot;POST&quot;, &quot;/jobs/a/cancel&quot;, &quot;&quot;, String::new(), 401),
+        (
+            &quot;POST&quot;,
+            &quot;/jobs/a/cancel&quot;,
+            &quot;Bearer unknown&quot;,
+            String::new(),
+            401,
+        ),
+        (
+            &quot;POST&quot;,
+            &quot;/jobs&quot;,
+            &quot;Bearer demo-operator&quot;,
+            r#&quot;{&quot;id&quot;:&quot;&quot;,&quot;payload&quot;:&quot;work&quot;}&quot;#.to_owned(),
+            422,
+        ),
+        (
+            &quot;POST&quot;,
+            &quot;/jobs&quot;,
+            &quot;Bearer demo-operator&quot;,
+            serde_json::json!({&quot;id&quot;:&quot;a&quot;,&quot;payload&quot;:&quot;x&quot;.repeat(1001)}).to_string(),
+            422,
+        ),
+        (&quot;POST&quot;, &quot;/jobs&quot;, &quot;Bearer demo-operator&quot;, &quot;{&quot;.into(), 400),
+        (
+            &quot;POST&quot;,
+            &quot;/jobs&quot;,
+            &quot;Bearer demo-operator&quot;,
+            &quot;x&quot;.repeat(4097),
+            413,
+        ),
+        (&quot;GET&quot;, &quot;/health&quot;, &quot;&quot;, String::new(), 200),
+    ];
+    let mut observed = Vec::new();
+    for (method, path, identity, body, expected) in cases {
+        let response = tokio::time::timeout(std::time::Duration::from_secs(2), async {
+            let mut stream = tokio::net::TcpStream::connect(address).await.unwrap();
+            let request = format!(&quot;{method} {path} HTTP/1.1\r\nHost: {address}\r\nAuthorization: {identity}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}&quot;,body.len());
+            stream.write_all(request.as_bytes()).await.unwrap();
+            let mut response = Vec::new();
+            stream.take(8193).read_to_end(&amp;mut response).await.unwrap();
+            response
+        }).await.unwrap();
+        let response = String::from_utf8(response).unwrap();
+        let status = response
+            .split_whitespace()
+            .nth(1)
+            .unwrap()
+            .parse::&lt;u16&gt;()
+            .unwrap();
+        observed.push((path.to_owned(), status, expected));
+    }
+    stop.send(()).unwrap();
+    server.await.unwrap();
+    for (route, status, expected) in observed {
+        assert_eq!(status, expected, &quot;{route}&quot;);
+    }
+}
+</code></pre></div><h2 id="protect-the-disposable-test-boundary">Protect the disposable test boundary</h2><p>The scheduler's opt-in database tests require the exact name rust_course_test_scheduler and a literal loopback address or absolute local socket path. A shared test helper parses the effective SQLx connection options and verifies SELECT current_database() on every new connection before migrations or resets. A string containing the test name elsewhere in a URL is insufficient. Tests still require a database you have established is disposable; the name and local transport alone do not establish ownership. The author verification creates a fresh private Unix-socket-only cluster and removes only that cluster after a successful shutdown.</p>
+<h3>Output policy and ownership at process boundaries</h3><p>The listener bind and required startup banner now complete before spawning the worker. A closed stdout pipe is ordinary I/O failure; startup uses writeln! and flush with ? instead of a panic-producing printing macro. SCHEDULER_DATABASE_URL errors use a fixed message because the non-Unicode error type can otherwise retain the original credential-bearing value.</p><p>Worker observations have a different contract: they use best-effort Write calls, and an output error does not panic the task or decide whether a database effect committed. That means a lost log line is possible. Inspect durable job/effect state when reconciling outcomes; a log line is not a durable acknowledgment or audit record. A synchronous write can still block on a slow sink. This small local demonstration does not promise a hard shutdown deadline for logging; a stronger operational requirement would justify a bounded logging worker and an explicit dropped-message policy.</p><p>The main task owns the Ctrl-C future and a pinned server future. The same watch sender can stop both the server and worker. Every server exit signals the worker, awaits its handle, closes the pool, and only then returns saved server, worker or signal errors. It no longer uses an early ? after serving that could skip the join. The worker observes the current stop state before waiting, so an already-set stop is effective. Read <a href="../../verification/service-output-followup.html">the process evidence and remaining limits</a>; a source review of this ordering is distinct from an injected accept-error execution.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://www.postgresql.org/docs/18/explicit-locking.html">PostgreSQL 18 explicit locking</a></li><li><a href="https://www.postgresql.org/docs/18/sql-select.html">PostgreSQL 18 SELECT locking clauses</a></li><li><a href="https://docs.rs/tokio/1.53.3/tokio/task/struct.JoinHandle.html">Tokio task ownership</a></li><li><a href="https://www.postgresql.org/docs/18/functions-math.html">PostgreSQL 18: mathematical operators</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-8/08-delivery.html">Previous: Partial failure, idempotency, and the outbox</a><a href="../../lessons/stage-8/08-replication.html">Next: A deterministic replicated-state laboratory</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#specification-before-implementation">Specification before implementation</a><a href="#plain-english-model-temporary-authority">Plain-English model: temporary authority</a><a href="#prediction">Prediction</a><a href="#runnable-checkpoint">Runnable checkpoint</a><a href="#guided-implementation-and-unfamiliar-sql">Guided implementation and unfamiliar SQL</a><a href="#deliberate-mistake">Deliberate mistake</a><a href="#independent-practice">Independent practice</a><a href="#review-and-evidence">Review and evidence</a><a href="#playbook-investigation">Playbook investigation</a><a href="#mastery-check">Mastery check</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</a><a href="#investigate-a-lease-that-aged-while-waiting">Investigate a lease that aged while waiting</a><a href="#test-the-api-boundary-before-database-work">Test the API boundary before database work</a><a href="#protect-the-disposable-test-boundary">Protect the disposable test boundary</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

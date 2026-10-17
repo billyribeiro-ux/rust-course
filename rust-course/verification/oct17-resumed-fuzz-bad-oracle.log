@@ -1,0 +1,117 @@
+$ python3 scripts/fuzz-expression.py --target bad-oracle --cache-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17
+Command: mise exec cargo:cargo-fuzz@0.13.2 -- rustup run nightly-2026-10-17 cargo fuzz run --fuzz-dir /Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target bad-oracle /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/corpus/bad-oracle -- -runs=10000 -max_len=4097 -timeout=2 -rss_limit_mb=512 -seed=20261009 -artifact_prefix=/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/artifacts/
+   Compiling expression-fuzz v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz)
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.57s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.01s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle -artifact_prefix=/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz/artifacts/bad-oracle/ -runs=10000 -max_len=4097 -timeout=2 -rss_limit_mb=512 -seed=20261009 -artifact_prefix=/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/artifacts/ /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/corpus/bad-oracle`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 20261009
+INFO: Loaded 1 modules   (886 inline 8-bit counters): 886 [0x1009f62a0, 0x1009f6616), 
+INFO: Loaded 1 PC tables (886 PCs): 886 [0x1009f6618,0x1009f9d78), 
+INFO:        5 files found in /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/corpus/bad-oracle
+INFO: seed corpus: files: 5 min: 3b max: 131b total: 170b rss: 35Mb
+
+thread '<unnamed>' (18583255) panicked at fuzz_targets/bad_oracle.rs:11:13:
+assertion `left == right` failed: INTENTIONALLY WRONG: each character occupies one byte
+  left: 4
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+==81888== ERROR: libFuzzer: deadly signal
+==81888==WARNING: external symbolizer didn't start up correctly!
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1012db654"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10097873c"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10096c07c"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1886dd740"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1886d38d4"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1885d9974"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009d476c"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009d44dc"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009cf87c"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009b821c"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009aa83c"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009a3514"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009aae28"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009d4fd4"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009d4ef8"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1009d4bf8"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x100961cd8"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x100963a5c"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10096a694"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10096b2cc"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x100969f64"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10096d8f8"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10096cf9c"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10096f798"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10096f930"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10098eec4"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x10099ca68"
+==81888==WARNING: Can't read from symbolizer at fd 3
+==81888==WARNING: atos failed to symbolize address "0x1883084e0"
+    #0 0x0001012db654 in __sanitizer_print_stack_trace+0x28 (/Users/billyribeiro/.rustup/toolchains/nightly-2026-10-17-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/lib/librustc-nightly_rt.asan.dylib:arm64+0x87654)
+    #1 0x00010097873c in fuzzer::PrintStackTrace()+0x30 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10001873c)
+    #2 0x00010096c07c in fuzzer::Fuzzer::CrashCallback()+0x54 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10000c07c)
+    #3 0x0001886dd740 in _sigtramp+0x34 (/usr/lib/system/libsystem_platform.dylib:arm64e+0x3740)
+    #4 0x0001886d38d4 in pthread_kill+0x124 (/usr/lib/system/libsystem_pthread.dylib:arm64e+0x68d4)
+    #5 0x0001885d9974 in abort+0x90 (/usr/lib/system/libsystem_c.dylib:arm64e+0x78974)
+    #6 0x0001009d476c in _RNvNtNtNtCs29DId5Tv72I_3std3sys3pal4unix14abort_internal+0x8 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10007476c)
+    #7 0x0001009d44dc in _RNvNtCs29DId5Tv72I_3std7process5abort+0x8 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x1000744dc)
+    #8 0x0001009cf87c in _RNCNvCsfsA8EIwMYOE_13libfuzzer_sys10initialize0B3_+0xb8 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10006f87c)
+    #9 0x0001009b821c in _RNvNtCs29DId5Tv72I_3std9panicking15panic_with_hook+0x26c (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10005821c)
+    #10 0x0001009aa83c in _RNCNvNtCs29DId5Tv72I_3std9panicking13panic_handler0B5_+0x40 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10004a83c)
+    #11 0x0001009a3514 in _RINvNtNtCs29DId5Tv72I_3std3sys9backtrace26___rust_end_short_backtraceNCNvNtB6_9panicking13panic_handler0zEB6_+0x8 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x100043514)
+    #12 0x0001009aae28 in _RNvCs6EUDi8WbMwz_7___rustc17rust_begin_unwind+0x1c (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10004ae28)
+    #13 0x0001009d4fd4 in _RNvNtCs89ihjnFx7T6_4core9panicking9panic_fmt+0x24 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x100074fd4)
+    #14 0x0001009d4ef8 in _RNvNtCs89ihjnFx7T6_4core9panicking19assert_failed_inner+0xb8 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x100074ef8)
+    #15 0x0001009d4bf8 in _RINvNtCs89ihjnFx7T6_4core9panicking13assert_failedjjEB4_+0x24 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x100074bf8)
+    #16 0x000100961cd8 in _RNvNvCsapRtsnF4YSi_10bad_oracle1__19___libfuzzer_sys_run+0x394 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x100001cd8)
+    #17 0x000100963a5c in rust_fuzzer_test_input+0x2fc (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x100003a5c)
+    #18 0x00010096a694 in _RINvNvNtCs29DId5Tv72I_3std9panicking12catch_unwind7do_callNCNvCsfsA8EIwMYOE_13libfuzzer_sys15test_input_wrap0lEBY_+0xc4 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10000a694)
+    #19 0x00010096b2cc in __rust_try+0x18 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10000b2cc)
+    #20 0x000100969f64 in LLVMFuzzerTestOneInput+0x16c (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x100009f64)
+    #21 0x00010096d8f8 in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long)+0x158 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10000d8f8)
+    #22 0x00010096cf9c in fuzzer::Fuzzer::RunOne(unsigned char const*, unsigned long, bool, fuzzer::InputInfo*, bool, bool*)+0x48 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10000cf9c)
+    #23 0x00010096f798 in fuzzer::Fuzzer::ReadAndExecuteSeedCorpora(std::__1::vector<fuzzer::SizedFile, std::__1::allocator<fuzzer::SizedFile>>&)+0x814 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10000f798)
+    #24 0x00010096f930 in fuzzer::Fuzzer::Loop(std::__1::vector<fuzzer::SizedFile, std::__1::allocator<fuzzer::SizedFile>>&)+0x88 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10000f930)
+    #25 0x00010098eec4 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long))+0x1a3c (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10002eec4)
+    #26 0x00010099ca68 in main+0x24 (/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target/aarch64-apple-darwin/release/bad-oracle:arm64+0x10003ca68)
+    #27 0x0001883084e0 in start+0x1b4c (/usr/lib/dyld:arm64e+0x204e0)
+
+NOTE: libFuzzer has rudimentary signal handlers.
+      Combine libFuzzer with AddressSanitizer or similar for better crash reports.
+SUMMARY: libFuzzer: deadly signal
+MS: 0 ; base unit: 0000000000000000000000000000000000000000
+0x32,0x2b,0xf0,0x9f,0xa6,0x80,
+2+\360\237\246\200
+artifact_prefix='/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/artifacts/'; Test unit written to /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/artifacts/crash-f35db42258ccd2ebf5e3ffb480bdecec33e61def
+Base64: Mivwn6aA
+────────────────────────────────────────────────────────────────────────────────
+
+Error: Fuzz target exited with exit status: 77
+This target contains an intentionally false assertion. A finding is expected; inspect its input and oracle before blaming the parser.

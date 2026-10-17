@@ -1,0 +1,2 @@
+rows=2 static_notional=7700 dynamic_totals=[7700, 5]
+retained 2 owned rows after dropping the source buffer

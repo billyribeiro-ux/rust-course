@@ -1,0 +1,78 @@
+{
+  "verified_on": "2026-10-09",
+  "rust_version": "1.99.0",
+  "release": "2026-10-01",
+  "release_source": "https://blog.rust-lang.org/2026/10/01/Rust-1.99.0/",
+  "methods": [
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/book/ch04-01-what-is-ownership.html",
+      "result": "Direct HTTPS fetch returned versioned HTML; web tool versioned-document rendering failed."
+    },
+    {
+      "url": "https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html",
+      "result": "Official current documentation read with web tool."
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/io/trait.BufRead.html",
+      "result": "Official current documentation read with web tool."
+    },
+    {
+      "url": "https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html",
+      "result": "Official current documentation read with web tool."
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/primitive.i64.html",
+      "result": "Official current documentation read with web tool."
+    },
+    {
+      "url": "https://mise.jdx.dev/lang/rust.html",
+      "result": "Official mise documentation read with web tool."
+    }
+  ],
+  "lesson_sources": [
+    "https://blog.rust-lang.org/2026/10/01/Rust-1.99.0/",
+    "https://doc.rust-lang.org/1.99.0/book/ch03-02-data-types.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch03-03-how-functions-work.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch04-01-what-is-ownership.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch04-02-references-and-borrowing.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch04-03-slices.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch05-01-defining-structs.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch06-00-enums.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch06-01-defining-an-enum.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch06-02-match.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch09-02-recoverable-errors-with-result.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch10-02-traits.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch10-03-lifetime-syntax.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch11-01-writing-tests.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch15-01-box.html",
+    "https://doc.rust-lang.org/1.99.0/book/ch18-02-trait-objects.html",
+    "https://doc.rust-lang.org/1.99.0/std/boxed/struct.Box.html",
+    "https://doc.rust-lang.org/1.99.0/std/collections/struct.BTreeMap.html",
+    "https://doc.rust-lang.org/1.99.0/std/collections/struct.HashSet.html",
+    "https://doc.rust-lang.org/1.99.0/std/convert/trait.AsRef.html",
+    "https://doc.rust-lang.org/1.99.0/std/fmt/trait.Debug.html",
+    "https://doc.rust-lang.org/1.99.0/std/fs/fn.rename.html",
+    "https://doc.rust-lang.org/1.99.0/std/fs/struct.File.html",
+    "https://doc.rust-lang.org/1.99.0/std/fs/struct.OpenOptions.html#method.create_new",
+    "https://doc.rust-lang.org/1.99.0/std/io/struct.BufReader.html",
+    "https://doc.rust-lang.org/1.99.0/std/io/trait.BufRead.html",
+    "https://doc.rust-lang.org/1.99.0/std/io/trait.Read.html#method.take",
+    "https://doc.rust-lang.org/1.99.0/std/io/trait.Write.html",
+    "https://doc.rust-lang.org/1.99.0/std/iter/trait.Iterator.html",
+    "https://doc.rust-lang.org/1.99.0/std/num/type.NonZeroU16.html",
+    "https://doc.rust-lang.org/1.99.0/std/option/enum.Option.html",
+    "https://doc.rust-lang.org/1.99.0/std/primitive.i64.html#method.checked_add",
+    "https://doc.rust-lang.org/1.99.0/std/primitive.i64.html#method.checked_div",
+    "https://doc.rust-lang.org/1.99.0/std/primitive.str.html",
+    "https://doc.rust-lang.org/1.99.0/std/primitive.str.html#method.is_char_boundary",
+    "https://doc.rust-lang.org/1.99.0/std/primitive.str.html#method.lines",
+    "https://doc.rust-lang.org/1.99.0/std/result/enum.Result.html",
+    "https://doc.rust-lang.org/1.99.0/std/str/fn.from_utf8.html",
+    "https://doc.rust-lang.org/1.99.0/std/str/trait.FromStr.html",
+    "https://doc.rust-lang.org/1.99.0/std/string/struct.String.html",
+    "https://doc.rust-lang.org/1.99.0/std/time/struct.Duration.html",
+    "https://doc.rust-lang.org/cargo/commands/cargo-run.html",
+    "https://mise.jdx.dev/lang/rust.html"
+  ],
+  "limits": "Versioned links are supplied for the pinned Rust baseline. Not every versioned page was individually fetched; direct ownership fetch confirms the versioned path, and native Rust 1.99 checks verify code behavior. No claim of independent source review."
+}

@@ -1,0 +1,16 @@
+$ mise exec node@26.12.0 -- npm run build
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge
+mise WARN  Failed to resolve tool version list for node: [--runtime] node@26.12.0: node@26.12.0 is not in the lockfile
+hint: Run `mise install` without --locked to update the lockfile
+mise WARN  Failed to resolve tool version list for rust: [~/Desktop/rust-course/rust-course/mise.toml] rust@1.99.1: rust@1.99.1 is not in the lockfile
+hint: Run `mise install` without --locked to update the lockfile
+mise WARN  Failed to resolve tool version list for rust: [~/Desktop/rust-course/rust-course/mise.toml] rust@1.99.1: rust@1.99.1 is not in the lockfile
+hint: Run `mise install` without --locked to update the lockfile
+mise WARN  Failed to resolve tool version list for node: [--runtime] node@26.12.0: node@26.12.0 is not in the lockfile
+hint: Run `mise install` without --locked to update the lockfile
+mise ERROR No version is set for shim: node
+Set a global default version with one of the following:
+mise use -g node@24.21.0
+mise use -g node@26.12.0
+mise ERROR Version: 2026.10.12 macos-arm64 (2026-10-16)
+mise ERROR Run with --verbose or MISE_VERBOSE=1 for more information

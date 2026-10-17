@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "project": "p10-issues",
+  "checkpoints": [
+    {
+      "id": "00-scaffold",
+      "title": "First domain or encoding checkpoint",
+      "source": "projects/scaffolds/p10-issues",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p10-issues/locks/00-scaffold.Cargo.lock"
+    },
+    {
+      "id": "01-http-validation",
+      "title": "HTTP validation and actor boundary",
+      "source": "projects/checkpoints/p10-issues/01-http-validation",
+      "contract": "An in-process Axum service exposes POST /issues/validate; the writer fixture receives a normalized title, a reader receives403, unknown identity401, invalid title422, invalid JSON400, and oversized body413. Four admitted requests, a one-second deadline, and4096-byte bodies are bounded. Nothing is persisted and this endpoint never creates an issue.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p10-issues/locks/01-http-validation.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete reference implementation",
+      "source": "projects/reference/p10-issues",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p10-issues/locks/final.Cargo.lock"
+    }
+  ]
+}

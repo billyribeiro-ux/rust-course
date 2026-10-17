@@ -1,0 +1,143 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Measure a claim before optimizing · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="07-performance" data-lesson="07-performance"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Measure a claim before optimizing</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 07 / Performance and unsafe Rust</div><h1>Measure a claim before optimizing</h1><p class="lead">Use a repeatable release-profile experiment and correctness oracle to evaluate performance changes.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-6/06-boundaries.html">Rendering, security and alternative clients</a></li><li><a href="../../lessons/stage-4/04-monitor.html">A bounded local health monitor</a></li></ul><ul><li>Define the measured workload and timing boundary</li><li>Separate compiler profile, workload shape and algorithm effects</li><li>Collect multiple local measurements without inventing guarantees</li><li>Reject optimizations that change semantics or weaken validation</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#compaction">compaction</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#replay">replay</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p12">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-turn-faster-into-a-testable-statement">Purpose: turn “faster” into a testable statement</h2>
+<p>Performance work begins with a question whose conditions are explicit. “The replay is fast” has no workload, machine, profile or correctness requirement. A useful claim might say that one implementation processes a fixed synthetic stream with identical resulting state in less elapsed time under a recorded release build. P12 provides a small benchmark executable so you can practice constructing that evidence. It reports measurements from your machine when you run it. This course does not supply invented throughput numbers or suggest that a toy stream predicts production market-system performance.</p>
+<h2 id="model-measured-time-includes-a-chosen-boundary">Model: measured time includes a chosen boundary</h2>
+<p>The benchmark compares immediate streaming with a reusable buffer holding at most 1024 events. Both timed regions include synthetic generation and complete replay, including creation of a fresh Replay and any batch allocation. The timer stops when the selected variant returns. Full-state comparison, digest calculation, output and final state destruction happen afterward. One untimed reference run supplies the expected state. Each variant receives two warm-ups and seven measured trials, with first/second order alternating within each pair rather than randomized. The executable prints raw TSV sample rows; the recorded measurement report computes minimum, median and maximum from those observations. If you change this boundary, label the new measurement rather than treating it as equivalent work.</p>
+<h2 id="predict-what-will-change">Predict what will change</h2>
+<p>Before running, predict why the comparison requires a release build, what a tiny versus large event count changes, and how two live orders differ from thousands of live orders. Explain why the last comparison could change allocation and tree-lookup behavior even when total event count stays constant. Predict that the digest should remain stable for the same count and generator rule; do not predict a particular elapsed time. Background activity, CPU power state, thermal behavior and filesystem cache effects can affect observations. Repetition helps reveal variation but does not eliminate all confounding factors.</p>
+<pre><code>cd rust-course/projects
+mise exec -- rustc -Vv
+mise exec -- cargo test -p p12-replay
+mise exec -- cargo run --release -p p12-replay --bin benchmark -- 1000003</code></pre>
+<h2 id="read-the-harness-before-trusting-its-output">Read the harness before trusting its output</h2>
+<div class="code-wrap" data-source="projects/reference/p12-replay/src/bin/benchmark.rs" data-sha256="fa5ae599102aec6723aafae5a7a7996f653d8009cdbc614ae941125f3ee9d0a4"><div class="code-label"><a href="../../projects/reference/p12-replay/src/bin/benchmark.rs">projects/reference/p12-replay/src/bin/benchmark.rs</a></div><pre><code>//! Compare immediate event application with a bounded, reusable event batch.
+//! Both timed regions include synthetic generation and complete replay work.
+use p12_replay::{Event, Replay};
+use std::{hint::black_box, io, time::Instant};
+const BATCH_EVENTS: usize = 1024;
+const SAMPLES: usize = 7;
+const WARMUPS_PER_VARIANT: usize = 2;
+fn batched(count: usize) -&gt; Result&lt;Replay, p12_replay::Error&gt; {
+    let mut source = p12_replay::synthetic(count)?;
+    let mut replay = Replay::new(4096)?;
+    let mut batch: Vec&lt;Event&gt; = Vec::with_capacity(BATCH_EVENTS);
+    loop {
+        // The iterator is lazy; no more than BATCH_EVENTS events are retained.
+        batch.extend(source.by_ref().take(BATCH_EVENTS));
+        if batch.is_empty() {
+            return Ok(replay);
+        }
+        for event in batch.drain(..) {
+            replay.apply(event)?;
+        }
+        // drain preserves allocation capacity for the next bounded batch.
+    }
+}
+fn run_variant(name: &amp;str, count: usize) -&gt; Result&lt;Replay, p12_replay::Error&gt; {
+    match name {
+        &quot;stream&quot; =&gt; p12_replay::run(count),
+        &quot;batch1024&quot; =&gt; batched(count),
+        _ =&gt; unreachable!(&quot;variant names come from the fixed internal pair&quot;),
+    }
+}
+fn require_same(actual: &amp;Replay, expected: &amp;Replay) -&gt; io::Result&lt;()&gt; {
+    if actual != expected {
+        return Err(io::Error::other(&quot;complete replay states differ&quot;));
+    }
+    Ok(())
+}
+fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    let arguments: Vec&lt;_&gt; = std::env::args_os().skip(1).collect();
+    let count = match arguments.as_slice() {
+        [] =&gt; 1_000_003,
+        [text] =&gt; text
+            .to_str()
+            .ok_or(&quot;count must be UTF-8 integer text&quot;)?
+            .parse::&lt;usize&gt;()?,
+        _ =&gt; return Err(&quot;usage: benchmark [event_count 1..=10000000]&quot;.into()),
+    };
+    if !(1..=10_000_000).contains(&amp;count) {
+        return Err(&quot;benchmark count must be in 1..=10000000&quot;.into());
+    }
+    if cfg!(debug_assertions) {
+        return Err(&quot;comparative measurement requires cargo run --release&quot;.into());
+    }
+    let expected = black_box(p12_replay::run(count)?);
+    for warmup in 0..WARMUPS_PER_VARIANT {
+        let order = if warmup % 2 == 0 {
+            [&quot;stream&quot;, &quot;batch1024&quot;]
+        } else {
+            [&quot;batch1024&quot;, &quot;stream&quot;]
+        };
+        for variant in order {
+            require_same(
+                &amp;black_box(run_variant(variant, black_box(count))?),
+                &amp;expected,
+            )?;
+        }
+    }
+    println!(
+        &quot;benchmark=replay profile=release events={count} samples_per_variant={SAMPLES} warmups_per_variant={WARMUPS_PER_VARIANT} untimed_reference_runs=1 batch_limit={BATCH_EVENTS}&quot;
+    );
+    println!(
+        &quot;timed=generation_and_replay excluded=state_comparison_output includes_batch_allocation=true live_orders_peak=2&quot;
+    );
+    println!(
+        &quot;sample\tposition\tvariant\telapsed_ns\taccepted\topen_orders\tdigest\tfull_state_equal&quot;
+    );
+    for sample in 0..SAMPLES {
+        let order = if sample % 2 == 0 {
+            [&quot;stream&quot;, &quot;batch1024&quot;]
+        } else {
+            [&quot;batch1024&quot;, &quot;stream&quot;]
+        };
+        for (position, variant) in order.into_iter().enumerate() {
+            let start = Instant::now();
+            let state = black_box(run_variant(variant, black_box(count))?);
+            let elapsed = start.elapsed().as_nanos();
+            require_same(&amp;state, &amp;expected)?;
+            println!(
+                &quot;{}\t{}\t{variant}\t{elapsed}\t{}\t{}\t{:016x}\ttrue&quot;,
+                sample + 1,
+                position + 1,
+                state.accepted(),
+                state.orders().len(),
+                state.digest()
+            );
+        }
+    }
+    println!(
+        &quot;limit=local_observation_only no_disk_input=true randomization=false order=alternating_pairs&quot;
+    );
+    Ok(())
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn batch_boundaries_preserve_complete_state() {
+        for count in [0, 1, 2, 3, 4, 1023, 1024, 1025, 2049, 10_003] {
+            assert_eq!(
+                batched(count).unwrap(),
+                p12_replay::run(count).unwrap(),
+                &quot;count={count}&quot;
+            );
+        }
+    }
+}
+</code></pre></div>
+<p>Argument parsing accepts an event count from one through ten million. The harness rejects a debug build so a profile mismatch cannot silently become comparative evidence. black_box discourages optimization based on visible inputs and outputs, but remains a best-effort barrier. require_same compares every completed Replay with the untimed reference, including orders, sequence, capacity and accounting. The printed digest is a convenient diagnostic, not the correctness gate. The batch-boundary regression also compares complete states at counts around 1024. These comparisons detect semantic divergence for the exercised inputs; they do not establish every possible workload or failure behavior.</p>
+<h2 id="inspect-the-workload-s-hidden-assumptions">Inspect the workload's hidden assumptions</h2>
+<p>The synthetic generator repeats two placements followed by their cancellations. Its live map never exceeds two orders. That is excellent for a bounded demonstration and poor evidence for lookup behavior in a large active book. Price values vary by a deterministic rule, and no network, exchange matching, latency distribution or real data feed is modeled. The benchmark includes allocation for inserted map entries, but its state-size distribution is unusually small. Record these facts beside each result. A performance conclusion should name this workload, not quietly generalize to all replay systems.</p>
+<h2 id="intentional-failure-make-a-misleading-comparison">Intentional failure: make a misleading comparison</h2>
+<p>Run the comparative executable once without --release and predict its refusal before execution. That failure enforces the harness contract; it is not a Rust installation defect. Now review a fictional report comparing an old debug measurement with a new release measurement. The attribution is invalid because implementation and profile changed together. Repeat both real variants under one release profile and input count. Separately consider a “faster” implementation that skips duplicate-ID checks: run the rejection tests before interpreting its timing. Correctness is a constraint of the experiment, not a separate nice-to-have after optimization.</p>
+<h2 id="playbook-investigation-a-claimed-twofold-improvement">Playbook investigation: a claimed twofold improvement</h2>
+<p>You receive only a screenshot of one throughput figure and a patch replacing BTreeMap with another representation. Observations are incomplete: the screenshot does not establish event count, compiler version, profile, active-state size or whether validation still runs. Form at least three competing hypotheses. One may attribute improvement to the data structure, another to a release-profile change, and another to a smaller workload. Design a paired experiment that can disprove your favored explanation. For example, keep the old implementation but use the screenshot's build profile; if it improves similarly, the patch is not sufficient evidence for the claimed cause.</p>
+<p>Choose the next investigation step independently. You might capture exact commands, inspect generated input counts, or compare complete resulting states. Do not begin by rewriting the program again. A defensible report includes raw observations, controls, at least one disproved hypothesis, and remaining uncertainty. A fix can be “correct the benchmark procedure and withdraw the unsupported claim.” Engineering progress does not always require a source-code change.</p>
+<h2 id="guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</h2>
+<p>Write a measurement plan before execution: question, fixed inputs, build profile, timing boundary, correctness oracle, number of trials and environmental observations. Then add a second deterministic generator whose live set grows to a chosen bounded size before cancellations. Keep the original generator as a baseline. Independently evaluate one change such as reducing repeated lookups or adjusting representation. Preserve failure semantics, including unchanged state after rejection. Decide what variation would be too large to justify your conclusion and what additional experiment would resolve it.</p>
+<details><summary>Tiered hints and solution direction</summary><details><summary>Hint 1: choose the next observation</summary><p>compare like with like before searching for an advanced profiler.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>event count and maximum live state are different workload dimensions.</p></details><details><summary>Worked solution</summary><p>A sound investigation first proves semantic equality on small adversarial streams, then repeats equivalent large workloads under one recorded profile. Retain rejected experiments in the log with the reason they were invalid. Do not select only the fastest trial as representative of normal behavior.</p></details></details>
+<aside class="stuck"><h3>When you get stuck</h3><p>Run the correctness tests, capture mise exec -- rustc -Vv, and read the benchmark's start and stop lines. Inspect std::hint::black_box's stated limitations. Ask for review with both commands, all reported samples, workload rule, digest and complete-state comparisons. “It feels slower” should become a reproducible observation before anyone proposes a low-level optimization.</p></aside>
+<h2 id="review-evidence-and-mastery">Review, evidence and mastery</h2>
+<p>Submit the measurement plan, local output, a paired comparison and a limits paragraph. Mastery means making a causal claim no stronger than the experiment supports. You should be able to reject misleading evidence, preserve correctness while changing performance, and explain why a local median is useful without presenting it as a service-level guarantee or a prediction for an unrelated workload.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Current scope and invariants.</strong> The next sequence is exact, live order count is capped, fixed-point prices are validated, and rejected events preserve the entire replay state. All fallible accounting is checked before a placement is committed.</p><p><strong>Why this is the current recommended shape.</strong> Newtypes separate event and order IDs; a private Price representation prevents invalid ticks entering through safe constructors. Replay accounting stays private behind read-only getters, so callers cannot bypass transition validation by assigning metrics. Integer arithmetic expresses the chosen scale exactly. A BTreeMap gives stable iteration, generators stream events, and full-state comparisons accompany digest checks.</p><p><strong>Reasonable alternative and tradeoff.</strong> A hash map can offer different lookup costs, but deterministic output would need a separate ordering step and measurement on a representative workload. A mature decimal type is appropriate when varying scales or richer decimal operations become requirements. Neither abstraction is needed to express this fixed four-place bounded exercise clearly.</p><p><strong>Evidence and limits.</strong> Native reference tests were run through mise in the coordinated course verification; inspect the current verification record for exact results. Exact decimal grammar and limits; full-state deterministic replay; duplicate and sequence rejection; capacity and absent cancellation; injected accounting overflow; bounded generated live state. The supplied generator keeps only two live orders. A digest can collide and omits internal details; it is not an equivalence proof. Local benchmark samples include generation and exclude final digest/destruction. No universal timing claims are made.</p><p><strong>Requirement that would justify evolution.</strong> Revisit representation and benchmark workload when active-state size, persistence, out-of-order arrival or domain rules expand. This is a state-transition exercise, not a matching engine. Add an amendment only after specifying its accounting and identity semantics.</p><p>In your review, explain this choice in your own words, preserve the behavioral contract during changes, and name the evidence that would make you choose the alternative. Deliberately broken variants above are diagnostic exercises, never recommended implementation stages.</p></section><p class="evidence"><strong>Patch verification:</strong> the coordinated targeted suite passed after adding P06 write-failure and stale-compaction regressions and making P12 accounting private. The exact execution is recorded in verification/patch001-targeted.log; independent review remains pending.</p><h2 id="recorded-comparative-evidence">Recorded comparative evidence</h2><p>The authored <a href="../../benchmark-results.html">measurement report</a> records the actual release-profile comparison: 1,000,003 events, two warm-ups and seven samples per variant, alternating pair order, and complete-state equality. The local streaming median was 8.805 ms and the bounded-batch median 9.574 ms. Batching was slower in all seven paired observations on that recorded workload; no CPU or allocator profile was collected to attribute the cause. The same report separately compares one and four indexer workers over a fixed warm-cache fixture. Preserve these workload and environment limits when discussing the observations.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/std/hint/fn.black_box.html">black_box limitations</a></li><li><a href="https://doc.rust-lang.org/std/time/struct.Instant.html">Instant</a></li><li><a href="https://doc.rust-lang.org/cargo/reference/profiles.html">Cargo profiles</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-7/07-allocation-dispatch.html">Previous: Choose ownership and dispatch without hidden cost claims</a><a href="../../lessons/stage-7/07-replay.html">Next: Deterministic replay with exact domain values</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-turn-faster-into-a-testable-statement">Purpose: turn “faster” into a testable statement</a><a href="#model-measured-time-includes-a-chosen-boundary">Model: measured time includes a chosen boundary</a><a href="#predict-what-will-change">Predict what will change</a><a href="#read-the-harness-before-trusting-its-output">Read the harness before trusting its output</a><a href="#inspect-the-workload-s-hidden-assumptions">Inspect the workload's hidden assumptions</a><a href="#intentional-failure-make-a-misleading-comparison">Intentional failure: make a misleading comparison</a><a href="#playbook-investigation-a-claimed-twofold-improvement">Playbook investigation: a claimed twofold improvement</a><a href="#guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</a><a href="#review-evidence-and-mastery">Review, evidence and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#recorded-comparative-evidence">Recorded comparative evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-09T18:54:52.372315+00:00",
+  "scope": "Pure data decision tests and JavaScript syntax, not browser or storage-runtime verification",
+  "commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--test",
+        "verification/progress-data.test.cjs"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--check",
+        "assets/progress-data.js"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--check",
+        "assets/course.js"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0
+    }
+  ],
+  "passed": true,
+  "tests": {
+    "passed": 8,
+    "failed": 0
+  },
+  "source_sha256": {
+    "assets/course.js": "1dcdf9e4c936195d7cc5abf4656f9a250177748fa0755fdfc68d41871288b689",
+    "assets/progress-data.js": "6552072dd9c9f53e74d0980c026d2638abed4d952cfb65f077a13c624332940b",
+    "verification/progress-data.test.cjs": "9229684befe0b98e2f77d49f006aea3ffaf8845e6285e401a6b4241ca6d7fb50"
+  }
+}

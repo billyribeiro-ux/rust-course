@@ -1,0 +1,813 @@
+{
+  "working_directory": "/Users/billyribeiro/Desktop/rust-course",
+  "temporary_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m",
+  "shared_target": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+  "independent_review": "pending",
+  "checks": [
+    {
+      "label": "p07-indexer-01-streaming-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "01-streaming",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming\nFixed-size reads preserve word state and unterminated final lines; at most budget plus one bytes are consumed; ordinary IO failures propagate.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p07-indexer-01-streaming-test",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "\nrunning 3 tests\ntest tests::detects_one_byte_over_budget ... ok\ntest tests::chunk_boundaries_preserve_words_and_lines ... ok\ntest tests::interrupted_reads_retry_but_real_errors_propagate ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling checkpoint-p07-streaming v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.48s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/checkpoint_p07_streaming-6249cbc0754c8741)\n     Running unittests src/main.rs (.course-cache/native/debug/deps/checkpoint_p07_streaming-62ae8f8a21303e77)\n"
+    },
+    {
+      "label": "p07-indexer-01-streaming-run",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "run",
+        "--offline",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "bytes=16 lines=2 words=3\n   Compiling checkpoint-p07-streaming v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.14s\n     Running `.course-cache/native/debug/checkpoint-p07-streaming`\n"
+    },
+    {
+      "label": "p07-indexer-01-streaming-clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "output": "    Checking checkpoint-p07-streaming v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.23s\n"
+    },
+    {
+      "label": "p07-indexer-final-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/final"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/final\nFinal reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/final/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p07-indexer-final-test",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "\nrunning 5 tests\ntest tests::invalid_limits_are_rejected ... ok\ntest tests::cancellation_before_start_submits_nothing ... ok\ntest tests::streaming_counts_across_buffer_boundaries_and_sorts ... ok\ntest tests::oversize_and_missing_files_are_per_file_results ... ok\ntest tests::queue_one_does_not_deadlock_and_output_is_repeatable ... ok\n\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling p07-indexer v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/final)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/p07_indexer-fea7beeca2e34c26)\n     Running unittests src/bin/indexer-benchmark.rs (.course-cache/native/debug/deps/indexer_benchmark-574affb77452c0d0)\n     Running unittests src/main.rs (.course-cache/native/debug/deps/p07_indexer-6a78d433c462c786)\n"
+    },
+    {
+      "label": "p08-monitor-01-budget-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "01-budget",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget\nA retry requires an available attempt, nonzero per-attempt cap, and positive time after elapsed time and backoff; arithmetic cannot wrap.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p08-monitor-01-budget-test",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "\nrunning 3 tests\ntest tests::caps_attempt_after_paying_backoff ... ok\ntest tests::arithmetic_does_not_overflow_when_deadline_is_exceeded ... ok\ntest tests::exhausted_time_count_and_zero_timeout_have_no_attempt ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling checkpoint-p08-budget v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/checkpoint_p08_budget-5f4d6b729107ff2b)\n     Running unittests src/main.rs (.course-cache/native/debug/deps/checkpoint_p08_budget-a7517dbab0d5915a)\n"
+    },
+    {
+      "label": "p08-monitor-01-budget-run",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "run",
+        "--offline",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "next_attempt_budget_ms=60\n   Compiling checkpoint-p08-budget v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s\n     Running `.course-cache/native/debug/checkpoint-p08-budget`\n"
+    },
+    {
+      "label": "p08-monitor-01-budget-clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "output": "    Checking checkpoint-p08-budget v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.18s\n"
+    },
+    {
+      "label": "p08-monitor-final-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/final"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/final\nFinal reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/final/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p08-monitor-final-test",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 101,
+      "output": "\nrunning 6 tests\ntest tests::rejects_remote_addresses ... ok\ntest tests::hung_endpoint_has_a_deadline ... FAILED\ntest tests::concurrency_cap_and_input_order_hold ... FAILED\ntest tests::shutdown_aborts_in_flight_and_unstarted_work ... FAILED\ntest tests::retries_then_recovers ... FAILED\ntest tests::malformed_response_is_bounded ... FAILED\n\nfailures:\n\n---- tests::hung_endpoint_has_a_deadline stdout ----\n\nthread 'tests::hung_endpoint_has_a_deadline' (910909) panicked at src/lib.rs:251:63:\ncalled `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: \"Operation not permitted\" }\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n---- tests::concurrency_cap_and_input_order_hold stdout ----\n\nthread 'tests::concurrency_cap_and_input_order_hold' (910908) panicked at src/lib.rs:207:63:\ncalled `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: \"Operation not permitted\" }\n\n---- tests::shutdown_aborts_in_flight_and_unstarted_work stdout ----\n\nthread 'tests::shutdown_aborts_in_flight_and_unstarted_work' (910913) panicked at src/lib.rs:294:63:\ncalled `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: \"Operation not permitted\" }\n\n---- tests::retries_then_recovers stdout ----\n\nthread 'tests::retries_then_recovers' (910912) panicked at src/lib.rs:207:63:\ncalled `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: \"Operation not permitted\" }\n\n---- tests::malformed_response_is_bounded stdout ----\n\nthread 'tests::malformed_response_is_bounded' (910910) panicked at src/lib.rs:207:63:\ncalled `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: \"Operation not permitted\" }\n\n\nfailures:\n    tests::concurrency_cap_and_input_order_hold\n    tests::hung_endpoint_has_a_deadline\n    tests::malformed_response_is_bounded\n    tests::retries_then_recovers\n    tests::shutdown_aborts_in_flight_and_unstarted_work\n\ntest result: FAILED. 1 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling p08-monitor v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/final)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.76s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/p08_monitor-e08f30ea96476369)\nerror: test failed, to rerun pass `--lib`\n"
+    },
+    {
+      "label": "p08-monitor-final-test-approved-retry",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/p08_monitor-e08f30ea96476369)\n\nrunning 6 tests\ntest tests::rejects_remote_addresses ... ok\ntest tests::shutdown_aborts_in_flight_and_unstarted_work ... ok\ntest tests::malformed_response_is_bounded ... ok\ntest tests::concurrency_cap_and_input_order_hold ... ok\ntest tests::retries_then_recovers ... ok\ntest tests::hung_endpoint_has_a_deadline ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n     Running unittests src/main.rs (.course-cache/native/debug/deps/p08_monitor-5fde8386dd288a2b)\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+      "environment_note": "Initial sandbox attempt could not bind loopback sockets. This explicitly approved retry passed all 6 tests."
+    },
+    {
+      "label": "p12-replay-01-price-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "01-price",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price\nPositive decimals use integer units of1/10000; signs, exponents, excess precision, zero and overflow are rejected. Private fields preserve the validated range.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p12-replay-01-price-test",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "\nrunning 3 tests\ntest tests::exact_scale_and_boundaries ... ok\ntest tests::rejects_invalid_grammar_precision_zero_and_range ... ok\ntest tests::formatted_valid_prices_round_trip_without_float ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling checkpoint-p12-price v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.23s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/checkpoint_p12_price-637d0125a6b36df7)\n     Running unittests src/main.rs (.course-cache/native/debug/deps/checkpoint_p12_price-5b271c07aca6d1e7)\n"
+    },
+    {
+      "label": "p12-replay-01-price-run",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "run",
+        "--offline",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "price=12.3400 ticks=123400\n   Compiling checkpoint-p12-price v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.14s\n     Running `.course-cache/native/debug/checkpoint-p12-price`\n"
+    },
+    {
+      "label": "p12-replay-01-price-clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "output": "    Checking checkpoint-p12-price v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.20s\n"
+    },
+    {
+      "label": "p12-replay-final-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/final"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/final\nFinal reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/final/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p12-replay-final-test",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "\nrunning 6 tests\ntest tests::injected_accounting_overflow_does_not_partially_insert ... ok\ntest tests::capacity_and_missing_cancel_preserve_state ... ok\ntest tests::rejection_is_transactional_and_corrected_event_can_retry ... ok\ntest tests::exact_decimal_conversion_rejects_bad_inputs ... ok\ntest tests::synthetic_processing_keeps_live_state_bounded ... ok\ntest tests::replay_is_identical_including_full_state ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 1 test\ntest tests::batch_boundaries_preserve_complete_state ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest tests::borrowed_fields_alias_input_and_owned_fields_survive_it ... ok\ntest tests::invalid_input_and_resource_bounds_are_explicit ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 2 tests\ntest tests::limits_fail_before_allocating_and_modes_are_explicit ... ok\ntest tests::layouts_preserve_every_field_and_analytics_for_boundary_sizes ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/final)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/p12_replay-75b0406db52407f8)\n     Running unittests src/bin/benchmark.rs (.course-cache/native/debug/deps/benchmark-5f2bf32d2fb29d7d)\n     Running unittests src/main.rs (.course-cache/native/debug/deps/p12_replay-82d2b1d797f44698)\n     Running unittests examples/dispatch_allocation.rs (.course-cache/native/debug/examples/dispatch_allocation-dbba78013d69fff5)\n     Running unittests examples/layout_profile.rs (.course-cache/native/debug/examples/layout_profile-4623bddde1091dfd)\n"
+    },
+    {
+      "label": "p13-unsafe-01-safe-slots-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "01-safe-slots",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots\nA fixed logical capacity bounds length; rejection returns the unchanged owned value; pop transfers ownership once; ordinary Vec drop releases remaining values.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p13-unsafe-01-safe-slots-test",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "\nrunning 3 tests\ntest tests::zero_capacity_and_zero_sized_values_are_logical_elements ... ok\ntest tests::capacity_failure_returns_ownership_unchanged ... ok\ntest tests::rejected_popped_and_stored_values_each_drop_once ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling checkpoint-p13-safe-slots v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/checkpoint_p13_safe_slots-b38b5154193fc9fb)\n     Running unittests src/main.rs (.course-cache/native/debug/deps/checkpoint_p13_safe_slots-a3d77e8513d59f44)\n"
+    },
+    {
+      "label": "p13-unsafe-01-safe-slots-run",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "run",
+        "--offline",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "stored first\nreturned second\npopped=Some(\"first\")\n   Compiling checkpoint-p13-safe-slots v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.14s\n     Running `.course-cache/native/debug/checkpoint-p13-safe-slots`\n"
+    },
+    {
+      "label": "p13-unsafe-01-safe-slots-clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "output": "    Checking checkpoint-p13-safe-slots v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s\n"
+    },
+    {
+      "label": "p13-unsafe-final-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/final"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/final\nFinal reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/final/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p13-unsafe-final-test",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--all-targets",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "exit_code": 0,
+      "output": "\nrunning 7 tests\ntest tests::alignment_is_preserved ... ok\ntest tests::zero_sized_values_are_logical_elements ... ok\ntest tests::values_are_dropped_exactly_once_and_rejected_value_is_returned ... ok\ntest tests::empty_zero_capacity_and_bounds ... ok\ntest tests::zero_sized_destructors_run_for_every_element ... ok\ntest tests::a_single_destructor_panic_leaves_empty_reusable_storage ... ok\ntest tests::agrees_with_safe_baseline_under_many_operations ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Compiling p13-unsafe v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/final)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.26s\n     Running unittests src/lib.rs (.course-cache/native/debug/deps/p13_unsafe-8c5725ac29f66f48)\n     Running unittests src/main.rs (.course-cache/native/debug/deps/p13_unsafe-2653b41d1481809d)\n"
+    },
+    {
+      "label": "p07-indexer-01-streaming-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "01-streaming",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/01-streaming"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/01-streaming\nFixed-size reads preserve word state and unterminated final lines; at most budget plus one bytes are consumed; ordinary IO failures propagate.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/01-streaming/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p07-indexer-01-streaming-metadata-locked",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/01-streaming/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "output": "{\"package_count\": 1, \"local_manifests\": [\"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/01-streaming/Cargo.toml\"], \"target_directory\": \"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"}\n[metadata summarized; graph resolution exited0]"
+    },
+    {
+      "label": "p07-indexer-final-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p07-indexer",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/final"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/final\nFinal reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/final/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p07-indexer-final-metadata-locked",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/final/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "output": "{\"package_count\": 1, \"local_manifests\": [\"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/final/Cargo.toml\"], \"target_directory\": \"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"}\n[metadata summarized; graph resolution exited0]"
+    },
+    {
+      "label": "p08-monitor-01-budget-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "01-budget",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/01-budget"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/01-budget\nA retry requires an available attempt, nonzero per-attempt cap, and positive time after elapsed time and backoff; arithmetic cannot wrap.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/01-budget/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p08-monitor-01-budget-metadata-locked",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/01-budget/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "output": "{\"package_count\": 1, \"local_manifests\": [\"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/01-budget/Cargo.toml\"], \"target_directory\": \"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"}\n[metadata summarized; graph resolution exited0]"
+    },
+    {
+      "label": "p08-monitor-final-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p08-monitor",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/final"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/final\nFinal reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/final/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p08-monitor-final-metadata-locked",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/final/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "output": "{\"package_count\": 17, \"local_manifests\": [\"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/final/Cargo.toml\"], \"target_directory\": \"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"}\n[metadata summarized; graph resolution exited0]"
+    },
+    {
+      "label": "p12-replay-01-price-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "01-price",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/01-price"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/01-price\nPositive decimals use integer units of 1/10,000; signs, exponents, excess precision, zero and overflow are rejected. Private fields preserve the validated range.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/01-price/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p12-replay-01-price-metadata-locked",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/01-price/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "output": "{\"package_count\": 1, \"local_manifests\": [\"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/01-price/Cargo.toml\"], \"target_directory\": \"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"}\n[metadata summarized; graph resolution exited0]"
+    },
+    {
+      "label": "p12-replay-final-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p12-replay",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/final"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/final\nFinal reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/final/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p12-replay-final-metadata-locked",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/final/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "output": "{\"package_count\": 1, \"local_manifests\": [\"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/final/Cargo.toml\"], \"target_directory\": \"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"}\n[metadata summarized; graph resolution exited0]"
+    },
+    {
+      "label": "p13-unsafe-01-safe-slots-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "01-safe-slots",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/01-safe-slots"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/01-safe-slots\nA fixed logical capacity bounds length; rejection returns the unchanged owned value; pop transfers ownership once; ordinary Vec drop releases remaining values.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/01-safe-slots/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p13-unsafe-01-safe-slots-metadata-locked",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/01-safe-slots/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "output": "{\"package_count\": 1, \"local_manifests\": [\"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/01-safe-slots/Cargo.toml\"], \"target_directory\": \"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"}\n[metadata summarized; graph resolution exited0]"
+    },
+    {
+      "label": "p13-unsafe-final-materialize",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p13-unsafe",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/final"
+      ],
+      "exit_code": 0,
+      "output": "Created /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/final\nFinal reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.\nWorking directory: course root; test with the current pinned mise toolchain:\nmise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/final/Cargo.toml\nUse an explicit --target-dir to reuse your chosen verification cache. No build output was copied.\n"
+    },
+    {
+      "label": "p13-unsafe-final-metadata-locked",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/final/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "output": "{\"package_count\": 1, \"local_manifests\": [\"/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/final/Cargo.toml\"], \"target_directory\": \"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"}\n[metadata summarized; graph resolution exited0]"
+    }
+  ],
+  "project_records": [
+    {
+      "project": "p07-indexer",
+      "checkpoint": "01-streaming",
+      "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/01-streaming",
+      "tests_passed": 3,
+      "source_sha256": "08f8ef89e0f4a5a745fd7e8ad64c6979698cc2b22c2d49c4468aa172d0c9b344",
+      "copied_library_identical": true,
+      "lockfile": "projects/checkpoints/p07-indexer/locks/01-streaming.Cargo.lock",
+      "locked_reconstruction": {
+        "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/01-streaming",
+        "package_count": 1,
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "lock_sha256": "6d475e71b7ccfa52ea85e489afd4f369571e6b9ea490bd13216df8ae69be2e30",
+        "local_paths_inside_copy": true
+      }
+    },
+    {
+      "project": "p07-indexer",
+      "checkpoint": "final",
+      "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p07-indexer/final",
+      "tests_passed": 5,
+      "source_sha256": "fd37a2011060ec2ad67a82ff2b8dd6ff56e57f19772577c43de6af6589d1cc6d",
+      "copied_library_identical": true,
+      "lockfile": "projects/checkpoints/p07-indexer/locks/final.Cargo.lock",
+      "locked_reconstruction": {
+        "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p07-indexer/final",
+        "package_count": 1,
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "lock_sha256": "13b4acffe35dd78ac9aae36da1d3a2ede3caa616140e01a654903081b864695a",
+        "local_paths_inside_copy": true
+      }
+    },
+    {
+      "project": "p08-monitor",
+      "checkpoint": "01-budget",
+      "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/01-budget",
+      "tests_passed": 3,
+      "source_sha256": "8ede405245b7481a1345fa069703ff907a0ccac777bc70ab662c4b133bfd76a2",
+      "copied_library_identical": true,
+      "lockfile": "projects/checkpoints/p08-monitor/locks/01-budget.Cargo.lock",
+      "locked_reconstruction": {
+        "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/01-budget",
+        "package_count": 1,
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "lock_sha256": "abddc6e6c924e27b337248a56fa73f288aee619bfa1038741e5aaa4652bdf5d1",
+        "local_paths_inside_copy": true
+      }
+    },
+    {
+      "project": "p08-monitor",
+      "checkpoint": "final",
+      "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p08-monitor/final",
+      "tests_passed": 6,
+      "source_sha256": "b724f2ec8da010b64b106befabeef510a7180f5a32c0f00b9859dcc6bd4da1d5",
+      "copied_library_identical": true,
+      "lockfile": "projects/checkpoints/p08-monitor/locks/final.Cargo.lock",
+      "locked_reconstruction": {
+        "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p08-monitor/final",
+        "package_count": 17,
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "lock_sha256": "03d4e49555014eb0e8e2ebc667871bdba2079f58d1c5f3eb4e3d091799e8309e",
+        "local_paths_inside_copy": true
+      }
+    },
+    {
+      "project": "p12-replay",
+      "checkpoint": "01-price",
+      "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/01-price",
+      "tests_passed": 3,
+      "source_sha256": "173939e116d94c060839914214c1d6f87509a877e25fd92858ce86124510b574",
+      "copied_library_identical": true,
+      "lockfile": "projects/checkpoints/p12-replay/locks/01-price.Cargo.lock",
+      "locked_reconstruction": {
+        "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/01-price",
+        "package_count": 1,
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "lock_sha256": "2c7f776c906042f35bae01f69f6511accdf030bea77c1a5abe07805a90eb3a28",
+        "local_paths_inside_copy": true
+      }
+    },
+    {
+      "project": "p12-replay",
+      "checkpoint": "final",
+      "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p12-replay/final",
+      "tests_passed": 11,
+      "source_sha256": "4302d377f6ac52c2cdc09895275e7f0a39f5974dd36327e7dd32fafb79a2193c",
+      "copied_library_identical": true,
+      "lockfile": "projects/checkpoints/p12-replay/locks/final.Cargo.lock",
+      "locked_reconstruction": {
+        "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p12-replay/final",
+        "package_count": 1,
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "lock_sha256": "fa4396d97af800fdc6aef416873a3390f7785509f0108b350c408f2fe6283493",
+        "local_paths_inside_copy": true
+      }
+    },
+    {
+      "project": "p13-unsafe",
+      "checkpoint": "01-safe-slots",
+      "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/01-safe-slots",
+      "tests_passed": 3,
+      "source_sha256": "5c776c48db1cba8d42912e9bbe057b9dbb01b22a35cec3c327b764c46adcb3d1",
+      "copied_library_identical": true,
+      "lockfile": "projects/checkpoints/p13-unsafe/locks/01-safe-slots.Cargo.lock",
+      "locked_reconstruction": {
+        "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/01-safe-slots",
+        "package_count": 1,
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "lock_sha256": "33b95f77f0d27bea725b3992aab556356989f50181ddcd087f4e1efc69afe219",
+        "local_paths_inside_copy": true
+      }
+    },
+    {
+      "project": "p13-unsafe",
+      "checkpoint": "final",
+      "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/p13-unsafe/final",
+      "tests_passed": 7,
+      "source_sha256": "20ed4f3c55d798d7da29edce0174ca55c0187ca02a4a992ed043addd6196b502",
+      "copied_library_identical": true,
+      "lockfile": "projects/checkpoints/p13-unsafe/locks/final.Cargo.lock",
+      "locked_reconstruction": {
+        "destination": "/Users/billyribeiro/Desktop/rust-course/.course-cache/checkpoint-systems-xbdxxn5m/locked-reconstruction/p13-unsafe/final",
+        "package_count": 1,
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "lock_sha256": "fd41f63638339c4b775919b0c50df5ed3864dde3fb47c9f13afd07e96ea8e55b",
+        "local_paths_inside_copy": true
+      }
+    }
+  ],
+  "status": "all eight reconstructed checkpoints passed tests; four earlier demos and strict Clippy passed; all eight fresh copies resolved full dependency graphs offline with --locked",
+  "total_tests_passed": 41,
+  "limits": [
+    "Author-side verification, not independent acceptance.",
+    "Initial monitor final test attempt hit sandbox loopback PermissionDenied; approved retry passed all 6 tests.",
+    "Native checks do not substitute for Miri; final unsafe source is identical to separately audited reference.",
+    "All builds share the existing outer native target. Copies and logs remain in .course-cache; no storage was claimed reclaimed."
+  ]
+}

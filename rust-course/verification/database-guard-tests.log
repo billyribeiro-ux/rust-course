@@ -1,0 +1,27 @@
+$ mise exec -- cargo test --locked --offline --manifest-path projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p10-issues -p p14-scheduler --test postgres
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native
+
+running 4 tests
+test postgres_authorization_transaction_pagination ... ignored, requires COURSE_TEST_DATABASE_URL pointing to a disposable course database
+test support::effective_database_name_must_match_not_merely_appear_in_url ... ok
+test support::parsed_remote_hosts_and_query_overrides_are_rejected_without_connecting ... ok
+test support::explicit_local_transports_and_exact_decoded_names_are_accepted ... ok
+
+test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 6 tests
+test completion_samples_clock_after_waiting_for_its_row_lock ... ignored, requires isolated COURSE_SCHEDULER_TEST_DATABASE_URL
+test crash_redelivery_fencing_dedup_cancellation ... ignored, requires isolated COURSE_SCHEDULER_TEST_DATABASE_URL
+test lease_fields_cannot_rewrite_durable_payload_or_retry_count ... ignored, requires isolated COURSE_SCHEDULER_TEST_DATABASE_URL
+test support::effective_database_name_must_match_not_merely_appear_in_url ... ok
+test support::parsed_remote_hosts_and_query_overrides_are_rejected_without_connecting ... ok
+test support::explicit_local_transports_and_exact_decoded_names_are_accepted ... ok
+
+test result: ok. 3 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Compiling p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+   Compiling p10-issues v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.47s
+     Running tests/postgres.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/postgres-2d7c0e83bf0fc9d7)
+     Running tests/postgres.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/postgres-046d47942d28a9db)

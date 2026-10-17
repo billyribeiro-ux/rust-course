@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p13-unsafe",
+  "checkpoints": [
+    {
+      "id": "01-safe-slots",
+      "title": "Establish safe capacity and ownership semantics",
+      "source": "projects/checkpoints/p13-unsafe/01-safe-slots",
+      "contract": "A fixed logical capacity bounds length; rejection returns the unchanged owned value; pop transfers ownership once; ordinary Vec drop releases remaining values.",
+      "commands": [
+        "cargo test --locked",
+        "cargo run --locked"
+      ],
+      "lockfile": "projects/checkpoints/p13-unsafe/locks/01-safe-slots.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete verified reference",
+      "source": "projects/reference/p13-unsafe",
+      "contract": "Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.",
+      "commands": [
+        "cargo test --locked --all-targets"
+      ],
+      "lockfile": "projects/checkpoints/p13-unsafe/locks/final.Cargo.lock"
+    }
+  ]
+}

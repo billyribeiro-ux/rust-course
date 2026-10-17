@@ -1,0 +1,285 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>File IO: preserve errors and replace data carefully · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="01-io" data-lesson="01-io"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / File IO: preserve errors and replace data carefully</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 01 / Ownership and core Rust</div><h1>File IO: preserve errors and replace data carefully</h1><p class="lead">Complete a single-writer journal while explaining exactly what temporary-file replacement guarantees.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-1/01-journal.html">A versioned text format that rejects corruption</a></li></ul><ul><li>Differentiate NotFound from other IO failures</li><li>Bound reads before allocation grows without limit</li><li>Implement and test a temporary-file replacement protocol</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#durability">durability</a> · <a href="../../glossary.html#generic">generic</a> · <a href="../../glossary.html#idempotency">idempotency</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#schema">schema</a> · <a href="../../glossary.html#utf-8">UTF-8</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p02">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-storage-is-a-protocol-not-one-write-call">Purpose: storage is a protocol, not one write call</h2>
+<p>An in-memory journal can validate a title perfectly and still lose data through careless file handling. IO connects your process to resources whose behavior is not fully under its control: files can disappear, permissions can change, disks can fill, and another process may act concurrently. Your job is to choose a protocol and report its actual guarantees. This checkpoint implements a small single-writer store, not a database disguised as a text file.</p>
+<p>The reference load operation opens the requested path. Only ErrorKind::NotFound becomes an empty Journal. PermissionDenied, invalid UTF-8, malformed content, and other failures remain errors. Treating all errors as “start fresh” turns a temporary access problem into an apparently empty task list. A subsequent save could overwrite data the program never read. Preserving the error protects both the user and your ability to diagnose the problem.</p>
+<p>The CLI retains its file argument as an operating-system path. Task titles, commands, and identifiers are explicitly converted to UTF-8 text with recoverable errors when conversion fails. A filesystem path need not be valid Unicode, so converting every argument to String at process startup would impose an unnecessary assumption on file access.</p>
+<h2 id="prediction-and-a-safe-runnable-workflow">Prediction and a safe runnable workflow</h2>
+<p>Use a scratch directory that you own. Do not mutate the checked-in fixture. Run the commands below from rust-course/projects after creating a directory named scratch in that directory. Predict each output and state change before running it. The first list has no task output because the path is missing. add prints added 1. Completing task 1 updates status; a later list shows [x].</p>
+<pre><code>mkdir -p scratch
+mise exec -- cargo run -p task-journal -- scratch/tasks.txt list
+mise exec -- cargo run -p task-journal -- scratch/tasks.txt add &#x27;Practice careful IO&#x27;
+mise exec -- cargo run -p task-journal -- scratch/tasks.txt done 1
+mise exec -- cargo run -p task-journal -- scratch/tasks.txt list
+mise exec -- cargo test -p task-journal --test storage</code></pre>
+<p>The expected output assumes a new scratch path. If it already exists, inspect it and choose another scratch filename instead of deleting data blindly. Reproducible experiments must control their initial state. The storage integration test creates a unique temporary directory and cleans up its own files; it does not depend on an already-populated personal journal.</p>
+<h2 id="guided-checkpoint-bounded-loading">Guided checkpoint: bounded loading</h2>
+<p>Before decoding, load reads at most one byte beyond the 1 MiB limit. The extra byte distinguishes a file exactly at the accepted limit from a larger file. Calling read_to_end without a take limit would allow allocation to grow with the entire file before checking its size. A check after unbounded ingestion does not enforce a memory-ingestion limit. The decoder also checks size because it is a public boundary that callers can use independently of File.</p>
+<p>Convert the retained bytes to UTF-8 only after the read succeeds and the size is acceptable. A failed conversion means the file violates the format, not that invalid bytes should be silently removed. File::open and Read failures are wrapped as Error::Io, retaining the original error as a source. That source chain lets callers inspect the underlying failure while a display message supplies domain context. Stringifying every error too early would throw away that structure.</p>
+<div class="code-wrap" data-source="projects/reference/p02-journal/src/lib.rs" data-sha256="cde61b40ff54acfc7db0217c9996e9b2745f8312a4307a8d6fb00e17dd1cf706"><div class="code-label"><a href="../../projects/reference/p02-journal/src/lib.rs">projects/reference/p02-journal/src/lib.rs</a></div><pre><code>//! A small versioned task journal. Titles are UTF-8, single-line, 1–200 bytes.
+//! The storage format is `TASKS\t1` followed by tab-separated id/status/title rows.
+//! ```
+//! use task_journal::Journal;
+//! let mut journal = Journal::default();
+//! let id = journal.add(&quot;Learn borrowing&quot;)?;
+//! journal.complete(id)?;
+//! let restored = Journal::decode(&amp;journal.encode())?;
+//! assert_eq!(restored.tasks(), journal.tasks());
+//! # Ok::&lt;(), task_journal::Error&gt;(())
+//! ```
+use std::{
+    collections::HashSet,
+    fmt,
+    fs::{self, File, OpenOptions},
+    io::{self, Read, Write},
+    path::Path,
+};
+const MAX_FILE_BYTES: u64 = 1_048_576;
+const MAX_TASKS: usize = 10_000;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Status {
+    Open,
+    Done,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Task {
+    id: u64,
+    title: String,
+    status: Status,
+}
+impl Task {
+    pub fn id(&amp;self) -&gt; u64 {
+        self.id
+    }
+    pub fn title(&amp;self) -&gt; &amp;str {
+        &amp;self.title
+    }
+    pub fn status(&amp;self) -&gt; Status {
+        self.status
+    }
+}
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Journal {
+    tasks: Vec&lt;Task&gt;,
+}
+#[derive(Debug)]
+pub enum Error {
+    Invalid(String),
+    NotFound(u64),
+    Io(io::Error),
+}
+impl fmt::Display for Error {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        match self {
+            Self::Invalid(s) =&gt; write!(f, &quot;invalid journal: {s}&quot;),
+            Self::NotFound(id) =&gt; write!(f, &quot;task {id} does not exist&quot;),
+            Self::Io(e) =&gt; write!(f, &quot;storage: {e}&quot;),
+        }
+    }
+}
+impl std::error::Error for Error {
+    fn source(&amp;self) -&gt; Option&lt;&amp;(dyn std::error::Error + &#x27;static)&gt; {
+        if let Self::Io(e) = self {
+            Some(e)
+        } else {
+            None
+        }
+    }
+}
+impl From&lt;io::Error&gt; for Error {
+    fn from(e: io::Error) -&gt; Self {
+        Self::Io(e)
+    }
+}
+fn validate_title(title: &amp;str) -&gt; Result&lt;(), Error&gt; {
+    if title.trim().is_empty() || title.len() &gt; 200 || title.chars().any(char::is_control) {
+        return Err(Error::Invalid(
+            &quot;title must contain 1–200 bytes and no control characters&quot;.into(),
+        ));
+    }
+    Ok(())
+}
+impl Journal {
+    pub fn tasks(&amp;self) -&gt; &amp;[Task] {
+        &amp;self.tasks
+    }
+    pub fn add(&amp;mut self, title: &amp;str) -&gt; Result&lt;u64, Error&gt; {
+        validate_title(title)?;
+        if self.tasks.len() &gt;= MAX_TASKS {
+            return Err(Error::Invalid(&quot;task limit reached&quot;.into()));
+        }
+        let id = self
+            .tasks
+            .iter()
+            .map(|t| t.id)
+            .max()
+            .unwrap_or(0)
+            .checked_add(1)
+            .ok_or_else(|| Error::Invalid(&quot;identifier space exhausted&quot;.into()))?;
+        self.tasks.push(Task {
+            id,
+            title: title.to_owned(),
+            status: Status::Open,
+        });
+        Ok(id)
+    }
+    pub fn complete(&amp;mut self, id: u64) -&gt; Result&lt;(), Error&gt; {
+        let task = self
+            .tasks
+            .iter_mut()
+            .find(|t| t.id == id)
+            .ok_or(Error::NotFound(id))?;
+        task.status = Status::Done;
+        Ok(())
+    }
+    pub fn remove(&amp;mut self, id: u64) -&gt; Result&lt;(), Error&gt; {
+        let position = self
+            .tasks
+            .iter()
+            .position(|t| t.id == id)
+            .ok_or(Error::NotFound(id))?;
+        self.tasks.remove(position);
+        Ok(())
+    }
+    pub fn encode(&amp;self) -&gt; String {
+        let mut output = String::from(&quot;TASKS\t1\n&quot;);
+        for task in &amp;self.tasks {
+            let status = match task.status {
+                Status::Open =&gt; &quot;open&quot;,
+                Status::Done =&gt; &quot;done&quot;,
+            };
+            use std::fmt::Write;
+            writeln!(output, &quot;{}\t{status}\t{}&quot;, task.id, task.title)
+                .expect(&quot;writing String cannot fail&quot;);
+        }
+        output
+    }
+    pub fn decode(input: &amp;str) -&gt; Result&lt;Self, Error&gt; {
+        if input.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let mut lines = input.lines();
+        if lines.next() != Some(&quot;TASKS\t1&quot;) {
+            return Err(Error::Invalid(
+                &quot;unsupported or missing format header&quot;.into(),
+            ));
+        }
+        let mut journal = Self::default();
+        let mut seen = HashSet::new();
+        for (offset, row) in lines.enumerate() {
+            let fail = || Error::Invalid(format!(&quot;malformed row {}&quot;, offset + 2));
+            let columns: Vec&lt;&amp;str&gt; = row.split(&#x27;\t&#x27;).collect();
+            let [id, status, title] = columns.as_slice() else {
+                return Err(fail());
+            };
+            let id: u64 = id.parse().map_err(|_| fail())?;
+            if id == 0 || !seen.insert(id) || journal.tasks.len() &gt;= MAX_TASKS {
+                return Err(fail());
+            }
+            let status = match *status {
+                &quot;open&quot; =&gt; Status::Open,
+                &quot;done&quot; =&gt; Status::Done,
+                _ =&gt; return Err(fail()),
+            };
+            validate_title(title)?;
+            journal.tasks.push(Task {
+                id,
+                title: (*title).to_owned(),
+                status,
+            });
+        }
+        Ok(journal)
+    }
+    /// A missing path starts a new journal. Other read errors are preserved.
+    pub fn load(path: &amp;Path) -&gt; Result&lt;Self, Error&gt; {
+        let file = match File::open(path) {
+            Ok(file) =&gt; file,
+            Err(e) if e.kind() == io::ErrorKind::NotFound =&gt; return Ok(Self::default()),
+            Err(e) =&gt; return Err(e.into()),
+        };
+        let mut bytes = Vec::new();
+        file.take(MAX_FILE_BYTES + 1).read_to_end(&amp;mut bytes)?;
+        if bytes.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let text =
+            std::str::from_utf8(&amp;bytes).map_err(|_| Error::Invalid(&quot;file is not UTF-8&quot;.into()))?;
+        Self::decode(text)
+    }
+    /// Writes a sibling temporary file then renames it. Designed for one writer.
+    /// No locking or parent-directory fsync: not a database durability guarantee.
+    pub fn save(&amp;self, path: &amp;Path) -&gt; Result&lt;(), Error&gt; {
+        let bytes = self.encode();
+        if bytes.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let mut temporary_name = path.as_os_str().to_os_string();
+        temporary_name.push(format!(&quot;.{}.tmp&quot;, std::process::id()));
+        let temporary = std::path::PathBuf::from(temporary_name);
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&amp;temporary)?;
+        let result = (|| -&gt; io::Result&lt;()&gt; {
+            file.write_all(bytes.as_bytes())?;
+            file.sync_all()?;
+            drop(file);
+            fs::rename(&amp;temporary, path)
+        })();
+        if result.is_err() {
+            let _ = fs::remove_file(&amp;temporary);
+        }
+        result.map_err(Error::from)
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn round_trip_and_transitions() {
+        let mut j = Journal::default();
+        let a = j.add(&quot;read 🦀&quot;).unwrap();
+        let b = j.add(&quot;write tests&quot;).unwrap();
+        j.complete(a).unwrap();
+        j.complete(a).unwrap();
+        j.remove(b).unwrap();
+        assert_eq!(Journal::decode(&amp;j.encode()).unwrap(), j);
+        assert_eq!(j.tasks()[0].status(), Status::Done);
+        assert!(matches!(j.complete(99), Err(Error::NotFound(99))));
+    }
+    #[test]
+    fn rejects_corruption_without_partial_success() {
+        for input in [
+            &quot;TASKS\t2\n&quot;,
+            &quot;TASKS\t1\n1\topen\tx\n1\tdone\ty\n&quot;,
+            &quot;TASKS\t1\n0\topen\tx\n&quot;,
+            &quot;TASKS\t1\n1\tmaybe\tx\n&quot;,
+            &quot;TASKS\t1\n1\topen\t\n&quot;,
+        ] {
+            assert!(Journal::decode(input).is_err(), &quot;{input}&quot;);
+        }
+        let mut j = Journal::default();
+        assert!(j.add(&quot; &quot;).is_err());
+        assert!(j.add(&quot;one\ntwo&quot;).is_err());
+        assert!(j.tasks().is_empty());
+    }
+    #[test]
+    fn id_overflow_is_an_error() {
+        let mut j = Journal::decode(&quot;TASKS\t1\n18446744073709551615\topen\tx\n&quot;).unwrap();
+        assert!(j.add(&quot;next&quot;).is_err());
+    }
+}
+</code></pre></div>
+<h2 id="guided-checkpoint-replacing-a-complete-file">Guided checkpoint: replacing a complete file</h2>
+<p>The save method encodes into memory, verifies its output limit, and creates a sibling temporary file using create_new. That option refuses to overwrite an existing temporary path. It writes all bytes, synchronizes the temporary file, closes it, and renames it onto the destination. On an error after temporary creation, it attempts to remove its own temporary file. A reader should not observe a half-written replacement produced by this process&#x27;s ordinary write sequence.</p>
+<p>The guarantee has limits. The implementation has no multi-process locking, and two writers can lose each other&#x27;s updates. It does not fsync the containing directory, so do not claim a full power-loss durability guarantee. Rename replacement behavior and failures depend on the filesystem and operating system; test the target platform. A stale same-process-name temporary file causes a reported error rather than unsafe overwriting. These are concrete design limits, not generic warnings attached to every program.</p>
+<h2 id="intentional-mistake-truncate-before-you-know-you-can-finish">Intentional mistake: truncate before you know you can finish</h2>
+<p>Sketch the simpler implementation File::create(destination), then write_all. Opening with truncation can erase the old contents before the new bytes have been fully written. If a later write fails, the old complete file is gone. The temporary-file protocol changes that ordering. Do not simulate disk-full failures by filling your machine. Instead, reason about the sequence and use a controlled failing writer abstraction in an extension if you want fault-injection tests.</p>
+<p>Also avoid printing “saved” before save returns successfully. Process messages are part of the observable contract. The reference prints added only after persistence succeeds, so a success message does not claim an uncompleted storage operation. The in-memory object may have changed before save fails, but the short-lived CLI exits on that error; a long-lived UI would need an explicit unsaved-state policy.</p>
+<h2 id="playbook-an-existing-journal-appears-empty">Playbook: an existing journal appears empty</h2>
+<p>Observation: a learner program lists zero tasks when opening a protected or invalid path. Hypothesis A: decoding a valid empty journal is correct. Hypothesis B: an error was converted to an empty default by unwrap_or_default. Distinguishing experiment: load a known malformed file whose bytes are fixed and inspect the Result directly in a test. Expected reference result: Err. If the learner returns Ok(empty), the “valid empty file” explanation is disproven without relying on platform-specific permission behavior.</p>
+<p>Trace the first place an error becomes success. The smallest fix is to special-case NotFound at the open boundary and propagate other errors, not to add retries everywhere. Record which failure you actually reproduced and which platform cases remain untested. Ask AI for the failure sequence under each proposed save protocol, then challenge it to identify what rename and sync_all do not guarantee together in this implementation.</p>
+<h2 id="a-failed-acknowledgement-does-not-undo-a-save">A failed acknowledgement does not undo a save</h2><p>The CLI saves an added task before writing added ID. Both output writing and its final flush are fallible, so a closed pipe exits with an I/O error instead of panicking. The save may already have succeeded. The output regression adds one task with stdout connected to a pipe whose read end is closed, observes failure, then reloads exactly one saved task. Repeating add blindly would create another task; inspect the journal after an uncertain acknowledgement. This is a local example of separating state change from delivery of its report, not a claim that the file format supports distributed idempotency.</p><h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Add a command that validates a journal without saving it. Return a nonzero exit for corrupted contents and preserve the file byte-for-byte. Next design, without claiming to implement it, how two simultaneous writers would coordinate. Name the lost-update scenario explicitly: each reads the same old state, each adds a different task, and the later save replaces the earlier update. A temporary filename alone does not solve this.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>inspect Result at each IO boundary before changing the parser.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>compare missing-path handling with malformed-file handling in the integration test.</p></details><details><summary>Worked solution</summary><p>match File::open, return an empty model only for NotFound, then propagate bounded-read and decoding errors with ?. A review request should include the initial file bytes, exact command, final bytes, and the first error observed. Avoid sharing personal journal contents when a three-row synthetic fixture reproduces the issue.</p></details>
+<h2 id="review-and-mastery">Review and mastery</h2>
+<p>The recommended design isolates pure parsing from file access and presentation, then tests each relevant boundary. A temporary replacement protocol is appropriate for this documented single-writer local journal. A transactional database is a meaningful alternative when concurrent writers, crash recovery, richer queries, or durable identity history become actual requirements. It adds operational and schema concerns, so it should be selected for those guarantees rather than as a status symbol.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><h3>Requirements and invariants</h3><p>Tasks have private validated titles, nonzero unique current-file IDs, and one of two statuses. A failed domain validation leaves state unchanged. The versioned decoder rejects unknown headers, malformed rows, duplicate IDs, oversized files, and invalid UTF-8. Missing files start a journal; other load failures are retained.</p><h3>Chosen design and concrete habits</h3><p>Journal methods own state transitions, borrowed getters avoid incidental copies, and a pure decoder separates format checks from filesystem effects. load caps ingestion before decoding. save writes and syncs a sibling temporary file before rename, and success messages occur only after save returns. IO errors preserve their source. The String formatting expect is an internal infallibility assertion, not a policy for routine disk errors.</p><h3>Meaningful alternative and evolution threshold</h3><p>A database or explicit locking protocol is required when multiple writers must coordinate or stronger crash-recovery guarantees matter. The current rename sequence has no parent-directory fsync and no concurrency control. IDs may be reused after removing the current maximum; permanent external identity or audit history would justify a persisted monotonic allocator or event log. These changes follow concrete requirements.</p><h3>Actual checks and remaining uncertainty</h3><p>Native state-transition, malformed-format, fixture, filesystem replacement, and documentation tests passed in verification/native-tests.log and passed again in verification/patch001-foundations-tests.log after the patch audit. Tests show corrupt input is retained and valid state reloads on the tested local filesystem. They do not simulate power failure, all permission modes, or simultaneous writers. Independent review remains pending.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/fs/struct.File.html">File</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/fs/struct.OpenOptions.html#method.create_new">OpenOptions create_new</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/fs/fn.rename.html">rename</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/io/trait.Read.html#method.take">Read::take</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-1/01-journal.html">Previous: A versioned text format that rejects corruption</a><a href="../../lessons/stage-1/01-logs.html">Next: Stream logs with bounded lines and honest accounting</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-storage-is-a-protocol-not-one-write-call">Purpose: storage is a protocol, not one write call</a><a href="#prediction-and-a-safe-runnable-workflow">Prediction and a safe runnable workflow</a><a href="#guided-checkpoint-bounded-loading">Guided checkpoint: bounded loading</a><a href="#guided-checkpoint-replacing-a-complete-file">Guided checkpoint: replacing a complete file</a><a href="#intentional-mistake-truncate-before-you-know-you-can-finish">Intentional mistake: truncate before you know you can finish</a><a href="#playbook-an-existing-journal-appears-empty">Playbook: an existing journal appears empty</a><a href="#a-failed-acknowledgement-does-not-undo-a-save">A failed acknowledgement does not undo a save</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#review-and-mastery">Review and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

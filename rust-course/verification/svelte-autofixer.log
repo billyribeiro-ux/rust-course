@@ -1,0 +1,8 @@
+npm notice run npx
+npm notice run 'svelte-mcp' svelte-autofixer rust-course/experiments/svelte-bridge/src/App.svelte --svelte-version 5
+Detected file path, reading file...
+{
+  issues: [],
+  suggestions: [],
+  require_another_tool_call_after_fixing: false
+}

@@ -1,0 +1,21 @@
+mise by @jdx – installing 1 tool
+mise rust@nightly-2026-10-08 info: syncing channel updates for nightly-2026-10-08-aarch64-apple-darwin
+mise rust@nightly-2026-10-08 info: latest update on 2026-10-08 for version 1.101.0-nightly (1d81eb4ad 2026-10-07)
+mise rust@nightly-2026-10-08 info: downloading 7 components
+mise ░░░░░░░░░░░░░░░░ 0/1 · 3.0s
+  rust@nightly-2026-10-08  installing  3.0s
+mise ░░░░░░░░░░░░░░░░ 0/1 · 6.0s
+  rust@nightly-2026-10-08  installing  6.0s
+mise ░░░░░░░░░░░░░░░░ 0/1 · 9.0s
+  rust@nightly-2026-10-08  installing  9.0s
+mise ░░░░░░░░░░░░░░░░ 0/1 · 12.0s
+  rust@nightly-2026-10-08  installing  12.0s
+mise ░░░░░░░░░░░░░░░░ 0/1 · 15.0s
+  rust@nightly-2026-10-08  installing  15.0s
+mise ░░░░░░░░░░░░░░░░ 0/1 · 18.0s
+  rust@nightly-2026-10-08  installing  18.0s
+mise rust@nightly-2026-10-08   nightly-2026-10-08-aarch64-apple-darwin installed - rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)
+mise rust@nightly-2026-10-08 info: checking for self-update (current version: 1.29.1)
+mise rust@nightly-2026-10-08 rustc 1.101.0-nightly (1d81eb4ad 2026-10-07)
+mise ✓ rust@nightly-2026-10-08  18.4s
+mise ████████████████ 1/1 · installed 1 tool in 18.4s

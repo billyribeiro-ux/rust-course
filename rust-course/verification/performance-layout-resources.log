@@ -1,0 +1,307 @@
+FILE 01-1-aos.resources.txt
+real 0.05
+user 0.04
+sys 0.00
+            49872896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3239  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  13  involuntary context switches
+           330929738  instructions retired
+           193407368  cycles elapsed
+            49267024  peak memory footprint
+
+FILE 01-2-soa.resources.txt
+real 0.02
+user 0.02
+sys 0.00
+            49938432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3243  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  11  involuntary context switches
+           409436026  instructions retired
+            96959904  cycles elapsed
+            49332560  peak memory footprint
+
+FILE 02-1-soa.resources.txt
+real 0.02
+user 0.02
+sys 0.00
+            49938432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3243  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  13  involuntary context switches
+           409094836  instructions retired
+            96335823  cycles elapsed
+            49332560  peak memory footprint
+
+FILE 02-2-aos.resources.txt
+real 0.05
+user 0.04
+sys 0.00
+            49872896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3239  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  16  involuntary context switches
+           330890469  instructions retired
+           201835025  cycles elapsed
+            49267024  peak memory footprint
+
+FILE 03-1-aos.resources.txt
+real 0.05
+user 0.04
+sys 0.00
+            49872896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3239  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  20  involuntary context switches
+           330776723  instructions retired
+           200594786  cycles elapsed
+            49267024  peak memory footprint
+
+FILE 03-2-soa.resources.txt
+real 0.02
+user 0.02
+sys 0.00
+            49938432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3245  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  12  involuntary context switches
+           409323051  instructions retired
+            98144716  cycles elapsed
+            49332560  peak memory footprint
+
+FILE 04-1-soa.resources.txt
+real 0.02
+user 0.02
+sys 0.00
+            49938432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3243  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  13  involuntary context switches
+           409574620  instructions retired
+            98182516  cycles elapsed
+            49332560  peak memory footprint
+
+FILE 04-2-aos.resources.txt
+real 0.05
+user 0.05
+sys 0.00
+            49872896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3239  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  21  involuntary context switches
+           330866888  instructions retired
+           206598425  cycles elapsed
+            49267024  peak memory footprint
+
+FILE 05-1-aos.resources.txt
+real 0.05
+user 0.05
+sys 0.00
+            49872896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3239  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  19  involuntary context switches
+           330766523  instructions retired
+           200932657  cycles elapsed
+            49267024  peak memory footprint
+
+FILE 05-2-soa.resources.txt
+real 0.02
+user 0.02
+sys 0.00
+            49938432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3243  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                   9  involuntary context switches
+           409043940  instructions retired
+            96809049  cycles elapsed
+            49332560  peak memory footprint
+
+FILE 06-1-soa.resources.txt
+real 0.02
+user 0.02
+sys 0.00
+            49938432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3243  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  13  involuntary context switches
+           409351189  instructions retired
+            96549629  cycles elapsed
+            49332560  peak memory footprint
+
+FILE 06-2-aos.resources.txt
+real 0.05
+user 0.05
+sys 0.00
+            49872896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3239  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  33  involuntary context switches
+           330976641  instructions retired
+           201882102  cycles elapsed
+            49267024  peak memory footprint
+
+FILE 07-1-aos.resources.txt
+real 0.05
+user 0.05
+sys 0.00
+            49872896  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3239  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  25  involuntary context switches
+           330972882  instructions retired
+           208581608  cycles elapsed
+            49267024  peak memory footprint
+
+FILE 07-2-soa.resources.txt
+real 0.02
+user 0.02
+sys 0.00
+            49938432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                3243  page reclaims
+                   0  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  17  involuntary context switches
+           409151040  instructions retired
+            96544589  cycles elapsed
+            49332560  peak memory footprint

@@ -1,0 +1,268 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Layer configuration, then validate the effective state · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="02-config" data-lesson="02-config"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Layer configuration, then validate the effective state</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 02 / Libraries and language design</div><h1>Layer configuration, then validate the effective state</h1><p class="lead">Build a typed configuration boundary with deterministic precedence and redacted secrets.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-2/02-traits.html">Traits as required capabilities, not decoration</a></li></ul><ul><li>Specify merge order separately from validation order</li><li>Represent validated values with constrained types</li><li>Prevent accidental secret exposure in formatting and errors</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#authentication">authentication</a> · <a href="../../glossary.html#enum">enum</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#panic">panic</a> · <a href="../../glossary.html#schema">schema</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p04">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-one-effective-configuration-one-clear-precedence">Purpose: one effective configuration, one clear precedence</h2>
+<p>Applications often combine defaults, a configuration file, environment variables, and command-line overrides. Bugs arise when different parts of the program resolve precedence differently or parse the same raw text repeatedly. This project constructs one effective raw map, validates it once, and exposes a typed Config. Later code receives an IP address, a nonzero port, a Duration, a bounded connection count, and an optional Secret rather than a collection of unchecked strings.</p>
+<p>The precedence is defaults, then file, then APP_* environment, then --set arguments. Later layers replace earlier values with the same recognized key. Structural checks occur within each layer: unknown keys and duplicates are rejected. Semantic validation occurs after merging. Therefore a higher-precedence valid port can repair a lower-precedence invalid port value. This policy is intentional; another application might validate every layer independently to catch stale mistakes, but that would yield different behavior.</p>
+<h2 id="predict-before-running-a-layered-case">Predict before running a layered case</h2>
+<p>The fixture sets port=9000. Predict the result when the environment sets APP_PORT=9001 and the command line sets port=9002. Expected: 9002. Then predict a file containing port=bad with a command-line port=9002. The reference accepts the effective value because validation occurs after resolution. Removing the command-line repair exposes the invalid final value and produces a configuration error.</p>
+<pre><code>mise exec -- cargo run -p typed-config -- --file reference/p04-config/fixtures/app.conf --set port=9002
+mise exec -- cargo test -p typed-config later_layers_win_before_validation
+mise exec -- cargo test -p typed-config --test cli</code></pre>
+<p>The first command&#x27;s output also depends on recognized APP_* values already present in your shell. The integration test controls the child process environment, then sets known values and verifies command-line precedence. That controlled setup is stronger evidence for precedence than a terminal run whose environment you never recorded. Avoid placing real secrets in commands while practicing; synthetic markers are sufficient to test redaction.</p>
+<h2 id="guided-checkpoint-raw-input-becomes-constrained-state">Guided checkpoint: raw input becomes constrained state</h2>
+<p>Layer::parse accepts strict key=value lines, blank lines, and full-line comments beginning with #. It trims surrounding whitespace from keys and values. It does not implement inline comments or quoting. A token containing # therefore retains that character rather than silently losing a suffix. Clear grammar prevents configuration from becoming a collection of surprising heuristics. File size and individual value limits bound accepted text before it becomes stored state.</p>
+<p>Resolve merges owned maps and validates the effective values. NonZeroU16 makes port zero unrepresentable in the resulting Config. IpAddr distinguishes actual IP addresses from arbitrary host strings; localhost is intentionally not a valid input here. Duration expresses seconds as time rather than a bare number that callers might interpret as milliseconds. The connection limit remains u16, protected by private fields and constructor validation. Types and privacy work together; not every useful constraint has a built-in standard-library type.</p>
+<div class="code-wrap" data-source="projects/reference/p04-config/src/lib.rs" data-sha256="2a7a464a9cb460fff6be87cd27d34b26dd04ed336b8813d14b75d1043c64ef5b"><div class="code-label"><a href="../../projects/reference/p04-config/src/lib.rs">projects/reference/p04-config/src/lib.rs</a></div><pre><code>//! Resolve textual layers first, then validate into a typed configuration.
+//! ```
+//! use typed_config::{Config, Layer};
+//! let file = Layer::parse(&quot;port=9000\ntimeout_seconds=20&quot;)?;
+//! let override_layer = Layer::parse(&quot;port=9100&quot;)?;
+//! let config = Config::resolve([file, override_layer])?;
+//! assert_eq!(config.port().get(), 9100);
+//! # Ok::&lt;(), typed_config::ConfigError&gt;(())
+//! ```
+use std::{collections::BTreeMap, fmt, net::IpAddr, num::NonZeroU16, time::Duration};
+const KEYS: [&amp;str; 5] = [
+    &quot;host&quot;,
+    &quot;port&quot;,
+    &quot;timeout_seconds&quot;,
+    &quot;max_connections&quot;,
+    &quot;token&quot;,
+];
+#[derive(Clone, Default)]
+pub struct Layer {
+    values: BTreeMap&lt;String, String&gt;,
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ConfigError {
+    pub key: String,
+    pub problem: &amp;&#x27;static str,
+}
+impl fmt::Display for ConfigError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        write!(f, &quot;configuration key {}: {}&quot;, self.key, self.problem)
+    }
+}
+impl std::error::Error for ConfigError {}
+fn error(key: &amp;str, problem: &amp;&#x27;static str) -&gt; ConfigError {
+    ConfigError {
+        key: key.into(),
+        problem,
+    }
+}
+// Debug intentionally redacts every value: even an unknown key might carry a secret.
+impl fmt::Debug for Layer {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        f.debug_struct(&quot;Layer&quot;)
+            .field(&quot;keys&quot;, &amp;self.values.keys().collect::&lt;Vec&lt;_&gt;&gt;())
+            .finish()
+    }
+}
+impl Layer {
+    /// Strict key=value lines, ASCII key names, full-line # comments only.
+    /// Values are trimmed. Duplicate or unknown keys fail within a layer.
+    pub fn parse(text: &amp;str) -&gt; Result&lt;Self, ConfigError&gt; {
+        if text.len() &gt; 16_384 {
+            return Err(error(&quot;file&quot;, &quot;configuration exceeds 16 KiB&quot;));
+        }
+        let mut layer = Self::default();
+        for line in text
+            .lines()
+            .map(str::trim)
+            .filter(|s| !s.is_empty() &amp;&amp; !s.starts_with(&#x27;#&#x27;))
+        {
+            let (key, value) = line
+                .split_once(&#x27;=&#x27;)
+                .ok_or_else(|| error(&quot;file&quot;, &quot;expected key=value&quot;))?;
+            layer.insert(key.trim(), value.trim())?;
+        }
+        Ok(layer)
+    }
+    pub fn insert(&amp;mut self, key: &amp;str, value: &amp;str) -&gt; Result&lt;(), ConfigError&gt; {
+        if !KEYS.contains(&amp;key) {
+            return Err(error(&quot;unknown&quot;, &quot;unknown configuration key&quot;));
+        }
+        if self.values.contains_key(key) {
+            return Err(error(key, &quot;duplicate within one layer&quot;));
+        }
+        if value.len() &gt; 4096 {
+            return Err(error(key, &quot;value exceeds 4096 bytes&quot;));
+        }
+        self.values.insert(key.into(), value.into());
+        Ok(())
+    }
+    /// Accepts an injected iterator so tests never mutate process environment.
+    pub fn environment&lt;I, K, V&gt;(pairs: I) -&gt; Result&lt;Self, ConfigError&gt;
+    where
+        I: IntoIterator&lt;Item = (K, V)&gt;,
+        K: AsRef&lt;str&gt;,
+        V: AsRef&lt;str&gt;,
+    {
+        let mut layer = Self::default();
+        for (name, value) in pairs {
+            let key = match name.as_ref() {
+                &quot;APP_HOST&quot; =&gt; &quot;host&quot;,
+                &quot;APP_PORT&quot; =&gt; &quot;port&quot;,
+                &quot;APP_TIMEOUT_SECONDS&quot; =&gt; &quot;timeout_seconds&quot;,
+                &quot;APP_MAX_CONNECTIONS&quot; =&gt; &quot;max_connections&quot;,
+                &quot;APP_TOKEN&quot; =&gt; &quot;token&quot;,
+                _ =&gt; continue,
+            };
+            layer.insert(key, value.as_ref())?;
+        }
+        Ok(layer)
+    }
+}
+#[derive(Clone)]
+pub struct Secret(String);
+impl Secret {
+    pub fn expose(&amp;self) -&gt; &amp;str {
+        &amp;self.0
+    }
+}
+impl fmt::Debug for Secret {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        f.write_str(&quot;[REDACTED]&quot;)
+    }
+}
+#[derive(Clone, Debug)]
+pub struct Config {
+    host: IpAddr,
+    port: NonZeroU16,
+    timeout: Duration,
+    max_connections: u16,
+    token: Option&lt;Secret&gt;,
+}
+impl Config {
+    pub fn host(&amp;self) -&gt; IpAddr {
+        self.host
+    }
+    pub fn port(&amp;self) -&gt; NonZeroU16 {
+        self.port
+    }
+    pub fn timeout(&amp;self) -&gt; Duration {
+        self.timeout
+    }
+    pub fn max_connections(&amp;self) -&gt; u16 {
+        self.max_connections
+    }
+    pub fn token(&amp;self) -&gt; Option&lt;&amp;Secret&gt; {
+        self.token.as_ref()
+    }
+    /// Later layers win. Only final effective values undergo semantic validation.
+    pub fn resolve(layers: impl IntoIterator&lt;Item = Layer&gt;) -&gt; Result&lt;Self, ConfigError&gt; {
+        let mut raw: BTreeMap&lt;String, String&gt; = [
+            (&quot;host&quot;, &quot;127.0.0.1&quot;),
+            (&quot;port&quot;, &quot;8080&quot;),
+            (&quot;timeout_seconds&quot;, &quot;30&quot;),
+            (&quot;max_connections&quot;, &quot;100&quot;),
+        ]
+        .into_iter()
+        .map(|(k, v)| (k.into(), v.into()))
+        .collect();
+        for layer in layers {
+            raw.extend(layer.values);
+        }
+        let host = raw[&quot;host&quot;]
+            .parse::&lt;IpAddr&gt;()
+            .map_err(|_| error(&quot;host&quot;, &quot;expected an IPv4 or IPv6 address&quot;))?;
+        let port = raw[&quot;port&quot;]
+            .parse::&lt;NonZeroU16&gt;()
+            .map_err(|_| error(&quot;port&quot;, &quot;expected an integer in 1..=65535&quot;))?;
+        let seconds = raw[&quot;timeout_seconds&quot;]
+            .parse::&lt;u64&gt;()
+            .map_err(|_| error(&quot;timeout_seconds&quot;, &quot;expected an integer in 1..=300&quot;))?;
+        if !(1..=300).contains(&amp;seconds) {
+            return Err(error(&quot;timeout_seconds&quot;, &quot;expected an integer in 1..=300&quot;));
+        }
+        let max_connections = raw[&quot;max_connections&quot;]
+            .parse::&lt;u16&gt;()
+            .map_err(|_| error(&quot;max_connections&quot;, &quot;expected an integer in 1..=10000&quot;))?;
+        if !(1..=10_000).contains(&amp;max_connections) {
+            return Err(error(&quot;max_connections&quot;, &quot;expected an integer in 1..=10000&quot;));
+        }
+        let token = match raw.remove(&quot;token&quot;) {
+            None =&gt; None,
+            Some(token) =&gt; {
+                if token.len() &lt; 12
+                    || token.chars().any(char::is_whitespace)
+                    || token.chars().any(char::is_control)
+                {
+                    return Err(error(
+                        &quot;token&quot;,
+                        &quot;expected at least 12 bytes with no whitespace or controls&quot;,
+                    ));
+                }
+                Some(Secret(token))
+            }
+        };
+        Ok(Self {
+            host,
+            port,
+            timeout: Duration::from_secs(seconds),
+            max_connections,
+            token,
+        })
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn later_layers_win_before_validation() {
+        let file = Layer::parse(&quot;port=not-yet-valid\ntimeout_seconds=10&quot;).unwrap();
+        let env = Layer::environment([(&quot;APP_PORT&quot;, &quot;9001&quot;), (&quot;UNRELATED&quot;, &quot;ignored&quot;)]).unwrap();
+        let cli = Layer::parse(&quot;port=9002&quot;).unwrap();
+        let c = Config::resolve([file, env, cli]).unwrap();
+        assert_eq!(c.port().get(), 9002);
+        assert_eq!(c.timeout(), Duration::from_secs(10));
+    }
+    #[test]
+    fn errors_and_debug_do_not_include_secret_values() {
+        let marker = &quot;super-secret-token&quot;;
+        let layer = Layer::parse(&amp;format!(&quot;token={marker}&quot;)).unwrap();
+        assert!(!format!(&quot;{layer:?}&quot;).contains(marker));
+        let c = Config::resolve([layer]).unwrap();
+        assert!(!format!(&quot;{c:?}&quot;).contains(marker));
+        assert_eq!(c.token().unwrap().expose(), marker);
+        let invalid = Layer::parse(&quot;token=bad secret&quot;).unwrap();
+        let e = Config::resolve([invalid]).unwrap_err();
+        assert!(!e.to_string().contains(&quot;bad secret&quot;));
+        assert!(Layer::parse(&quot;token=x\ntoken=y&quot;).is_err());
+        assert!(Layer::parse(&quot;typo=x&quot;).is_err());
+    }
+    #[test]
+    fn boundaries() {
+        for port in [&quot;0&quot;, &quot;65536&quot;, &quot;-1&quot;, &quot;abc&quot;] {
+            assert!(Config::resolve([Layer::parse(&amp;format!(&quot;port={port}&quot;)).unwrap()]).is_err());
+        }
+        for seconds in [1, 300] {
+            assert!(
+                Config::resolve([Layer::parse(&amp;format!(&quot;timeout_seconds={seconds}&quot;)).unwrap()])
+                    .is_ok()
+            );
+        }
+        for seconds in [0, 301] {
+            assert!(
+                Config::resolve([Layer::parse(&amp;format!(&quot;timeout_seconds={seconds}&quot;)).unwrap()])
+                    .is_err()
+            );
+        }
+    }
+}
+</code></pre></div>
+<p>A missing token becomes None. An explicitly present empty token is invalid, not equivalent to missing. That distinction matters when an override accidentally erases a required value. The current reference makes tokens optional; do not infer authentication policy from the existence of a token field. It is a configuration teaching model, not a complete security system.</p>
+<h2 id="redaction-is-observable-behavior">Redaction is observable behavior</h2>
+<p>Secret wraps a String and implements Debug with a fixed redaction marker. Config can then derive Debug without printing the token&#x27;s contents. Layer&#x27;s Debug prints keys only, because raw layers may contain invalid or unclassified sensitive values. ConfigError identifies a key and a problem without echoing the input value. These choices reduce accidental disclosure through routine debugging and error presentation.</p>
+<p>The wrapper does not encrypt memory, zeroize allocations, or prevent a caller from deliberately invoking expose and printing the returned text. Its purpose is to make ordinary formatting safe by default and intentional access visible in code review. Do not claim more. The tests search output for a synthetic marker and verify redaction in both library formatting and a launched CLI process. They are behavioral evidence for those paths, not a guarantee about every future log statement.</p>
+<h2 id="intentional-mistake-and-playbook-investigation">Intentional mistake and playbook investigation</h2>
+<p>Introduce a learner bug by reversing the layer iteration order. Observation: the file value wins over a command-line override. Hypothesis A: the CLI parser failed to capture --set. Hypothesis B: the merge applies high-precedence values too early and then overwrites them. Distinguishing experiment: call Config::resolve directly with two layers setting different ports, then reverse just their order. Expected reference behavior: the second layer wins in each case. If the learner result follows the first layer instead, the CLI hypothesis is disproven for the direct reproduction.</p>
+<p>The smallest fix belongs in merge ordering, followed by regression tests that preserve unrelated keys from lower layers. Do not “fix” it by special-casing port after validation; that creates a second precedence system. Record the input order, effective result, and expected result. Ask AI to propose a counterexample to the corrected merge, especially a layer that overrides one key while leaving another untouched. Evaluate the counterexample before accepting any generalized claim.</p>
+<h2 id="reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</h2><p>This complete early checkpoint resolves only optional port layers and validates the final value. Files, process environment, other fields and secret redaction are later boundaries. The <a href="../../projects/checkpoints/p04-config/index.html">checkpoint contract and source</a> are separately preserved. From the course root, run:</p><pre><code class="language-sh">python3 scripts/start-checkpoint.py p04 01-effective-port
+cd learner-work/checkpoints/p04-config/01-effective-port
+mise exec -- cargo test
+mise exec -- cargo run</code></pre><p>The helper refuses an existing destination; choose a new explicit destination if you already have work there. This is a complete guided comparison checkpoint, not evidence that you independently implemented the project. Make predictions, inspect each boundary test, then carry the next requirement into your own source. A separately named <code>final</code> checkpoint reconstructs the current complete reference without pretending it is this earlier milestone. Exact reconstruction and test commands are recorded in <a href="../../verification/early-checkpoints.log">the author check log</a>.</p><h2 id="redacted-output-can-still-fail">Redacted output can still fail</h2><p>The CLI writes the already-redacted Debug representation through fallible writeln! and flush. A closed output pipe returns failure, and a second failure on stderr is handled as a best-effort diagnostic rather than a panic. These output checks preserve secret redaction; they do not make a terminal a confidential destination. The <a href="../../verification/cli-output-followup.html">child-process regression</a> closes the only pipe reader before execution to force the relevant I/O failure deterministically.</p><h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Add a validated log_level key with a closed enum. Support exactly info, warn, and error; reject other spellings unless you explicitly choose normalization. Preserve default/file/environment/CLI precedence and ensure Debug still redacts the token. Add one test for an invalid lower layer repaired by a valid upper layer, one for an invalid effective value, and one showing an unrelated lower-layer timeout survives a port override.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>inspect the raw merged value before changing type conversion, using only non-secret synthetic inputs.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>distinguish duplicate keys within one layer from the same key across layers.</p></details><details><summary>Worked solution</summary><p>extend raw values in declared precedence order, then parse each final field into a validated type and construct Config only after all fields pass. A concise review request includes your precedence rule, one two-layer counterexample, and the new enum&#x27;s accepted spellings. Ask an AI reviewer to search for secret exposure in errors as well as in Debug.</p></details>
+<h2 id="recommended-design-and-alternatives">Recommended design and alternatives</h2>
+<p>The recommended design resolves precedence once and validates once, so application code receives stable typed values. A concrete map and constructor are appropriate for five keys and four sources. A configuration library can help when nested schemas, multiple file syntaxes, or source-location diagnostics become requirements. Your precedence, accepted values, and redaction policy remain explicit requirements even when syntax parsing moves into a dependency.</p>
+<p>Mastery means predicting the effective configuration for three layers without running the program, explaining why zero cannot appear in a constructed port, and demonstrating that a token marker does not appear in tested output paths. State the limits: environment bytes that are not Unicode are skipped by this simple CLI adapter, and the secret wrapper does not provide memory erasure. A complete design note names such boundaries so a future production adaptation can decide which ones must change.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><h3>Requirements and invariants</h3><p>Resolve defaults &lt; file &lt; environment &lt; command line, reject unknown or duplicate keys within one layer, then validate effective values. Constructed ports are nonzero, timeouts and connection counts are bounded, hosts are IP addresses, and ordinary formatting/errors do not expose tokens. An explicitly empty token differs from an absent token.</p><h3>Chosen design and concrete habits</h3><p>Raw Layer and validated Config are separate types. Layer::environment takes injected pairs for parallel-safe tests instead of mutating process environment. Private fields and NonZeroU16 protect accepted state. Secret implements redacted Debug; errors identify keys and rules without echoing input. Normal parsing and IO failures use Result from the first recommended checkpoint, including documentation examples.</p><h3>Meaningful alternative and evolution threshold</h3><p>Validating each raw layer before merge is defensible when stale invalid configuration must be rejected even if overridden; it is a different policy and needs different tests. A schema library becomes useful for nested structures and source-location diagnostics. Required credentials, zeroization, or a real secret provider require explicit new guarantees; this redaction wrapper does not encrypt or erase memory.</p><h3>Actual checks and remaining uncertainty</h3><p>Native precedence, boundary, redaction, controlled-child-environment CLI, and documentation tests passed in verification/native-tests.log and passed again in verification/patch001-foundations-tests.log after the patch audit. Tested output paths omit synthetic token markers. The CLI skips non-Unicode environment pairs, and future hand-written logging can still expose values deliberately. Independent review remains pending.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/num/type.NonZeroU16.html">NonZeroU16</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/time/struct.Duration.html">Duration</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/fmt/trait.Debug.html">Debug</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/collections/struct.BTreeMap.html">BTreeMap extend</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-2/02-traits.html">Previous: Traits as required capabilities, not decoration</a><a href="../../lessons/stage-2/02-conversions.html">Next: Validated conversions, standard traits, closures, and iterators</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-one-effective-configuration-one-clear-precedence">Purpose: one effective configuration, one clear precedence</a><a href="#predict-before-running-a-layered-case">Predict before running a layered case</a><a href="#guided-checkpoint-raw-input-becomes-constrained-state">Guided checkpoint: raw input becomes constrained state</a><a href="#redaction-is-observable-behavior">Redaction is observable behavior</a><a href="#intentional-mistake-and-playbook-investigation">Intentional mistake and playbook investigation</a><a href="#reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</a><a href="#redacted-output-can-still-fail">Redacted output can still fail</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#recommended-design-and-alternatives">Recommended design and alternatives</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

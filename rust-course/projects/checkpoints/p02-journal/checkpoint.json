@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p02-journal",
+  "checkpoints": [
+    {
+      "id": "01-domain",
+      "title": "Owned task state before persistence",
+      "source": "projects/checkpoints/p02-journal/01-domain",
+      "contract": "Keep at most 32 tasks with private fields, nonempty titles of at most 200 UTF-8 bytes and no control characters. Add validates before mutation; complete is idempotent and reports missing IDs. This stage has no file format or I/O.",
+      "commands": [
+        "cargo test",
+        "cargo run"
+      ],
+      "lockfile": "projects/checkpoints/p02-journal/locks/01-domain.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete current reference",
+      "source": "projects/reference/p02-journal",
+      "contract": "The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p02-journal/locks/final.Cargo.lock"
+    }
+  ]
+}

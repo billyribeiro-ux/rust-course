@@ -1,0 +1,11 @@
+   Compiling p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.64s
+     Running tests/persistence_edges.rs (.course-cache/native/debug/deps/persistence_edges-84770302d0a1c347)
+
+running 3 tests
+test exact_record_size_is_accepted_but_one_extra_byte_fails_without_repair ... ok
+test valid_looking_price_damage_is_outside_the_integrity_contract ... ok
+test physical_record_limit_survives_restart_and_rejects_before_append ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+

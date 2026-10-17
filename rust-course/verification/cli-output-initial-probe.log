@@ -1,0 +1,229 @@
+Working directory: /Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native
+
+$ mise exec -- cargo fmt --manifest-path projects/Cargo.toml -p workshop-calculator -p task-journal -p typed-config -p expression-language -- --check
+
+exit=0
+
+$ mise exec -- cargo check --manifest-path projects/Cargo.toml -p workshop-calculator -p task-journal -p typed-config -p expression-language --all-targets --locked
+    Checking workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Checking expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+    Checking task-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal)
+    Checking typed-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.57s
+
+exit=0
+
+$ mise exec -- cargo clippy --manifest-path projects/Cargo.toml -p workshop-calculator -p task-journal -p typed-config -p expression-language --all-targets --locked -- -D warnings
+    Checking workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Checking task-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal)
+    Checking typed-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config)
+    Checking expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.61s
+
+exit=0
+
+$ mise exec -- cargo test --manifest-path projects/Cargo.toml -p workshop-calculator -p task-journal -p typed-config -p expression-language --locked
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/expression_language-60ed30f7d14de4c8)
+
+running 7 tests
+test tests::every_arithmetic_overflow_reports_its_operator ... ok
+test tests::precedence_associativity_unary ... ok
+test tests::precise_error_spans ... ok
+test tests::recursive_nesting_and_constructed_tree_depth_are_separate_limits ... ok
+test tests::exact_byte_and_token_limits_have_distinct_diagnostics ... ok
+test tests::resource_limits_are_errors ... ok
+test tests::deterministic_exhaustive_small_integer_properties ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/expression_language-1505baa17e2183cd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/corpus.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/corpus-124d7998d5224b1c)
+
+running 1 test
+test checked_in_examples ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/output.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/output-c22c2da66139c84b)
+
+running 2 tests
+test closed_diagnostic_sink_does_not_panic ... ok
+test closed_stdout_is_a_reported_io_failure_not_a_panic ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/task_journal-0739db4c2981223f)
+
+running 3 tests
+test tests::id_overflow_is_an_error ... ok
+test tests::rejects_corruption_without_partial_success ... ok
+test tests::round_trip_and_transitions ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/task_journal-33a9ab36ff24bf30)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/output.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/output-ab8be9229f520cbd)
+
+running 3 tests
+test closed_diagnostic_sink_does_not_panic ... ok
+test closed_stdout_is_a_reported_io_failure_not_a_panic ... ok
+test failed_acknowledgement_does_not_undo_saved_task ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running tests/storage.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/storage-288affef7a6f7a99)
+
+running 2 tests
+test checked_in_fixture_roundtrips ... ok
+test saves_reloads_and_preserves_corrupt_input ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/typed_config-c78ad270e540bfa6)
+
+running 3 tests
+test tests::later_layers_win_before_validation ... ok
+test tests::errors_and_debug_do_not_include_secret_values ... ok
+test tests::boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/typed_config-1adcc4a198a33ebe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-b060d0bb9733236f)
+
+running 1 test
+test cli_override_beats_environment_and_redacts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/output.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/output-d12c1903e5cd5f85)
+
+running 2 tests
+test closed_diagnostic_sink_does_not_panic ... ok
+test closed_stdout_is_a_reported_io_failure_not_a_panic ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/workshop_calculator-a9fe3dd05598004d)
+
+running 8 tests
+test conversion::tests::avoids_false_intermediate_overflow_and_rejects_real_range_loss ... ok
+test conversion::tests::common_fractional_signed_and_scientific_values ... ok
+test conversion::tests::every_unit_pair_agrees_with_independent_expected_values ... ok
+test conversion::tests::explicit_zero_is_valid_and_negative_zero_keeps_its_sign ... ok
+test tests::recoverable_errors ... ok
+test tests::units_and_integer_division ... ok
+test conversion::tests::invalid_units_numbers_and_nonfinite_inputs_are_errors ... ok
+test tests::exhaustive_small_addition_commutes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/workshop_calculator-b33229b5bc7b5183)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-d6088105cadeea0e)
+
+running 5 tests
+test non_unicode_operand_is_a_usage_error ... ok
+test adding_conversion_does_not_silently_change_integer_arithmetic ... ok
+test cli_separates_success_domain_and_usage ... ok
+test conversion_cli_accepts_fractional_signed_and_scientific_values ... ok
+test conversion_cli_reports_validation_and_range_errors_without_success_output ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/output.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/output-2c72eb0226e123b0)
+
+running 2 tests
+test closed_diagnostic_sink_does_not_panic ... ok
+test closed_stdout_is_a_reported_io_failure_not_a_panic ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+   Doc-tests expression_language
+
+running 1 test
+test reference/p05-expressions/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.43s; merged doctests compilation took 0.24s
+   Doc-tests task_journal
+
+running 1 test
+test reference/p02-journal/src/lib.rs - (line 3) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.39s; merged doctests compilation took 0.20s
+   Doc-tests typed_config
+
+running 1 test
+test reference/p04-config/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.44s; merged doctests compilation took 0.24s
+   Doc-tests workshop_calculator
+
+running 2 tests
+test reference/p01-calculator/src/conversion.rs - conversion (line 3) ... ok
+test reference/p01-calculator/src/lib.rs - (line 2) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.42s; merged doctests compilation took 0.22s
+
+exit=0
+
+$ mise exec -- cargo test --manifest-path projects/Cargo.toml -p workshop-calculator --example workshop_basics --locked
+   Compiling workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.18s
+     Running unittests examples/workshop_basics.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/examples/workshop_basics-dcaa2c18b8e7b236)
+
+running 3 tests
+test tests::delivery_is_charged_only_for_nonempty_orders ... ok
+test tests::subtotal_uses_whole_cents_and_handles_zero_quantity ... ok
+test tests::subtotal_rejects_overflow_without_wrapping ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit=0
+
+$ mise exec -- cargo build --manifest-path projects/Cargo.toml -p workshop-calculator --examples --locked
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+
+exit=0
+
+$ python3 verification/cli-output-probe.py --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+hello: normal output and exit passed
+Traceback (most recent call last):
+  File "/Users/billyribeiro/Desktop/rust-course/rust-course/verification/cli-output-probe.py", line 26, in <module>
+    assert result.returncode == 1 and b'panicked' not in result.stderr and result.stderr, (name, result)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('hello', CompletedProcess(args=['/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/examples/hello'], returncode=101, stderr=b"\nthread 'main' (3564322) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/std/src/io/stdio.rs:1168:9:\nfailed printing to stdout: Broken pipe (os error 32)\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n"))
+
+exit=1
+

@@ -1,0 +1,168 @@
+{
+  "date": "2026-10-09",
+  "scope": "Fresh standalone learner checkpoints and exact lockfiles; real WASM build and bindgen. No browser rendering.",
+  "initial_attempts": [
+    {
+      "checkpoint": "01-local-state",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p11",
+        "01-local-state",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-checkpoints-z5fzb_f5/01-local-state"
+      ],
+      "exit_code": 0
+    },
+    {
+      "checkpoint": "01-local-state",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--format-version",
+        "1",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-checkpoints-z5fzb_f5/01-local-state/Cargo.toml"
+      ],
+      "exit_code": 0
+    },
+    {
+      "checkpoint": "01-local-state",
+      "command": [
+        "python3",
+        "rust-course/scripts/build-ui.py",
+        "--project",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-checkpoints-z5fzb_f5/01-local-state",
+        "--wasm-bindgen",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/tools/wasm-bindgen-0.2.129-aarch64-apple-darwin/wasm-bindgen",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm"
+      ],
+      "exit_code": 0
+    },
+    {
+      "checkpoint": "final",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p11",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-checkpoints-z5fzb_f5/final"
+      ],
+      "exit_code": 0
+    },
+    {
+      "checkpoint": "final",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--format-version",
+        "1",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-checkpoints-z5fzb_f5/final/Cargo.toml"
+      ],
+      "exit_code": 101
+    }
+  ],
+  "checks": [
+    {
+      "checkpoint": "01-local-state",
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p11",
+        "01-local-state",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-checkpoints-z5fzb_f5/01-local-state"
+      ],
+      "exit_code": 0
+    },
+    {
+      "checkpoint": "01-local-state",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--format-version",
+        "1",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-checkpoints-z5fzb_f5/01-local-state/Cargo.toml"
+      ],
+      "exit_code": 0
+    },
+    {
+      "checkpoint": "01-local-state",
+      "command": [
+        "python3",
+        "rust-course/scripts/build-ui.py",
+        "--project",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-checkpoints-z5fzb_f5/01-local-state",
+        "--wasm-bindgen",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/tools/wasm-bindgen-0.2.129-aarch64-apple-darwin/wasm-bindgen",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p11",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-final-checkpoint-hrb6xjth/final"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-final-checkpoint-hrb6xjth/final/Cargo.toml"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "rust-course/scripts/build-ui.py",
+        "--project",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-final-checkpoint-hrb6xjth/final",
+        "--wasm-bindgen",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/tools/wasm-bindgen-0.2.129-aarch64-apple-darwin/wasm-bindgen",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "correction": "Multiple workspace roots in copied path dependency corrected; fresh final checkpoint metadata and WASM build now pass."
+}

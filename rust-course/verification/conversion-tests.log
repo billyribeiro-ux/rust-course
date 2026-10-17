@@ -1,0 +1,42 @@
+   Compiling workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/workshop_calculator-a9fe3dd05598004d)
+
+running 8 tests
+test conversion::tests::avoids_false_intermediate_overflow_and_rejects_real_range_loss ... ok
+test conversion::tests::every_unit_pair_agrees_with_independent_expected_values ... ok
+test tests::recoverable_errors ... ok
+test conversion::tests::common_fractional_signed_and_scientific_values ... ok
+test conversion::tests::explicit_zero_is_valid_and_negative_zero_keeps_its_sign ... ok
+test tests::units_and_integer_division ... ok
+test conversion::tests::invalid_units_numbers_and_nonfinite_inputs_are_errors ... ok
+test tests::exhaustive_small_addition_commutes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/workshop_calculator-b33229b5bc7b5183)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (.course-cache/native/debug/deps/cli-d6088105cadeea0e)
+
+running 5 tests
+test non_unicode_operand_is_a_usage_error ... ok
+test adding_conversion_does_not_silently_change_integer_arithmetic ... ok
+test cli_separates_success_domain_and_usage ... ok
+test conversion_cli_accepts_fractional_signed_and_scientific_values ... ok
+test conversion_cli_reports_validation_and_range_errors_without_success_output ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+
+   Doc-tests workshop_calculator
+
+running 2 tests
+test reference/p01-calculator/src/conversion.rs - conversion (line 3) ... ok
+test reference/p01-calculator/src/lib.rs - (line 2) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.39s; merged doctests compilation took 0.21s

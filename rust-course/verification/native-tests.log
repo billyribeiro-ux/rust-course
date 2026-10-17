@@ -1,0 +1,413 @@
+   Compiling p15-replication v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication)
+   Compiling p09-chat v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat)
+   Compiling p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling url v2.5.8
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-postgres v0.9.0
+   Compiling sqlx-macros-core v0.9.0
+   Compiling sqlx-macros v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling p10-issues v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues)
+   Compiling p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.51s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/expression_language-60ed30f7d14de4c8)
+
+running 4 tests
+test tests::precise_error_spans ... ok
+test tests::precedence_associativity_unary ... ok
+test tests::resource_limits_are_errors ... ok
+test tests::deterministic_exhaustive_small_integer_properties ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/expression_language-1505baa17e2183cd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/corpus.rs (.course-cache/native/debug/deps/corpus-124d7998d5224b1c)
+
+running 1 test
+test checked_in_examples ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/log_detective-145fa27d1d59ce1d)
+
+running 4 tests
+test tests::rejects_total_exhaustion_and_invalid_limits ... ok
+test tests::drain_oversized_then_recover ... ok
+test tests::tiny_buffers_and_final_line ... ok
+test tests::accounting_property_across_buffer_sizes ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/log_detective-4e6c7f4320f7a5e0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fixtures.rs (.course-cache/native/debug/deps/fixtures-9cb63975ac7b5ee0)
+
+running 1 test
+test fixture_totals ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p06_kv-0e5c0c32c57fab6c)
+
+running 8 tests
+test tests::crc_known_vector ... ok
+test tests::complete_corruption_is_never_silently_discarded ... ok
+test tests::malicious_length_is_rejected_before_allocation ... ok
+test tests::read_error_is_not_misclassified_as_torn_tail ... ok
+test tests::overwritten_deleted_and_empty_values_replay ... ok
+test tests::every_torn_suffix_recovers_only_the_complete_prefix ... ok
+test tests::reopen_repairs_tail_and_can_append ... ok
+test tests::compaction_preserves_state_and_lock ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p06_kv-43c15a7b67f80f6f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p07_indexer-00920d4dac60850a)
+
+running 5 tests
+test tests::invalid_limits_are_rejected ... ok
+test tests::cancellation_before_start_submits_nothing ... ok
+test tests::oversize_and_missing_files_are_per_file_results ... ok
+test tests::streaming_counts_across_buffer_boundaries_and_sorts ... ok
+test tests::queue_one_does_not_deadlock_and_output_is_repeatable ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p07_indexer-2eecbcebcde2875e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p08_monitor-3ce66e31d817896c)
+
+running 6 tests
+test tests::rejects_remote_addresses ... ok
+test tests::shutdown_aborts_in_flight_and_unstarted_work ... ok
+test tests::malformed_response_is_bounded ... ok
+test tests::concurrency_cap_and_input_order_hold ... ok
+test tests::retries_then_recovers ... ok
+test tests::hung_endpoint_has_a_deadline ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p08_monitor-436fddbfd2b44d64)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p09_chat-7d857af4e616c360)
+
+running 5 tests
+test tests::truncated_body_fails ... ok
+test tests::oversized_rejected_before_body ... ok
+test tests::lag_is_visible ... ok
+test tests::fragmented_frame_and_utf8 ... ok
+test tests::loopback_and_shutdown ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p09_chat-2affd8f9b8adb209)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p10_issues-4913f4b37e18cfbd)
+
+running 1 test
+test tests::title_and_roles ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p10_issues-0066b1772da8a57e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/postgres.rs (.course-cache/native/debug/deps/postgres-2d7c0e83bf0fc9d7)
+
+running 1 test
+test postgres_authorization_transaction_pagination ... ignored, requires COURSE_TEST_DATABASE_URL pointing to a disposable course database
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p12_replay-f8430eaea09acc5b)
+
+running 6 tests
+test tests::injected_accounting_overflow_does_not_partially_insert ... ok
+test tests::capacity_and_missing_cancel_preserve_state ... ok
+test tests::exact_decimal_conversion_rejects_bad_inputs ... ok
+test tests::rejection_is_transactional_and_corrected_event_can_retry ... ok
+test tests::synthetic_processing_keeps_live_state_bounded ... ok
+test tests::replay_is_identical_including_full_state ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/benchmark.rs (.course-cache/native/debug/deps/benchmark-2967bb5c9403ea48)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p12_replay-f4991495b451c673)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p13_unsafe-3437e9c900a2ed96)
+
+running 7 tests
+test tests::alignment_is_preserved ... ok
+test tests::empty_zero_capacity_and_bounds ... ok
+test tests::values_are_dropped_exactly_once_and_rejected_value_is_returned ... ok
+test tests::zero_sized_destructors_run_for_every_element ... ok
+test tests::zero_sized_values_are_logical_elements ... ok
+test tests::a_single_destructor_panic_leaves_empty_reusable_storage ... ok
+test tests::agrees_with_safe_baseline_under_many_operations ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p13_unsafe-0f48e9a94c0e5bfc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p14_scheduler-30a430154cee8157)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p14_scheduler-fa74816b81f6ff8d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/postgres.rs (.course-cache/native/debug/deps/postgres-046d47942d28a9db)
+
+running 1 test
+test crash_redelivery_fencing_dedup_cancellation ... ignored, requires isolated COURSE_SCHEDULER_TEST_DATABASE_URL
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p15_replication-381f24b501e27e9e)
+
+running 3 tests
+test tests::conflicting_append_cannot_replace_prefix ... ok
+test tests::partition_blocks_commit_until_heal ... ok
+test tests::duplicates_restarts_delay_and_loss ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p15_replication-c0b5608bb9fb4127)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/p16_workbench-5234fcdbb8e272dc)
+
+running 5 tests
+test tests::duplicate_out_of_order_and_conflicts ... ok
+test tests::rejected_order_is_atomic ... ok
+test http::tests::read_and_write_boundary ... ok
+test tests::buy_sell_conserves_cash_without_fees ... ok
+test tests::restart_replays_and_truncated_tail_fails ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/p16_workbench-a8713efac52d9649)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/task_journal-0739db4c2981223f)
+
+running 3 tests
+test tests::id_overflow_is_an_error ... ok
+test tests::round_trip_and_transitions ... ok
+test tests::rejects_corruption_without_partial_success ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/task_journal-33a9ab36ff24bf30)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/storage.rs (.course-cache/native/debug/deps/storage-288affef7a6f7a99)
+
+running 2 tests
+test checked_in_fixture_roundtrips ... ok
+test saves_reloads_and_preserves_corrupt_input ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/typed_config-c78ad270e540bfa6)
+
+running 3 tests
+test tests::later_layers_win_before_validation ... ok
+test tests::errors_and_debug_do_not_include_secret_values ... ok
+test tests::boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/typed_config-1adcc4a198a33ebe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (.course-cache/native/debug/deps/cli-b060d0bb9733236f)
+
+running 1 test
+test cli_override_beats_environment_and_redacts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/workshop_calculator-a9fe3dd05598004d)
+
+running 3 tests
+test tests::recoverable_errors ... ok
+test tests::units_and_integer_division ... ok
+test tests::exhaustive_small_addition_commutes ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/workshop_calculator-b33229b5bc7b5183)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (.course-cache/native/debug/deps/cli-d6088105cadeea0e)
+
+running 1 test
+test cli_separates_success_domain_and_usage ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+   Doc-tests expression_language
+
+running 1 test
+test reference/p05-expressions/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.33s; merged doctests compilation took 0.15s
+   Doc-tests log_detective
+
+running 1 test
+test reference/p03-logs/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.33s; merged doctests compilation took 0.16s
+   Doc-tests p06_kv
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p07_indexer
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p08_monitor
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p09_chat
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p10_issues
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p12_replay
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p13_unsafe
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p14_scheduler
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p15_replication
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p16_workbench
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests task_journal
+
+running 1 test
+test reference/p02-journal/src/lib.rs - (line 3) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.32s; merged doctests compilation took 0.15s
+   Doc-tests typed_config
+
+running 1 test
+test reference/p04-config/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.36s; merged doctests compilation took 0.19s
+   Doc-tests workshop_calculator
+
+running 1 test
+test reference/p01-calculator/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.33s; merged doctests compilation took 0.15s

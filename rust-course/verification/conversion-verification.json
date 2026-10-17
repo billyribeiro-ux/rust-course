@@ -1,0 +1,75 @@
+{
+  "task": "Complete missing P01 fractional length-conversion capability",
+  "date_utc": "2026-10-09T05:39:02.020440+00:00",
+  "cwd": "/Users/billyribeiro/Desktop/rust-course",
+  "toolchain_command": "mise exec -- rustc --version",
+  "toolchain_output": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "authored": "complete",
+  "author_self_review": "complete",
+  "code_verified": "passed",
+  "independent_review": "pending",
+  "lesson": {
+    "file": "authoring/conversion.json",
+    "id": "00-conversions",
+    "insert_after": "00-calculator",
+    "insert_before": "01-ownership",
+    "prose_words": 1810,
+    "foundations_json_modified": false
+  },
+  "checks": [
+    {
+      "command": "mise exec -- cargo fmt --manifest-path rust-course/projects/Cargo.toml -p workshop-calculator",
+      "exit_code": 0
+    },
+    {
+      "command": "mise exec -- cargo test --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p workshop-calculator",
+      "exit_code": 0,
+      "log": "verification/conversion-tests.log",
+      "passed": 15,
+      "failed": 0,
+      "breakdown": {
+        "library": 8,
+        "cli": 5,
+        "doctests": 2
+      }
+    },
+    {
+      "command": "mise exec -- cargo clippy --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p workshop-calculator --all-targets -- -D warnings",
+      "exit_code": 0,
+      "log": "verification/conversion-clippy.log"
+    },
+    {
+      "command": "mise exec -- cargo run --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p workshop-calculator --example roundoff",
+      "exit_code": 0,
+      "log": "verification/conversion-roundoff.log",
+      "stdout": "0.1 + 0.2 = 0.30000000000000004\nequal to 0.3: false\n"
+    },
+    {
+      "command": "mise exec -- cargo run --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p workshop-calculator -- convert 1.5m cm",
+      "exit_code": 0,
+      "log": "verification/conversion-cli.log",
+      "stdout": "approximately 150cm\n"
+    }
+  ],
+  "coverage": [
+    "All 16 source/target unit pairs against explicit independently written expected values",
+    "Fractional, signed, and scientific-notation numbers",
+    "NaN, infinity, invalid numeric syntax and unsupported source/target units",
+    "128-byte accepted boundary and 129-byte rejection",
+    "False intermediate overflow avoided; genuine positive/negative overflow rejected",
+    "Underflow to zero during parsing and scaling rejected; explicit zero/negative zero accepted; nonzero subnormal allowed",
+    "CLI success/error streams and exit codes; old integer arithmetic retained"
+  ],
+  "limitations": [
+    "Finite regression suite does not prove every floating-point rounding behavior or physical accuracy bound.",
+    "Nonzero subnormal results can have poor relative precision; accepted contract is finite and nonzero-preserving, not exact decimal.",
+    "Deliberate broken-expression experiment in lesson is explicitly expected behavior; mutation was not executed as a separate recorded check.",
+    "Author-side review only; independent acceptance remains pending."
+  ],
+  "logs_sha256": {
+    "conversion-tests.log": "9908069632291829d6866121f3766e0dd3f9831b3e42a0d070aab5bb10d01130",
+    "conversion-clippy.log": "0a5d5818e5141490e1b239105a12f720db411414d9e5e86b0c4f127667529766",
+    "conversion-roundoff.log": "fd0220c56f424c40472b630b025748bdd949c7a2a1e1739254889ae410b52a5d",
+    "conversion-cli.log": "9290108368a517b3ea62a5790b09d03fd6f16704970d0284962f4f114af9c7c7"
+  }
+}

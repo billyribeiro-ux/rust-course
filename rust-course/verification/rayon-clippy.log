@@ -1,0 +1,8 @@
+    Checking either v1.19.0
+    Checking crossbeam-utils v0.8.23
+    Checking crossbeam-epoch v0.9.20
+    Checking crossbeam-deque v0.8.6
+    Checking rayon-core v1.13.0
+    Checking rayon v1.12.0
+    Checking indexer-parallel-tools v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/experiments/p07-rayon)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.66s

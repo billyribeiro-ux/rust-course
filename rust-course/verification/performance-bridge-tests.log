@@ -1,0 +1,18 @@
+   Compiling p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running unittests examples/dispatch_allocation.rs (.course-cache/native/debug/examples/dispatch_allocation-2f88a7cf1dea1509)
+
+running 2 tests
+test tests::borrowed_fields_alias_input_and_owned_fields_survive_it ... ok
+test tests::invalid_input_and_resource_bounds_are_explicit ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/layout_profile.rs (.course-cache/native/debug/examples/layout_profile-24bf68738c48773f)
+
+running 2 tests
+test tests::limits_fail_before_allocating_and_modes_are_explicit ... ok
+test tests::layouts_preserve_every_field_and_analytics_for_boundary_sizes ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

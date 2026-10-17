@@ -1,0 +1,280 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Model valid task states and make invalid transitions visible · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="01-modeling" data-lesson="01-modeling"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Model valid task states and make invalid transitions visible</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 01 / Ownership and core Rust</div><h1>Model valid task states and make invalid transitions visible</h1><p class="lead">Turn informal journal rules into private fields, enums, constructors, and explicit failures.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-1/01-ownership.html">Ownership as an API decision: borrow, move, or clone</a></li></ul><ul><li>Translate invariants into construction boundaries</li><li>Distinguish absence from failure</li><li>Test state transitions without filesystem IO</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#enum">enum</a> · <a href="../../glossary.html#invariant">invariant</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#slice">slice</a> · <a href="../../glossary.html#transaction">transaction</a> · <a href="../../glossary.html#utf-8">UTF-8</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p02">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-protect-the-meaning-of-a-task">Purpose: protect the meaning of a task</h2>
+<p>A task is more than three fields. It has an identifier greater than zero, a title with useful content, and a status chosen from a known set. The journal has another invariant: identifiers are unique within the current stored collection. These claims are requirements that must hold wherever data enters or changes. If every caller can set every field freely, every caller must remember every rule. A small domain API makes the rules easier to preserve and easier to test.</p>
+<p>The reference stores Task fields privately and exposes read-only getters. Status is an enum with Open and Done. Journal owns a Vec&lt;Task&gt;, but its tasks method returns a slice. Callers can inspect tasks without inserting malformed rows. add, complete, and remove describe permitted state changes. None of these choices prevents all bugs automatically. They reduce the number of places where the invariants can be violated, which makes review and testing more focused.</p>
+<h2 id="predict-transitions-before-implementing">Predict transitions before implementing</h2>
+<p>Create an empty journal, add one task, complete it twice, then try to complete identifier 99. Predict the number of tasks, the final status of the first task, and the last result. Expected: one task, Done, and Error::NotFound(99). Completing an already-completed task is idempotent in this contract: the second call leaves the state unchanged and succeeds. Another application might reject the second completion, but that would be a different explicit rule.</p>
+<pre><code>mise exec -- cargo test -p task-journal round_trip_and_transitions
+mise exec -- cargo test -p task-journal rejects_corruption_without_partial_success</code></pre>
+<p>Do not confuse a missing task with a false status flag. Option can represent a lookup with no result. Result represents an operation that might fail and carries a reason. The complete method turns a failed lookup into NotFound using ok_or. Returning a bool would lose the distinction between “already done,” “identifier absent,” and “operation succeeded,” unless the contract carefully assigned meanings to those booleans. A named error is easier to review.</p>
+<h2 id="guided-checkpoint-validate-before-mutation">Guided checkpoint: validate before mutation</h2>
+<p>Implement add in the learner scaffold. First reject titles whose trimmed form is empty, whose UTF-8 byte length exceeds 200, or whose characters include a control character. The reference stores the original nonempty text rather than trimming it automatically. This is a deliberate policy: validation and normalization are separate operations. If you choose normalization for your extension, state it and test it. The length bound counts bytes, so a non-ASCII character may use more than one byte.</p>
+<p>Next enforce the maximum task count. Then compute the next identifier with checked_add. Finally push the newly built Task. The order matters because all ordinary validation failures occur before mutation. A caller receiving an error can rely on no task having been added. This is a small transaction-like property within memory, not a database transaction. Write an assertion that the collection remains empty after rejected input, instead of checking only that an error was returned.</p>
+<div class="code-wrap" data-source="projects/reference/p02-journal/src/lib.rs" data-sha256="cde61b40ff54acfc7db0217c9996e9b2745f8312a4307a8d6fb00e17dd1cf706"><div class="code-label"><a href="../../projects/reference/p02-journal/src/lib.rs">projects/reference/p02-journal/src/lib.rs</a></div><pre><code>//! A small versioned task journal. Titles are UTF-8, single-line, 1–200 bytes.
+//! The storage format is `TASKS\t1` followed by tab-separated id/status/title rows.
+//! ```
+//! use task_journal::Journal;
+//! let mut journal = Journal::default();
+//! let id = journal.add(&quot;Learn borrowing&quot;)?;
+//! journal.complete(id)?;
+//! let restored = Journal::decode(&amp;journal.encode())?;
+//! assert_eq!(restored.tasks(), journal.tasks());
+//! # Ok::&lt;(), task_journal::Error&gt;(())
+//! ```
+use std::{
+    collections::HashSet,
+    fmt,
+    fs::{self, File, OpenOptions},
+    io::{self, Read, Write},
+    path::Path,
+};
+const MAX_FILE_BYTES: u64 = 1_048_576;
+const MAX_TASKS: usize = 10_000;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Status {
+    Open,
+    Done,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Task {
+    id: u64,
+    title: String,
+    status: Status,
+}
+impl Task {
+    pub fn id(&amp;self) -&gt; u64 {
+        self.id
+    }
+    pub fn title(&amp;self) -&gt; &amp;str {
+        &amp;self.title
+    }
+    pub fn status(&amp;self) -&gt; Status {
+        self.status
+    }
+}
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Journal {
+    tasks: Vec&lt;Task&gt;,
+}
+#[derive(Debug)]
+pub enum Error {
+    Invalid(String),
+    NotFound(u64),
+    Io(io::Error),
+}
+impl fmt::Display for Error {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        match self {
+            Self::Invalid(s) =&gt; write!(f, &quot;invalid journal: {s}&quot;),
+            Self::NotFound(id) =&gt; write!(f, &quot;task {id} does not exist&quot;),
+            Self::Io(e) =&gt; write!(f, &quot;storage: {e}&quot;),
+        }
+    }
+}
+impl std::error::Error for Error {
+    fn source(&amp;self) -&gt; Option&lt;&amp;(dyn std::error::Error + &#x27;static)&gt; {
+        if let Self::Io(e) = self {
+            Some(e)
+        } else {
+            None
+        }
+    }
+}
+impl From&lt;io::Error&gt; for Error {
+    fn from(e: io::Error) -&gt; Self {
+        Self::Io(e)
+    }
+}
+fn validate_title(title: &amp;str) -&gt; Result&lt;(), Error&gt; {
+    if title.trim().is_empty() || title.len() &gt; 200 || title.chars().any(char::is_control) {
+        return Err(Error::Invalid(
+            &quot;title must contain 1–200 bytes and no control characters&quot;.into(),
+        ));
+    }
+    Ok(())
+}
+impl Journal {
+    pub fn tasks(&amp;self) -&gt; &amp;[Task] {
+        &amp;self.tasks
+    }
+    pub fn add(&amp;mut self, title: &amp;str) -&gt; Result&lt;u64, Error&gt; {
+        validate_title(title)?;
+        if self.tasks.len() &gt;= MAX_TASKS {
+            return Err(Error::Invalid(&quot;task limit reached&quot;.into()));
+        }
+        let id = self
+            .tasks
+            .iter()
+            .map(|t| t.id)
+            .max()
+            .unwrap_or(0)
+            .checked_add(1)
+            .ok_or_else(|| Error::Invalid(&quot;identifier space exhausted&quot;.into()))?;
+        self.tasks.push(Task {
+            id,
+            title: title.to_owned(),
+            status: Status::Open,
+        });
+        Ok(id)
+    }
+    pub fn complete(&amp;mut self, id: u64) -&gt; Result&lt;(), Error&gt; {
+        let task = self
+            .tasks
+            .iter_mut()
+            .find(|t| t.id == id)
+            .ok_or(Error::NotFound(id))?;
+        task.status = Status::Done;
+        Ok(())
+    }
+    pub fn remove(&amp;mut self, id: u64) -&gt; Result&lt;(), Error&gt; {
+        let position = self
+            .tasks
+            .iter()
+            .position(|t| t.id == id)
+            .ok_or(Error::NotFound(id))?;
+        self.tasks.remove(position);
+        Ok(())
+    }
+    pub fn encode(&amp;self) -&gt; String {
+        let mut output = String::from(&quot;TASKS\t1\n&quot;);
+        for task in &amp;self.tasks {
+            let status = match task.status {
+                Status::Open =&gt; &quot;open&quot;,
+                Status::Done =&gt; &quot;done&quot;,
+            };
+            use std::fmt::Write;
+            writeln!(output, &quot;{}\t{status}\t{}&quot;, task.id, task.title)
+                .expect(&quot;writing String cannot fail&quot;);
+        }
+        output
+    }
+    pub fn decode(input: &amp;str) -&gt; Result&lt;Self, Error&gt; {
+        if input.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let mut lines = input.lines();
+        if lines.next() != Some(&quot;TASKS\t1&quot;) {
+            return Err(Error::Invalid(
+                &quot;unsupported or missing format header&quot;.into(),
+            ));
+        }
+        let mut journal = Self::default();
+        let mut seen = HashSet::new();
+        for (offset, row) in lines.enumerate() {
+            let fail = || Error::Invalid(format!(&quot;malformed row {}&quot;, offset + 2));
+            let columns: Vec&lt;&amp;str&gt; = row.split(&#x27;\t&#x27;).collect();
+            let [id, status, title] = columns.as_slice() else {
+                return Err(fail());
+            };
+            let id: u64 = id.parse().map_err(|_| fail())?;
+            if id == 0 || !seen.insert(id) || journal.tasks.len() &gt;= MAX_TASKS {
+                return Err(fail());
+            }
+            let status = match *status {
+                &quot;open&quot; =&gt; Status::Open,
+                &quot;done&quot; =&gt; Status::Done,
+                _ =&gt; return Err(fail()),
+            };
+            validate_title(title)?;
+            journal.tasks.push(Task {
+                id,
+                title: (*title).to_owned(),
+                status,
+            });
+        }
+        Ok(journal)
+    }
+    /// A missing path starts a new journal. Other read errors are preserved.
+    pub fn load(path: &amp;Path) -&gt; Result&lt;Self, Error&gt; {
+        let file = match File::open(path) {
+            Ok(file) =&gt; file,
+            Err(e) if e.kind() == io::ErrorKind::NotFound =&gt; return Ok(Self::default()),
+            Err(e) =&gt; return Err(e.into()),
+        };
+        let mut bytes = Vec::new();
+        file.take(MAX_FILE_BYTES + 1).read_to_end(&amp;mut bytes)?;
+        if bytes.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let text =
+            std::str::from_utf8(&amp;bytes).map_err(|_| Error::Invalid(&quot;file is not UTF-8&quot;.into()))?;
+        Self::decode(text)
+    }
+    /// Writes a sibling temporary file then renames it. Designed for one writer.
+    /// No locking or parent-directory fsync: not a database durability guarantee.
+    pub fn save(&amp;self, path: &amp;Path) -&gt; Result&lt;(), Error&gt; {
+        let bytes = self.encode();
+        if bytes.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let mut temporary_name = path.as_os_str().to_os_string();
+        temporary_name.push(format!(&quot;.{}.tmp&quot;, std::process::id()));
+        let temporary = std::path::PathBuf::from(temporary_name);
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&amp;temporary)?;
+        let result = (|| -&gt; io::Result&lt;()&gt; {
+            file.write_all(bytes.as_bytes())?;
+            file.sync_all()?;
+            drop(file);
+            fs::rename(&amp;temporary, path)
+        })();
+        if result.is_err() {
+            let _ = fs::remove_file(&amp;temporary);
+        }
+        result.map_err(Error::from)
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn round_trip_and_transitions() {
+        let mut j = Journal::default();
+        let a = j.add(&quot;read 🦀&quot;).unwrap();
+        let b = j.add(&quot;write tests&quot;).unwrap();
+        j.complete(a).unwrap();
+        j.complete(a).unwrap();
+        j.remove(b).unwrap();
+        assert_eq!(Journal::decode(&amp;j.encode()).unwrap(), j);
+        assert_eq!(j.tasks()[0].status(), Status::Done);
+        assert!(matches!(j.complete(99), Err(Error::NotFound(99))));
+    }
+    #[test]
+    fn rejects_corruption_without_partial_success() {
+        for input in [
+            &quot;TASKS\t2\n&quot;,
+            &quot;TASKS\t1\n1\topen\tx\n1\tdone\ty\n&quot;,
+            &quot;TASKS\t1\n0\topen\tx\n&quot;,
+            &quot;TASKS\t1\n1\tmaybe\tx\n&quot;,
+            &quot;TASKS\t1\n1\topen\t\n&quot;,
+        ] {
+            assert!(Journal::decode(input).is_err(), &quot;{input}&quot;);
+        }
+        let mut j = Journal::default();
+        assert!(j.add(&quot; &quot;).is_err());
+        assert!(j.add(&quot;one\ntwo&quot;).is_err());
+        assert!(j.tasks().is_empty());
+    }
+    #[test]
+    fn id_overflow_is_an_error() {
+        let mut j = Journal::decode(&quot;TASKS\t1\n18446744073709551615\topen\tx\n&quot;).unwrap();
+        assert!(j.add(&quot;next&quot;).is_err());
+    }
+}
+</code></pre></div>
+<h2 id="intentional-mistake-replacing-an-enum-with-an-unrestricted-string">Intentional mistake: replacing an enum with an unrestricted string</h2>
+<p>In a scratch design, replace Status with String and allow callers to write any value. List the additional states you have now admitted: done, Done, complete, empty text, a typo, and arbitrary bytes representable as UTF-8. Every display and persistence branch must decide what those states mean. Restore the enum and observe that a match missing Done is rejected by the compiler. The supplied 04-nonexhaustive.rs exercise demonstrates this diagnostic. An exhaustive match is useful when adding a new state should force a review of existing behavior.</p>
+<p>A wildcard arm can hide that pressure. Match arms ending in _ are appropriate when a fallback is the intended behavior, but adding them automatically just to satisfy the compiler can conceal forgotten business rules. For our status representation, handling both named variants explicitly is clearer. If you add Archived later, the compiler should direct you to the places that need a deliberate decision.</p>
+<h2 id="playbook-a-title-looks-short-but-is-rejected">Playbook: a title looks short but is rejected</h2>
+<p>Observation: a title consisting of repeated emoji reaches the 200-byte limit before it reaches 200 visible symbols. Hypothesis A: the limit uses character count and contains an off-by-one bug. Hypothesis B: the specified limit counts UTF-8 bytes. A distinguishing experiment compares the same count of ASCII letters and a multibyte symbol, then measures each with .len() and .chars().count(). Expected result: byte lengths differ while the scalar-value counts match. That disproves A as the explanation for this case.</p>
+<p>The correct fix is not automatically to replace len. Decide what the product limit is meant to protect. A storage byte limit directly bounds encoded data. A user-facing character limit raises additional questions about grapheme clusters and Unicode normalization. For this course the byte rule is documented and tested. Improve the error text if the observation shows it is confusing; changing semantics without a requirement would make the tests and file contract inconsistent.</p>
+<h2 id="reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</h2><p>This complete early checkpoint contains private owned task state and validated transitions, with a 32-task cap. It deliberately precedes encoding and file I/O; the final project documents its larger cap separately. The <a href="../../projects/checkpoints/p02-journal/index.html">checkpoint contract and source</a> are separately preserved. From the course root, run:</p><pre><code class="language-sh">python3 scripts/start-checkpoint.py p02 01-domain
+cd learner-work/checkpoints/p02-journal/01-domain
+mise exec -- cargo test
+mise exec -- cargo run</code></pre><p>The helper refuses an existing destination; choose a new explicit destination if you already have work there. This is a complete guided comparison checkpoint, not evidence that you independently implemented the project. Make predictions, inspect each boundary test, then carry the next requirement into your own source. A separately named <code>final</code> checkpoint reconstructs the current complete reference without pretending it is this earlier milestone. Exact reconstruction and test commands are recorded in <a href="../../verification/early-checkpoints.log">the author check log</a>.</p><h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Add rename(id, title) to your learner journal. Reuse the existing validation rule, return NotFound for an absent identifier, and guarantee that a failed rename leaves the old title intact. Decide and document which error wins if both the identifier is missing and the proposed title is invalid. Either ordering can be defensible; it should be consistent and covered by a test. This task forces you to reason about both validation boundaries and observable failure precedence.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>write before-and-after states before writing the method.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>validate the new value into a temporary variable before assigning to the task.</p></details><details><summary>Worked solution</summary><p>call validate_title, find the task with iter_mut and ok_or, then replace the stored title with title.to_owned(). The borrowed input must become owned storage once, after acceptance. Ask for a review of the invariant and error ordering, not “make this more Rusty.” An AI can suggest alternatives, but you should reject any that silently alter the transition contract.</p></details>
+<h2 id="review-and-mastery-evidence">Review and mastery evidence</h2>
+<p>The recommended domain boundary enforces title rules for every construction route and exposes private fields through read-only views. The decoder separately enforces collection rules such as unique identifiers. A dedicated validated Title type would be a sound next step if several domain objects shared the same title invariant; for one Task model, a private validation helper keeps the requirement visible without unnecessary indirection. Keep per-value and collection invariants distinct in either design.</p>
+<p>Mastery means you can enumerate valid states, identify every constructor or mutator, and provide a test for each rejection that must preserve old state. Passing the compiler&#x27;s exhaustiveness check proves that your match covers the enum variants, not that the actions in those arms satisfy the requirements. Unit tests add behavioral evidence. A concise design note should connect each invariant to its enforcing boundary and acknowledge that identifier reuse after deleting the highest task is allowed by this reference&#x27;s current-file model.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/book/ch05-01-defining-structs.html">Structs</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch06-01-defining-an-enum.html">Enums</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch06-02-match.html">match</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/option/enum.Option.html">Option</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-1/01-ownership.html">Previous: Ownership as an API decision: borrow, move, or clone</a><a href="../../lessons/stage-1/01-collections.html">Next: Tuples, arrays, vectors, and maps with explicit contracts</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-protect-the-meaning-of-a-task">Purpose: protect the meaning of a task</a><a href="#predict-transitions-before-implementing">Predict transitions before implementing</a><a href="#guided-checkpoint-validate-before-mutation">Guided checkpoint: validate before mutation</a><a href="#intentional-mistake-replacing-an-enum-with-an-unrestricted-string">Intentional mistake: replacing an enum with an unrestricted string</a><a href="#playbook-a-title-looks-short-but-is-rejected">Playbook: a title looks short but is rejected</a><a href="#reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#review-and-mastery-evidence">Review and mastery evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

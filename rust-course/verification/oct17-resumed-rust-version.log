@@ -1,0 +1,5 @@
+$ mise exec -- rustc --version
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+
+exit=0

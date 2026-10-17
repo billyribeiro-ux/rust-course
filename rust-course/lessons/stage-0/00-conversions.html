@@ -1,0 +1,298 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Convert fractional lengths with an honest numeric contract · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="00-conversions" data-lesson="00-conversions"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Convert fractional lengths with an honest numeric contract</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 00 / Tool foundations</div><h1>Convert fractional lengths with an honest numeric contract</h1><p class="lead">Add a typed approximate length converter, preserve integer arithmetic, and investigate finite range and floating-point rounding.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-0/00-calculator.html">Build a checked calculator with units and useful errors</a></li></ul><ul><li>Choose a numeric representation from the measurement requirement.</li><li>Parse bounded unit-bearing input into a validated private type.</li><li>Distinguish parsing, nonfinite values, overflow, underflow, and ordinary rounding.</li><li>Use one-factor experiments and library/CLI regressions to explain failures.</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#enum">enum</a> · <a href="../../glossary.html#invariant">invariant</a> · <a href="../../glossary.html#mise">mise</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p01">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><section><h2 id="purpose-convert-a-measurement-without-weakening-the-calculator">Purpose: convert a measurement without weakening the calculator</h2>
+<p>A shelf is 1.5 meters wide, and the drawing asks for centimeters. The integer calculator cannot express that input. Its rejection is correct for its existing contract; the missing capability is a separate conversion command. This checkpoint adds <code>convert 1.5m cm</code> while keeping <code>7m / 2</code> equal to <code>3m</code>. Requirements determine the representation. We need signed fractional measurements, so this operation uses <code>f64</code>, Rust’s 64-bit binary floating-point number. Integer arithmetic continues to use checked <code>i64</code>.</p>
+<p>The supported units are millimeters (<code>mm</code>), centimeters (<code>cm</code>), meters (<code>m</code>), and kilometers (<code>km</code>). Negative values represent a signed displacement. The converter does not decide whether a particular physical object may have a negative size. That additional domain rule belongs in an application that knows what is being measured.</p>
+<h2 id="plain-model-approximate-number-recognized-unit-validated-boundary">Plain model: approximate number, recognized unit, validated boundary</h2>
+<p>A <code>Length</code> contains a private finite number and a <code>LengthUnit</code> enum. Callers receive one only through validation or a successful conversion. Private fields prevent another module from constructing a length containing infinity. An enum limits units to four named choices. A <code>Result</code> describes ordinary failure: unknown unit, invalid numeric text, nonfinite input, overflow, or loss of a nonzero value to zero. The CLI translates that result into an exit status and a message; it never assumes user input succeeds.</p>
+<p>Floating point is a deliberate fit for approximate measurement, not an exact decimal system. Many decimal fractions have no finite binary expansion. The stored value is a nearby representable number, and arithmetic can round again. Integers, money in a specified smallest unit, exact decimal records, and scientific measurements can require different representations. Choosing <code>f64</code> here does not replace that requirements analysis.</p>
+<h2 id="predict-before-running">Predict before running</h2>
+<p>Predict whether <code>0.1_f64 + 0.2 == 0.3</code> is true. Then predict the converter’s result for <code>1.5m</code> to <code>cm</code>, and whether converting <code>1e308km</code> to <code>km</code> should succeed. Write the three predictions before reading the explanation.</p>
+<pre><code># Working directory: rust-course/projects
+mise exec -- cargo run -p workshop-calculator --example roundoff
+mise exec -- cargo run -p workshop-calculator -- convert 1.5m cm
+mise exec -- cargo run -p workshop-calculator -- convert 1e308km km</code></pre>
+<p>The roundoff example prints <code>0.30000000000000004</code> and <code>equal to 0.3: false</code>. Those outputs were observed with Rust 1.99.0 in the original record; the current course pin is 1.99.1. The sum and the parsed literal round to different representable values. This is evidence about these operands, not proof that every decimal addition produces an unequal result. The common conversion prints <code>approximately 150cm</code>. That particular value is exactly representable, but the command’s general contract remains approximate. The same-unit huge conversion succeeds because its factor is one.</p>
+<div class="code-wrap" data-source="projects/reference/p01-calculator/examples/roundoff.rs" data-sha256="a2558a87b02b96e2e1afcbe73f44dca634448ed8fbe6c777dd836d1a9b021772"><div class="code-label"><a href="../../projects/reference/p01-calculator/examples/roundoff.rs">projects/reference/p01-calculator/examples/roundoff.rs</a></div><pre><code>use std::io::{self, Write};
+
+fn main() -&gt; io::Result&lt;()&gt; {
+    let sum = 0.1_f64 + 0.2;
+    let mut output = io::stdout().lock();
+    writeln!(output, &quot;0.1 + 0.2 = {sum:.17}&quot;)?;
+    writeln!(output, &quot;equal to 0.3: {}&quot;, sum == 0.3)?;
+    output.flush()
+}
+</code></pre></div>
+<h2 id="read-the-complete-implementation">Read the complete implementation</h2>
+<div class="code-wrap" data-source="projects/reference/p01-calculator/src/conversion.rs" data-sha256="1ba2007bc7d5fb119220db3b777aea752f55ce078d010804abbd26ae8abcb1ff"><div class="code-label"><a href="../../projects/reference/p01-calculator/src/conversion.rs">projects/reference/p01-calculator/src/conversion.rs</a></div><pre><code>//! Approximate floating-point length conversion, separate from integer arithmetic.
+//!
+//! ```
+//! use workshop_calculator::conversion::{convert, LengthUnit};
+//! let converted = convert(&quot;1.5m&quot;, &quot;cm&quot;)?;
+//! assert_eq!(converted.value(), 150.0);
+//! assert_eq!(converted.unit(), LengthUnit::Centimeters);
+//! # Ok::&lt;(), workshop_calculator::conversion::ConversionError&gt;(())
+//! ```
+use std::fmt;
+
+pub const MAX_INPUT_BYTES: usize = 128;
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum LengthUnit {
+    Millimeters,
+    Centimeters,
+    Meters,
+    Kilometers,
+}
+
+impl LengthUnit {
+    pub fn parse(input: &amp;str) -&gt; Result&lt;Self, ConversionError&gt; {
+        match input {
+            &quot;mm&quot; =&gt; Ok(Self::Millimeters),
+            &quot;cm&quot; =&gt; Ok(Self::Centimeters),
+            &quot;m&quot; =&gt; Ok(Self::Meters),
+            &quot;km&quot; =&gt; Ok(Self::Kilometers),
+            _ =&gt; Err(ConversionError::InvalidUnit),
+        }
+    }
+
+    pub fn symbol(self) -&gt; &amp;&#x27;static str {
+        match self {
+            Self::Millimeters =&gt; &quot;mm&quot;,
+            Self::Centimeters =&gt; &quot;cm&quot;,
+            Self::Meters =&gt; &quot;m&quot;,
+            Self::Kilometers =&gt; &quot;km&quot;,
+        }
+    }
+
+    // All four integer factors are exactly representable in f64. Their ratios
+    // can still be inexact, so the result is explicitly an approximation.
+    fn millimeters(self) -&gt; f64 {
+        match self {
+            Self::Millimeters =&gt; 1.0,
+            Self::Centimeters =&gt; 10.0,
+            Self::Meters =&gt; 1000.0,
+            Self::Kilometers =&gt; 1_000_000.0,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ConversionError {
+    InputTooLong,
+    InvalidNumber,
+    InvalidUnit,
+    NonFinite,
+    Overflow,
+    Underflow,
+}
+
+impl fmt::Display for ConversionError {
+    fn fmt(&amp;self, formatter: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        formatter.write_str(match self {
+            Self::InputTooLong =&gt; &quot;conversion input exceeds 128 bytes&quot;,
+            Self::InvalidNumber =&gt; &quot;expected a number immediately followed by mm, cm, m, or km&quot;,
+            Self::InvalidUnit =&gt; &quot;length unit must be mm, cm, m, or km&quot;,
+            Self::NonFinite =&gt; &quot;input must be finite; NaN and infinity are not lengths&quot;,
+            Self::Overflow =&gt; &quot;converted value exceeds the finite f64 range&quot;,
+            Self::Underflow =&gt; {
+                &quot;a nonzero value rounded to zero; choose a different unit or representation&quot;
+            }
+        })
+    }
+}
+
+impl std::error::Error for ConversionError {}
+
+/// Validated finite value and recognized length unit. Fields stay private so
+/// conversion callers cannot bypass finite-value validation.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Length {
+    value: f64,
+    unit: LengthUnit,
+}
+
+impl Length {
+    pub fn value(self) -&gt; f64 {
+        self.value
+    }
+
+    pub fn unit(self) -&gt; LengthUnit {
+        self.unit
+    }
+
+    pub fn parse(input: &amp;str) -&gt; Result&lt;Self, ConversionError&gt; {
+        if input.len() &gt; MAX_INPUT_BYTES {
+            return Err(ConversionError::InputTooLong);
+        }
+        // Longest suffixes first: &quot;1mm&quot; must not become the number &quot;1m&quot;.
+        let (number, unit) = [
+            LengthUnit::Millimeters,
+            LengthUnit::Centimeters,
+            LengthUnit::Kilometers,
+            LengthUnit::Meters,
+        ]
+        .into_iter()
+        .find_map(|unit| {
+            input
+                .strip_suffix(unit.symbol())
+                .map(|number| (number, unit))
+        })
+        .ok_or(ConversionError::InvalidUnit)?;
+        if number.is_empty() || number.trim() != number {
+            return Err(ConversionError::InvalidNumber);
+        }
+        let value = number
+            .parse::&lt;f64&gt;()
+            .map_err(|_| ConversionError::InvalidNumber)?;
+        if !value.is_finite() {
+            return Err(ConversionError::NonFinite);
+        }
+        // Parsing an extremely tiny decimal can already round a nonzero input
+        // to zero. Exponent digits do not determine whether the significand is zero.
+        let significand = number.split([&#x27;e&#x27;, &#x27;E&#x27;]).next().unwrap_or(number);
+        if value == 0.0
+            &amp;&amp; significand
+                .bytes()
+                .any(|digit| matches!(digit, b&#x27;1&#x27;..=b&#x27;9&#x27;))
+        {
+            return Err(ConversionError::Underflow);
+        }
+        Ok(Self { value, unit })
+    }
+
+    pub fn to_unit(self, unit: LengthUnit) -&gt; Result&lt;Self, ConversionError&gt; {
+        let ratio = self.unit.millimeters() / unit.millimeters();
+        // Scale once. (value * source_factor) / target_factor can overflow at
+        // the intermediate product even when the requested result is finite.
+        let value = self.value * ratio;
+        if !value.is_finite() {
+            return Err(ConversionError::Overflow);
+        }
+        if self.value != 0.0 &amp;&amp; value == 0.0 {
+            return Err(ConversionError::Underflow);
+        }
+        Ok(Self { value, unit })
+    }
+}
+
+pub fn convert(input: &amp;str, target_unit: &amp;str) -&gt; Result&lt;Length, ConversionError&gt; {
+    Length::parse(input)?.to_unit(LengthUnit::parse(target_unit)?)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn common_fractional_signed_and_scientific_values() {
+        for (input, target, expected) in [
+            (&quot;1.5m&quot;, &quot;cm&quot;, 150.0),
+            (&quot;-2.5km&quot;, &quot;m&quot;, -2500.0),
+            (&quot;+0.125m&quot;, &quot;mm&quot;, 125.0),
+            (&quot;1.25e3mm&quot;, &quot;m&quot;, 1.25),
+            (&quot;2.5E-2km&quot;, &quot;m&quot;, 25.0),
+        ] {
+            let actual = convert(input, target).unwrap();
+            assert_eq!(actual.value(), expected, &quot;{input} -&gt; {target}&quot;);
+            assert_eq!(actual.unit().symbol(), target);
+        }
+    }
+
+    #[test]
+    fn every_unit_pair_agrees_with_independent_expected_values() {
+        // Explicit expected conversions avoid deriving the oracle through the
+        // implementation&#x27;s factor-division algorithm.
+        let cases = [
+            (&quot;1mm&quot;, [1.0, 0.1, 0.001, 0.000_001]),
+            (&quot;1cm&quot;, [10.0, 1.0, 0.01, 0.000_01]),
+            (&quot;1m&quot;, [1000.0, 100.0, 1.0, 0.001]),
+            (&quot;1km&quot;, [1_000_000.0, 100_000.0, 1000.0, 1.0]),
+        ];
+        for (input, expected_values) in cases {
+            for (target, expected) in [&quot;mm&quot;, &quot;cm&quot;, &quot;m&quot;, &quot;km&quot;].into_iter().zip(expected_values) {
+                let actual = convert(input, target).unwrap().value();
+                assert!(
+                    (actual - expected).abs() &lt;= expected * 1e-14,
+                    &quot;{input} -&gt; {target}&quot;
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn invalid_units_numbers_and_nonfinite_inputs_are_errors() {
+        for input in [&quot;NaNm&quot;, &quot;infm&quot;, &quot;-infm&quot;, &quot;1e309m&quot;] {
+            assert_eq!(
+                convert(input, &quot;cm&quot;),
+                Err(ConversionError::NonFinite),
+                &quot;{input}&quot;
+            );
+        }
+        for input in [&quot;1m &quot;, &quot;1s&quot;, &quot;1MM&quot;, &quot;m&quot;, &quot; 1m&quot;, &quot;1 m&quot;, &quot;1_000m&quot;, &quot;1.2.3m&quot;] {
+            assert!(convert(input, &quot;cm&quot;).is_err(), &quot;{input}&quot;);
+        }
+        for target in [&quot;&quot;, &quot;s&quot;, &quot;CM&quot;, &quot; cm&quot;, &quot;cm &quot;] {
+            assert_eq!(convert(&quot;1m&quot;, target), Err(ConversionError::InvalidUnit));
+        }
+        assert_eq!(
+            convert(&amp;format!(&quot;{}m&quot;, &quot;1&quot;.repeat(128)), &quot;m&quot;),
+            Err(ConversionError::InputTooLong)
+        );
+        let longest_accepted = format!(&quot;{}1m&quot;, &quot;0&quot;.repeat(126));
+        assert_eq!(longest_accepted.len(), MAX_INPUT_BYTES);
+        assert_eq!(convert(&amp;longest_accepted, &quot;m&quot;).unwrap().value(), 1.0);
+    }
+
+    #[test]
+    fn avoids_false_intermediate_overflow_and_rejects_real_range_loss() {
+        assert_eq!(convert(&quot;1e308km&quot;, &quot;km&quot;).unwrap().value(), 1e308);
+        assert_eq!(convert(&quot;1e308m&quot;, &quot;km&quot;).unwrap().value(), 1e305);
+        assert_eq!(convert(&quot;1e308km&quot;, &quot;mm&quot;), Err(ConversionError::Overflow));
+        assert_eq!(convert(&quot;-1e308km&quot;, &quot;mm&quot;), Err(ConversionError::Overflow));
+        assert_eq!(convert(&quot;5e-324mm&quot;, &quot;km&quot;), Err(ConversionError::Underflow));
+        assert_eq!(convert(&quot;1e-999m&quot;, &quot;cm&quot;), Err(ConversionError::Underflow));
+        assert!(convert(&quot;1e-300m&quot;, &quot;mm&quot;).unwrap().value().is_finite());
+        assert!(convert(&quot;5e-324m&quot;, &quot;mm&quot;).unwrap().value() &gt; 0.0);
+    }
+
+    #[test]
+    fn explicit_zero_is_valid_and_negative_zero_keeps_its_sign() {
+        for input in [&quot;0m&quot;, &quot;0.0e-999m&quot;, &quot;+0cm&quot;] {
+            assert_eq!(convert(input, &quot;km&quot;).unwrap().value(), 0.0);
+        }
+        let negative_zero = convert(&quot;-0.0m&quot;, &quot;cm&quot;).unwrap().value();
+        assert_eq!(negative_zero, 0.0);
+        assert!(negative_zero.is_sign_negative());
+    }
+}
+</code></pre></div>
+<p>Read <code>Length::parse</code> in boundary order. It rejects inputs longer than 128 bytes before numeric parsing. Suffix recognition checks two-letter units before <code>m</code>; otherwise <code>1mm</code> could be split into the invalid number <code>1m</code>. Numeric parsing accepts fractions and scientific notation such as <code>1.25e3</code>. It rejects embedded whitespace, unsupported units, and separators such as <code>1_000</code>. A Rust source literal and a runtime numeric string have different grammars.</p>
+<p>Successful parsing alone is insufficient. <code>f64</code> includes NaN and positive and negative infinity, so <code>is_finite()</code> enforces our domain. Extremely small decimal text can parse as zero. For a zero result, we inspect only the significand for a nonzero digit, excluding the exponent. Thus <code>1e-999m</code> is rejected as underflow, while <code>0e-999m</code> is a valid zero. The numeric parser has already established valid syntax before this check. Explicit negative zero remains valid and keeps its sign.</p>
+<p>Conversion divides the two unit factors first, then multiplies the value by that ratio. Each factor is an exactly representable small integer measured in millimeters. A ratio may still be inexact. Scaling once avoids an unnecessary intermediate overflow: <code>1e308 * 1_000_000 / 1_000_000</code> overflows at the multiplication, even though the intended same-unit result is finite. Reordering arbitrary floating-point expressions is not automatically safe; here the four bounded, positive factors make the reason specific and reviewable.</p>
+<p>The result must be finite. A nonzero input may not become zero during conversion. Finite nonzero subnormal results remain allowed; they can have poorer relative precision than ordinary normalized values. These checks detect range loss, not every rounding error. The converter does not claim a maximum physical measurement error.</p>
+<h2 id="guided-checkpoint-trace-one-success-and-three-failures">Guided checkpoint: trace one success and three failures</h2>
+<p>Run the common command, then trace <code>1.5m</code>: the suffix selects meters, parsing yields 1.5, the meter-to-centimeter ratio is 100, and the result is 150. The library returns a <code>Length</code>; <code>main</code> prints the approximate label and exits zero. Now run the following commands separately. Each failure should produce a diagnostic on stderr, no successful value on stdout, and exit status one.</p>
+<pre><code>mise exec -- cargo run -p workshop-calculator -- convert NaNm cm
+mise exec -- cargo run -p workshop-calculator -- convert 1e308km mm
+mise exec -- cargo run -p workshop-calculator -- convert 5e-324mm km
+mise exec -- cargo test -p workshop-calculator</code></pre>
+<p>The first input is nonfinite before conversion. The second is finite at entry but too large after scaling. The third is a positive representable subnormal value whose scaled result rounds to zero. These are different boundaries with different errors. A missing target, such as <code>convert 1.5m</code>, is an argument-count error and exits two. Existing integer arithmetic still rejects <code>1.5m + 2m</code>; the new fractional contract belongs specifically to conversion.</p>
+<h2 id="intentional-mistake-a-mathematically-equivalent-formula">Intentional mistake: a mathematically equivalent formula</h2>
+<p>In a disposable learner copy, replace the ratio-first expression with <code>(self.value * self.unit.millimeters()) / unit.millimeters()</code>. Predict which existing regression fails, then run the range test. The same-unit <code>1e308km</code> case detects false intermediate overflow. This deliberately incorrect implementation is an investigation exercise, not a suggested first checkpoint. Restore the ratio-first expression and confirm the regression passes.</p>
+<p>Another tempting mistake is to permit every value that <code>parse</code> accepts. Remove the finite check only in that disposable copy and inspect the nonfinite test. A parser answers whether text describes an <code>f64</code>; domain validation answers whether that value is an accepted length. Neither responsibility replaces the other.</p>
+<h2 id="apply-the-problem-solving-playbook">Apply the problem-solving playbook</h2>
+<p>Observation: the deliberate multiply-first version rejects a huge same-unit conversion. Expected behavior: a finite input converted to its own unit retains its value. Reproduce with the exact command, pinned compiler version, and changed expression recorded. Locate the boundary: argument parsing and unit recognition completed, while result validation sees a nonfinite value.</p>
+<p>Hypothesis A is that the decimal parser cannot represent <code>1e308</code>. Hypothesis B is that an intermediate multiplication overflows. Uncertainty remains until an experiment distinguishes them. Change only the units from <code>km → km</code> to <code>mm → mm</code>, keeping the numeric text. In the deliberately broken version the millimeter case succeeds and the kilometer case fails. That expected experimental result contradicts hypothesis A: identical numeric parsing occurs in both cases. Inspecting the intermediate factors supports B. Do not claim that this experiment was run unless you actually performed the mutation.</p>
+<p>The smallest sound fix computes the bounded factor ratio first. The actual supplied tests pass for the repaired implementation, including same-unit extremes and true overflow. Keep both regressions: a fix that simply accepts infinity would satisfy neither contract. Capture the cause, distinguishing experiment, fix, and remaining rounding limitations. The <a href="../../playbook.html">problem-solving playbook</a> provides the shared investigation template. An AI assistant can explain the competing hypotheses or suggest a discriminator; require it to account for observed values before accepting a patch.</p>
+<h2 id="independent-tasks-tiered-hints-and-worked-solution">Independent tasks, tiered hints, and worked solution</h2>
+<p>First, add a regression converting <code>2.5e-2km</code> to meters without changing implementation. Second, explain why <code>0.0e-999m</code> must succeed while <code>1e-999m</code> fails. Third, write a CLI test for unsupported target <code>in</code> that checks exit status and the absence of successful stdout. These tasks strengthen evidence around the present contract rather than adding unrelated features.</p>
+<details><summary>Hint 1: choose the diagnostic category</summary><p>Separate successful expected values from diagnostic categories.</p></details><details><summary>Hint 2: distinguish zero from underflow</summary><p>Examine the significand before the exponent; an exponent containing 9 does not make zero nonzero.</p></details><details><summary>Hint 3: test the process boundary</summary><p>Integration tests use <code>Command</code> and <code>CARGO_BIN_EXE_workshop-calculator</code>, so they exercise the built program rather than duplicating library logic.</p></details>
+<details><summary>Worked solution</summary><p> <code>2.5e-2</code> kilometers equals 25 meters, so assert that value and the target unit. The zero case has no nonzero significand digit; the tiny nonzero case does and is rejected after parsing rounds it to zero. For inches, run arguments <code>["convert", "1.5m", "in"]</code>, expect code one, an empty stdout, and a unit diagnostic on stderr. The completed library and CLI tests contain these checks. Test-only unwraps mean an expected success is an assertion; production paths continue to propagate or handle errors.</p></details>
+<h2 id="when-you-get-stuck">When you get stuck</h2>
+<p>Start with <code>mise exec -- cargo test -p workshop-calculator conversion</code> to isolate library behavior. If it passes but the command differs, inspect argument order and then run <code>mise exec -- cargo test -p workshop-calculator --test cli</code>. Read the pinned standard-library <code>f64</code> documentation for <code>is_finite</code>, infinity, and subnormal values. Do not guess that every number below <code>MIN_POSITIVE</code> is zero: that constant names the smallest positive <em>normal</em> value.</p>
+<p>A useful review request is: “With Rust 1.99.1, this command produced this status and stderr; I expected this value. Library test X passes. I suspect argument routing or suffix parsing. Which one-input experiment distinguishes them?” Include a small reproducer and your uncertainty. Avoid sending only “floating point is broken” or asking a tool to replace every equality with an arbitrary tolerance.</p>
+<h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2>
+<p>The requirements are four length units, bounded numeric text, signed finite fractional values, honest approximate output, and explicit range failures. Separate <code>Length</code> and <code>LengthUnit</code> types keep this contract distinct from checked integer <code>Quantity</code>. Ordinary failures use typed errors. Private fields protect the invariant after construction. A direct subcommand branch is proportionate for one additional operation; a command parser becomes useful when options, help structure, and more commands make manual routing cumbersome.</p>
+<p>A fixed decimal representation would be justified by an exact decimal interchange requirement with a specified scale and rounding policy. Rational arithmetic could preserve more exact conversion relationships but introduces numerator/denominator range and simplification decisions. A units library becomes attractive for more dimensions and compound calculations. None is needed merely to demonstrate four approximate length conversions correctly.</p>
+<p>The scoped native run passed 15 tests: eight library tests, five CLI tests, and two doctests. Clippy passed for all package targets with warnings denied. The roundoff example was executed. Logs are <code>verification/conversion-tests.log</code>, <code>conversion-clippy.log</code>, and <code>conversion-roundoff.log</code>. Explicit conversion tables cover all 16 unit pairs; range and invalid-input regressions exercise failure boundaries. This evidence does not prove every floating-point rounding behavior, performance on other machines, or a physical accuracy guarantee. Independent review remains pending.</p>
+<h2 id="mastery-check">Mastery check</h2>
+<p>Without reading the source, explain why parsing NaN can succeed while length validation fails, why integer division remains unchanged, why factor order matters, and why a finite result can still be approximate. Then classify <code>-2.5km → m</code>, <code>1e308km → mm</code>, <code>0e-999m → cm</code>, and <code>5e-324mm → km</code>. You are ready to continue when you can predict both the successful value or error category and the boundary responsible, then confirm your claims with a focused test.</p></section><p>The roundoff executable and converter CLI propagate output-write and flush failures. The <a href="../../verification/cli-output-followup.html">closed-pipe checks</a> cover this process boundary separately from the approximate-number tests.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.f64.html">Rust 1.99.1 f64: finite values, constants, parsing and representation</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/result/enum.Result.html">Rust 1.99.1 Result: recoverable success and failure</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/process/struct.Command.html">Rust 1.99.1 Command: integration-test process boundaries</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-0/00-calculator.html">Previous: Build a checked calculator with units and useful errors</a><a href="../../lessons/stage-1/01-ownership.html">Next: Ownership as an API decision: borrow, move, or clone</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-convert-a-measurement-without-weakening-the-calculator">Purpose: convert a measurement without weakening the calculator</a><a href="#plain-model-approximate-number-recognized-unit-validated-boundary">Plain model: approximate number, recognized unit, validated boundary</a><a href="#predict-before-running">Predict before running</a><a href="#read-the-complete-implementation">Read the complete implementation</a><a href="#guided-checkpoint-trace-one-success-and-three-failures">Guided checkpoint: trace one success and three failures</a><a href="#intentional-mistake-a-mathematically-equivalent-formula">Intentional mistake: a mathematically equivalent formula</a><a href="#apply-the-problem-solving-playbook">Apply the problem-solving playbook</a><a href="#independent-tasks-tiered-hints-and-worked-solution">Independent tasks, tiered hints, and worked solution</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#mastery-check">Mastery check</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

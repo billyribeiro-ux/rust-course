@@ -1,0 +1,95 @@
+Working directory: /Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native
+
+Earlier strict Clippy run rejected nested match condition (collapsible_if). The suggested let-chain was inspected, applied, and the checks below rerun. Earlier native tests passed before that formatting-only branch refactor.
+
+$ mise exec -- env CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native rustc --version
+rustc 1.99.0 (b940084d7 2026-09-28)
+
+exit=0
+
+$ mise exec -- env CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native cargo fmt --manifest-path projects/Cargo.toml -p log-detective -- --check
+
+exit=0
+
+$ mise exec -- env CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native cargo check --manifest-path projects/Cargo.toml -p log-detective --all-targets --locked
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+
+exit=0
+
+$ mise exec -- env CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native cargo clippy --manifest-path projects/Cargo.toml -p log-detective --all-targets --locked -- -D warnings
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+
+exit=0
+
+$ mise exec -- env CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native cargo test --manifest-path projects/Cargo.toml -p log-detective --locked
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/log_detective-145fa27d1d59ce1d)
+
+running 4 tests
+test tests::drain_oversized_then_recover ... ok
+test tests::rejects_total_exhaustion_and_invalid_limits ... ok
+test tests::tiny_buffers_and_final_line ... ok
+test tests::accounting_property_across_buffer_sizes ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/log_detective-4e6c7f4320f7a5e0)
+
+running 2 tests
+test tests::native_path_is_preserved_but_non_unicode_query_is_rejected ... ok
+test tests::argument_contract ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-c19b4aab488ba45e)
+
+running 2 tests
+test existing_summary_and_streaming_search_have_separate_output_contracts ... ok
+test invalid_arguments_and_budget_exhaustion_exit_nonzero_without_success_summary ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/fixtures.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/fixtures-9cb63975ac7b5ee0)
+
+running 1 test
+test fixture_totals ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/search.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/search-4f48500284169fe5)
+
+running 7 tests
+test exact_budget_counts_delimiters_and_rejected_bytes ... ok
+test interrupted_read_is_retried ... ok
+test output_failure_returns_error_instead_of_successful_report ... ok
+test rejected_records_are_counted_but_never_emitted ... ok
+test read_error_after_a_match_preserves_error_and_documents_prefix_output ... ok
+test unicode_literal_matching_is_independent_of_chunk_boundaries ... ok
+test generated_stream_exceeds_default_budget_without_whole_input_storage ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.98s
+
+   Doc-tests log_detective
+
+running 2 tests
+test reference/p03-logs/src/lib.rs - search (line 154) ... ok
+test reference/p03-logs/src/lib.rs - (line 2) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.42s; merged doctests compilation took 0.24s
+
+exit=0
+
+$ mise exec -- env CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native cargo fmt --manifest-path projects/scaffolds/p03-logs/Cargo.toml -- --check
+
+exit=0
+
+$ mise exec -- env CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native cargo test --manifest-path projects/scaffolds/p03-logs/Cargo.toml --locked --no-run
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+  Executable unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/log_detective_scaffold-1b53a47bd90863f3)
+
+exit=0
+

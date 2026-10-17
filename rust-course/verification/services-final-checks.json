@@ -1,0 +1,136 @@
+[
+  {
+    "check": "native",
+    "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "test",
+      "--target-dir",
+      "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "-p",
+      "p09-chat",
+      "-p",
+      "p10-issues",
+      "-p",
+      "p14-scheduler",
+      "-p",
+      "p15-replication",
+      "-p",
+      "p16-workbench",
+      "--all-targets"
+    ],
+    "exit_code": 0,
+    "result": "passed"
+  },
+  {
+    "check": "doc-contract",
+    "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "test",
+      "--target-dir",
+      "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "-p",
+      "p16-workbench",
+      "--doc"
+    ],
+    "exit_code": 0,
+    "result": "passed"
+  },
+  {
+    "check": "postgres",
+    "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "test",
+      "--target-dir",
+      "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "-p",
+      "p10-issues",
+      "-p",
+      "p14-scheduler",
+      "--test",
+      "postgres",
+      "--",
+      "--ignored",
+      "--nocapture"
+    ],
+    "exit_code": 0,
+    "result": "passed"
+  },
+  {
+    "check": "clippy",
+    "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "clippy",
+      "--target-dir",
+      "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "-p",
+      "p09-chat",
+      "-p",
+      "p10-issues",
+      "-p",
+      "p14-scheduler",
+      "-p",
+      "p15-replication",
+      "-p",
+      "p16-workbench",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "result": "passed"
+  },
+  {
+    "check": "sqlx-prepare-check",
+    "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "sqlx",
+      "prepare",
+      "--check",
+      "--",
+      "--features",
+      "verified-query",
+      "--target-dir",
+      "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+    ],
+    "exit_code": 0,
+    "result": "passed"
+  },
+  {
+    "check": "sqlx-offline",
+    "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "check",
+      "--target-dir",
+      "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "--features",
+      "verified-query"
+    ],
+    "exit_code": 0,
+    "result": "passed"
+  }
+]

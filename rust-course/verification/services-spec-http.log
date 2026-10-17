@@ -1,0 +1,9 @@
+   Compiling p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.18s
+     Running tests/http.rs (.course-cache/native/debug/deps/http-9fe92334f6591718)
+
+running 1 test
+test authorization_and_input_rejection_precede_database_work ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

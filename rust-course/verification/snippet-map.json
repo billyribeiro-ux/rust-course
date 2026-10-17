@@ -1,0 +1,334 @@
+[
+  {
+    "source": "projects/reference/p01-calculator/src/main.rs",
+    "sha256": "7484e3e7b8adf4d6dcc2c48fd3feb2fd1487dadb4e71e50d4764f734544d56fc"
+  },
+  {
+    "source": "projects/reference/p01-calculator/examples/hello.rs",
+    "sha256": "6e793d96190578dbbc09ea8f94b03e62b219a378185881fb3e8e12b1b344c811"
+  },
+  {
+    "source": "projects/reference/p01-calculator/examples/workshop_basics.rs",
+    "sha256": "93b093fc53ebc6be4705fa717b008ab3333c0a38f7736b0a9d2cf76cd6d7d0bd"
+  },
+  {
+    "source": "projects/reference/p01-calculator/src/lib.rs",
+    "sha256": "f79ed74a2fa6e0c52162f61dbaa45f9df4b919b90c9b748bd90b189cb832115a"
+  },
+  {
+    "source": "projects/reference/p01-calculator/src/lib.rs",
+    "sha256": "f79ed74a2fa6e0c52162f61dbaa45f9df4b919b90c9b748bd90b189cb832115a"
+  },
+  {
+    "source": "projects/reference/p01-calculator/examples/roundoff.rs",
+    "sha256": "a2558a87b02b96e2e1afcbe73f44dca634448ed8fbe6c777dd836d1a9b021772"
+  },
+  {
+    "source": "projects/reference/p01-calculator/src/conversion.rs",
+    "sha256": "1ba2007bc7d5fb119220db3b777aea752f55ce078d010804abbd26ae8abcb1ff"
+  },
+  {
+    "source": "projects/reference/p02-journal/src/lib.rs",
+    "sha256": "cde61b40ff54acfc7db0217c9996e9b2745f8312a4307a8d6fb00e17dd1cf706"
+  },
+  {
+    "source": "projects/reference/p02-journal/src/lib.rs",
+    "sha256": "cde61b40ff54acfc7db0217c9996e9b2745f8312a4307a8d6fb00e17dd1cf706"
+  },
+  {
+    "source": "projects/reference/p18-core-labs/src/collections.rs",
+    "sha256": "e6f507f5d09d1e13c48771859b5a53c856fafd54d69c5f26f7594d296dd872f3"
+  },
+  {
+    "source": "projects/reference/p18-core-labs/examples/collections.rs",
+    "sha256": "f0fd6674d4db1f0a48694f91ef607aa842861a18883537109bbc41cfbaffc438"
+  },
+  {
+    "source": "projects/reference/p02-journal/src/lib.rs",
+    "sha256": "cde61b40ff54acfc7db0217c9996e9b2745f8312a4307a8d6fb00e17dd1cf706"
+  },
+  {
+    "source": "projects/reference/p02-journal/src/lib.rs",
+    "sha256": "cde61b40ff54acfc7db0217c9996e9b2745f8312a4307a8d6fb00e17dd1cf706"
+  },
+  {
+    "source": "projects/reference/p03-logs/src/lib.rs",
+    "sha256": "933837c39abd6c99c3686313a6fb24fc46589fc07b059792596d839ccf8712d3"
+  },
+  {
+    "source": "projects/reference/p03-logs/src/main.rs",
+    "sha256": "2f3769e2d5b4d6178612e263eb77601f0ba0582de482251071cfaf905233f689"
+  },
+  {
+    "source": "projects/reference/p04-config/src/lib.rs",
+    "sha256": "2a7a464a9cb460fff6be87cd27d34b26dd04ed336b8813d14b75d1043c64ef5b"
+  },
+  {
+    "source": "projects/reference/p04-config/src/lib.rs",
+    "sha256": "2a7a464a9cb460fff6be87cd27d34b26dd04ed336b8813d14b75d1043c64ef5b"
+  },
+  {
+    "source": "projects/reference/p18-core-labs/src/conversions.rs",
+    "sha256": "94875afb18de2845da1c61f2425b178cbca329ea18d05633c542a465ba49121b"
+  },
+  {
+    "source": "projects/reference/p18-core-labs/examples/conversions.rs",
+    "sha256": "e45fe23156feeb386520f80c28c58c9f9e62e4c0543b29e76f0e2ec48669f4d5"
+  },
+  {
+    "source": "projects/reference/p18-core-labs/examples/let_chains.rs",
+    "sha256": "1815ca0caa71e9703b1cc58a916cbf20d5872c1946c2b24660706f4f797ff717"
+  },
+  {
+    "source": "projects/reference/p03-logs/src/lib.rs",
+    "sha256": "933837c39abd6c99c3686313a6fb24fc46589fc07b059792596d839ccf8712d3"
+  },
+  {
+    "source": "projects/reference/p05-expressions/src/lib.rs",
+    "sha256": "8e7449135dc5f8c100168994ddac2d4ddd4702d4dcbe861a107049bba00f227b"
+  },
+  {
+    "source": "projects/reference/p05-expressions/src/lib.rs",
+    "sha256": "8e7449135dc5f8c100168994ddac2d4ddd4702d4dcbe861a107049bba00f227b"
+  },
+  {
+    "source": "projects/reference/p06-kv/src/lib.rs",
+    "sha256": "aa70dac72ad8889ab9954de6f45e01d23c817297c8e89dd01dfb0a6dcce1d7e9"
+  },
+  {
+    "source": "experiments/expression-fuzz/fuzz_targets/expression.rs",
+    "sha256": "3528c9f8d915082c396c56ea6b267456b85e2c35e2c359c4b37bff4acc7c71d7"
+  },
+  {
+    "source": "experiments/expression-fuzz/fuzz_targets/bad_oracle.rs",
+    "sha256": "8b0f0b5dca38dcf0d054632c10b3d36b4f75d3c78c00237f8bffcafa6bd4756f"
+  },
+  {
+    "source": "projects/reference/p06-kv/src/lib.rs",
+    "sha256": "aa70dac72ad8889ab9954de6f45e01d23c817297c8e89dd01dfb0a6dcce1d7e9"
+  },
+  {
+    "source": "projects/reference/p18-core-labs/src/interior.rs",
+    "sha256": "1efd1bc706c6341b5ff1e3819ce63b497bb04d139f400db0b305c6087d954698"
+  },
+  {
+    "source": "projects/reference/p18-core-labs/examples/interior.rs",
+    "sha256": "6f5dd40a9fcbfa616c36b4c838f69344accdfd9603452c2ce1b457dc2a31714f"
+  },
+  {
+    "source": "projects/reference/p06-kv/src/lib.rs",
+    "sha256": "aa70dac72ad8889ab9954de6f45e01d23c817297c8e89dd01dfb0a6dcce1d7e9"
+  },
+  {
+    "source": "projects/reference/p06-kv/src/lib.rs",
+    "sha256": "aa70dac72ad8889ab9954de6f45e01d23c817297c8e89dd01dfb0a6dcce1d7e9"
+  },
+  {
+    "source": "projects/reference/p06-kv/src/main.rs",
+    "sha256": "03cf71f87576d18c122d3e8fbd81ca165e8cc96b9a4b2245a57171881f26d938"
+  },
+  {
+    "source": "projects/reference/p07-indexer/src/lib.rs",
+    "sha256": "a86a23003bcc00cda19e1f1a1fb90c253b3d3ad16d436609f4000d26e3cf3808"
+  },
+  {
+    "source": "projects/reference/p19-concurrency-labs/src/atomics.rs",
+    "sha256": "6039885671e8f21f0da00ecdf51a5f31dfd181ae991f948d98d09e4151b1c2aa"
+  },
+  {
+    "source": "projects/reference/p07-indexer/src/lib.rs",
+    "sha256": "a86a23003bcc00cda19e1f1a1fb90c253b3d3ad16d436609f4000d26e3cf3808"
+  },
+  {
+    "source": "projects/reference/p07-indexer/src/main.rs",
+    "sha256": "09444a3d901a36a7f99d2abd4b7a0fb4b9a0a16494ddbdb337a7c79326926561"
+  },
+  {
+    "source": "projects/experiments/p07-rayon/src/lib.rs",
+    "sha256": "570125be102c844bc579d998cfc69312309cdc6ef1b11caa3b79e6309679d42e"
+  },
+  {
+    "source": "projects/reference/p08-monitor/src/lib.rs",
+    "sha256": "b724f2ec8da010b64b106befabeef510a7180f5a32c0f00b9859dcc6bd4da1d5"
+  },
+  {
+    "source": "projects/reference/p19-concurrency-labs/src/deadlines.rs",
+    "sha256": "3e7f57b78406d718ea02465b753b5cd37a2f69a12d12d4de68f9901ee3008da6"
+  },
+  {
+    "source": "projects/reference/p08-monitor/src/lib.rs",
+    "sha256": "b724f2ec8da010b64b106befabeef510a7180f5a32c0f00b9859dcc6bd4da1d5"
+  },
+  {
+    "source": "projects/reference/p08-monitor/src/main.rs",
+    "sha256": "4b9e23b783082582c86d33e48e4486875d847d3641065ee91a21d8ce14abd99f"
+  },
+  {
+    "source": "projects/reference/p09-chat/examples/frame.rs",
+    "sha256": "4d0cfc15c8192f2208b70cf6c5bbfac897fae2a1365012d4f9497d2a9f97e61a"
+  },
+  {
+    "source": "projects/reference/p09-chat/src/lib.rs",
+    "sha256": "ca145a0b627d59c6b806c698293d687a10524467a9e6302a56494b58b463eb89"
+  },
+  {
+    "source": "projects/checkpoints/p09-chat/01-framing/src/lib.rs",
+    "sha256": "ad68802629987f52934c016172c16a69a7f9757443e949a89ddcfb39def9d3b2"
+  },
+  {
+    "source": "projects/reference/p10-issues/examples/validation.rs",
+    "sha256": "7a1290ad0646ab1980a2d8886dc808f23d919a8d8ea3fbce3b9b5de538aea4d2"
+  },
+  {
+    "source": "projects/reference/p10-issues/src/lib.rs",
+    "sha256": "8a63ea23ad9faa602a82b0fc4ed29f6f6d3555d11585bf0a27c7e748b6fe6450"
+  },
+  {
+    "source": "projects/checkpoints/p10-issues/01-http-validation/src/lib.rs",
+    "sha256": "618ba2000537a66dcffc81991a244a2600d43306f8c8517b55d8db6299889126"
+  },
+  {
+    "source": "projects/reference/p10-issues/migrations/0001_issues.sql",
+    "sha256": "02b775e011abeffb0836e7e158bf133e40050bd7d79fd9697f4cf5cbb444829e"
+  },
+  {
+    "source": "projects/reference/p10-issues/tests/postgres.rs",
+    "sha256": "7be080c34e6557a89db9dccc9eb74a8bb0726c09458dc944227d79447193a03a"
+  },
+  {
+    "source": "projects/reference/p10-issues/tests/web_boundaries.rs",
+    "sha256": "762a38816c5f38ccb52957a611616acae74529a2fcb3a34be7ec3674d67c91fc"
+  },
+  {
+    "source": "exercises/browser/index.html",
+    "sha256": "19d98e12da0b49225b7a597b0b58070b4bb95e769588e3f0043af786cb671832"
+  },
+  {
+    "source": "projects/ui-console/src/lib.rs",
+    "sha256": "2a38a779367c75a822b7e9a6dd0be721ce38d60088e17923e08c361d73d39549"
+  },
+  {
+    "source": "projects/reference/p11-ui-model/src/lib.rs",
+    "sha256": "b4510c4c374df5bb9610a393fa226e6684abf921ebad3e009fbc0a87ea831de1"
+  },
+  {
+    "source": "projects/reference/p12-replay/examples/layout_profile.rs",
+    "sha256": "11131b3ae4a5b109acb0f6213e9eab29f83f2679d3e7d643f7aa30f96c8ce6c3"
+  },
+  {
+    "source": "projects/reference/p12-replay/examples/dispatch_allocation.rs",
+    "sha256": "cd4f7b73095f99c7b3a182a09ee7f3cae62032d54c505f4393527c4c923112da"
+  },
+  {
+    "source": "projects/reference/p12-replay/src/bin/benchmark.rs",
+    "sha256": "fa5ae599102aec6723aafae5a7a7996f653d8009cdbc614ae941125f3ee9d0a4"
+  },
+  {
+    "source": "projects/reference/p12-replay/src/lib.rs",
+    "sha256": "09bbbdb34470f9826e9a2ffee38e9d08825791204cfaf5897928c36171c3bbef"
+  },
+  {
+    "source": "projects/reference/p12-replay/src/main.rs",
+    "sha256": "c6ea8a1c5d7ddd2741db1f286d57c8a72817802352b29b11a71b39d536013b34"
+  },
+  {
+    "source": "projects/reference/p12-replay/fixtures/ticks.csv",
+    "sha256": "e87ce3642cb8599e9f6675b5dd504c1bbdb16401c229578a3dc283b3c370ef5a"
+  },
+  {
+    "source": "projects/reference/p12-replay/src/ticks.rs",
+    "sha256": "9d0eb9c0e21651f99e8d00c66f59a6f87c549b7d768b463b9507eb0d68c5b1df"
+  },
+  {
+    "source": "projects/reference/p12-replay/src/bin/tick_replay.rs",
+    "sha256": "c3523db064d40b07721323242a7bdb7e5fa56d91fbc469ac8658395c50b5badc"
+  },
+  {
+    "source": "projects/reference/p13-unsafe/src/lib.rs",
+    "sha256": "20ed4f3c55d798d7da29edce0174ca55c0187ca02a4a992ed043addd6196b502"
+  },
+  {
+    "source": "projects/reference/p13-unsafe/src/lib.rs",
+    "sha256": "20ed4f3c55d798d7da29edce0174ca55c0187ca02a4a992ed043addd6196b502"
+  },
+  {
+    "source": "projects/reference/p17-specializations/examples/dispatch.rs",
+    "sha256": "8d78deb58d37b3d26be50338b0ad8f069a514a884a6e7940d75f9b793d53dcec"
+  },
+  {
+    "source": "projects/reference/p17-specializations/src/lib.rs",
+    "sha256": "67fbe34da034f5620976fe99b92c8f21d66c96ea6e6a37ba94fea1b710283740"
+  },
+  {
+    "source": "projects/reference/p17-derive/src/lib.rs",
+    "sha256": "2001c7c7c188e8e559469f7a784aba89352fa79bf25be1ecac1ffe0407392b27"
+  },
+  {
+    "source": "exercises/specializations/no-std/src/lib.rs",
+    "sha256": "e4f27b7bfb02c6ec21dc60ec9abe4e2f4bcf28156fe2abd313084f785d4b854a"
+  },
+  {
+    "source": "projects/reference/p14-scheduler/tests/postgres.rs",
+    "sha256": "ff899dc9b968defb7fa5ee2b405f2db93f95357103c11413691f878635e1b9a5"
+  },
+  {
+    "source": "projects/checkpoints/p14-scheduler/01-lease-model/src/lib.rs",
+    "sha256": "8628340a9d5ed761cdf30cae2f85c2017fef7c0ff5f077ac041686fee75ddc5f"
+  },
+  {
+    "source": "projects/reference/p14-scheduler/migrations/0001_jobs.sql",
+    "sha256": "200085324d71715ffd2bfb6bb68142c87ba7e43790027a33de32fc9f5c62a161"
+  },
+  {
+    "source": "projects/reference/p14-scheduler/src/lib.rs",
+    "sha256": "47cc3be1cd5a9f1626c0c5285cb39b6f639039ae157b5dd60779e07bc1c61887"
+  },
+  {
+    "source": "projects/reference/p14-scheduler/tests/http.rs",
+    "sha256": "1b97419644fbf01483cd72e459f8c337ba6c491ec38932dcc971f103e85ac1fe"
+  },
+  {
+    "source": "projects/reference/p15-replication/src/main.rs",
+    "sha256": "d31d93eccbcb8a60c895fb36aa85a42551ac3cd0766d97715db52ceed4051e57"
+  },
+  {
+    "source": "projects/reference/p15-replication/src/lib.rs",
+    "sha256": "1c0ae747a6f7f689cf8df6659200f27809cd7052ed9e1e23994554e460019694"
+  },
+  {
+    "source": "projects/checkpoints/p15-replication/01-append-transport/src/lib.rs",
+    "sha256": "257ac1d3940f229945300e28baab88b6eb33f97e104c5d56a95fb00e97c5cc9d"
+  },
+  {
+    "source": "projects/reference/p16-workbench/examples/domain.rs",
+    "sha256": "1eba4fa69b23c9e481437604afae86d6d45ada3ccb9776439c573b8b7dac1970"
+  },
+  {
+    "source": "projects/reference/p16-workbench/src/lib.rs",
+    "sha256": "10b985efe10b61789ae480356652111c4f84d05279b3944eecb91eba855b15f9"
+  },
+  {
+    "source": "projects/checkpoints/p16-workbench/01-order-domain/src/lib.rs",
+    "sha256": "7cd5ebb1f2128b659866c2fdcba32233ee09c5ac6135696b2400eb32e1dee107"
+  },
+  {
+    "source": "projects/reference/p16-workbench/src/http.rs",
+    "sha256": "66415d56d49af6176308627a1ca3c8be1224e3b98dfa5dbb698c087f84963c3a"
+  },
+  {
+    "source": "projects/reference/p16-workbench/src/replay.rs",
+    "sha256": "959bef5c826786fc734ff3a9c4f4b1f618ed103905731838dcfd00bf21fe9fc7"
+  },
+  {
+    "source": "experiments/svelte-bridge/src/App.svelte",
+    "sha256": "9a53ea2797df1f39907426d910e9d59017aecd57c60c1139d142f1791015194d"
+  },
+  {
+    "source": "experiments/svelte-bridge/src/client.js",
+    "sha256": "6d6f594c618959825fea2c77c3dc9bdde4d45b5a35a5f4745c14af0f8c34d9da"
+  },
+  {
+    "source": "experiments/svelte-bridge/vite.config.js",
+    "sha256": "7085d3c79e10e9b78a8bc7176ddc182e81bcd473269bff68cb0727dabd430f19"
+  }
+]

@@ -1,0 +1,1031 @@
+{
+  "date": "2026-10-09T06:21:03.999082+00:00",
+  "author_self_review": "complete",
+  "independent_review": "pending",
+  "scope": "Portable snapshot, mise path expansion, Cargo manifests/scaffolds, package exclusions, Rust MCP access and stable Leptos advisory options. No reference/UI Rust source or dependencies changed.",
+  "archive": {
+    "temp_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0",
+    "archive": "/Users/billyribeiro/Desktop/rust-course/rust-course-review.zip",
+    "archive_sha256": "1fac6f740928c46a925b668058953dd1c2296f524f49ff1d279ded11e24a9bfe",
+    "compressed_bytes": 1059176,
+    "uncompressed_bytes": 3138973,
+    "file_count": 374,
+    "excluded_leaks": []
+  },
+  "archive_snapshot_note": "This is the measured existing archive, not a claim that future authored changes are already archived. Root should regenerate final archive after all source/content changes.",
+  "commands": [
+    {
+      "label": "mise-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--version"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/mise-version.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/mise-version.stderr",
+      "stdout_sha256": "8dc912acd5bfeafc70b01b1d2a2afb0844afa02f5dba2f1ae8d5c212d005afb6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "mise-target-root",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "python3",
+        "-c",
+        "import os; print(os.environ[\"CARGO_TARGET_DIR\"])"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/mise-target-root.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/mise-target-root.stderr",
+      "stdout_sha256": "008efbdc8f491d8b6cf5dcf44b5efe3200091ca345af74f453f0ff3a5d2d250f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "reference-metadata",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--no-deps",
+        "--locked",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/reference-metadata.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/reference-metadata.stderr",
+      "stdout_sha256": "5cab4f7c401cdf1c2a5319af32269a868a3ff4c3a296358bebe35601c2a37c35",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 18,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p01-calculator/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p02-journal/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p03-logs/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p04-config/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p05-expressions/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p06-kv/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p07-indexer/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p08-monitor/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p09-chat/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p10-issues/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p11-ui-model/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p12-replay/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p13-unsafe/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p14-scheduler/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p15-replication/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p16-workbench/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p17-derive/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p17-specializations/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "ui-metadata",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--manifest-path",
+        "projects/ui-console/Cargo.toml",
+        "--no-deps",
+        "--locked",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/ui-metadata.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/ui-metadata.stderr",
+      "stdout_sha256": "356c7f91f023eebb1e23b2387082bbdf493ab9a31e2bdec1551e634df0467664",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/ui-console",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/ui-console/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p01-calculator",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p01-calculator"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p01-calculator.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p01-calculator.stderr",
+      "stdout_sha256": "55295fe06f57c8b859ab972b1c7a58b42e47fff670b8131f2f7208465d89dc3a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p01-calculator",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p01-calculator.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p01-calculator.stderr",
+      "stdout_sha256": "b5e88a13ba3032e2cfaaca7cece2afb71b67a60c7a897452ec01e4e9391b17e2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p02-journal",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p02-journal"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p02-journal.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p02-journal.stderr",
+      "stdout_sha256": "e2db03f18db5641ec8b8d0b819af0c68b44461f685fb8475e8c73799dc105c9f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p02-journal",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p02-journal",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p02-journal.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p02-journal.stderr",
+      "stdout_sha256": "3d1f0691cf7c546761e51d30e2e67c3b9000da6b369bda0517e7970c8ac4c6ce",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p02-journal",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p02-journal/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p03-logs",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p03-logs"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p03-logs.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p03-logs.stderr",
+      "stdout_sha256": "dc4584fd9d96ddaffc061551c53eeeed65d125a16cee395de88d8d6576119490",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p03-logs",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p03-logs",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p03-logs.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p03-logs.stderr",
+      "stdout_sha256": "ecbf470cc69a032e70b80fd35052488e7d51916032c36d313aa5f4094a2607b9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p03-logs",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p03-logs/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p04-config",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p04-config"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p04-config.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p04-config.stderr",
+      "stdout_sha256": "a28097e692ce2efe722dce0edde2c69ab7bcd4d9e5f197efe0c767e69da57dff",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p04-config",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p04-config",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p04-config.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p04-config.stderr",
+      "stdout_sha256": "1942281c14b8e3eb84c124d806b75a2d7afd8c4daf0f151ede3d6a845c12dc0e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p04-config",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p04-config/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p05-expressions",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p05-expressions"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p05-expressions.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p05-expressions.stderr",
+      "stdout_sha256": "e44c54072f56ec1656c3e8dc15560390bfcc1f7af335c10f3bfbbcf948067c45",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p05-expressions",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p05-expressions",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p05-expressions.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p05-expressions.stderr",
+      "stdout_sha256": "fee5e89a31787a261ca2be17bf15880c5444911253d238bd628d4dc1356446d7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p05-expressions",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p05-expressions/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p06-kv",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p06-kv"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p06-kv.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p06-kv.stderr",
+      "stdout_sha256": "6f625787e5b9886d0845132334eee0318b1d2277e8a4bc1b2ccf877035bfeba3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p06-kv",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p06-kv",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p06-kv.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p06-kv.stderr",
+      "stdout_sha256": "26e77793fd66f6a2283063f0cc8e63d8ecdad22edab0e2fc6f4ddbac0633bf54",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p06-kv",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p06-kv/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p07-indexer",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p07-indexer"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p07-indexer.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p07-indexer.stderr",
+      "stdout_sha256": "c9c918f0ea85940bee09e691c588bca75d31c14d083d012cb4415ab6150eb687",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p07-indexer",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p07-indexer",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p07-indexer.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p07-indexer.stderr",
+      "stdout_sha256": "afb92fc729bcda510d2eb5b5cdbdc8603f2e56c9046f0806c8b9b4ad2238357b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p07-indexer",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p07-indexer/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p08-monitor",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p08-monitor"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p08-monitor.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p08-monitor.stderr",
+      "stdout_sha256": "6b786665d1b8fd96320caad2bbe41290531df4884d28d6d2fccfb4b033bf68a8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p08-monitor",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p08-monitor",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p08-monitor.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p08-monitor.stderr",
+      "stdout_sha256": "433e4fb5c81bf6f7320a9a93f8832344a1249d8a0ec45a091845535b8bdc9f2a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p08-monitor",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p08-monitor/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p09-chat",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p09-chat"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p09-chat.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p09-chat.stderr",
+      "stdout_sha256": "a5cf1242cb3d1a2a9d78e776b98d14a35284b70f507288bdde8a37ce8c62efb4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p09-chat",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p09-chat",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p09-chat.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p09-chat.stderr",
+      "stdout_sha256": "016090fa97795d1e9a7e161be0541c916b1c6501eb8402d74838a806ee2d99b7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p09-chat",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p09-chat/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p10-issues",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p10-issues"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p10-issues.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p10-issues.stderr",
+      "stdout_sha256": "ddf761c390534a3e83fb259743a2121f50133aa968ea59d096c98034db713872",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p10-issues",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p10-issues",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p10-issues.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p10-issues.stderr",
+      "stdout_sha256": "7fd0e894ec2e3b764adcce4e6ca814daf4acc78e0855e9202b05f31eca612178",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p10-issues",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p10-issues/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p11-console",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p11-console"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p11-console.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p11-console.stderr",
+      "stdout_sha256": "a747c136f91fbfcf361f27e2e964eb540ec3eb747b2a11783194982a4c8a90c5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p11-console",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p11-console",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p11-console.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p11-console.stderr",
+      "stdout_sha256": "e6ce8ee9433b1fbbd857422892b37c564bb08036a088d519f0a82845b424e5da",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p11-console",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p11-console/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p12-replay",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p12-replay"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p12-replay.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p12-replay.stderr",
+      "stdout_sha256": "2aa4e536f2ddc67497517d5f0db188d21f30c0f47625bf062a1971f7c7a075de",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p12-replay",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p12-replay",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p12-replay.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p12-replay.stderr",
+      "stdout_sha256": "c7ec1ab0f7c834392a58732e2564216058f4205f7d53a162e7d91ef89b60b7a0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p12-replay",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p12-replay/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p13-unsafe",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p13-unsafe"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p13-unsafe.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p13-unsafe.stderr",
+      "stdout_sha256": "76bafa86fee4e2e18d1788de143297506b3736cb7a29f12187955e0031a00c6b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p13-unsafe",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p13-unsafe",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p13-unsafe.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p13-unsafe.stderr",
+      "stdout_sha256": "59f6d3537396b05c7e4d11a20b652704853beae2112b8782eb483ed7a8442912",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p13-unsafe",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p13-unsafe/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p14-scheduler",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p14-scheduler"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p14-scheduler.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p14-scheduler.stderr",
+      "stdout_sha256": "27839d3632d23ae8d145ca45b803eff564b253eebcdb52a6d3c9c27a412b7092",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p14-scheduler",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p14-scheduler",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p14-scheduler.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p14-scheduler.stderr",
+      "stdout_sha256": "8a5043ecd4689bdf530c5f1e6a5dafd21d566582b15d4285b13f1494041ecd83",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p14-scheduler",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p14-scheduler/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p15-replication",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p15-replication"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p15-replication.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p15-replication.stderr",
+      "stdout_sha256": "e8049099280d033f3338282b4026293808b64d7042e441dae836372e84bd5eb0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p15-replication",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p15-replication",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p15-replication.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p15-replication.stderr",
+      "stdout_sha256": "158e1311e4f9f41024c62219b08a8c43c113d3d839ffb3cdf4c68f78640d3a03",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p15-replication",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p15-replication/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "copy-p16-workbench",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p16-workbench"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p16-workbench.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/copy-p16-workbench.stderr",
+      "stdout_sha256": "2ec36aeacbe278a7a8ce20a93f3705a60cbb13f5b339b719ec7e49e0c09e46f8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "metadata-p16-workbench",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p16-workbench",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p16-workbench.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/metadata-p16-workbench.stderr",
+      "stdout_sha256": "0224b3c1d884c4bda88be67555946a1ba3437660db855cc105d01f18b744d293",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 1,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p16-workbench",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p16-workbench/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "mise-target-learner",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "python3",
+        "-c",
+        "import os; print(os.environ[\"CARGO_TARGET_DIR\"])"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/mise-target-learner.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/mise-target-learner.stderr",
+      "stdout_sha256": "008efbdc8f491d8b6cf5dcf44b5efe3200091ca345af74f453f0ff3a5d2d250f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "refuse-overwrite",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p01"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 1,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/refuse-overwrite.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/refuse-overwrite.stderr",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "63a1585155937a5514bb71af8034a20b50a58b9e88f09a098157fbb0e4049984"
+    },
+    {
+      "label": "refuse-traversal",
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p01",
+        "--name",
+        "../escape"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 1,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/refuse-traversal.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/refuse-traversal.stderr",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "65d74091d6f21f9a01041d4572191bfbea5dad4a4d666a1d15ae2717c7b51d6a"
+    },
+    {
+      "label": "reference-full-metadata",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--locked",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/reference-full-metadata.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/reference-full-metadata.stderr",
+      "stdout_sha256": "ac31b4f0f057b12a59516a4c014173d756bf722c5ce5d078dff0392942df9c0d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 179,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p17-derive/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p11-ui-model/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p05-expressions/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p03-logs/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p06-kv/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p07-indexer/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p08-monitor/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p09-chat/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p10-issues/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p12-replay/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p13-unsafe/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p14-scheduler/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p15-replication/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p16-workbench/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p17-specializations/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p02-journal/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p04-config/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p01-calculator/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "ui-full-metadata",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--manifest-path",
+        "projects/ui-console/Cargo.toml",
+        "--locked",
+        "--offline",
+        "--format-version",
+        "1"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/ui-full-metadata.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/ui-full-metadata.stderr",
+      "stdout_sha256": "e2a1bc96a90fde0ebbd80c4a28bc5f80286ddbf50b288ba9e57d334725fb49fa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": {
+        "package_count": 184,
+        "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/ui-console",
+        "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+        "local_manifest_paths": [
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p11-ui-model/Cargo.toml",
+          "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/ui-console/Cargo.toml"
+        ]
+      }
+    },
+    {
+      "label": "repack-with-exclusions",
+      "command": [
+        "python3",
+        "scripts/pack.py"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course",
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/repack-with-exclusions.stdout",
+      "stderr": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/repack-with-exclusions.stderr",
+      "stdout_sha256": "eba4e42cc33f710ebd5d52e0bc54e43030362b9b8b2d9ad7f87d63bb318a209f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "setup_limitation": "Initial mise execution could not record its trusted-config symlink under the sandbox. Explicit approved retry succeeded. Inspected temporary configuration was trusted; no global Rust default changed.",
+  "findings": [
+    {
+      "severity": "fixed",
+      "location": "scripts/pack.py",
+      "defect": "Packaging excluded .env but included a reproduced .env.local configuration probe.",
+      "change": "Exclude .env.* variants as well.",
+      "validation": "Repacking extracted copy excluded .env.local, learner-work, .local, target, and UI pkg probes; original scaffold/reference sources preserved."
+    }
+  ],
+  "copy_checks": {
+    "scaffolds": 16,
+    "copied_metadata_passed": 16,
+    "source_overwrite_refused": true,
+    "traversal_name_refused": true,
+    "native_package_count": 179,
+    "native_local_manifest_count": 18,
+    "ui_package_count": 184,
+    "ui_local_manifest_count": 2,
+    "path_dependency_check": "Every source=null manifest resolved inside the extracted course folder.",
+    "builds": "None: metadata-only; no duplicate target artifacts."
+  },
+  "mcp": {
+    "server_version": "0.4.1 configured",
+    "tool": "mcp__rust__workspace_info",
+    "arguments": {
+      "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+      "toolchain": "1.99.0",
+      "include_dependencies": false
+    },
+    "actual_result": "tool call error: tool call failed for `rust/workspace-info`\n\nCaused by:\n    Unexpected response type",
+    "wrapper_workspace_access_verified": false,
+    "configuration": "Local rust-mcp-server executable; args empty so server defaults to launch working directory. Tool call used existing absolute manifest. Server --help documents --workspace as optional. No configuration edit made.",
+    "fallback": "mise exec -- cargo metadata with explicit manifest; extracted native and UI dependency graphs resolved successfully."
+  },
+  "advisory": {
+    "id": "RUSTSEC-2024-0436",
+    "package": "paste",
+    "version": "1.0.15",
+    "target_kinds": [
+      [
+        "proc-macro"
+      ],
+      [
+        "test"
+      ],
+      [
+        "test"
+      ],
+      [
+        "test"
+      ],
+      [
+        "test"
+      ],
+      [
+        "test"
+      ],
+      [
+        "custom-build"
+      ]
+    ],
+    "type": "informational: unmaintained",
+    "patched_versions": "none listed",
+    "known_vulnerability_claim": "The existing audit reports no known vulnerabilities; this advisory is a maintenance notice, not a clean-bill-of-security proof.",
+    "latest_eligible_stable_leptos": {
+      "version": "0.8.22",
+      "published_at": "2026-10-05T13:31:54Z"
+    },
+    "newer_prerelease": {
+      "version": "0.9.0-beta",
+      "published_at": "2026-07-18T18:59:50Z"
+    },
+    "decision": "Retain the pinned tested stable framework. Official v0.8.22 still declares paste1.0. No compatible stable upstream version removing it was found by the Oct8 cutoff. Track upstream migration; reevaluate on a stable release, rebuild WASM, repeat UI tests and cargo audit. Do not rename/override a transitive macro crate without a tested upstream dependency change.",
+    "maintained_framework_evidence": "Official stable release Oct5 includes active fixes and dependency maintenance. This supports maintained Leptos, while the separate paste dependency remains unmaintained.",
+    "possible_alternatives": "RustSec lists pastey and with_builtin_macros; these require an upstream migration or maintained tested fork, not an application-level version bump.",
+    "primary_sources": [
+      "https://github.com/leptos-rs/leptos/releases/tag/v0.8.22",
+      "https://api.github.com/repos/leptos-rs/leptos/releases?per_page=8",
+      "https://raw.githubusercontent.com/leptos-rs/leptos/v0.8.22/Cargo.toml",
+      "https://rustsec.org/advisories/RUSTSEC-2024-0436.html"
+    ],
+    "retrieval_limit": "crates.io API retrieval returned403; direct official GitHub API/tagged manifest and existing resolved lock/metadata provided release/dependency evidence."
+  },
+  "checkpoint_reconstruction": {
+    "observation": "Existing services checkpoint JSON names tasks and final files but contains no executable intermediate snapshot recipe.",
+    "proposal": "Root-owned materializer should explicitly map each checkpoint to source snapshot/patch sequence and a standalone Cargo.toml with [workspace], concrete pins and resolvable relative path dependencies. Copy into a new learner directory; reject overwrite; preserve immutable reference helpers; use the course mise shared target. Validate cargo metadata for every materialized stage and compile/test each stage contract. Source recipes stay small; never package compiled targets.",
+    "status": "Reported to root; mechanism implementation not owned or claimed verified by this audit."
+  },
+  "temporary_audit_bytes": 6146954,
+  "temporary_storage_note": "Retained under .course-cache for evidence. Relocation is not reclaimed space."
+}

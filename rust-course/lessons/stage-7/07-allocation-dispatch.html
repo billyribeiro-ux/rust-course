@@ -1,0 +1,232 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Choose ownership and dispatch without hidden cost claims · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="07-allocation-dispatch" data-lesson="07-allocation-dispatch"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Choose ownership and dispatch without hidden cost claims</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 07 / Performance and unsafe Rust</div><h1>Choose ownership and dispatch without hidden cost claims</h1><p class="lead">Trace borrowed and owned parsing, qualify zero-copy claims, and compare static and dynamic dispatch as design choices.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-7/07-layout.html">Profile data layout and distinguish memory from locality</a></li></ul><ul><li>Distinguish a borrowed symbol slice from an allocation-free program.</li><li>Choose retention ownership from required lifetimes.</li><li>Explain static and dynamic dispatch separately from heap allocation.</li><li>Preserve behavior while deciding which cost would justify measurement.</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#borrow">borrow</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#drop">drop</a> · <a href="../../glossary.html#generic">generic</a> · <a href="../../glossary.html#heap">heap</a> · <a href="../../glossary.html#iterator">iterator</a> · <a href="../../glossary.html#lifetime">lifetime</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p12">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><section><h2 id="purpose-separate-ownership-allocation-and-dispatch-costs">Purpose: separate ownership, allocation, and dispatch costs</h2>
+<p>A tick report reads a small bounded text buffer, calculates totals, and sometimes retains records after the buffer is released. Three design questions arise: can symbol text be borrowed, when must it become owned, and how should callers select a calculation? These questions concern different boundaries. A trait object does not inherently allocate, and a borrowed string does not make an entire program allocation-free. This checkpoint keeps those distinctions visible in executable code.</p>
+<p>The layout investigation measured a repeated scan. This lesson complements it with ownership and abstraction reasoning. It does not invent a static-versus-dynamic speed result. First establish the behavior and lifetime requirements; then measure only if dispatch or allocation cost is material to the real workload.</p>
+<h2 id="plain-model-ownership-is-a-duration-requirement">Plain model: ownership is a duration requirement</h2>
+<p>A borrowed <code>&amp;str</code> identifies existing valid UTF-8 bytes without owning their storage. Its lifetime constrains how long a caller may use them. A <code>String</code> owns a growable buffer and can survive the source from which its contents were copied. Our parser borrows symbol slices from one input <code>String</code>, parses prices and quantities into integers, and returns a <code>Vec</code> of typed rows. The vector allocates storage for row descriptors even though the symbol bytes are shared.</p>
+<p>“Zero-copy” therefore needs a named boundary: symbol extraction creates slices into the existing buffer. Reading a file or network body may already have copied bytes into that buffer; parsing numeric text computes new integer values; storing the row vector requires memory. Retaining one tiny slice can also keep its entire backing buffer alive. Avoid a broad zero-copy claim when the evidence establishes only one avoided copy.</p>
+<h2 id="predict-before-running">Predict before running</h2>
+<p>Predict whether the borrowed rows can outlive the input string, whether <code>&amp;dyn Metric</code> requires a heap allocation, and whether a generic total and a dynamic total should produce identical results. Then run the reference:</p>
+<pre><code># Working directory: rust-course/projects
+mise exec -- cargo run -p p12-replay --example dispatch_allocation
+mise exec -- cargo test -p p12-replay --example dispatch_allocation</code></pre>
+<p>The observed output reports two rows, static notional 7700, and dynamic totals <code>[7700, 5]</code>. After converting the rows into owned records, the program drops both the borrowed vector and source buffer, then reports two retained owned rows. The borrowed rows could not have survived that source drop. The dynamic metrics borrow two values; no <code>Box</code> is required at that interface.</p>
+<h2 id="runnable-example-a-bounded-borrowed-parser">Runnable example: a bounded borrowed parser</h2>
+<div class="code-wrap" data-source="projects/reference/p12-replay/examples/dispatch_allocation.rs" data-sha256="cd4f7b73095f99c7b3a182a09ee7f3cae62032d54c505f4393527c4c923112da"><div class="code-label"><a href="../../projects/reference/p12-replay/examples/dispatch_allocation.rs">projects/reference/p12-replay/examples/dispatch_allocation.rs</a></div><pre><code>//! A borrowed parser and two dispatch choices, with no speed claim.
+use std::fmt;
+
+const MAX_BYTES: usize = 4096;
+const MAX_ROWS: usize = 64;
+
+#[derive(Debug, PartialEq, Eq)]
+struct Tick&lt;&#x27;a&gt; {
+    symbol: &amp;&#x27;a str,
+    price: u64,
+    quantity: u64,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+struct OwnedTick {
+    symbol: String,
+    price: u64,
+    quantity: u64,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+enum ParseError {
+    InputLimit,
+    RowLimit,
+    Fields,
+    Symbol,
+    Number,
+    Range,
+}
+impl fmt::Display for ParseError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        f.write_str(match self {
+            Self::InputLimit =&gt; &quot;input exceeds 4096 bytes&quot;,
+            Self::RowLimit =&gt; &quot;input exceeds 64 rows&quot;,
+            Self::Fields =&gt; &quot;each row must have symbol,price,quantity&quot;,
+            Self::Symbol =&gt; &quot;symbol must contain 1 through 8 uppercase ASCII letters&quot;,
+            Self::Number =&gt; &quot;price and quantity must be unsigned decimal integers&quot;,
+            Self::Range =&gt; &quot;price must be 1..=1000000000000; quantity 1..=1000000000&quot;,
+        })
+    }
+}
+impl std::error::Error for ParseError {}
+
+fn parse(input: &amp;str) -&gt; Result&lt;Vec&lt;Tick&lt;&#x27;_&gt;&gt;, ParseError&gt; {
+    if input.len() &gt; MAX_BYTES {
+        return Err(ParseError::InputLimit);
+    }
+    let mut rows = Vec::new();
+    // The entire borrowed input is already bounded; this is not unbounded I/O.
+    for line in input.lines() {
+        if rows.len() == MAX_ROWS {
+            return Err(ParseError::RowLimit);
+        }
+        let mut fields = line.split(&#x27;,&#x27;);
+        let symbol = fields.next().ok_or(ParseError::Fields)?;
+        let price = fields.next().ok_or(ParseError::Fields)?;
+        let quantity = fields.next().ok_or(ParseError::Fields)?;
+        if fields.next().is_some() {
+            return Err(ParseError::Fields);
+        }
+        if symbol.is_empty() || symbol.len() &gt; 8 || !symbol.bytes().all(|b| b.is_ascii_uppercase())
+        {
+            return Err(ParseError::Symbol);
+        }
+        if price.is_empty()
+            || quantity.is_empty()
+            || !price.bytes().all(|b| b.is_ascii_digit())
+            || !quantity.bytes().all(|b| b.is_ascii_digit())
+        {
+            return Err(ParseError::Number);
+        }
+        let price: u64 = price.parse().map_err(|_| ParseError::Number)?;
+        let quantity: u64 = quantity.parse().map_err(|_| ParseError::Number)?;
+        if !(1..=1_000_000_000_000).contains(&amp;price) || !(1..=1_000_000_000).contains(&amp;quantity) {
+            return Err(ParseError::Range);
+        }
+        rows.push(Tick {
+            symbol,
+            price,
+            quantity,
+        });
+    }
+    Ok(rows)
+}
+
+fn retain(rows: &amp;[Tick&lt;&#x27;_&gt;]) -&gt; Vec&lt;OwnedTick&gt; {
+    rows.iter()
+        .map(|row| OwnedTick {
+            symbol: row.symbol.to_owned(),
+            price: row.price,
+            quantity: row.quantity,
+        })
+        .collect()
+}
+
+trait Metric {
+    fn score(&amp;self, tick: &amp;Tick&lt;&#x27;_&gt;) -&gt; u128;
+}
+struct Notional;
+impl Metric for Notional {
+    fn score(&amp;self, tick: &amp;Tick&lt;&#x27;_&gt;) -&gt; u128 {
+        u128::from(tick.price) * u128::from(tick.quantity)
+    }
+}
+struct Quantity;
+impl Metric for Quantity {
+    fn score(&amp;self, tick: &amp;Tick&lt;&#x27;_&gt;) -&gt; u128 {
+        u128::from(tick.quantity)
+    }
+}
+
+fn total_static&lt;M: Metric&gt;(rows: &amp;[Tick&lt;&#x27;_&gt;], metric: &amp;M) -&gt; u128 {
+    rows.iter().map(|row| metric.score(row)).sum()
+}
+fn total_dynamic(rows: &amp;[Tick&lt;&#x27;_&gt;], metric: &amp;dyn Metric) -&gt; u128 {
+    rows.iter().map(|row| metric.score(row)).sum()
+}
+
+fn main() -&gt; Result&lt;(), ParseError&gt; {
+    let input = String::from(&quot;ABC,1200,3\nXYZ,2050,2\n&quot;);
+    let rows = parse(&amp;input)?;
+    let static_total = total_static(&amp;rows, &amp;Notional);
+    // These trait objects borrow two stack-resident values; dyn does not require Box.
+    let metrics: [&amp;dyn Metric; 2] = [&amp;Notional, &amp;Quantity];
+    let totals = metrics.map(|metric| total_dynamic(&amp;rows, metric));
+    println!(
+        &quot;rows={} static_notional={static_total} dynamic_totals={totals:?}&quot;,
+        rows.len()
+    );
+    let owned = retain(&amp;rows);
+    drop(rows);
+    drop(input);
+    println!(
+        &quot;retained {} owned rows after dropping the source buffer&quot;,
+        owned.len()
+    );
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn borrowed_fields_alias_input_and_owned_fields_survive_it() {
+        let owned = {
+            let input = String::from(&quot;ABC,1200,3\nXYZ,2050,2\n&quot;);
+            let rows = parse(&amp;input).unwrap();
+            assert!(std::ptr::eq(rows[0].symbol.as_ptr(), input.as_ptr()));
+            assert_eq!(total_static(&amp;rows, &amp;Notional), 7700);
+            assert_eq!(total_dynamic(&amp;rows, &amp;Notional), 7700);
+            assert_eq!(total_dynamic(&amp;rows, &amp;Quantity), 5);
+            retain(&amp;rows)
+        };
+        assert_eq!(
+            owned,
+            [
+                OwnedTick {
+                    symbol: &quot;ABC&quot;.into(),
+                    price: 1200,
+                    quantity: 3
+                },
+                OwnedTick {
+                    symbol: &quot;XYZ&quot;.into(),
+                    price: 2050,
+                    quantity: 2
+                }
+            ]
+        );
+    }
+    #[test]
+    fn invalid_input_and_resource_bounds_are_explicit() {
+        for input in [
+            &quot;abc,1,1&quot;,
+            &quot;ABCDEFGHI,1,1&quot;,
+            &quot;A,0,1&quot;,
+            &quot;A,1,0&quot;,
+            &quot;A,1,-2&quot;,
+            &quot;A,1,2,3&quot;,
+            &quot;A,1&quot;,
+            &quot;A,18446744073709551616,1&quot;,
+        ] {
+            assert!(parse(input).is_err(), &quot;{input}&quot;);
+        }
+        assert_eq!(parse(&amp;&quot;A,1,1\n&quot;.repeat(65)), Err(ParseError::RowLimit));
+        assert_eq!(parse(&amp;&quot;x&quot;.repeat(4097)), Err(ParseError::InputLimit));
+        assert!(parse(&quot;&quot;).unwrap().is_empty());
+        assert_eq!(parse(&amp;&quot;A,1,1\n&quot;.repeat(64)).unwrap().len(), 64);
+    }
+}
+</code></pre></div>
+<p>The parser checks a 4096-byte input bound and a 64-row limit. Each nonempty record has exactly three comma-separated fields. Symbols contain one through eight uppercase ASCII letters; positive price and quantity have explicit integer limits. Invalid fields produce a typed error. Empty input yields no rows. <code>str::lines()</code> is appropriate here because the complete borrowed input is already bounded; this is different from reading an arbitrarily long file line into memory.</p>
+<p>The returned <code>Tick&lt;'_&gt;</code> values carry borrows from the supplied input. The library does not clone the source to appease a compiler error. At the retention boundary, <code>retain</code> explicitly creates owned symbols because the requirement changes: those records must remain usable independently. Both choices are sound first implementations for their respective lifetimes. Borrowing is not automatically superior to ownership.</p>
+<h2 id="follow-allocations-through-the-design">Follow allocations through the design</h2>
+<p>The input <code>String</code> owns storage. The parser's row vector can grow as rows are pushed. A vector has a length and capacity; reserving capacity can reduce growth reallocations when a useful bound or accurate estimate is known. Reserving the maximum for every tiny request may waste memory, while requesting exactly one additional slot repeatedly can create needless work. Here at most 64 rows makes ordinary vector growth a proportionate choice.</p>
+<p>Each nonempty owned symbol created by <code>to_owned</code> needs independent string storage, and the retained vector owns its own element buffer. These are code-level allocation opportunities, not instrumented allocator-call counts. Compiler transformations, allocator behavior, and capacity policy affect actual requests and operating-system mappings. If allocation is the suspected bottleneck, use an allocation profiler appropriate to the target and measure the chosen request boundary.</p>
+<p>Alternatives include processing borrowed rows immediately, retaining the full input together with offsets, sharing a buffer through an ownership type, or copying only records that must survive. Each has a duration and memory tradeoff. A small copy that lets a large network buffer be released may reduce retained memory. Adding reference counting everywhere can introduce metadata, synchronization, and API complexity without serving the current requirement.</p>
+<h2 id="static-and-dynamic-dispatch-the-selection-boundary">Static and dynamic dispatch: the selection boundary</h2>
+<p><code>total_static&lt;M: Metric&gt;</code> takes a concrete metric type selected at compile time. The compiler can generate code for the concrete instantiations and may inline their operations. <code>total_dynamic</code> accepts a trait object, enabling a common interface for metric implementations selected at runtime. Its reference carries access to the underlying value and the information needed to call the appropriate methods. The small array can contain both a notional metric and a quantity metric.</p>
+<p>Dynamic dispatch does not imply that the metric is boxed: these objects are borrowed. Conversely, a generic function may operate on heap-owned data. Allocation and dispatch are orthogonal decisions. Runtime flexibility can be worth an indirect call; generic specialization can improve optimization opportunities while increasing generated code and compilation work across many instantiations. A compiler may sometimes devirtualize a visible trait-object call, so source syntax alone is not a measured instruction trace.</p>
+<p>Neither mechanism is a universally professional or universally fast choice. Use a concrete or generic type when the implementation is naturally fixed. Use a trait object when heterogeneous implementations or runtime selection simplify a real boundary. In a hot path, consider dispatching once around a batch instead of once per element, but preserve the same behavior and measure the change.</p>
+<h2 id="guided-checkpoint-retain-only-when-necessary">Guided checkpoint: retain only when necessary</h2>
+<p>Trace the input's ownership through <code>main</code>. Calculate the borrowed totals while the input remains alive. Then inspect <code>retain</code> and identify each field copied into the owned representation. Drop the borrowed rows and input and access the owned records. The passing test checks complete expected owned rows, not only their count, so a retention function that accidentally drops a symbol or swaps a quantity is detected.</p>
+<p>Now choose a consumer requirement. A report rendered immediately can use the borrowed rows. A background queue that outlives the request needs an appropriate owned representation. Write that lifetime requirement in plain language before selecting <code>String</code>, references, or reference-counted buffers. An API should make the required ownership transition visible instead of hiding an expensive clone inside a convenient accessor.</p>
+<h2 id="intentional-mistake-drop-the-owner-too-early">Intentional mistake: drop the owner too early</h2>
+<p>In a disposable learner copy, move <code>drop(input)</code> to immediately after parsing, then use the borrowed rows. Predict a borrow-checker rejection because the owner would be moved while references remain in use. This mutation is an expected diagnostic exercise, not an executed check recorded in the supplied logs. Restore the valid lifetime ordering. Changing every field to owned text would satisfy the compiler but would also change the allocation and ownership design; do that only when the retention requirement calls for it.</p>
+<h2 id="apply-the-problem-solving-playbook">Apply the problem-solving playbook</h2>
+<p>Observation: the reference calculates both metrics through <code>&amp;dyn Metric</code> and retains owned records after the source is dropped. Hypothesis A says dynamic dispatch requires boxing and therefore caused the symbol copies. Hypothesis B says the copies occur because the retained records must outlive the input. Inspect the actual boundary: the dynamic metric array borrows values, while <code>to_owned</code> appears specifically in <code>retain</code>. The executed tests verify the totals and retained contents. A's necessary-allocation claim is disproved by this concrete borrowing interface.</p>
+<p>For a further distinguishing experiment, remove the retention step in a learner copy while keeping dynamic dispatch. The expected totals stay the same and the explicit symbol-copy step disappears. Conversely, keep retention and use only static totals; ownership still requires those owned strings. Mark these latter experiments as expected until you execute them. Record the result and limitations in the <a href="../../playbook.html">shared investigation template</a>. Ask an AI assistant to identify the owning allocation and relevant lifetime before accepting a proposed clone or lifetime annotation.</p>
+<h2 id="independent-tasks-tiered-hints-and-worked-solution">Independent tasks, tiered hints, and worked solution</h2>
+<p>Investigate adding a maximum-price metric: decide whether the summation interface can express it correctly, and design a corresponding aggregation if it cannot. Then change the application to retain only rows whose quantity exceeds two. Specify whether order is preserved and whether the original input may be released afterward. Add a test containing zero retained rows and another containing two symbols with different quantities.</p>
+<details><summary>Hint 1: check the aggregation contract</summary><p>A metric's return value must fit the existing result contract; a sum interface does not compute a maximum. A maximum operation needs a corresponding aggregation function, returning <code>Option</code> for empty input.</p></details><details><summary>Hint 2: follow the owner</summary><p>Filtering borrowed rows does not extend their lifetime.</p></details><details><summary>Hint 3: place the ownership transition</summary><p>Perform the filter before copying symbols if the goal is selective retention.</p></details>
+<details><summary>Worked solution direction</summary><p>The worked direction is to add a separate maximum-price function using <code>Iterator::max</code>, with static or dynamic field selection only if that abstraction helps. For selective retention, iterate in source order, filter by quantity, and construct owned rows only for matches. An empty result is a valid empty vector. The fixture retains ABC and discards XYZ at a threshold greater than two, and the retained ABC remains valid after the input is dropped. This avoids shoehorning a different operation into an unsuitable abstraction.</p></details>
+<h2 id="reconstruct-a-working-checkpoint">Reconstruct a working checkpoint</h2><p>From the course root, create a fresh final P12 study copy. The helper preserves originals, copies the exact lockfile, and refuses to overwrite an existing destination. Reuse your prior copy or choose another name when repeating the exercise.</p><pre><code>python3 scripts/start-checkpoint.py p12 final --destination learner-work/dispatch-investigation
+mise exec -- cargo test --locked --all-targets --manifest-path learner-work/dispatch-investigation/Cargo.toml
+mise exec -- cargo run --locked --manifest-path learner-work/dispatch-investigation/Cargo.toml --example dispatch_allocation</code></pre><p>The <a href="../../projects/checkpoints/p12-replay/index.html">P12 checkpoint guide</a> also provides the earlier exact-price milestone. Mise keeps build output in the shared native target.</p><h2 id="when-you-get-stuck">When you get stuck</h2>
+<p>Run the example tests, then reduce a borrowing failure to one symbol and one owner. Write down which value owns each buffer and the last use of each reference. Read the standard <code>Vec</code> and <code>String</code> documentation for allocation behavior, and the Reference for trait objects. A useful review request includes the smallest failing lifetime example, the required retention duration, your proposed ownership boundary, and whether your concern is compile time, memory, or runtime. Avoid asking for a performance patch before identifying the cost.</p>
+<h2 id="engineering-decisions-evidence-limits-and-mastery">Engineering decisions, evidence limits, and mastery</h2>
+<p>This small parser uses no external dependency, accepts bounded input, preserves typed failures, and explicitly transitions from borrowed to owned records. Separate static and dynamic functions make dispatch choices visible for teaching; a real API may choose only one. The two example tests passed and the executable output was recorded in <a href="../../verification/performance-dispatch-example.log">the example log</a>. All P12 targets passed strict Clippy. No allocator instrumentation or static-versus-dynamic timing was collected, and no dispatch speedup is claimed.</p>
+<p>Mastery means defending an ownership choice from a duration requirement, narrowing a zero-copy statement to the operation actually verified, and explaining why a borrowed trait object need not allocate. You should also recognize when the metric abstraction fails to express a new operation and simplify or reshape it instead of adding a misleading implementation.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/std/vec/struct.Vec.html">Rust standard library: Vec capacity and allocation behavior</a></li><li><a href="https://doc.rust-lang.org/std/string/struct.String.html">Rust standard library: String ownership and representation</a></li><li><a href="https://doc.rust-lang.org/reference/types/trait-object.html">Rust Reference: trait objects</a></li><li><a href="https://doc.rust-lang.org/book/ch10-01-syntax.html#performance-of-code-using-generics">Rust Book: monomorphization and generic performance</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-7/07-layout.html">Previous: Profile data layout and distinguish memory from locality</a><a href="../../lessons/stage-7/07-performance.html">Next: Measure a claim before optimizing</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-separate-ownership-allocation-and-dispatch-costs">Purpose: separate ownership, allocation, and dispatch costs</a><a href="#plain-model-ownership-is-a-duration-requirement">Plain model: ownership is a duration requirement</a><a href="#predict-before-running">Predict before running</a><a href="#runnable-example-a-bounded-borrowed-parser">Runnable example: a bounded borrowed parser</a><a href="#follow-allocations-through-the-design">Follow allocations through the design</a><a href="#static-and-dynamic-dispatch-the-selection-boundary">Static and dynamic dispatch: the selection boundary</a><a href="#guided-checkpoint-retain-only-when-necessary">Guided checkpoint: retain only when necessary</a><a href="#intentional-mistake-drop-the-owner-too-early">Intentional mistake: drop the owner too early</a><a href="#apply-the-problem-solving-playbook">Apply the problem-solving playbook</a><a href="#independent-tasks-tiered-hints-and-worked-solution">Independent tasks, tiered hints, and worked solution</a><a href="#reconstruct-a-working-checkpoint">Reconstruct a working checkpoint</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#engineering-decisions-evidence-limits-and-mastery">Engineering decisions, evidence limits, and mastery</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

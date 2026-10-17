@@ -1,0 +1,160 @@
+   Compiling typed-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config)
+   Compiling expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+   Compiling task-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal)
+   Compiling workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+   Compiling log-detective v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/expression_language-60ed30f7d14de4c8)
+
+running 4 tests
+test tests::precise_error_spans ... ok
+test tests::precedence_associativity_unary ... ok
+test tests::resource_limits_are_errors ... ok
+test tests::deterministic_exhaustive_small_integer_properties ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/expression_language-1505baa17e2183cd)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/corpus.rs (.course-cache/native/debug/deps/corpus-124d7998d5224b1c)
+
+running 1 test
+test checked_in_examples ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/log_detective-145fa27d1d59ce1d)
+
+running 4 tests
+test tests::drain_oversized_then_recover ... ok
+test tests::rejects_total_exhaustion_and_invalid_limits ... ok
+test tests::tiny_buffers_and_final_line ... ok
+test tests::accounting_property_across_buffer_sizes ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/log_detective-4e6c7f4320f7a5e0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fixtures.rs (.course-cache/native/debug/deps/fixtures-9cb63975ac7b5ee0)
+
+running 1 test
+test fixture_totals ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/task_journal-0739db4c2981223f)
+
+running 3 tests
+test tests::id_overflow_is_an_error ... ok
+test tests::round_trip_and_transitions ... ok
+test tests::rejects_corruption_without_partial_success ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/task_journal-33a9ab36ff24bf30)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/storage.rs (.course-cache/native/debug/deps/storage-288affef7a6f7a99)
+
+running 2 tests
+test checked_in_fixture_roundtrips ... ok
+test saves_reloads_and_preserves_corrupt_input ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/typed_config-c78ad270e540bfa6)
+
+running 3 tests
+test tests::later_layers_win_before_validation ... ok
+test tests::errors_and_debug_do_not_include_secret_values ... ok
+test tests::boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/typed_config-1adcc4a198a33ebe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (.course-cache/native/debug/deps/cli-b060d0bb9733236f)
+
+running 1 test
+test cli_override_beats_environment_and_redacts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/workshop_calculator-a9fe3dd05598004d)
+
+running 3 tests
+test tests::recoverable_errors ... ok
+test tests::units_and_integer_division ... ok
+test tests::exhaustive_small_addition_commutes ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/debug/deps/workshop_calculator-b33229b5bc7b5183)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (.course-cache/native/debug/deps/cli-d6088105cadeea0e)
+
+running 2 tests
+test non_unicode_operand_is_a_usage_error ... ok
+test cli_separates_success_domain_and_usage ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
+
+   Doc-tests expression_language
+
+running 1 test
+test reference/p05-expressions/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.36s; merged doctests compilation took 0.18s
+   Doc-tests log_detective
+
+running 1 test
+test reference/p03-logs/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.36s; merged doctests compilation took 0.18s
+   Doc-tests task_journal
+
+running 1 test
+test reference/p02-journal/src/lib.rs - (line 3) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.36s; merged doctests compilation took 0.17s
+   Doc-tests typed_config
+
+running 1 test
+test reference/p04-config/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.41s; merged doctests compilation took 0.20s
+   Doc-tests workshop_calculator
+
+running 1 test
+test reference/p01-calculator/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.34s; merged doctests compilation took 0.17s

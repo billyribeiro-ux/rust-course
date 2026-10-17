@@ -1,0 +1,410 @@
+{
+  "fixture": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+  "files": 689,
+  "initial_mise": {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "rustc",
+      "--version"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "mise ERROR failed to ln -sf /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy /Users/billyribeiro/.local/state/mise/trusted-configs/cold-start-_rbc7kj_-Rust Workshop Fresh -47ca79b3da183281\nmise ERROR Operation not permitted (os error 1)\nmise ERROR Version: 2026.10.4 macos-arm64 (2026-10-07)\nmise ERROR Run with --verbose or MISE_VERBOSE=1 for more information\n"
+  },
+  "checked_at_utc": "2026-10-09T18:00:24.526739+00:00",
+  "checks": [
+    {
+      "command": [
+        "mise",
+        "--version"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "--version"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "git",
+        "--version"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--version"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "--version"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/serve.py",
+        "--help"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p01"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-project.py",
+        "p01"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "learner-work/p01-calculator/Cargo.toml",
+        "--offline",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 101,
+      "actual_exit_code": 101
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "locate-project",
+        "--message-format",
+        "plain"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/p01-calculator",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-checkpoint.py",
+        "p01",
+        "01-checked-add"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-checkpoint.py",
+        "p01",
+        "01-checked-add"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/01-checked-add/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "run",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/01-checked-add/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-checkpoint.py",
+        "p01",
+        "final"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/start-checkpoint.py",
+        "p01",
+        "final"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 1,
+      "actual_exit_code": 1
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "run",
+        "-p",
+        "workshop-calculator",
+        "--locked",
+        "--offline",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "--",
+        "12m",
+        "+",
+        "3m"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/projects",
+      "expected_exit_code": 0,
+      "actual_exit_code": 0
+    }
+  ],
+  "result": "passed",
+  "original_learnerwork_unchanged": true,
+  "separate_copy_with_spaces": true,
+  "copy_source_files": 689,
+  "original_learnerwork_files": 0,
+  "copy_native_target_created": false,
+  "test_storage": {
+    "target_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+    "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+    "reason": "Reuse existing course verification cache; user Cargo configuration independently redirects intermediates otherwise."
+  },
+  "review_kind": "author-team cold-start source/command audit; not independent acceptance",
+  "independent_review": "pending",
+  "findings": [
+    {
+      "id": "CS01",
+      "location": "authoring/README.html",
+      "issue": "Sequential blocks left the terminal inside learner-work/p01-calculator, then assumed course-root relative paths for checkpoints and reference builds.",
+      "correction": "All README blocks now explicitly start and remain at the course root, using manifest paths for learner and reference checks."
+    },
+    {
+      "id": "CS02",
+      "location": "authoring/README.html; scripts/start-checkpoint.py:16",
+      "issue": "Generic Python 3 prerequisite omitted the checkpoint helper minimum imposed by stdlib tomllib.",
+      "correction": "Documented Python 3.11+, mise, Git and native linker prerequisites, version checks and primary installation references. Actual tested Python was 3.14.8; this was not a bare-machine installer test."
+    },
+    {
+      "id": "CS03",
+      "location": "projects/scaffolds/p01-calculator/README.html",
+      "issue": "Copied scaffold guide directed learners to test the immutable original scaffold path.",
+      "correction": "Guide now targets learner-work/p01-calculator from course root or cargo test from inside the learner copy. It states that this library has no runnable binary and its four TODO failures are expected."
+    },
+    {
+      "id": "CS04",
+      "location": "authoring/foundations.json:00-terminal",
+      "issue": "Initial cd rust-course assumed a parent directory and fixed extracted-folder name; the first-use setup did not mention config review/trust.",
+      "correction": "Defined course root by contents, linked prerequisites, added pwd/ls and review-before-mise-trust. A folder containing spaces was used in verification."
+    },
+    {
+      "id": "CS05",
+      "location": "scripts/build-course.py:project workbench and launch blocks",
+      "issue": "Learner-copy creation was followed by reference-workspace tests without separating what those tests established.",
+      "correction": "Separate labeled learner-copy and reference commands, each using explicit manifest paths from course root; setup points to prerequisites and config review."
+    },
+    {
+      "id": "CS06",
+      "location": "authoring/README.html:disk guidance",
+      "issue": "Shared target explanation did not mention that user Cargo build.build-dir can independently relocate intermediates.",
+      "correction": "Documented independent build-dir, applicable user/ancestor configuration and environment setting, and limits of disk measurements. Scoped tests explicitly selected the existing target for both artifact locations; no user Cargo configuration was changed."
+    }
+  ],
+  "environment": {
+    "mise": "2026.10.4 macos-arm64 (2026-10-07)",
+    "python": "3.14.8",
+    "git": "2.56.0",
+    "rustc": "1.99.0 (b940084d7 2026-09-28)"
+  },
+  "additional_observations": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--version"
+      ],
+      "initial": "Sandbox could not write the scoped temporary-copy mise trust record.",
+      "resolution": "Repeated with narrowly approved execution; exit 0 and rustc 1.99.0. No broad permission or security settings changed."
+    },
+    {
+      "command": [
+        "mise",
+        "trust"
+      ],
+      "result": "exit 0; no untrusted config files found after the approved earlier invocation. Config was read before running."
+    },
+    {
+      "command": [
+        "mise",
+        "install"
+      ],
+      "initial": "All 10 configured tools were already installed, but sandbox denied user shim staging.",
+      "resolution": "Approved rerun exited0; installed 0 tools. Applicable ancestor/user mise configuration included tools beyond course Rust. This is warm installed-tool verification, not a clean OS install."
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "printenv",
+        "CARGO_TARGET_DIR"
+      ],
+      "exit_code": 0,
+      "stdout": "/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/.local/native-target"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/serve.py",
+        "--port",
+        "8001"
+      ],
+      "initial": "Sandbox denied loopback bind.",
+      "resolution": "Narrowly approved retry printed localhost 8001 startup; Ctrl-C stopped only that owned process with exit 0. Existing port 8000 server was left untouched. No HTTP requests, browser, fake DOM or rendering tests performed."
+    }
+  ],
+  "test_counts": {
+    "scaffold_expected_failures": 4,
+    "early_checkpoint_passed": 3,
+    "final_checkpoint_passed": 15
+  },
+  "no_overwrite_cases": [
+    "scaffold p01",
+    "checkpoint p01 01-checked-add",
+    "checkpoint p01 final"
+  ],
+  "harness_correction": "Initial harness guessed early-demo stdout 42. Source actually calls 7+5 and printed 12 correctly. Corrected the harness expectation without modifying course source or repeating the already successful command.",
+  "scope_limits": [
+    "Fresh source copy on the existing configured macOS machine; not a bare-machine setup, minimum-Python installation or other-OS verification.",
+    "Cargo checks added --offline and explicit shared --target-dir and command-local CARGO_BUILD_BUILD_DIR to reuse current artifacts. No complete workspace rebuild was requested.",
+    "Only first-project workflow and launch process were executed; not all 37 checkpoints in this pass. Earlier broader evidence remains separate.",
+    "Mise may inherit user/ancestor configuration. This pass did not replace it or change global Rust defaults.",
+    "No real-browser inspection, native file-picker/download behavior, visual layout, or independent curriculum acceptance established."
+  ],
+  "fixture_retained": "Only the newly created source fixture and its marker learner files remain under the outer .course-cache/cold-start-* for review; no per-copy native target was created. Existing original learner-work was absent and remains absent.",
+  "sources": [
+    {
+      "title": "mise getting started",
+      "url": "https://mise.jdx.dev/getting-started.html"
+    },
+    {
+      "title": "Python 3.11 tomllib",
+      "url": "https://docs.python.org/3.11/library/tomllib.html"
+    },
+    {
+      "title": "Rust platform installation prerequisites",
+      "url": "https://doc.rust-lang.org/book/ch01-01-installation.html"
+    },
+    {
+      "title": "Git downloads",
+      "url": "https://git-scm.com/downloads/"
+    }
+  ],
+  "reviewed_files_sha256": {
+    "authoring/README.html": "614119605d945a4ee034a649c10034e0022cf63ca78c3d79d04832015d2d51cb",
+    "authoring/foundations.json": "fd49e0c2c9b86e1b0f9a7eef694f6052a3443967593e3930cb3d30b39969f19b",
+    "projects/scaffolds/p01-calculator/README.html": "e17c5d57af40bbbe461356b6338258b740c3b62cc8545c310f0b13c1db321b30",
+    "scripts/start-project.py": "c32efb903a9173be19fb2595fe6fe1323f5040668d1fc0076fb6681fb5494a75",
+    "scripts/start-checkpoint.py": "b5cd0b573ea24558dfa10d6fd18dae2f629a6d2a51612b411c08e4ae9d1648f2",
+    "scripts/serve.py": "a30b0c0dae2a06a4e2bad1f7cd4ff090ffa7d5ba24c04845870f281f6d5e8f4c",
+    "mise.toml": "3297d6937046c9c8ba599dac70548bfb6da1eb8922f56ce57d7782bcc1bae40e",
+    "projects/checkpoints/p01-calculator/checkpoint.json": "f619a6d05bbf6f6d586f622d9b2b12f0fa4d081f6a479fca056cf52a53ece1e2"
+  },
+  "final_static_assertions": {
+    "renderer_python_syntax": "passed",
+    "first_lesson_review_before_trust": "passed",
+    "README_learner_and_reference_manifest_paths_from_course_root": "passed",
+    "note": "Exact-string check caught an initially missed reference-block replacement (cargo fmt syntax differed); corrected before final freeze. No Cargo rerun needed for this documentation-only correction."
+  }
+}

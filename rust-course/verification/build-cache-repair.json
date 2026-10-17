@@ -1,0 +1,109 @@
+{
+  "symptom": "Cargo could not link/copy an existing proc-macro2 build-script executable (EPERM).",
+  "observations": [
+    "directory write and ordinary hard-link probe succeeded",
+    "no open files reported in exact build-script directory",
+    "cache directory contained only disposable generated build-script output"
+  ],
+  "action": "remove only that inactive build-script cache directory so Cargo can regenerate it; no security settings or source changed",
+  "removed_files": [
+    ".course-cache/native/debug/build/proc-macro2-5191bf176163d1c9/build_script_build-5191bf176163d1c9.d",
+    ".course-cache/native/debug/build/proc-macro2-5191bf176163d1c9/build_script_build-5191bf176163d1c9"
+  ],
+  "logical_bytes": 629053,
+  "followup": "Fresh proc-macro2 compilation succeeded; seven other pre-existing build-script executables produced identical EPERM. No open files in debug/build. Regenerate only inactive build-script output directories, retaining compiled dependency libraries and all source.",
+  "regenerated_build_script_directories": [
+    {
+      "path": ".course-cache/native/debug/build/libc-17681317f7e930c6",
+      "logical_bytes": 696026
+    },
+    {
+      "path": ".course-cache/native/debug/build/httparse-b5a57e4cf64373ae",
+      "logical_bytes": 633563
+    },
+    {
+      "path": ".course-cache/native/debug/build/serde_json-c7dd331f4bb7281f",
+      "logical_bytes": 473448
+    },
+    {
+      "path": ".course-cache/native/debug/build/serde_core-706374d3121a7b5e",
+      "logical_bytes": 1203368
+    },
+    {
+      "path": ".course-cache/native/debug/build/serde_core-2e70d9a1d3d6352a",
+      "logical_bytes": 1203368
+    },
+    {
+      "path": ".course-cache/native/debug/build/quote-93fb0e6a010b2f89",
+      "logical_bytes": 572844
+    },
+    {
+      "path": ".course-cache/native/debug/build/proc-macro2-5191bf176163d1c9",
+      "logical_bytes": 1257517
+    },
+    {
+      "path": ".course-cache/native/debug/build/serde_core-cd0a48e644f37b9b",
+      "logical_bytes": 1203368
+    },
+    {
+      "path": ".course-cache/native/debug/build/parking_lot_core-8891679e23165c96",
+      "logical_bytes": 1033027
+    },
+    {
+      "path": ".course-cache/native/debug/build/icu_properties_data-1a61c9d4f981629a",
+      "logical_bytes": 947727
+    },
+    {
+      "path": ".course-cache/native/debug/build/num-traits-059079bed5adcb2b",
+      "logical_bytes": 1596453
+    },
+    {
+      "path": ".course-cache/native/debug/build/serde_core-c46b83de2dca5b42",
+      "logical_bytes": 601976
+    },
+    {
+      "path": ".course-cache/native/debug/build/serde-874dca7c8956a039",
+      "logical_bytes": 601391
+    },
+    {
+      "path": ".course-cache/native/debug/build/icu_normalizer_data-2085a555620dcb98",
+      "logical_bytes": 947727
+    },
+    {
+      "path": ".course-cache/native/debug/build/generic-array-97970ee6334ac9d3",
+      "logical_bytes": 1301940
+    },
+    {
+      "path": ".course-cache/native/debug/build/proc-macro2-c35f40e2e1ed71c9",
+      "logical_bytes": 1257517
+    },
+    {
+      "path": ".course-cache/native/debug/build/crossbeam-utils-43e284dd955b1d09",
+      "logical_bytes": 1092033
+    },
+    {
+      "path": ".course-cache/native/debug/build/quote-9776b7b3b5396093",
+      "logical_bytes": 1145132
+    },
+    {
+      "path": ".course-cache/native/debug/build/serde-2d0629c66f5b53b5",
+      "logical_bytes": 1202223
+    },
+    {
+      "path": ".course-cache/native/debug/build/getrandom-4e1fb7b8c4c2446f",
+      "logical_bytes": 1032989
+    },
+    {
+      "path": ".course-cache/native/debug/build/zmij-f08e288227415805",
+      "logical_bytes": 575543
+    },
+    {
+      "path": ".course-cache/native/debug/build/thiserror-111a10c19855a180",
+      "logical_bytes": 1307424
+    },
+    {
+      "path": ".course-cache/native/debug/build/serde_json-94d1a72c5ad880ac",
+      "logical_bytes": 946312
+    }
+  ]
+}

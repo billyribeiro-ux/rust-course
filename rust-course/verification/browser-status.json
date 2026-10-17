@@ -1,0 +1,153 @@
+{
+  "date": "2026-10-09T20:49:05.786409+00:00",
+  "status": "core_browser_checks_passed_import_pending",
+  "browser": "Google Chrome 155 via authorized CUA browser tools",
+  "independent_review": "pending",
+  "checks": [
+    {
+      "name": "reader_desktop",
+      "result": "passed",
+      "observed": "1440x1000 learning map and lesson controls inspected in Chrome."
+    },
+    {
+      "name": "reader_narrow",
+      "result": "passed",
+      "observed": "390x844 learning map, menu opening, focus transfer and Escape closing inspected."
+    },
+    {
+      "name": "theme",
+      "result": "passed",
+      "observed": "Dark theme rendered and survived reload; restored light theme."
+    },
+    {
+      "name": "search",
+      "result": "passed",
+      "observed": "Matching and no-match results; ArrowDown focuses result. Fixed Escape from a result, then verified it clears results and returns search focus after cache-bypassing reload."
+    },
+    {
+      "name": "clipboard",
+      "result": "passed",
+      "observed": "Copy code returned the exact four setup commands; prior clipboard was empty and was restored to empty."
+    },
+    {
+      "name": "notes",
+      "result": "passed",
+      "observed": "Unicode multiline note and completion survived reload. Original empty notes and completion restored afterward."
+    },
+    {
+      "name": "stale_tab",
+      "result": "passed",
+      "observed": "A completed tab-A save refused a stale tab-B write. Export displayed both distinct versions; reloading recovered tab A."
+    },
+    {
+      "name": "export_fallback",
+      "result": "passed",
+      "observed": "Export displayed valid JSON and conflict recovery fields. Download completion could not be confirmed by the download-event tool."
+    },
+    {
+      "name": "disclosure",
+      "result": "passed",
+      "observed": "Worked solution opened through UI. All four collapsed details expanded in print and were collapsed again after printing."
+    },
+    {
+      "name": "print",
+      "result": "passed",
+      "observed": "Chrome Page.printToPDF rendered a six-page letter-sized lesson. All six page PNGs inspected: readable source, no overlap/clipping, sidebar and interactive controls omitted."
+    },
+    {
+      "name": "rust_load_and_empty",
+      "result": "passed",
+      "observed": "WASM loaded. Offline HTTP502 then automatic reconnect to owned fresh backend; zero-event/empty-quote state rendered."
+    },
+    {
+      "name": "rust_order",
+      "result": "passed",
+      "observed": "Missing quote rejected without commit. Replay created LAB quotes; buy two LAB accepted and appeared in ledger/holdings."
+    },
+    {
+      "name": "rust_refresh",
+      "result": "passed",
+      "observed": "Pause/resume, no-match filter, watchlist update and persisted history values exercised."
+    },
+    {
+      "name": "rust_uncertain",
+      "result": "passed",
+      "observed": "Stopped owned backend, submitted synthetic buy, observed retained ID and locked inputs. Restarted same journal, exact lookup404 kept identity, retry accepted same ID; ledger showed one fill for it."
+    },
+    {
+      "name": "rust_cancellation",
+      "result": "passed",
+      "observed": "Initial short fixture completed before cancellation. A later queued job qa-browser-queue-3 was cancelled from its row and visibly persisted as 0/64 cancelled."
+    },
+    {
+      "name": "rust_terminal_controls",
+      "result": "passed",
+      "observed": "Completed jobs initially offered Cancel and returned422. Fixed button to disable for all nonactive states; final completed buttons observed disabled."
+    },
+    {
+      "name": "rust_history_labels",
+      "result": "passed",
+      "observed": "Replaced Rust Some/None debug formatting with readable positions/no-records text; final rendered positions confirmed."
+    },
+    {
+      "name": "rust_narrow",
+      "result": "passed",
+      "observed": "390x844 order form and ledger layout inspected; desktop1440x1000 inspected separately."
+    },
+    {
+      "name": "svelte_errors",
+      "result": "passed",
+      "observed": "Offline502 shown, refresh recovered after backend restart."
+    },
+    {
+      "name": "svelte_cancellation",
+      "result": "passed",
+      "observed": "Paused only the owned backend process, clicked refresh then Cancel request; prior snapshot remained with stale/cancelled status. Resumed backend and refreshed successfully."
+    },
+    {
+      "name": "svelte_layout_filter",
+      "result": "passed",
+      "observed": "Desktop1440x1000 and narrow390x844 inspected; LAB and no-match filters exercised."
+    },
+    {
+      "name": "runtime_logs",
+      "result": "passed",
+      "observed": "Final captured error-level console logs empty for reader, Rust console and Svelte tab."
+    }
+  ],
+  "unverified": [
+    "Progress JSON file import and invalid-file rejection: extension file chooser requires Allow access to file URLs.",
+    "Actual export download saved-file verification: download-event wait timed out; visible JSON fallback was verified."
+  ],
+  "scope_limits": [
+    "Representative reader pages and specified UI flows; not every lesson/page or every operating system.",
+    "No atomic cross-tab locking claim.",
+    "The uncertain-order test used an unavailable backend, not a deliberately dropped post-commit response.",
+    "Request-cancellation status combines user cancellation and deadline expiry; this run invoked the Cancel control while a request was pending.",
+    "No independent acceptance or learner competence claim."
+  ],
+  "environment": "Owned backend journal .course-cache/browser-qa/events-20261009.jsonl; no existing learner or application database used. Viewport overrides reset.",
+  "fixes": [
+    "assets/course.js: Escape from search results clears search and focuses the input.",
+    "projects/ui-console/src/lib.rs: Cancel disabled for terminal jobs; history labels use display text."
+  ],
+  "evidence_images": [
+    "browser-console-desktop.jpg",
+    "browser-console-uncertain.jpg",
+    "browser-note-conflict.jpg",
+    "browser-reader-dark.jpg",
+    "browser-reader-desktop.jpg",
+    "browser-reader-mobile.jpg",
+    "browser-svelte-desktop.jpg",
+    "browser-svelte-mobile.jpg"
+  ],
+  "source_sha256": {
+    "assets/course.js": "b52aff837d0a32c8bd1623700f43805e31b61f126e3846d9c57791a73c22c8ff",
+    "assets/course.css": "a54f6c2766fa64c0c4df8f2906ec7a80c8e2f8fe6139632a9a10dd98cf473a61",
+    "assets/progress-data.js": "6552072dd9c9f53e74d0980c026d2638abed4d952cfb65f077a13c624332940b",
+    "projects/ui-console/src/lib.rs": "2a38a779367c75a822b7e9a6dd0be721ce38d60088e17923e08c361d73d39549",
+    "projects/ui-console/console.css": "6700f33f59df0ac7559624146dcc4952c1e24e9a0bb986ea7ff0980f607d5fd5"
+  },
+  "download_verification_limit": "The download-event wait timed out. A direct chrome://downloads/ verification attempt was rejected by browser URL policy (HTTP/HTTPS only), with workarounds prohibited. No workaround was attempted.",
+  "fixture_cleanup": "Stopped the owned backend, console proxy and Svelte dev server after checks. Course preview on localhost8000 remains running. Test journal retained only under excluded .course-cache."
+}

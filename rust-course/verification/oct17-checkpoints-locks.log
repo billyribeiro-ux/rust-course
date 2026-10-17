@@ -1,0 +1,488 @@
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p01-calculator 01-checked-add --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/01-checked-add
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/01-checked-add
+Parse two bounded signed decimal i64 strings and return their checked sum. Invalid numbers and arithmetic overflow are different errors. This stage deliberately has no units, operator selection, or general CLI parser. The executable propagates output-write/flush failures instead of panicking; arithmetic errors remain distinct in the library.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/01-checked-add/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/01-checked-add/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p01-calculator final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p01-calculator/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p02-journal 01-domain --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/01-domain
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/01-domain
+Keep at most 32 tasks with private fields, nonempty titles of at most 200 UTF-8 bytes and no control characters. Add validates before mutation; complete is idempotent and reports missing IDs. This stage has no file format or I/O.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/01-domain/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/01-domain/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p02-journal final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p02-journal/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p03-logs 01-bounded-lines --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/01-bounded-lines
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/01-bounded-lines
+Read one LF-delimited byte line while retaining at most max bytes (1..=4096). Drain an oversized line before the next call; treat a nonempty final unterminated line as a line; propagate I/O errors. CR remains payload at this stage, and UTF-8/record grammar are not yet interpreted.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/01-bounded-lines/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/01-bounded-lines/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p03-logs final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/final
+Complete bounded log grammar, all-record summary, case-sensitive Unicode literal search with immediate LF-normalized output, explicit line/total-byte budgets and I/O failure propagation. CLI --contains and --max-bytes allow large streams without whole-file retention; see the reference README.html for precise policies. This is the final checkpoint, not the earlier framing milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p03-logs/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p04-config 01-effective-port --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/01-effective-port
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/01-effective-port
+Resolve at most eight optional textual port layers, with later present values winning and default 8080. Validate only the effective value as a nonzero u16. The result stores a private validated port; this milestone does not read process environment/files or manage secrets.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/01-effective-port/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/01-effective-port/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p04-config final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p04-config/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p05-expressions 01-token-spans --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/01-token-spans
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/01-token-spans
+Tokenize at most 1024 UTF-8 source bytes into at most 64 tokens: nonnegative decimal i64 literals, plus, star and ASCII whitespace. Keep byte spans; reject unknown symbols and out-of-range literals. This stage does not parse precedence, unary signs or parentheses, or evaluate expressions.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/01-token-spans/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/01-token-spans/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p05-expressions final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p05-expressions/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p06-kv 01-prefix-replay --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/01-prefix-replay
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/01-prefix-replay
+Replay at most 65536 bytes of a miniature format: one length byte, payload, one wrapping-byte-sum checksum. Return complete payloads, valid byte boundary and torn-tail flag. Ignore only incomplete final records; reject complete checksum damage. This is not KV01, CRC32, or a durable file store.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/01-prefix-replay/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/01-prefix-replay/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p06-kv final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p06-kv/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p07-indexer 01-streaming --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/01-streaming
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/01-streaming
+Fixed-size reads preserve word state and unterminated final lines; at most budget plus one bytes are consumed; ordinary IO failures propagate.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/01-streaming/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/01-streaming/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p07-indexer final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/final
+Complete bounded indexer with deterministic final results and synchronous coordinator-owned per-file progress; initial/result/final snapshots distinguish indexed, oversized, failed, cancelled, unreturned and unsubmitted work. CLI progress uses stderr. Cancellation remains cooperative and no timing guarantee is claimed. Materializes a new standalone copy without changing immutable source.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p07-indexer/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p08-monitor 01-budget --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/01-budget
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/01-budget
+A retry requires an available attempt, nonzero per-attempt cap, and positive time after elapsed time and backoff; arithmetic cannot wrap.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/01-budget/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/01-budget/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p08-monitor final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/final
+Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p08-monitor/final/Cargo.toml --offline
+     Locking 4 packages to highest Rust 1.99 compatible versions
+    Updating libc v0.2.190 -> v0.2.191
+    Updating syn v3.0.6 -> v3.0.9
+    Updating tokio v1.53.2 -> v1.53.3
+    Updating unicode-ident v1.0.26 -> v1.0.27
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/00-scaffold/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat 01-framing --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/01-framing
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/01-framing
+A synchronous byte-stream codec accepts UTF-8 frames of1..1024 bytes without control characters; distinguishes clean EOF from truncated input; bounds allocation before reading payload. No TCP listener, Tokio task, broadcast, or shutdown behavior exists in this milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/01-framing/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/01-framing/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p09-chat/final/Cargo.toml --offline
+     Locking 4 packages to highest Rust 1.99 compatible versions
+    Updating libc v0.2.190 -> v0.2.191
+    Updating syn v3.0.6 -> v3.0.9
+    Updating tokio v1.53.2 -> v1.53.3
+    Updating unicode-ident v1.0.26 -> v1.0.27
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/00-scaffold/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues 01-http-validation --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/01-http-validation
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/01-http-validation
+An in-process Axum service exposes POST /issues/validate; the writer fixture receives a normalized title, a reader receives403, unknown identity401, invalid title422, invalid JSON400, and oversized body413. Four admitted requests, a one-second deadline, and4096-byte bodies are bounded. Nothing is persisted and this endpoint never creates an issue.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/01-http-validation/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/01-http-validation/Cargo.toml --offline
+     Locking 6 packages to highest Rust 1.99 compatible versions
+    Updating libc v0.2.190 -> v0.2.191
+    Updating serde_json v1.0.151 -> v1.0.154
+    Updating smallvec v1.16.2 -> v1.16.3
+    Updating syn v3.0.6 -> v3.0.9
+    Updating tokio v1.53.2 -> v1.53.3
+    Updating unicode-ident v1.0.26 -> v1.0.27
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p10-issues/final/Cargo.toml --offline
+     Locking 9 packages to highest Rust 1.99 compatible versions
+    Updating equivalent v1.0.2 -> v1.0.3
+    Updating libc v0.2.190 -> v0.2.191
+    Updating serde_json v1.0.151 -> v1.0.154
+    Updating sha2 v0.11.0 -> v0.11.1
+    Updating smallvec v1.16.2 -> v1.16.3
+    Updating syn v3.0.6 -> v3.0.9
+    Updating tokio v1.53.2 -> v1.53.3
+    Updating unicode-ident v1.0.26 -> v1.0.27
+    Updating unicode-normalization v0.1.25 -> v0.1.26
+note: pass `--verbose` to see 1 unchanged dependencies behind latest
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p11-console 01-local-state --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/01-local-state
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/01-local-state
+A local Leptos component owns one String filter and presents a labeled keyboard-accessible input and live text. It performs no network I/O and needs no backend. The complete HTML loader and locked WASM build are included; browser interaction remains a separate verification gate.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- python3 scripts/build-ui.py --project /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/01-local-state
+python3 scripts/console-server.py --project /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/01-local-state
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/01-local-state/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+note: pass `--verbose` to see 1 unchanged dependencies behind latest
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p11-console final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/final
+The complete reference Leptos client connects to the loopback simulated workbench. It models loading, error and empty states, filters, polling, watchlists, order reconciliation, history charts and jobs. Client state lost on reload is documented. Public fixture credentials are not a production identity system.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- python3 scripts/build-ui.py --project /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/final
+python3 scripts/console-server.py --project /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/final
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p11-console/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+note: pass `--verbose` to see 1 unchanged dependencies behind latest
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p12-replay 01-price --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/01-price
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/01-price
+Positive decimals use integer units of 1/10,000; signs, exponents, excess precision, zero and overflow are rejected. Private fields preserve the validated range.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/01-price/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/01-price/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p12-replay final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/final
+Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p12-replay/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p13-unsafe 01-safe-slots --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/01-safe-slots
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/01-safe-slots
+A fixed logical capacity bounds length; rejection returns the unchanged owned value; pop transfers ownership once; ordinary Vec drop releases remaining values.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/01-safe-slots/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/01-safe-slots/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p13-unsafe final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/final
+Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p13-unsafe/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/00-scaffold/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler 01-lease-model --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/01-lease-model
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/01-lease-model
+An in-memory queue retains at most16 jobs,256-byte payloads, three claims per job, and ten logical ticks per lease. Exact enqueue retries have no new effect; conflicting payloads fail. Expiry permits redelivery and a newer token fences old completion. Cancellation revokes completion. No database, OS clock, background worker, or external effect is implemented.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/01-lease-model/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/01-lease-model/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p14-scheduler/final/Cargo.toml --offline
+     Locking 9 packages to highest Rust 1.99 compatible versions
+    Updating equivalent v1.0.2 -> v1.0.3
+    Updating libc v0.2.190 -> v0.2.191
+    Updating serde_json v1.0.151 -> v1.0.154
+    Updating sha2 v0.11.0 -> v0.11.1
+    Updating smallvec v1.16.2 -> v1.16.3
+    Updating syn v3.0.6 -> v3.0.9
+    Updating tokio v1.53.2 -> v1.53.3
+    Updating unicode-ident v1.0.26 -> v1.0.27
+    Updating unicode-normalization v0.1.25 -> v0.1.26
+note: pass `--verbose` to see 1 unchanged dependencies behind latest
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/00-scaffold/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication 01-append-transport --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/01-append-transport
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/01-append-transport
+A fixed leader proposes up to8 values and produces at most16 pending packets for two followers. A caller can take, delay, drop, or deliver packets. Duplicate delivery is idempotent; gaps, conflicts, and invalid follower indices fail. No acknowledgments, committed prefix, elections, process persistence, or consensus guarantee exists here.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/01-append-transport/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/01-append-transport/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p15-replication/final/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/00-scaffold/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench 01-order-domain --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/01-order-domain
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/01-order-domain
+A single synthetic symbol uses integer cents and whole shares. Quotes require increasing sequence numbers; orders retain stable logical IDs and an original accepted price. Purchases and sales use checked arithmetic, prohibit negative cash/shares, retain at most64 orders, and reject without partial state changes. No files, HTTP, watchlists, replay jobs, chart, or actual trading exists.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/01-order-domain/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/01-order-domain/Cargo.toml --offline
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-oct17-nsn9yqyp/p16-workbench/final/Cargo.toml --offline
+     Locking 6 packages to highest Rust 1.99 compatible versions
+    Updating libc v0.2.190 -> v0.2.191
+    Updating serde_json v1.0.151 -> v1.0.154
+    Updating smallvec v1.16.2 -> v1.16.3
+    Updating syn v3.0.6 -> v3.0.9
+    Updating tokio v1.53.2 -> v1.53.3
+    Updating unicode-ident v1.0.26 -> v1.0.27
+
+exit=0

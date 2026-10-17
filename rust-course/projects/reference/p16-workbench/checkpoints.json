@@ -1,0 +1,22 @@
+{
+  "project": "p16-workbench",
+  "mechanism": "Each listed source checkpoint reconstructs with scripts/start-checkpoint.py into a fresh standalone Cargo project. No learner directory is overwritten.",
+  "manifest": "projects/checkpoints/p16-workbench/checkpoint.json",
+  "steps": [
+    {
+      "checkpoint": "00-scaffold",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p16 00-scaffold"
+    },
+    {
+      "checkpoint": "01-order-domain",
+      "contract": "A single synthetic symbol uses integer cents and whole shares. Quotes require increasing sequence numbers; orders retain stable logical IDs and an original accepted price. Purchases and sales use checked arithmetic, prohibit negative cash/shares, retain at most64 orders, and reject without partial state changes. No files, HTTP, watchlists, replay jobs, chart, or actual trading exists.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p16 01-order-domain"
+    },
+    {
+      "checkpoint": "final",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p16 final"
+    }
+  ]
+}

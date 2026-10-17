@@ -1,0 +1,49 @@
+{
+  "started_utc": "2026-10-17T11:29:51.875897+00:00",
+  "finished_utc": "2026-10-17T11:29:51.948578+00:00",
+  "command": [
+    "python3",
+    "verification/svelte-http-audit.py",
+    "--binary",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native/debug/p16-workbench"
+  ],
+  "overall": "failed",
+  "checks": [],
+  "requests": [
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "expected": 200,
+      "bytes": 22
+    }
+  ],
+  "processes": [
+    {
+      "label": "rust",
+      "pid": 64315,
+      "exit": 0
+    },
+    {
+      "label": "vite",
+      "pid": 64316,
+      "exit": 1
+    }
+  ],
+  "process_logs": {
+    "rust": "LISTEN_ADDR=127.0.0.1:4116\nSIMULATED ONLY; one journal writer and replay worker; journal=\"/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-svelte-http-qnlj1yzl/events.jsonl\"\n",
+    "vite": "mise WARN  Failed to resolve tool version list for node: [~/Desktop/rust-course/rust-course/experiments/svelte-bridge/mise.toml] node@26.12.0: node@26.12.0 is not in the lockfile\nhint: Run `mise install` without --locked to update the lockfile\nmise WARN  Failed to resolve tool version list for rust: [~/Desktop/rust-course/rust-course/mise.toml] rust@1.99.1: rust@1.99.1 is not in the lockfile\nhint: Run `mise install` without --locked to update the lockfile\nmise WARN  Failed to resolve tool version list for node: [~/Desktop/rust-course/rust-course/experiments/svelte-bridge/mise.toml] node@26.12.0: node@26.12.0 is not in the lockfile\nhint: Run `mise install` without --locked to update the lockfile\nmise WARN  Failed to resolve tool version list for rust: [~/Desktop/rust-course/rust-course/mise.toml] rust@1.99.1: rust@1.99.1 is not in the lockfile\nhint: Run `mise install` without --locked to update the lockfile\nmise ERROR No version is set for shim: node\nSet a global default version with one of the following:\nmise use -g node@24.21.0\nmise use -g node@26.12.0\nmise ERROR Version: 2026.10.12 macos-arm64 (2026-10-16)\nmise ERROR Run with --verbose or MISE_VERBOSE=1 for more information\n"
+  },
+  "failure": {
+    "type": "AssertionError",
+    "message": "vite exited during startup with1"
+  },
+  "binary_sha256": "2d0cbe621bdd22f464161db18081abb21e40c12556b738615a9b9a7230405a7c",
+  "limits": [
+    "No browser was opened or automated. These are real HTTP and Node-client module checks, not rendered component interaction.",
+    "Only owned Rust/Vite processes and a temporary synthetic journal were used; occupied ports cause refusal.",
+    "SIGSTOP/SIGCONT targeted the owned Rust child to create a controlled slow upstream; no user processes or databases were touched.",
+    "Screen-reader behavior, keyboard interaction, visual layout and Svelte DOM lifecycle remain unverified."
+  ]
+}

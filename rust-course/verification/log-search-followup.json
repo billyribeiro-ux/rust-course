@@ -1,0 +1,217 @@
+{
+  "verified_at": "2026-10-09T19:17:26.618299+00:00",
+  "scope": "P03 streaming literal search and configurable work budget follow-up",
+  "authored": true,
+  "author_self_review_complete": true,
+  "independent_review": "pending",
+  "code_verified": true,
+  "commands": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "rustc",
+        "--version"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "log-detective",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "check",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "log-detective",
+        "--all-targets",
+        "--locked"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "log-detective",
+        "--all-targets",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "-p",
+        "log-detective",
+        "--locked"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/scaffolds/p03-logs/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_TARGET_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "projects/scaffolds/p03-logs/Cargo.toml",
+        "--locked",
+        "--no-run"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "environment": {
+    "CARGO_TARGET_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+    "CARGO_BUILD_BUILD_DIR": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+  },
+  "tests": {
+    "reference_passed": 18,
+    "reference_failed": 0,
+    "scaffold": "six intentional TODO acceptance tests compiled only; not claimed passing"
+  },
+  "findings": [
+    {
+      "location": "projects/reference/p03-logs/src/main.rs",
+      "issue": "No search operation and no way to raise the default 64MiB work budget.",
+      "correction": "Added --contains and positive --max-bytes, retained native paths, explicit stdout/stderr and error/flush behavior."
+    },
+    {
+      "location": "projects/reference/p03-logs/src/lib.rs",
+      "issue": "Only summarization exposed; output behavior not yet applicable.",
+      "correction": "Shared bounded scanner, literal UTF-8 matching on valid records, immediate normalized output, fixed-cardinality counters, Interrupted retry and propagated write errors."
+    },
+    {
+      "location": "projects/checkpoints/p03-logs/01-bounded-lines",
+      "issue": "No defect within the declared early framing contract.",
+      "correction": "Source unchanged; final checkpoint contract explicitly adds search and budgets without misrepresenting the early milestone."
+    },
+    {
+      "location": "authoring/foundations.json#01-logs and P03 README/scaffold/decisions/assessment/requirements map",
+      "issue": "Teaching described a fixed-size summarizer rather than the requested searchable large stream.",
+      "correction": "Added complete search increment, exact CLI contract, Unicode hypothesis-disproving investigation, partial-output failure teaching and generated-reader evidence."
+    }
+  ],
+  "large_stream": {
+    "bytes": 67109888,
+    "records": 65537,
+    "generated_record_bytes": 1024,
+    "reader_capacity_bytes": 257,
+    "line_payload_limit_bytes": 1023,
+    "matches": 65537,
+    "stored_whole_file": false,
+    "rss_measured": false
+  },
+  "primary_sources": [
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/trait.BufRead.html",
+      "local_sha256": "bad01559148e22729208690a858f0a279b3b595c32539dd6ab18a6ddfac05d8a"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/primitive.str.html",
+      "local_sha256": "912596d9c052c16d834aa595bd2b1a35b853de9b733fc95e5e3d5a686447ad06"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.0/std/io/trait.Write.html",
+      "local_sha256": "94483f38e85993952298cef6ca2d5bffc59cc4ad361889926d2ba03a53fda470"
+    }
+  ],
+  "source_access": "Web open failed for versioned Rust pages; corresponding installed Rust1.99.0 official HTML was read directly (method documentation, not search snippets). Hashes identify that primary source copy.",
+  "limitations": [
+    "No OS peak-memory measurement; total generated input need not exceed this machine RAM.",
+    "No regular expressions, Unicode normalization, case folding, secret redaction, wall-clock deadline or atomic output publication.",
+    "Reader/writer buffers and allocator overhead add to retained payload.",
+    "Rendered HTML/source synchronization and whole-course statuses are root integration work; this agent did not render or mark global review.",
+    "No browser verification or independent acceptance claimed."
+  ],
+  "changed_files": [
+    "projects/reference/p03-logs/src/lib.rs",
+    "projects/reference/p03-logs/src/main.rs",
+    "projects/reference/p03-logs/tests/search.rs",
+    "projects/reference/p03-logs/tests/cli.rs",
+    "projects/reference/p03-logs/README.html",
+    "projects/reference/p03-logs/decisions.html",
+    "projects/scaffolds/p03-logs/src/lib.rs",
+    "projects/scaffolds/p03-logs/README.html",
+    "projects/checkpoints/p03-logs/checkpoint.json",
+    "projects/checkpoints/p03-logs/index.html",
+    "authoring/foundations.json",
+    "authoring/assessments-fragment.html",
+    "authoring/requirements-map.json",
+    "verification/log-search-followup.json",
+    "verification/log-search-followup.html",
+    "verification/log-search-followup.log"
+  ],
+  "environment_note": "The final recorded commands set target values after mise selection. Earlier invocations using shell-only CARGO_TARGET_DIR had their final-artifact location overridden by mise.toml; scoped checks were rerun with the actual shared target. CARGO_BUILD_BUILD_DIR remained shared throughout."
+}

@@ -1,0 +1,140 @@
+   Compiling p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay)
+   Compiling expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+    Finished `release` profile [optimized] target(s) in 0.45s
+     Running unittests src/lib.rs (.course-cache/native/release/deps/expression_language-18f1aa9f904ebca2)
+
+running 5 tests
+test tests::precise_error_spans ... ok
+test tests::precedence_associativity_unary ... ok
+test tests::every_arithmetic_overflow_reports_its_operator ... ok
+test tests::resource_limits_are_errors ... ok
+test tests::deterministic_exhaustive_small_integer_properties ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (.course-cache/native/release/deps/expression_language-bff9edd8610cf946)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/corpus.rs (.course-cache/native/release/deps/corpus-00ec65191b333817)
+
+running 1 test
+test checked_in_examples ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/release/deps/p12_replay-9ed546fe68df4bd4)
+
+running 7 tests
+test tests::capacity_and_missing_cancel_preserve_state ... ok
+test tests::exact_decimal_conversion_rejects_bad_inputs ... ok
+test tests::injected_accounting_overflow_does_not_partially_insert ... ok
+test tests::injected_counter_overflow_preserves_complete_state ... ok
+test tests::rejection_is_transactional_and_corrected_event_can_retry ... ok
+test tests::synthetic_processing_keeps_live_state_bounded ... ok
+test tests::replay_is_identical_including_full_state ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/benchmark.rs (.course-cache/native/release/deps/benchmark-ae685977580b5167)
+
+running 1 test
+test tests::batch_boundaries_preserve_complete_state ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/release/deps/p12_replay-b1b2c418255aef7b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/dispatch_allocation.rs (.course-cache/native/release/examples/dispatch_allocation-aaee3cf33a75535d)
+
+running 2 tests
+test tests::borrowed_fields_alias_input_and_owned_fields_survive_it ... ok
+test tests::invalid_input_and_resource_bounds_are_explicit ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/layout_profile.rs (.course-cache/native/release/examples/layout_profile-7dd5494350113a1f)
+
+running 2 tests
+test tests::limits_fail_before_allocating_and_modes_are_explicit ... ok
+test tests::layouts_preserve_every_field_and_analytics_for_boundary_sizes ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/release/deps/p13_unsafe-96b7ded48fedfe01)
+
+running 7 tests
+test tests::alignment_is_preserved ... ok
+test tests::empty_zero_capacity_and_bounds ... ok
+test tests::a_single_destructor_panic_leaves_empty_reusable_storage ... ok
+test tests::agrees_with_safe_baseline_under_many_operations ... ok
+test tests::zero_sized_destructors_run_for_every_element ... ok
+test tests::zero_sized_values_are_logical_elements ... ok
+test tests::values_are_dropped_exactly_once_and_rejected_value_is_returned ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/release/deps/p13_unsafe-395ce842d0fdf935)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (.course-cache/native/release/deps/workshop_calculator-a92d42770a6acb5e)
+
+running 8 tests
+test conversion::tests::avoids_false_intermediate_overflow_and_rejects_real_range_loss ... ok
+test conversion::tests::common_fractional_signed_and_scientific_values ... ok
+test conversion::tests::every_unit_pair_agrees_with_independent_expected_values ... ok
+test conversion::tests::invalid_units_numbers_and_nonfinite_inputs_are_errors ... ok
+test tests::recoverable_errors ... ok
+test conversion::tests::explicit_zero_is_valid_and_negative_zero_keeps_its_sign ... ok
+test tests::units_and_integer_division ... ok
+test tests::exhaustive_small_addition_commutes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (.course-cache/native/release/deps/workshop_calculator-15a2fb0dd4fa83d7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (.course-cache/native/release/deps/cli-a0d345b5d1399324)
+
+running 5 tests
+test non_unicode_operand_is_a_usage_error ... ok
+test adding_conversion_does_not_silently_change_integer_arithmetic ... ok
+test cli_separates_success_domain_and_usage ... ok
+test conversion_cli_accepts_fractional_signed_and_scientific_values ... ok
+test conversion_cli_reports_validation_and_range_errors_without_success_output ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s
+
+     Running unittests examples/hello.rs (.course-cache/native/release/examples/hello-b28a91c1d258a876)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/roundoff.rs (.course-cache/native/release/examples/roundoff-4aaf8363fa0ac1a8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/workshop_basics.rs (.course-cache/native/release/examples/workshop_basics-b837d9e17fde052a)
+
+running 3 tests
+test tests::delivery_is_charged_only_for_nonempty_orders ... ok
+test tests::subtotal_rejects_overflow_without_wrapping ... ok
+test tests::subtotal_uses_whole_cents_and_handles_zero_quantity ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

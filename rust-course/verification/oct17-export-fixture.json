@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "completed": {
+    "00-terminal": true
+  },
+  "notes": {
+    "00-terminal": "October 17 audit fixture: export and restore this note."
+  },
+  "theme": "light"
+}

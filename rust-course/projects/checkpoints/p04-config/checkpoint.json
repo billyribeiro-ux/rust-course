@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p04-config",
+  "checkpoints": [
+    {
+      "id": "01-effective-port",
+      "title": "Layer precedence before application configuration",
+      "source": "projects/checkpoints/p04-config/01-effective-port",
+      "contract": "Resolve at most eight optional textual port layers, with later present values winning and default 8080. Validate only the effective value as a nonzero u16. The result stores a private validated port; this milestone does not read process environment/files or manage secrets.",
+      "commands": [
+        "cargo test",
+        "cargo run"
+      ],
+      "lockfile": "projects/checkpoints/p04-config/locks/01-effective-port.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete current reference",
+      "source": "projects/reference/p04-config",
+      "contract": "The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p04-config/locks/final.Cargo.lock"
+    }
+  ]
+}

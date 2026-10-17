@@ -1,0 +1,35 @@
+$ cargo +1.99.1 update --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/experiments/p07-rayon/Cargo.toml
+    Updating crates.io index
+     Locking 2 packages to highest Rust 1.99 compatible versions
+    Updating crossbeam-deque v0.8.6 -> v0.8.8
+    Updating crossbeam-epoch v0.9.20 -> v0.9.21
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/no-std/Cargo.toml
+     Locking 0 packages to highest Rust 1.99 compatible versions
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p11-console/Cargo.toml
+    Updating crates.io index
+     Locking 11 packages to highest Rust 1.99 compatible versions
+    Updating equivalent v1.0.2 -> v1.0.3
+    Updating libc v0.2.190 -> v0.2.191
+    Updating manyhow v0.14.0 -> v0.14.1
+    Updating manyhow-macros v0.14.0 -> v0.14.1
+    Updating reactive_graph v0.2.15 -> v0.2.16
+    Updating serde_json v1.0.151 -> v1.0.154
+    Updating smallvec v1.16.2 -> v1.16.3
+    Updating syn v3.0.6 -> v3.0.9
+    Updating tokio v1.53.2 -> v1.53.3
+    Updating unicode-ident v1.0.26 -> v1.0.27
+    Updating uuid v1.27.0 -> v1.28.0
+note: pass `--verbose` to see 1 unchanged dependencies behind latest
+
+exit=0
+$ cargo +1.99.1 update --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz/Cargo.toml
+    Updating crates.io index
+     Locking 2 packages to highest Rust 1.99 compatible versions
+    Updating cc v1.6.0 -> v1.8.0
+    Updating libc v0.2.190 -> v0.2.191
+
+exit=0

@@ -1,0 +1,42 @@
+[
+  {
+    "file": "01-use-after-move.rs",
+    "expected_error": "E0382",
+    "expected_exit": "nonzero",
+    "reason": "value borrowed after ownership transfer",
+    "hint": "Borrow title when only reading it; move only when the callee needs ownership.",
+    "command": "mise exec -- rustc --edition=2024 --emit=metadata --out-dir /tmp/rust-course-diagnostics 01-use-after-move.rs"
+  },
+  {
+    "file": "02-aliasing.rs",
+    "expected_error": "E0499",
+    "expected_exit": "nonzero",
+    "reason": "two overlapping exclusive borrows",
+    "hint": "End the first mutable borrow before making the second; no clone is needed.",
+    "command": "mise exec -- rustc --edition=2024 --emit=metadata --out-dir /tmp/rust-course-diagnostics 02-aliasing.rs"
+  },
+  {
+    "file": "03-local-reference.rs",
+    "expected_error": "E0515",
+    "expected_exit": "nonzero",
+    "reason": "returned reference outlives local owner",
+    "hint": "Return String ownership or borrow caller-owned input; a lifetime label cannot extend storage.",
+    "command": "mise exec -- rustc --edition=2024 --emit=metadata --out-dir /tmp/rust-course-diagnostics 03-local-reference.rs"
+  },
+  {
+    "file": "04-nonexhaustive.rs",
+    "expected_error": "E0004",
+    "expected_exit": "nonzero",
+    "reason": "one enum state not handled",
+    "hint": "Add the Done arm explicitly and decide its behavior.",
+    "command": "mise exec -- rustc --edition=2024 --emit=metadata --out-dir /tmp/rust-course-diagnostics 04-nonexhaustive.rs"
+  },
+  {
+    "file": "05-missing-trait.rs",
+    "expected_error": "E0277",
+    "expected_exit": "nonzero",
+    "reason": "generic operation lacks a required trait bound",
+    "hint": "Require T: std::fmt::Display, because the body needs that capability.",
+    "command": "mise exec -- rustc --edition=2024 --emit=metadata --out-dir /tmp/rust-course-diagnostics 05-missing-trait.rs"
+  }
+]

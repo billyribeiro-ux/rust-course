@@ -1,0 +1,25 @@
+$ mise exec -- cargo clippy --workspace --all-targets --locked --manifest-path projects/Cargo.toml --target-dir ../.course-cache/oct17-native -- -D warnings
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native
+    Blocking waiting for file lock on package cache
+    Checking p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay)
+    Checking workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Checking log-detective v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs)
+    Checking p07-indexer v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer)
+    Checking p06-kv v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv)
+    Checking task-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal)
+    Checking core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs)
+    Checking expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+    Checking typed-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config)
+    Checking p09-chat v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat)
+    Checking p08-monitor v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor)
+   Compiling course-kind-derive v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive)
+    Checking concurrency-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs)
+    Checking p13-unsafe v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe)
+    Checking p15-replication v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication)
+    Checking course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+    Checking p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+    Checking p10-issues v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues)
+    Checking p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+    Checking rust-specializations v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.62s

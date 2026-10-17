@@ -1,0 +1,168 @@
+$ initdb -D /tmp/course-svc-k3xko2e7/data --auth=trust --no-locale -E UTF8
+The files belonging to this database system will be owned by user "billyribeiro".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+creating directory /tmp/course-svc-k3xko2e7/data ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... America/New_York
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+Success. You can now start the database server using:
+
+    pg_ctl -D /tmp/course-svc-k3xko2e7/data -l logfile start
+
+$ pg_ctl -D /tmp/course-svc-k3xko2e7/data -l /tmp/course-svc-k3xko2e7/server.log -o "-c listen_addresses= -c unix_socket_directories=/tmp/course-svc-k3xko2e7/socket -p 65432" -w start
+waiting for server to start.... done
+server started
+$ createdb -h /tmp/course-svc-k3xko2e7/socket -p 65432 rust_course_test_scheduler
+$ mise exec -- cargo test --offline --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p14-scheduler --test postgres lease_fields_cannot_rewrite_durable_payload_or_retry_count -- --ignored --nocapture
+   Compiling serde v1.0.229
+   Compiling stable_deref_trait v1.2.1
+   Compiling typenum v1.20.1
+   Compiling serde_core v1.0.229
+   Compiling cfg-if v1.0.5
+   Compiling writeable v0.6.4
+   Compiling litemap v0.8.3
+   Compiling utf8_iter v1.0.4
+   Compiling version_check v0.9.5
+   Compiling icu_normalizer_data v2.3.0
+   Compiling icu_properties_data v2.3.0
+   Compiling parking_lot_core v0.9.12
+   Compiling scopeguard v1.2.0
+   Compiling futures-sink v0.3.34
+   Compiling cmov v0.5.4
+   Compiling equivalent v1.0.2
+   Compiling crossbeam-utils v0.8.23
+   Compiling slab v0.4.12
+   Compiling futures-task v0.3.34
+   Compiling futures-io v0.3.34
+   Compiling thiserror v2.0.21
+   Compiling foldhash v0.2.0
+   Compiling allocator-api2 v0.2.21
+   Compiling syn v3.0.6
+   Compiling syn v2.0.119
+   Compiling cpufeatures v0.2.17
+   Compiling getrandom v0.4.3
+   Compiling rand_core v0.10.1
+   Compiling hashbrown v0.17.1
+   Compiling lock_api v0.4.14
+   Compiling parking v2.2.1
+   Compiling crc-catalog v2.5.0
+   Compiling num-traits v0.2.19
+   Compiling tinyvec v1.13.3
+   Compiling base64 v0.22.1
+   Compiling ctutils v0.4.3
+   Compiling futures-util v0.3.34
+   Compiling chacha20 v0.10.2
+   Compiling tokio v1.53.2
+   Compiling cpufeatures v0.3.1
+   Compiling form_urlencoded v1.2.2
+   Compiling unicode-bidi v0.3.18
+   Compiling generic-array v0.14.9
+   Compiling crc v3.4.0
+   Compiling event-listener v5.4.2
+   Compiling hashbrown v0.16.1
+   Compiling unicode-properties v0.1.4
+   Compiling futures-channel v0.3.34
+   Compiling whoami v2.1.3
+   Compiling byteorder v1.5.0
+   Compiling dotenvy v0.15.7
+   Compiling unicode-normalization v0.1.25
+   Compiling bitflags v2.13.2
+   Compiling hex v0.4.3
+   Compiling indexmap v2.14.2
+   Compiling hybrid-array v0.4.15
+   Compiling heck v0.5.0
+   Compiling hashlink v0.11.1
+   Compiling stringprep v0.1.5
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling atoi v2.0.0
+   Compiling digest v0.11.3
+   Compiling hmac v0.13.0
+   Compiling md-5 v0.11.0
+   Compiling sha2 v0.11.0
+   Compiling hkdf v0.13.0
+   Compiling synstructure v0.14.0
+   Compiling tracing-attributes v0.1.31
+   Compiling serde_derive v1.0.229
+   Compiling zerovec-derive v0.11.6
+   Compiling displaydoc v0.2.7
+   Compiling tokio-macros v2.7.2
+   Compiling thiserror-impl v2.0.21
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling tokio-stream v0.1.19
+   Compiling rand v0.10.3
+   Compiling tracing v0.1.44
+   Compiling zerofrom v0.1.8
+   Compiling serde_json v1.0.151
+   Compiling serde_path_to_error v0.1.20
+   Compiling crossbeam-queue v0.3.14
+   Compiling yoke v0.8.3
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.6
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling axum-core v0.5.6
+   Compiling zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling smallvec v1.16.2
+   Compiling either v1.19.0
+   Compiling serde_urlencoded v0.7.1
+   Compiling parking_lot v0.12.5
+   Compiling futures-intrusive v0.5.0
+   Compiling tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling icu_collections v2.3.0
+   Compiling icu_locale_core v2.3.0
+   Compiling hyper v1.12.0
+   Compiling tower v0.5.3
+   Compiling icu_provider v2.3.1
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling hyper-util v0.1.21
+   Compiling axum v0.8.9
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling url v2.5.8
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-postgres v0.9.0
+   Compiling sqlx-macros-core v0.9.0
+   Compiling sqlx-macros v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.24s
+     Running tests/postgres.rs (/Users/billyribeiro/.cargo/build-shared/debug/deps/postgres-046d47942d28a9db)
+
+running 1 test
+
+thread 'lease_fields_cannot_rewrite_durable_payload_or_retry_count' (3114214) panicked at reference/p14-scheduler/tests/postgres.rs:84:5:
+assertion `left == right` failed
+  left: "caller substitution"
+ right: "durable payload"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test lease_fields_cannot_rewrite_durable_payload_or_retry_count ... FAILED
+
+failures:
+
+failures:
+    lease_fields_cannot_rewrite_durable_payload_or_retry_count
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.03s
+
+error: test failed, to rerun pass `-p p14-scheduler --test postgres`
+$ pg_ctl -D /tmp/course-svc-k3xko2e7/data -m fast -w stop
+waiting for server to shut down.... done
+server stopped

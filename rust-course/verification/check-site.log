@@ -1,0 +1,12 @@
+$ python3 scripts/verify-site.py
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native
+{
+  "kind": "static checks only; not rendered browser QA",
+  "pages": 148,
+  "local_links_checked": 6639,
+  "source_inclusions_checked": 83,
+  "lessons_checked": 57,
+  "issues": [],
+  "total_issues": 0
+}

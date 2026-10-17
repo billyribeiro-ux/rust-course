@@ -1,0 +1,432 @@
+$ mise exec -- cargo test --workspace --locked --manifest-path projects/Cargo.toml --target-dir ../.course-cache/native
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native
+ Downloading crates ...
+  Downloaded equivalent v1.0.3
+  Downloaded sha2 v0.11.1
+  Downloaded smallvec v1.16.3
+  Downloaded unicode-ident v1.0.27
+  Downloaded serde_json v1.0.154
+  Downloaded unicode-normalization v0.1.26
+  Downloaded syn v3.0.9
+  Downloaded libc v0.2.191
+  Downloaded tokio v1.53.3
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.27
+   Compiling libc v0.2.191
+   Compiling pin-project-lite v0.2.17
+   Compiling serde v1.0.229
+   Compiling bytes v1.12.1
+   Compiling serde_core v1.0.229
+   Compiling itoa v1.0.18
+   Compiling futures-core v0.3.34
+   Compiling stable_deref_trait v1.2.1
+   Compiling typenum v1.20.1
+   Compiling zmij v1.0.23
+   Compiling memchr v2.8.3
+   Compiling serde_json v1.0.154
+   Compiling percent-encoding v2.3.2
+   Compiling cfg-if v1.0.5
+   Compiling once_cell v1.21.4
+   Compiling log v0.4.34
+   Compiling futures-sink v0.3.34
+   Compiling writeable v0.6.4
+   Compiling futures-io v0.3.34
+   Compiling slab v0.4.12
+   Compiling futures-task v0.3.34
+   Compiling litemap v0.8.3
+   Compiling utf8_iter v1.0.4
+   Compiling icu_normalizer_data v2.3.0
+   Compiling version_check v0.9.5
+   Compiling icu_properties_data v2.3.0
+   Compiling parking_lot_core v0.9.12
+   Compiling httparse v1.10.1
+   Compiling tower-service v0.3.3
+   Compiling scopeguard v1.2.0
+   Compiling cmov v0.5.4
+   Compiling form_urlencoded v1.2.2
+   Compiling httpdate v1.0.3
+   Compiling tower-layer v0.3.3
+   Compiling tracing-core v0.1.36
+   Compiling atomic-waker v1.1.2
+   Compiling sync_wrapper v1.0.2
+   Compiling ryu v1.0.23
+   Compiling mime v0.3.17
+   Compiling equivalent v1.0.3
+   Compiling futures-util v0.3.34
+   Compiling http v1.5.0
+   Compiling hybrid-array v0.4.15
+   Compiling generic-array v0.14.9
+   Compiling crossbeam-utils v0.8.23
+   Compiling autocfg v1.5.1
+   Compiling lock_api v0.4.14
+   Compiling ctutils v0.4.3
+   Compiling foldhash v0.2.0
+   Compiling matchit v0.8.4
+   Compiling thiserror v2.0.21
+   Compiling allocator-api2 v0.2.21
+   Compiling hashbrown v0.17.1
+   Compiling parking v2.2.1
+   Compiling crc-catalog v2.5.0
+   Compiling rand_core v0.10.1
+   Compiling getrandom v0.4.3
+   Compiling tinyvec v1.13.3
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling http-body v1.1.0
+   Compiling num-traits v0.2.19
+   Compiling crc v3.4.0
+   Compiling event-listener v5.4.2
+   Compiling base64 v0.22.1
+   Compiling chacha20 v0.10.2
+   Compiling unicode-bidi v0.3.18
+   Compiling hashbrown v0.16.1
+   Compiling unicode-properties v0.1.4
+   Compiling futures-channel v0.3.34
+   Compiling indexmap v2.14.2
+   Compiling unicode-normalization v0.1.26
+   Compiling byteorder v1.5.0
+   Compiling http-body-util v0.1.5
+   Compiling dotenvy v0.15.7
+   Compiling digest v0.11.3
+   Compiling bitflags v2.13.2
+   Compiling hex v0.4.3
+   Compiling whoami v2.1.3
+   Compiling serde_path_to_error v0.1.20
+   Compiling heck v0.5.0
+   Compiling p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay)
+   Compiling workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+   Compiling log-detective v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs)
+   Compiling p07-indexer v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer)
+   Compiling task-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal)
+   Compiling hashlink v0.11.1
+   Compiling stringprep v0.1.5
+   Compiling typed-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config)
+   Compiling syn v3.0.9
+   Compiling syn v2.0.119
+   Compiling expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+   Compiling socket2 v0.6.5
+   Compiling mio v1.2.4
+   Compiling errno v0.3.14
+   Compiling cpufeatures v0.2.17
+   Compiling hmac v0.13.0
+   Compiling cpufeatures v0.3.1
+   Compiling md-5 v0.11.0
+   Compiling p06-kv v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv)
+   Compiling core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs)
+   Compiling p13-unsafe v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe)
+   Compiling p15-replication v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication)
+   Compiling signal-hook-registry v1.4.8
+   Compiling sha2 v0.11.1
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.6
+   Compiling hkdf v0.13.0
+   Compiling tokio v1.53.3
+   Compiling crossbeam-queue v0.3.14
+   Compiling rand v0.10.3
+   Compiling digest v0.10.7
+   Compiling atoi v2.0.0
+   Compiling synstructure v0.14.0
+   Compiling sha2 v0.10.9
+   Compiling tracing-attributes v0.1.31
+   Compiling serde_derive v1.0.229
+   Compiling tokio-macros v2.7.2
+   Compiling zerofrom-derive v0.1.8
+   Compiling yoke-derive v0.8.4
+   Compiling zerovec-derive v0.11.6
+   Compiling displaydoc v0.2.7
+   Compiling thiserror-impl v2.0.21
+   Compiling course-kind-derive v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive)
+   Compiling tokio-stream v0.1.19
+   Compiling tracing v0.1.44
+   Compiling rust-specializations v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations)
+   Compiling zerofrom v0.1.8
+   Compiling axum-core v0.5.6
+   Compiling yoke v0.8.3
+   Compiling tower v0.5.3
+   Compiling p08-monitor v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor)
+   Compiling concurrency-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs)
+   Compiling p09-chat v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat)
+   Compiling smallvec v1.16.3
+   Compiling either v1.19.0
+   Compiling serde_urlencoded v0.7.1
+   Compiling course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+   Compiling hyper v1.12.0
+   Compiling zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling parking_lot v0.12.5
+   Compiling hyper-util v0.1.21
+   Compiling futures-intrusive v0.5.0
+   Compiling axum v0.8.9
+   Compiling tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling icu_collections v2.3.0
+   Compiling icu_locale_core v2.3.0
+   Compiling p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+   Compiling icu_provider v2.3.1
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling idna_adapter v1.2.2
+   Compiling idna v1.1.0
+   Compiling url v2.5.8
+   Compiling sqlx-core v0.9.0
+   Compiling sqlx-postgres v0.9.0
+   Compiling sqlx-macros-core v0.9.0
+   Compiling sqlx-macros v0.9.0
+   Compiling sqlx v0.9.0
+   Compiling p10-issues v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues)
+   Compiling p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.71s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/concurrency_labs-b6fd684f57e4e6dc)
+
+running 7 tests
+test atomics::tests::reader_survives_publisher_drop_without_fabricating_a_summary ... ok
+test atomics::tests::no_partial_summary_is_exposed_by_the_api ... ok
+test atomics::tests::oversized_reservation_leaves_the_budget_unchanged ... ok
+test atomics::tests::budget_never_admits_more_than_available ... ok
+test deadlines::tests::closed_cancelled_and_invalid_are_distinct ... ok
+test deadlines::tests::limit_preserves_unread_channel_items ... ok
+test deadlines::tests::steady_arrivals_do_not_restart_the_absolute_deadline ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/core_rust_labs-7c00be2cec22b2e9)
+
+running 13 tests
+test conversions::tests::conversions_preserve_the_declared_range ... ok
+test collections::tests::arrays_and_vectors_share_a_slice_contract ... ok
+test conversions::tests::collection_reports_first_failure_instead_of_dropping_it ... ok
+test conversions::tests::filter_is_inclusive_and_preserves_order_and_duplicates ... ok
+test collections::tests::repeated_labels_are_counted_and_rows_are_deterministic ... ok
+test interior::tests::handles_share_state_and_disabled_is_distinct_from_invalid ... ok
+test interior::tests::full_or_invalid_input_preserves_messages ... ok
+test conversions::tests::parsing_and_display_have_explicit_normalization ... ok
+test interior::tests::reentrant_write_is_an_error_then_guard_release_allows_progress ... ok
+test collections::tests::result_owns_its_labels_after_input_is_gone ... ok
+test interior::tests::weak_observer_does_not_keep_the_buffer_alive ... ok
+test collections::tests::item_distinct_and_text_boundaries_are_independent ... ok
+test interior::tests::unwinding_releases_the_observer_guard ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/course_kind_derive-e828c56caa79f851)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/course_ui_model-01871d128ead3ae9)
+
+running 7 tests
+test tests::retry_rejection_does_not_resolve_an_earlier_attempt ... ok
+test tests::uncertain_http_outcomes_remain_uncertain ... ok
+test tests::money_is_exact_integer_formatting_including_minimum ... ok
+test tests::empty_history_decodes_without_a_fabricated_cursor ... ok
+test tests::boundary_sequences_do_not_wrap ... ok
+test tests::replay_first_rejection_or_local_validation_does_not_hold_a_draft ... ok
+test tests::replay_retry_retains_identity_and_ticks_across_new_quotes_and_rejections ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/expression_language-6690cd445c24da0a)
+
+running 7 tests
+test tests::precedence_associativity_unary ... ok
+test tests::precise_error_spans ... ok
+test tests::every_arithmetic_overflow_reports_its_operator ... ok
+test tests::recursive_nesting_and_constructed_tree_depth_are_separate_limits ... ok
+test tests::exact_byte_and_token_limits_have_distinct_diagnostics ... ok
+test tests::resource_limits_are_errors ... ok
+test tests::deterministic_exhaustive_small_integer_properties ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/expression_language-15c38f5c4f0a8162)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/corpus.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/corpus-26e4fccf582a52f4)
+
+running 1 test
+test checked_in_examples ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/output.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/output-24b858a32d4bdf10)
+
+running 2 tests
+test closed_stdout_is_a_reported_io_failure_not_a_panic ... ok
+test closed_diagnostic_sink_does_not_panic ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/log_detective-da0cf26acb14949c)
+
+running 4 tests
+test tests::rejects_total_exhaustion_and_invalid_limits ... ok
+test tests::drain_oversized_then_recover ... ok
+test tests::tiny_buffers_and_final_line ... ok
+test tests::accounting_property_across_buffer_sizes ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/log_detective-3825a460abda63b9)
+
+running 2 tests
+test tests::native_path_is_preserved_but_non_unicode_query_is_rejected ... ok
+test tests::argument_contract ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-a7b6e794e332784c)
+
+running 2 tests
+test existing_summary_and_streaming_search_have_separate_output_contracts ... ok
+test invalid_arguments_and_budget_exhaustion_exit_nonzero_without_success_summary ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+
+     Running tests/fixtures.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/fixtures-c4654feab7bd088e)
+
+running 1 test
+test fixture_totals ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/search.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/search-e26a7a922e9ed503)
+
+running 7 tests
+test interrupted_read_is_retried ... ok
+test output_failure_returns_error_instead_of_successful_report ... ok
+test exact_budget_counts_delimiters_and_rejected_bytes ... ok
+test rejected_records_are_counted_but_never_emitted ... ok
+test read_error_after_a_match_preserves_error_and_documents_prefix_output ... ok
+test unicode_literal_matching_is_independent_of_chunk_boundaries ... ok
+test generated_stream_exceeds_default_budget_without_whole_input_storage ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p06_kv-751202de36b70be4)
+
+running 10 tests
+test tests::checksum_mismatch_with_complete_declared_payload_is_rejected ... ok
+test tests::read_error_is_not_misclassified_as_torn_tail ... ok
+test tests::overwritten_deleted_and_empty_values_replay ... ok
+test tests::crc_known_vector ... ok
+test tests::malicious_length_is_rejected_before_allocation ... ok
+test tests::every_torn_suffix_recovers_only_the_complete_prefix ... ok
+test tests::failed_write_keeps_acknowledged_state_and_poison_requires_reopen ... ok
+test tests::stale_compaction_file_is_visible_and_original_remains_writable ... ok
+test tests::reopen_repairs_tail_and_can_append ... ok
+test tests::compaction_preserves_state_and_lock ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p06_kv-aad98cd4123ce533)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-7a539dda8f226c52)
+
+running 4 tests
+test non_utf8_native_path_obeys_filesystem_support_without_panicking ... ok
+test rejected_commands_neither_create_files_nor_repair_an_existing_torn_tail ... ok
+test broken_output_and_diagnostic_pipes_are_errors_without_a_panic ... ok
+test non_utf8_text_is_an_input_error_and_native_unicode_paths_round_trip ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+
+     Running tests/persistence_edges.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/persistence_edges-9cf703c1abded4b3)
+
+running 3 tests
+test cwd_child ... ok
+test bounded_length_damage_can_resemble_an_incomplete_final_payload ... ok
+test relative_store_keeps_its_file_when_process_cwd_changes ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p07_indexer-630bba288707d8c7)
+
+running 10 tests
+test tests::invalid_configuration_emits_no_misleading_started_event ... ok
+test tests::invalid_limits_are_rejected ... ok
+test tests::initial_progress_can_cancel_before_any_file_is_opened ... ok
+test tests::empty_work_has_initial_and_final_progress ... ok
+test tests::cancellation_before_start_submits_nothing ... ok
+test tests::oversize_and_missing_files_are_per_file_results ... ok
+test tests::progress_cancellation_drains_results_and_accounts_for_unreturned_jobs ... ok
+test tests::streaming_counts_across_buffer_boundaries_and_sorts ... ok
+test tests::progress_is_monotonic_and_reports_failures_without_calling_them_successes ... ok
+test tests::queue_one_does_not_deadlock_and_output_is_repeatable ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/indexer-benchmark.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/indexer_benchmark-a2aabd3d0b184e27)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p07_indexer-18a96582938e9ca4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-353d654c6d66a36e)
+
+running 3 tests
+test closed_progress_sink_is_an_error_without_a_success_report ... ok
+test closed_result_sink_returns_an_io_error_without_panicking ... ok
+test progress_uses_stderr_while_sorted_results_stay_on_stdout ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.16s
+
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p08_monitor-3d45cbe15cf0eb0b)
+
+running 6 tests
+test tests::rejects_remote_addresses ... ok
+test tests::shutdown_aborts_in_flight_and_unstarted_work ... ok
+test tests::malformed_response_is_bounded ... ok
+test tests::concurrency_cap_and_input_order_hold ... ok
+test tests::retries_then_recovers ... ok
+test tests::hung_endpoint_has_a_deadline ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p08_monitor-7f3b195ae8b3b62a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-a054abed36961012)
+
+running 4 tests
+test non_utf8_endpoint_is_an_input_error ... ok
+test invalid_request_is_validated_before_any_network_request ... ok
+test broken_output_and_diagnostic_pipes_do_not_panic ... FAILED
+test demo_runs_and_invalid_or_excess_endpoints_are_rejected ... ok
+
+failures:
+
+---- broken_output_and_diagnostic_pipes_do_not_panic stdout ----
+
+thread 'broken_output_and_diagnostic_pipes_do_not_panic' (18265597) panicked at reference/p08-monitor/tests/cli.rs:62:5:
+assertion `left == right` failed: Output { status: ExitStatus(unix_wait_status(0)), stdout: "", stderr: "" }
+  left: Some(0)
+ right: Some(1)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    broken_output_and_diagnostic_pipes_do_not_panic
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+
+error: test failed, to rerun pass `-p p08-monitor --test cli`

@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-09",
+  "binary": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/p16-workbench",
+  "checks": [
+    {
+      "invalid_address_hex": "ff",
+      "exit_code": 1,
+      "journal_created": false
+    },
+    {
+      "invalid_address_hex": "6e6f742d616e2d61646472657373",
+      "exit_code": 1,
+      "journal_created": false
+    },
+    {
+      "invalid_address_hex": "302e302e302e303a30",
+      "exit_code": 1,
+      "journal_created": false
+    },
+    {
+      "filesystem_rejects_non_utf8": true,
+      "filesystem_errno": 92,
+      "program_exit": 1,
+      "fallback_journal_created": false
+    },
+    {
+      "native_path_hex": "2f7661722f666f6c646572732f62302f6b39736271776339307a7a62327876766b7374747776633030303030676e2f542f727573742d636f6e6669672d636865636b2d3766737971706a5f2f6a6f75726e616c2df09fa6802e6a736f6e6c",
+      "health_status": 200,
+      "graceful_exit": 0,
+      "fallback_journal_created": false
+    }
+  ],
+  "scope": "Executed on macOS ARM. Native-byte environment/path checks are Unix-specific; no mutation of user configuration or journals."
+}

@@ -1,0 +1,914 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Paper-trading invariants and deterministic event replay · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="09-domain" data-lesson="09-domain"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Paper-trading invariants and deterministic event replay</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 09 / The independent capstone</div><h1>Paper-trading invariants and deterministic event replay</h1><p class="lead">Specify numeric meaning and event identity before building a dashboard.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-7/07-replay.html">Deterministic replay with exact domain values</a></li><li><a href="../../lessons/stage-8/08-operations.html">Operate a service with evidence and a rollback plan</a></li></ul><ul><li>Use checked fixed-point arithmetic for a bounded domain</li><li>Separate duplicate events from conflicting identity reuse</li><li>Preserve state on rejected operations and replay deterministically</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#deduplication">deduplication</a> · <a href="../../glossary.html#invariant">invariant</a> · <a href="../../glossary.html#lifetime">lifetime</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#move">move</a> · <a href="../../glossary.html#ownership">ownership</a> · <a href="../../glossary.html#replay">replay</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p16">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-and-independent-specification">Purpose and independent specification</h2><p>The capstone is a research and <strong>simulated paper-trading</strong> workbench. There is no real-money execution, broker connection, paid feed, or claim to model an exchange accurately. Its first milestone is a domain engine that behaves predictably without HTTP, a browser, or a database. Start by implementing the following invariants: cash cannot become negative, holdings cannot become negative, a rejected order changes no state, a repeated logical order does not trade twice, and replaying accepted events in the same order reconstructs the same state.</p>
+<h2 id="plain-english-model-values-with-meaning">Plain-English model: values with meaning</h2><p>A number needs a unit. The engine stores prices and cash as signed64-bit integer cents and quantities as whole units. It deliberately excludes fractional shares, commissions, taxes, multiple currencies, partial fills, order-book depth, and realistic market impact. Buying three units at125 cents costs375 cents exactly within this model. Floating-point arithmetic could approximate many prices but would not express the intended fixed-cent invariant directly.</p>
+<p>Integer arithmetic is not magically safe. A valid per-item price multiplied by a large quantity can overflow. Validate bounds and use checked multiplication before mutation. Selling also checks cash addition. The current price cap is100,000,000 cents, quantity is1 through10,000, and the starting simulated balance is1,000,000 cents. These are teaching limits, not financial recommendations. Extending to fractional quantities requires an explicit scale and rounding rule; merely replacing i64 with f64 loses the original contract.</p>
+<h2 id="prediction">Prediction</h2><p>A tick sets RUST to125 cents. Order o1 buys three units. The client loses its response and submits exactly o1 again. What is the final cash? Now imagine the retry reuses o1 but asks for four units.</p><details><summary>Answer</summary><p>Cash is999,625 cents and holdings are3. The identical retry returns applied:false. Reusing the ID with a different quantity is a conflict, not an instruction to edit history. Generating a new ID for every automatic retry would defeat this rule and create another purchase.</p></details>
+<h2 id="small-runnable-example">Small runnable example</h2><p>The library owns all domain behavior. This example intentionally uses unwrap only for hard-coded fixtures that are expected to satisfy the invariants; API handlers must handle untrusted input errors explicitly.</p>
+<div class="code-wrap" data-source="projects/reference/p16-workbench/examples/domain.rs" data-sha256="1eba4fa69b23c9e481437604afae86d6d45ada3ccb9776439c573b8b7dac1970"><div class="code-label"><a href="../../projects/reference/p16-workbench/examples/domain.rs">projects/reference/p16-workbench/examples/domain.rs</a></div><pre><code>use p16_workbench::{Engine, Event, Order, Side, Tick};
+fn main() {
+    let mut engine = Engine::default();
+    engine
+        .apply(Event::Tick(Tick {
+            event_id: &quot;t1&quot;.into(),
+            symbol: &quot;RUST&quot;.into(),
+            price_cents: 125,
+            sequence: 1,
+        }))
+        .unwrap();
+    let order = Event::Order(Order {
+        order_id: &quot;o1&quot;.into(),
+        symbol: &quot;RUST&quot;.into(),
+        side: Side::Buy,
+        quantity: 3,
+    });
+    println!(&quot;first applied: {}&quot;, engine.apply(order.clone()).unwrap());
+    println!(&quot;retry applied: {}&quot;, engine.apply(order).unwrap());
+    println!(&quot;cash cents: {}&quot;, engine.snapshot().cash_cents);
+}
+</code></pre></div><pre><code>mise exec -- cargo run -p p16-workbench --example domain
+mise exec -- cargo test -p p16-workbench</code></pre>
+<h2 id="read-the-validation-path">Read the validation path</h2><p><code>Event</code> distinguishes a tick, an order, and a watchlist change. A tick has a unique event ID, symbol, integer price, and per-symbol sequence. Sequence determines accepted market order in this lab; wall-clock timestamps are absent because the engine does not make freshness or physical-time claims. A repeated event ID with identical content is a retry. A new ID with a sequence no greater than the last accepted sequence is out of order and rejected. A replay system that accepts late events would need a different policy, such as a bounded reorder buffer and an explicit finalization watermark.</p>
+<p><code>validate</code> only reads current state. It checks identity reuse, domain limits, quotes, arithmetic, cash, holdings, and the10,000-event session budget. <code>apply</code> calls validation before changing any field. The store later uses the same read-only validation before writing the event. Because one mutation owns the state exclusively, no other operation can change the checked facts between validation and application. That ownership argument would need revision if you split one account across multiple writers.</p>
+<h2 id="guided-checkpoint">Guided checkpoint</h2><p>Implement Tick, Side, Order, Event, and a minimal Engine containing cash, quotes, positions, and order IDs. Add duplicate-order and insufficient-cash tests before any persistence. Then implement snapshot as a read model: a representation for display, not the authority that accepts orders. The reference stores fills by logical order ID for lookup and separately tracks the latest100 accepted IDs in a bounded deque. Snapshots therefore return newest accepted fills first, independent of the spelling of an ID. A regression uses IDs beginning z, a, and m to prove that alphabetic order is not mistaken for acceptance order. This is still a recent read model, not an unbounded lifetime-history endpoint.</p>
+<div class="code-wrap" data-source="projects/reference/p16-workbench/src/lib.rs" data-sha256="10b985efe10b61789ae480356652111c4f84d05279b3944eecb91eba855b15f9"><div class="code-label"><a href="../../projects/reference/p16-workbench/src/lib.rs">projects/reference/p16-workbench/src/lib.rs</a></div><pre><code>//! Synthetic paper trading only. No exchange, broker, credentials, or real execution.
+use serde::{Deserialize, Serialize};
+use std::{
+    collections::{BTreeMap, VecDeque},
+    fs::{File, OpenOptions},
+    io::{self, BufRead, BufReader, Read, Write},
+    path::Path,
+};
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Tick {
+    pub event_id: String,
+    pub symbol: String,
+    pub price_cents: i64,
+    pub sequence: u64,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = &quot;lowercase&quot;)]
+pub enum Side {
+    Buy,
+    Sell,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Order {
+    pub order_id: String,
+    pub symbol: String,
+    pub side: Side,
+    pub quantity: i64,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Fill {
+    pub order_id: String,
+    pub symbol: String,
+    pub side: Side,
+    pub quantity: i64,
+    pub price_cents: i64,
+}
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(tag = &quot;kind&quot;, content = &quot;data&quot;, rename_all = &quot;snake_case&quot;)]
+pub enum Event {
+    Tick(Tick),
+    Order(Order),
+    Watchlist(Vec&lt;String&gt;),
+    ScheduleReplay(replay::ReplaySpec),
+    ReplayStep { job_id: String, index: usize },
+    CancelReplay { job_id: String },
+    FailReplay { job_id: String, reason: String },
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct Record {
+    version: u8,
+    #[serde(default)]
+    position: Option&lt;u64&gt;,
+    event: Event,
+}
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct Quote {
+    pub symbol: String,
+    pub price_cents: i64,
+    pub sequence: u64,
+}
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct Position {
+    pub symbol: String,
+    pub quantity: i64,
+}
+#[derive(Debug, Serialize, PartialEq, Eq)]
+pub struct Snapshot {
+    pub simulated: bool,
+    pub cash_cents: i64,
+    pub quotes: Vec&lt;Quote&gt;,
+    pub positions: Vec&lt;Position&gt;,
+    pub orders: Vec&lt;Fill&gt;,
+    pub watchlist: Vec&lt;String&gt;,
+    pub events: u64,
+}
+#[derive(Debug)]
+pub struct Engine {
+    cash: i64,
+    quotes: BTreeMap&lt;String, Quote&gt;,
+    positions: BTreeMap&lt;String, i64&gt;,
+    fills: BTreeMap&lt;String, Fill&gt;,
+    recent_orders: VecDeque&lt;String&gt;,
+    seen: BTreeMap&lt;String, Tick&gt;,
+    watchlist: Vec&lt;String&gt;,
+    events: u64,
+    history: VecDeque&lt;replay::ChartPoint&gt;,
+    jobs: BTreeMap&lt;String, replay::ReplayJob&gt;,
+}
+impl Default for Engine {
+    fn default() -&gt; Self {
+        Self {
+            cash: 1_000_000,
+            quotes: BTreeMap::new(),
+            positions: BTreeMap::new(),
+            fills: BTreeMap::new(),
+            recent_orders: VecDeque::new(),
+            seen: BTreeMap::new(),
+            watchlist: vec![&quot;RUST&quot;.into()],
+            events: 0,
+            history: VecDeque::new(),
+            jobs: BTreeMap::new(),
+        }
+    }
+}
+fn symbol(s: &amp;str) -&gt; bool {
+    !s.is_empty() &amp;&amp; s.len() &lt;= 8 &amp;&amp; s.bytes().all(|b| b.is_ascii_uppercase())
+}
+fn identifier(s: &amp;str) -&gt; bool {
+    !s.is_empty()
+        &amp;&amp; s.len() &lt;= 80
+        &amp;&amp; s.bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b&quot;-_&quot;.contains(&amp;b))
+}
+impl Engine {
+    fn validate_tick(&amp;self, t: &amp;Tick) -&gt; Result&lt;bool, &amp;&#x27;static str&gt; {
+        if let Some(old) = self.seen.get(&amp;t.event_id) {
+            return if old == t {
+                Ok(false)
+            } else {
+                Err(&quot;event id conflict&quot;)
+            };
+        }
+        if !identifier(&amp;t.event_id)
+            || !symbol(&amp;t.symbol)
+            || t.price_cents &lt;= 0
+            || t.price_cents &gt; 100_000_000
+        {
+            return Err(&quot;invalid tick&quot;);
+        }
+        if self
+            .quotes
+            .get(&amp;t.symbol)
+            .is_some_and(|q| t.sequence &lt;= q.sequence)
+        {
+            return Err(&quot;out-of-order tick&quot;);
+        }
+        if !self.quotes.contains_key(&amp;t.symbol) &amp;&amp; self.quotes.len() &gt;= 32 {
+            return Err(&quot;symbol budget&quot;);
+        }
+        Ok(true)
+    }
+    /// Validation is read-only. `false` denotes an exact retry already applied.
+    pub fn validate(&amp;self, event: &amp;Event) -&gt; Result&lt;bool, &amp;&#x27;static str&gt; {
+        match event {
+            Event::Tick(t) =&gt; {
+                if !self.validate_tick(t)? {
+                    return Ok(false);
+                }
+            }
+            Event::Order(o) =&gt; {
+                if let Some(fill) = self.fills.get(&amp;o.order_id) {
+                    return if fill.symbol == o.symbol
+                        &amp;&amp; fill.quantity == o.quantity
+                        &amp;&amp; fill.side == o.side
+                    {
+                        Ok(false)
+                    } else {
+                        Err(&quot;order id conflict&quot;)
+                    };
+                }
+                if !identifier(&amp;o.order_id)
+                    || !symbol(&amp;o.symbol)
+                    || !(1..=10_000).contains(&amp;o.quantity)
+                {
+                    return Err(&quot;invalid order&quot;);
+                }
+                let quote = self.quotes.get(&amp;o.symbol).ok_or(&quot;quote required&quot;)?;
+                let cost = quote
+                    .price_cents
+                    .checked_mul(o.quantity)
+                    .ok_or(&quot;cost overflow&quot;)?;
+                let held = *self.positions.get(&amp;o.symbol).unwrap_or(&amp;0);
+                match o.side {
+                    Side::Buy =&gt; {
+                        if cost &gt; self.cash {
+                            return Err(&quot;insufficient simulated cash&quot;);
+                        }
+                        held.checked_add(o.quantity).ok_or(&quot;position overflow&quot;)?;
+                    }
+                    Side::Sell =&gt; {
+                        if held &lt; o.quantity {
+                            return Err(&quot;insufficient position&quot;);
+                        }
+                        self.cash.checked_add(cost).ok_or(&quot;cash overflow&quot;)?;
+                    }
+                }
+            }
+            Event::ScheduleReplay(spec) =&gt; {
+                if let Some(job) = self.jobs.get(&amp;spec.job_id) {
+                    return if job.spec == *spec {
+                        Ok(false)
+                    } else {
+                        Err(&quot;job id conflict&quot;)
+                    };
+                }
+                if !identifier(&amp;spec.job_id)
+                    || spec.ticks.is_empty()
+                    || spec.ticks.len() &gt; 64
+                    || self.jobs.len() &gt;= 16
+                {
+                    return Err(&quot;replay job budget or identity&quot;);
+                }
+                for tick in &amp;spec.ticks {
+                    if !identifier(&amp;tick.event_id)
+                        || !symbol(&amp;tick.symbol)
+                        || tick.price_cents &lt;= 0
+                        || tick.price_cents &gt; 100_000_000
+                    {
+                        return Err(&quot;invalid replay tick&quot;);
+                    }
+                }
+                // Reserve enough event slots for already queued work plus this job and cancellation.
+                let pending: usize = self
+                    .jobs
+                    .values()
+                    .filter(|j| j.active())
+                    .map(|j| j.spec.ticks.len() - j.next)
+                    .sum();
+                if self.events + (pending + spec.ticks.len() + 32) as u64 &gt;= 10_000 {
+                    return Err(&quot;insufficient replay event budget&quot;);
+                }
+            }
+            Event::ReplayStep { job_id, index } =&gt; {
+                let job = self.jobs.get(job_id).ok_or(&quot;job not found&quot;)?;
+                if *index &lt; job.next {
+                    return Ok(false);
+                }
+                if !job.active() || *index != job.next {
+                    return Err(&quot;job no longer runnable or cursor conflict&quot;);
+                }
+                let tick = &amp;job.spec.ticks[*index];
+                self.validate_tick(tick)?;
+            }
+            Event::CancelReplay { job_id } =&gt; {
+                let job = self.jobs.get(job_id).ok_or(&quot;job not found&quot;)?;
+                if job.status == replay::ReplayStatus::Cancelled {
+                    return Ok(false);
+                }
+                if !job.active() {
+                    return Err(&quot;job already terminal&quot;);
+                }
+            }
+            Event::FailReplay { job_id, reason } =&gt; {
+                if reason.len() &gt; 100 {
+                    return Err(&quot;failure reason budget&quot;);
+                }
+                if !self.jobs.get(job_id).is_some_and(|j| j.active()) {
+                    return Err(&quot;job no longer runnable&quot;);
+                }
+            }
+            Event::Watchlist(symbols) =&gt; {
+                if symbols.len() &gt; 32 || symbols.iter().any(|s| !symbol(s)) {
+                    return Err(&quot;invalid watchlist&quot;);
+                }
+                let unique: std::collections::BTreeSet&lt;_&gt; = symbols.iter().collect();
+                if unique.len() != symbols.len() {
+                    return Err(&quot;duplicate watchlist symbol&quot;);
+                }
+            }
+        }
+        if self.events &gt;= 10_000 {
+            return Err(&quot;event budget reached; archive session&quot;);
+        }
+        if matches!(
+            event,
+            Event::Tick(_) | Event::Order(_) | Event::Watchlist(_)
+        ) {
+            let reserved: usize = self
+                .jobs
+                .values()
+                .filter(|job| job.active())
+                .map(|job| job.spec.ticks.len() - job.next)
+                .sum();
+            if self.events + reserved as u64 &gt;= 10_000 {
+                return Err(&quot;remaining event capacity reserved for accepted replay jobs&quot;);
+            }
+        }
+        Ok(true)
+    }
+    pub fn apply(&amp;mut self, event: Event) -&gt; Result&lt;bool, &amp;&#x27;static str&gt; {
+        if !self.validate(&amp;event)? {
+            return Ok(false);
+        }
+        match event {
+            Event::Tick(t) =&gt; self.accept_tick(t),
+            Event::Order(o) =&gt; {
+                let price = self.quotes[&amp;o.symbol].price_cents;
+                let cost = price * o.quantity;
+                let held = self.positions.entry(o.symbol.clone()).or_default();
+                match o.side {
+                    Side::Buy =&gt; {
+                        self.cash -= cost;
+                        *held += o.quantity;
+                    }
+                    Side::Sell =&gt; {
+                        self.cash += cost;
+                        *held -= o.quantity;
+                    }
+                }
+                let accepted_id = o.order_id.clone();
+                self.fills.insert(
+                    o.order_id.clone(),
+                    Fill {
+                        order_id: o.order_id,
+                        symbol: o.symbol,
+                        side: o.side,
+                        quantity: o.quantity,
+                        price_cents: price,
+                    },
+                );
+                self.recent_orders.push_back(accepted_id);
+                if self.recent_orders.len() &gt; 100 {
+                    self.recent_orders.pop_front();
+                }
+            }
+            Event::Watchlist(symbols) =&gt; self.watchlist = symbols,
+            Event::ScheduleReplay(spec) =&gt; {
+                self.jobs.insert(
+                    spec.job_id.clone(),
+                    replay::ReplayJob {
+                        spec,
+                        next: 0,
+                        status: replay::ReplayStatus::Queued,
+                        error: None,
+                    },
+                );
+            }
+            Event::ReplayStep { job_id, index } =&gt; {
+                let tick = self.jobs[&amp;job_id].spec.ticks[index].clone();
+                if self.validate_tick(&amp;tick)? {
+                    self.accept_tick(tick);
+                }
+                let job = self
+                    .jobs
+                    .get_mut(&amp;job_id)
+                    .expect(&quot;validated job exists under exclusive ownership&quot;);
+                job.next += 1;
+                job.status = if job.next == job.spec.ticks.len() {
+                    replay::ReplayStatus::Completed
+                } else {
+                    replay::ReplayStatus::Running
+                };
+            }
+            Event::CancelReplay { job_id } =&gt; {
+                self.jobs
+                    .get_mut(&amp;job_id)
+                    .expect(&quot;validated job exists&quot;)
+                    .status = replay::ReplayStatus::Cancelled;
+            }
+            Event::FailReplay { job_id, reason } =&gt; {
+                let job = self.jobs.get_mut(&amp;job_id).expect(&quot;validated job exists&quot;);
+                job.status = replay::ReplayStatus::Failed;
+                job.error = Some(reason);
+            }
+        }
+        self.events += 1;
+        Ok(true)
+    }
+    fn accept_tick(&amp;mut self, t: Tick) {
+        self.history.push_back(replay::ChartPoint {
+            event_position: self.events + 1,
+            symbol: t.symbol.clone(),
+            price_cents: t.price_cents,
+            sequence: t.sequence,
+        });
+        if self.history.len() &gt; 1024 {
+            self.history.pop_front();
+        }
+        self.quotes.insert(
+            t.symbol.clone(),
+            Quote {
+                symbol: t.symbol.clone(),
+                price_cents: t.price_cents,
+                sequence: t.sequence,
+            },
+        );
+        self.seen.insert(t.event_id.clone(), t);
+    }
+    pub fn fill(&amp;self, id: &amp;str) -&gt; Option&lt;&amp;Fill&gt; {
+        self.fills.get(id)
+    }
+    pub fn snapshot(&amp;self) -&gt; Snapshot {
+        Snapshot {
+            simulated: true,
+            cash_cents: self.cash,
+            quotes: self.quotes.values().cloned().collect(),
+            positions: self
+                .positions
+                .iter()
+                .map(|(s, q)| Position {
+                    symbol: s.clone(),
+                    quantity: *q,
+                })
+                .collect(),
+            orders: self
+                .recent_orders
+                .iter()
+                .rev()
+                .filter_map(|id| self.fills.get(id))
+                .cloned()
+                .collect(),
+            watchlist: self.watchlist.clone(),
+            events: self.events,
+        }
+    }
+}
+/// Distinguishes a rejected command from identity conflicts and uncertain storage outcomes.
+#[derive(Debug)]
+pub enum CommitError {
+    Rejected(&amp;&#x27;static str),
+    Conflict(&amp;&#x27;static str),
+    Storage(String),
+}
+impl std::fmt::Display for CommitError {
+    fn fmt(&amp;self, f: &amp;mut std::fmt::Formatter&lt;&#x27;_&gt;) -&gt; std::fmt::Result {
+        match self {
+            Self::Rejected(reason) | Self::Conflict(reason) =&gt; f.write_str(reason),
+            Self::Storage(reason) =&gt; f.write_str(reason),
+        }
+    }
+}
+impl std::error::Error for CommitError {}
+impl CommitError {
+    fn validation(reason: &amp;&#x27;static str) -&gt; Self {
+        match reason {
+            &quot;event id conflict&quot; | &quot;order id conflict&quot; | &quot;job id conflict&quot; =&gt; Self::Conflict(reason),
+            _ =&gt; Self::Rejected(reason),
+        }
+    }
+}
+/// The authoritative engine cannot be mutated without journal persistence by callers.
+///
+/// ```compile_fail,E0616
+/// use p16_workbench::{Store, Event};
+/// fn bypass_persistence(store: &amp;mut Store) {
+///     store.engine.apply(Event::Watchlist(vec![]));
+/// }
+/// ```
+pub struct Store {
+    pub(crate) engine: Engine,
+    file: File,
+    poisoned: bool,
+    records: u64,
+}
+impl Store {
+    /// A single process owns this file. No cross-process locking; do not start two writers.
+    /// sync_data precedes success. Creation-directory durability and torn-record repair are not promised.
+    pub fn open(path: &amp;Path) -&gt; io::Result&lt;Self&gt; {
+        let file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .read(true)
+            .open(path)?;
+        let mut engine = Engine::default();
+        let mut reader = BufReader::new(file.try_clone()?);
+        let mut line = Vec::new();
+        let mut records = 0;
+        loop {
+            line.clear();
+            let read = reader.by_ref().take(16385).read_until(b&#x27;\n&#x27;, &amp;mut line)?;
+            if read == 0 {
+                break;
+            }
+            records += 1;
+            if records &gt; 10_000 {
+                return Err(io::Error::new(io::ErrorKind::InvalidData, &quot;record budget&quot;));
+            }
+            if read &gt; 16384 || line.last() != Some(&amp;b&#x27;\n&#x27;) {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    &quot;oversized or incomplete record; preserve file for recovery&quot;,
+                ));
+            }
+            let record: Record = serde_json::from_slice(&amp;line)
+                .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+            if !matches!(record.version, 1 | 2)
+                || (record.version == 2 &amp;&amp; record.position != Some(records))
+                || (record.version == 1 &amp;&amp; record.position.is_some())
+            {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    &quot;unknown record version or non-contiguous journal position&quot;,
+                ));
+            }
+            let applied = engine
+                .apply(record.event)
+                .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+            if !applied {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    &quot;duplicate logical command in journal&quot;,
+                ));
+            }
+        }
+        Ok(Self {
+            engine,
+            file,
+            poisoned: false,
+            records,
+        })
+    }
+    pub fn snapshot(&amp;self) -&gt; Snapshot {
+        self.engine.snapshot()
+    }
+    pub fn commit(&amp;mut self, event: Event) -&gt; Result&lt;bool, CommitError&gt; {
+        if self.poisoned {
+            return Err(CommitError::Storage(
+                &quot;storage uncertain; stop and inspect journal&quot;.into(),
+            ));
+        }
+        if !self
+            .engine
+            .validate(&amp;event)
+            .map_err(CommitError::validation)?
+        {
+            return Ok(false);
+        }
+        if self.records &gt;= 10_000 {
+            return Err(CommitError::Rejected(&quot;physical journal record budget&quot;));
+        }
+        let mut bytes = serde_json::to_vec(&amp;Record {
+            version: 2,
+            position: Some(self.records + 1),
+            event: event.clone(),
+        })
+        .map_err(|e| CommitError::Storage(format!(&quot;encoding failed before append: {e}&quot;)))?;
+        bytes.push(b&#x27;\n&#x27;);
+        if bytes.len() &gt; 16384 {
+            return Err(CommitError::Rejected(&quot;journal record budget&quot;));
+        }
+        if let Err(error) = self
+            .file
+            .write_all(&amp;bytes)
+            .and_then(|()| self.file.sync_data())
+        {
+            self.poisoned = true;
+            return Err(CommitError::Storage(format!(&quot;storage uncertain: {error}&quot;)));
+        }
+        self.records += 1;
+        match self.engine.apply(event) {
+            Ok(true) =&gt; Ok(true),
+            result =&gt; {
+                self.poisoned = true;
+                Err(CommitError::Storage(format!(
+                    &quot;durable record could not be applied consistently: {result:?}&quot;
+                )))
+            }
+        }
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn tick(id: &amp;str, seq: u64) -&gt; Event {
+        Event::Tick(Tick {
+            event_id: id.into(),
+            symbol: &quot;RUST&quot;.into(),
+            price_cents: 125,
+            sequence: seq,
+        })
+    }
+    fn buy(id: &amp;str, n: i64) -&gt; Event {
+        Event::Order(Order {
+            order_id: id.into(),
+            symbol: &quot;RUST&quot;.into(),
+            side: Side::Buy,
+            quantity: n,
+        })
+    }
+    #[test]
+    fn duplicate_out_of_order_and_conflicts() {
+        let mut e = Engine::default();
+        assert!(e.apply(tick(&quot;t1&quot;, 1)).unwrap());
+        assert!(!e.apply(tick(&quot;t1&quot;, 1)).unwrap());
+        assert!(e.apply(tick(&quot;t1&quot;, 2)).is_err());
+        assert!(e.apply(tick(&quot;old&quot;, 0)).is_err());
+        e.apply(buy(&quot;o1&quot;, 3)).unwrap();
+        assert!(!e.apply(buy(&quot;o1&quot;, 3)).unwrap());
+        assert!(e.apply(buy(&quot;o1&quot;, 4)).is_err());
+        assert_eq!(e.snapshot().cash_cents, 999625);
+        assert_eq!(e.snapshot().positions[0].quantity, 3);
+    }
+    #[test]
+    fn rejected_order_is_atomic() {
+        let mut e = Engine::default();
+        e.apply(tick(&quot;t&quot;, 1)).unwrap();
+        let before = e.snapshot();
+        assert!(e.apply(buy(&quot;huge&quot;, 10000)).is_err());
+        assert_eq!(before, e.snapshot());
+    }
+    #[test]
+    fn buy_sell_conserves_cash_without_fees() {
+        for quantity in 1..500 {
+            let mut e = Engine::default();
+            e.apply(tick(&quot;t&quot;, 1)).unwrap();
+            e.apply(buy(&quot;b&quot;, quantity)).unwrap();
+            e.apply(Event::Order(Order {
+                order_id: &quot;s&quot;.into(),
+                symbol: &quot;RUST&quot;.into(),
+                side: Side::Sell,
+                quantity,
+            }))
+            .unwrap();
+            assert_eq!(e.snapshot().cash_cents, 1_000_000);
+            assert_eq!(e.snapshot().positions[0].quantity, 0);
+        }
+    }
+    #[test]
+    fn restart_replays_and_truncated_tail_fails() {
+        let path = std::env::temp_dir().join(format!(
+            &quot;course-workbench-{}-{}.jsonl&quot;,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let expected = {
+            let mut s = Store::open(&amp;path).unwrap();
+            s.commit(tick(&quot;t&quot;, 1)).unwrap();
+            s.commit(buy(&quot;b&quot;, 5)).unwrap();
+            s.engine.snapshot()
+        };
+        assert_eq!(Store::open(&amp;path).unwrap().engine.snapshot(), expected);
+        let mut f = OpenOptions::new().append(true).open(&amp;path).unwrap();
+        f.write_all(b&quot;{incomplete&quot;).unwrap();
+        drop(f);
+        assert!(Store::open(&amp;path).is_err());
+        std::fs::remove_file(path).unwrap();
+    }
+}
+
+pub mod http;
+
+pub mod replay;
+#[cfg(test)]
+mod storage_failure_tests {
+    use super::*;
+    #[test]
+    fn failed_append_does_not_change_memory_and_poison_rejects_later_work() {
+        let path = std::env::temp_dir().join(format!(
+            &quot;course-failure-{}-{}.jsonl&quot;,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let mut store = Store::open(&amp;path).unwrap();
+        let before = store.engine.snapshot();
+        // Inject an OS write failure by replacing the owned writer with a read-only handle.
+        store.file = File::open(&amp;path).unwrap();
+        assert!(store.commit(Event::Watchlist(vec![&quot;TEST&quot;.into()])).is_err());
+        assert_eq!(store.engine.snapshot(), before);
+        assert!(store.poisoned);
+        store.file = OpenOptions::new().append(true).open(&amp;path).unwrap();
+        assert!(store.commit(Event::Watchlist(vec![&quot;TEST&quot;.into()])).is_err());
+        drop(store);
+        assert_eq!(Store::open(&amp;path).unwrap().engine.snapshot(), before);
+        std::fs::remove_file(path).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod review_regressions {
+    use super::*;
+    #[test]
+    fn recent_orders_follow_acceptance_order_not_identifier_sort() {
+        let mut e = Engine::default();
+        e.apply(Event::Tick(Tick {
+            event_id: &quot;t&quot;.into(),
+            symbol: &quot;RUST&quot;.into(),
+            price_cents: 1,
+            sequence: 1,
+        }))
+        .unwrap();
+        for id in [
+            &quot;z-last-alphabetically&quot;,
+            &quot;a-first-alphabetically&quot;,
+            &quot;m-actually-latest&quot;,
+        ] {
+            e.apply(Event::Order(Order {
+                order_id: id.into(),
+                symbol: &quot;RUST&quot;.into(),
+                side: Side::Buy,
+                quantity: 1,
+            }))
+            .unwrap();
+        }
+        assert_eq!(
+            e.snapshot()
+                .orders
+                .iter()
+                .map(|f| f.order_id.as_str())
+                .collect::&lt;Vec&lt;_&gt;&gt;(),
+            vec![
+                &quot;m-actually-latest&quot;,
+                &quot;a-first-alphabetically&quot;,
+                &quot;z-last-alphabetically&quot;
+            ]
+        );
+        for n in 0..101 {
+            e.apply(Event::Order(Order {
+                order_id: format!(&quot;later-{n}&quot;),
+                symbol: &quot;RUST&quot;.into(),
+                side: Side::Buy,
+                quantity: 1,
+            }))
+            .unwrap();
+        }
+        assert_eq!(e.snapshot().orders.len(), 100);
+        assert_eq!(e.snapshot().orders[0].order_id, &quot;later-100&quot;);
+        assert!(e.fill(&quot;z-last-alphabetically&quot;).is_some());
+    }
+    #[test]
+    fn duplicate_durable_record_is_rejected_not_silently_counted() {
+        let path = std::env::temp_dir().join(format!(
+            &quot;course-duplicate-log-{}-{}.jsonl&quot;,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let first = include_str!(&quot;../fixtures/legacy-v1.jsonl&quot;)
+            .lines()
+            .next()
+            .unwrap();
+        std::fs::write(&amp;path, format!(&quot;{first}\n{first}\n&quot;)).unwrap();
+        assert!(matches!(Store::open(&amp;path),Err(error)if error.kind()==io::ErrorKind::InvalidData));
+        std::fs::remove_file(path).unwrap();
+    }
+}
+</code></pre></div>
+<h2 id="deliberate-mistake">Deliberate mistake</h2><p>Move cash subtraction before checking whether enough cash exists. An oversized order now returns an error after corrupting state. The rejected-order atomicity test must compare the complete snapshot before and after. Checking only the returned error would miss the defect. Restore validation-before-mutation. Next remove order-ID deduplication and observe the retry test changing holdings twice.</p>
+<h2 id="independent-practice">Independent practice</h2><p>Add a fee of one cent per order, charged once for an accepted logical order. Decide how sells behave when proceeds are smaller than the fee, whether a zero-position entry remains visible, and whether an exact retry returns the original fill or only an applied flag. Write these decisions as acceptance criteria before changing code.</p><details><summary>Hint 1</summary><p>The fee belongs to the logical command's effect, not to the number of HTTP attempts.</p></details><details><summary>Hint 2</summary><p>Compute all post-operation values with checked arithmetic before committing any field.</p></details><details><summary>Reference reasoning</summary><p>For a buy, checked cost plus fee must fit available cash. For a sell, define net proceeds and reject any unsupported negative result before changing holdings. Persist the fee semantics or event version so old events replay with their original meaning. Returning the persisted fill on retries is often clearer than recomputing a price from the current quote.</p></details>
+<h2 id="review-and-evidence">Review and evidence</h2><p>A reasonable tiny prototype can keep one handler, but the capstone separates domain rules once independent replay and failure tests require them. A domain engine makes invariants executable and deterministic. The test suite covers selected duplicate and out-of-order cases, atomic rejection, replay after restart, and a loop of buy/sell conservation cases. The loop is exhaustive only for its stated finite range; it is not a general property-testing engine. Extend with generated sequences and a simpler reference model before making broad correctness claims.</p>
+<h2 id="playbook-investigation">Playbook investigation</h2><p>Observation: holdings doubled after reconnect. Misleading evidence: each browser click handler fired once. Hypotheses include duplicate server delivery, changed retry IDs, and replay applying the same order twice. Record logical order IDs at the boundary and compare the journal. If the reconnect generated a new ID, the server correctly saw two commands and “deduplication broken” is disproven. Fix identity ownership in the client, then test a lost response followed by retry with the same ID. Keep the limitation that a deliberately new ID means a new order.</p>
+<h2 id="mastery-check">Mastery check</h2><p>Explain every numeric unit and bound, change one numeric rule without breaking old replay, and demonstrate a rejected operation leaves the complete state unchanged. Describe an ordering policy that would support late ticks, including its memory bound and the tradeoff it makes.</p>
+<aside class="callout"><h2 id="when-you-get-stuck">When you get stuck</h2><p>Run <code>mise exec -- cargo test -p p16-workbench rejected_order_is_atomic -- --nocapture</code>, then the duplicate test. Print a minimal event sequence rather than an entire HTTP trace. Ask for review with units, pre-state, intended post-state, event identity, and the first invariant violation.</p></aside><section><h2 id="reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</h2><p>Working directory: course root. This creates a complete separate source tree; it refuses an existing destination. Run the checkpoint tests before following the guided edits. The <a href="../../projects/checkpoints/p16-workbench/index.html">checkpoint contract and engineering decisions</a> state exactly which features exist.</p><pre><code>python3 scripts/start-checkpoint.py p16 01-order-domain
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p16-workbench/01-order-domain/Cargo.toml</code></pre><p>To compare an earlier milestone with the final reference, reconstruct each ID into a different directory. Run the final project’s own boundary fixtures as described in its contract; the chat and workbench use loopback services, and the workbench uses a dedicated disposable journal. These projects do not require PostgreSQL. Passing ordinary unit tests does not establish every network or restart behavior.</p></section><section><h2 id="complete-earlier-milestone-source">Complete earlier milestone source</h2><p>The original accepted price belongs to the order identity. An exact retry returns before consulting a changed quote. Checked arithmetic computes candidate balances before mutation, so expected rejection preserves the whole engine.</p><div class="code-wrap" data-source="projects/checkpoints/p16-workbench/01-order-domain/src/lib.rs" data-sha256="7cd5ebb1f2128b659866c2fdcba32233ee09c5ac6135696b2400eb32e1dee107"><div class="code-label"><a href="../../projects/checkpoints/p16-workbench/01-order-domain/src/lib.rs">projects/checkpoints/p16-workbench/01-order-domain/src/lib.rs</a></div><pre><code>//! Synthetic single-symbol, in-memory order domain checkpoint. No market access.
+//! Integer cents and whole shares only; no persistence, jobs, chart, or HTTP yet.
+use std::collections::BTreeMap;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Side {
+    Buy,
+    Sell,
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct Accepted {
+    side: Side,
+    quantity: i64,
+    price: i64,
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Engine {
+    cash: i64,
+    shares: i64,
+    quote: Option&lt;(u64, i64)&gt;,
+    orders: BTreeMap&lt;String, Accepted&gt;,
+}
+impl Default for Engine {
+    fn default() -&gt; Self {
+        Self {
+            cash: 1_000_000,
+            shares: 0,
+            quote: None,
+            orders: BTreeMap::new(),
+        }
+    }
+}
+impl Engine {
+    pub fn tick(&amp;mut self, sequence: u64, price: i64) -&gt; Result&lt;(), &amp;&#x27;static str&gt; {
+        if price &lt;= 0 || self.quote.is_some_and(|(old, _)| sequence &lt;= old) {
+            return Err(&quot;invalid or out-of-order tick&quot;);
+        }
+        self.quote = Some((sequence, price));
+        Ok(())
+    }
+    pub fn order(&amp;mut self, id: &amp;str, side: Side, quantity: i64) -&gt; Result&lt;bool, &amp;&#x27;static str&gt; {
+        if id.is_empty() || id.len() &gt; 64 || quantity &lt;= 0 {
+            return Err(&quot;invalid order&quot;);
+        }
+        if let Some(old) = self.orders.get(id) {
+            return if old.side == side &amp;&amp; old.quantity == quantity {
+                Ok(false)
+            } else {
+                Err(&quot;identity conflict&quot;)
+            };
+        }
+        if self.orders.len() &gt;= 64 {
+            return Err(&quot;retained order budget&quot;);
+        }
+        let price = self.quote.ok_or(&quot;missing quote&quot;)?.1;
+        let cost = price.checked_mul(quantity).ok_or(&quot;cost overflow&quot;)?;
+        let (cash, shares) = match side {
+            Side::Buy =&gt; (
+                self.cash
+                    .checked_sub(cost)
+                    .filter(|v| *v &gt;= 0)
+                    .ok_or(&quot;insufficient cash&quot;)?,
+                self.shares
+                    .checked_add(quantity)
+                    .ok_or(&quot;position overflow&quot;)?,
+            ),
+            Side::Sell =&gt; (
+                self.cash.checked_add(cost).ok_or(&quot;cash overflow&quot;)?,
+                self.shares
+                    .checked_sub(quantity)
+                    .filter(|v| *v &gt;= 0)
+                    .ok_or(&quot;insufficient shares&quot;)?,
+            ),
+        };
+        // All fallible domain checks precede this mutation boundary.
+        self.orders.insert(
+            id.into(),
+            Accepted {
+                side,
+                quantity,
+                price,
+            },
+        );
+        self.cash = cash;
+        self.shares = shares;
+        Ok(true)
+    }
+    pub fn balances(&amp;self) -&gt; (i64, i64) {
+        (self.cash, self.shares)
+    }
+    pub fn accepted_price(&amp;self, id: &amp;str) -&gt; Option&lt;i64&gt; {
+        self.orders.get(id).map(|a| a.price)
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn duplicate_preserves_original_fill_after_quote_changes() {
+        let mut e = Engine::default();
+        e.tick(1, 125).unwrap();
+        assert!(e.order(&quot;a&quot;, Side::Buy, 3).unwrap());
+        e.tick(2, 200).unwrap();
+        let before = e.clone();
+        assert!(!e.order(&quot;a&quot;, Side::Buy, 3).unwrap());
+        assert_eq!(e, before);
+        assert_eq!(e.accepted_price(&quot;a&quot;), Some(125));
+        assert!(e.order(&quot;a&quot;, Side::Buy, 4).is_err());
+    }
+    #[test]
+    fn rejection_has_no_partial_ledger_effect() {
+        let mut e = Engine::default();
+        assert!(e.order(&quot;a&quot;, Side::Buy, 1).is_err());
+        e.tick(1, i64::MAX).unwrap();
+        let before = e.clone();
+        assert!(e.order(&quot;a&quot;, Side::Buy, 2).is_err());
+        assert!(e.order(&quot;b&quot;, Side::Sell, 1).is_err());
+        assert_eq!(e, before);
+        assert!(e.tick(1, 10).is_err());
+        assert_eq!(e, before);
+    }
+    #[test]
+    fn integer_purchase_and_sale_balance() {
+        let mut e = Engine::default();
+        e.tick(1, 125).unwrap();
+        e.order(&quot;buy&quot;, Side::Buy, 3).unwrap();
+        e.order(&quot;sell&quot;, Side::Sell, 2).unwrap();
+        assert_eq!(e.balances(), (999875, 1));
+    }
+    #[test]
+    fn admission_is_bounded_but_exact_retries_still_work() {
+        let mut e = Engine::default();
+        e.tick(1, 1).unwrap();
+        for n in 0..64 {
+            e.order(&amp;format!(&quot;o{n}&quot;), Side::Buy, 1).unwrap();
+        }
+        let before = e.clone();
+        assert!(e.order(&quot;overflow&quot;, Side::Buy, 1).is_err());
+        assert!(!e.order(&quot;o0&quot;, Side::Buy, 1).unwrap());
+        assert_eq!(e, before);
+    }
+}
+</code></pre></div></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.i64.html#method.checked_mul">Rust checked arithmetic</a></li><li><a href="https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html">Rust enum data modeling</a></li><li><a href="https://serde.rs/enum-representations.html">Serde enum representations</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-8/08-operations.html">Previous: Operate a service with evidence and a rollback plan</a><a href="../../lessons/stage-9/09-workbench.html">Next: Connect a Rust UI to a durable local workbench</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-and-independent-specification">Purpose and independent specification</a><a href="#plain-english-model-values-with-meaning">Plain-English model: values with meaning</a><a href="#prediction">Prediction</a><a href="#small-runnable-example">Small runnable example</a><a href="#read-the-validation-path">Read the validation path</a><a href="#guided-checkpoint">Guided checkpoint</a><a href="#deliberate-mistake">Deliberate mistake</a><a href="#independent-practice">Independent practice</a><a href="#review-and-evidence">Review and evidence</a><a href="#playbook-investigation">Playbook investigation</a><a href="#mastery-check">Mastery check</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</a><a href="#complete-earlier-milestone-source">Complete earlier milestone source</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

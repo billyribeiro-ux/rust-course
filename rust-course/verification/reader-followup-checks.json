@@ -1,0 +1,49 @@
+[
+  {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "node",
+      "--version"
+    ],
+    "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "node",
+      "--test",
+      "verification/progress-data.test.cjs"
+    ],
+    "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "node",
+      "--check",
+      "assets/progress-data.js"
+    ],
+    "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "node",
+      "--check",
+      "assets/course.js"
+    ],
+    "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+    "exit_code": 0
+  }
+]

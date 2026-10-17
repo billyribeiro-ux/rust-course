@@ -1,0 +1,296 @@
+{
+  "kind": "patch001 instructional audit supplement",
+  "date": "2026-10-09",
+  "review_type": "author-side static instructional audit",
+  "independent_review": "pending",
+  "browser_review": "not run; access declined",
+  "code_changes_by_auditor": true,
+  "scope": {
+    "lesson_records_scanned": 44,
+    "inputs": [
+      "authoring/foundations.json",
+      "authoring/services.json",
+      "authoring/interface.json",
+      "authoring/systems.json",
+      "authoring/specializations.json",
+      "authoring/*.html"
+    ],
+    "checks": [
+      "Prerequisite ID resolution",
+      "Source-embed file existence",
+      "Lesson-relative link resolution",
+      "Named Cargo packages, examples and test-filter presence",
+      "mise prefixes in Rust command blocks",
+      "Targeted prose-to-reference alignment for persistence, request outcomes, UI data, replay budgets and benchmark procedure",
+      "Professional-correct-first checkpoint sequencing"
+    ]
+  },
+  "findings": [
+    {
+      "id": "IA01",
+      "priority": "P1",
+      "location": "authoring/interface.json:06-console Run the console; scripts/console-server.py Origin validation",
+      "observation": "Lesson directs localhost:8011 while proxy only accepts Origin http://127.0.0.1:8011. Mutating browser requests can receive403 despite successful reads.",
+      "recommended_fix": "Use http://127.0.0.1:8011 consistently or deliberately allow both equivalent loopback origins.",
+      "owner": "root",
+      "status": "reported for integration",
+      "current_resolution": {
+        "date": "2026-10-09",
+        "status": "author-side correction reviewed; independent review pending",
+        "current_state": "Resolved in canonical instructions: 06-console now opens http://127.0.0.1:8011, matching the proxy loopback-origin contract.",
+        "source_evidence": [
+          "authoring/interface.json:06-console",
+          "scripts/console-server.py"
+        ],
+        "verification_evidence": [
+          "verification/ui-selected-project.json",
+          "verification/proxy-checks.json"
+        ],
+        "limits": "Static instruction/source agreement and recorded loopback HTTP checks; no actual browser Origin interaction claimed."
+      }
+    },
+    {
+      "id": "IA02",
+      "priority": "P1",
+      "location": "projects/ui-console/src/lib.rs recent-order ledger; projects/reference/p16-workbench/src/lib.rs Engine::snapshot; authoring/services.json:09-domain",
+      "observation": "UI calls fills recent, but snapshot selects descending order_id from BTreeMap. UUID IDs are not chronology and a recent ambiguous order can be absent. 09-domain already names the actual ID ordering.",
+      "recommended_fix": "Track committed order chronology or relabel the bounded ID-sorted subset and provide a reliable ID reconciliation route before relying on it for unknown outcomes.",
+      "owner": "root",
+      "status": "reported for integration",
+      "current_resolution": {
+        "date": "2026-10-09",
+        "status": "author-side correction reviewed; independent review pending",
+        "current_state": "Resolved: Engine stores bounded acceptance chronology in recent_orders; snapshot uses that sequence rather than UUID sorting. Exact persisted order lookup supports reconciliation beyond the latest 100 fills.",
+        "source_evidence": [
+          "projects/reference/p16-workbench/src/lib.rs:Engine::snapshot and review_regressions::recent_orders_follow_acceptance_order_not_identifier_sort",
+          "projects/reference/p16-workbench/src/http.rs",
+          "authoring/interface.json:06-console",
+          "authoring/services.json:09-workbench"
+        ],
+        "verification_evidence": [
+          "verification/check-tests.log",
+          "verification/final-runtime-audit.json"
+        ],
+        "limits": "Recorded native regressions and API/source review establish finite tested behavior, not browser interaction or unbounded history guarantees."
+      }
+    },
+    {
+      "id": "IA03",
+      "priority": "P1",
+      "location": "projects/ui-console/src/lib.rs submit/command status mapping; authoring/services.json:09-workbench timeout contract",
+      "observation": "At inspection, received non-2xx responses were described as definite rejection, while backend408 may leave started blocking commit in progress and storage failure can be uncertain.",
+      "recommended_fix": "Classify uncertain statuses explicitly, retain logical IDs and direct reconciliation without automatic mutation retry; keep prose and UI semantics aligned.",
+      "owner": "root",
+      "status": "root correction in progress; not independently reverified",
+      "current_resolution": {
+        "date": "2026-10-09",
+        "status": "author-side correction reviewed; independent review pending",
+        "current_state": "Resolved: a pending logical ID survives uncertain outcomes; pure UI model tests preserve earlier uncertainty after a later rejected retry. Exact ledger reconciliation uses the same identity. Backend typed errors distinguish definite domain rejection from identity conflict and storage uncertainty.",
+        "source_evidence": [
+          "projects/reference/p11-ui-model/src/lib.rs",
+          "projects/ui-console/src/lib.rs",
+          "projects/reference/p16-workbench/src/http.rs",
+          "authoring/interface.json:06-console",
+          "authoring/services.json:09-workbench"
+        ],
+        "verification_evidence": [
+          "verification/ui-model-tests.log",
+          "verification/check-tests.log",
+          "verification/ui-current-build.log"
+        ],
+        "limits": "State-model and backend tests do not exercise browser event ordering, page reload durability, keyboard use or network cancellation. The lesson explicitly limits retained IDs to the open page."
+      }
+    },
+    {
+      "id": "IA04",
+      "priority": "P1",
+      "location": "authoring/systems.json:07-performance",
+      "observation": "Lesson still described the former single-variant benchmark: one warmup, sorted summary output, warning on debug and digest comparisons. Actual source has alternating stream/batch variants, two warmups each, raw TSV, debug rejection and full-state equality.",
+      "fix_applied": "Rewrote timing/protocol and line-reasoning paragraphs, changed example count to1000003, made the deliberate debug failure accurate, and linked the recorded report with its exact local medians and limits.",
+      "status": "fixed by auditor; prose only"
+    },
+    {
+      "id": "IA05",
+      "priority": "P2",
+      "location": "authoring/foundations.json:00-values guided checkpoint",
+      "observation": "Ordinary addition was taught first and checked addition only next, conflicting with patch001 correct professional habits from the first runnable checkpoint.",
+      "fix_applied": "First runnable addition now uses checked_add and Result; next step adds boundary evidence to that same implementation. Explicitly labeled broken experiment remains.",
+      "status": "fixed by auditor; prose only"
+    },
+    {
+      "id": "IA06",
+      "priority": "P2",
+      "location": "authoring/assessments-fragment.html:Final scenario C",
+      "observation": "Scenario called current workload32 active replay jobs; implementation caps16 retained jobs.",
+      "fix_applied": "Changed current-scope phrase to16 retained synthetic replay jobs.",
+      "status": "fixed by auditor; prose only"
+    },
+    {
+      "id": "IA07",
+      "priority": "P2",
+      "location": "scripts/build-course.py learning-map checkpoint links; authoring/assessments-fragment.html gate IDs",
+      "observation": "Generated links use #stage-0 through#stage-9; assessment IDs use gate-0 throughgate-9.",
+      "recommended_fix": "Point map links to #gate-{i} or provide aliases.",
+      "owner": "root",
+      "status": "reported for integration",
+      "current_resolution": {
+        "date": "2026-10-09",
+        "status": "author-side correction reviewed; independent review pending",
+        "current_state": "Resolved in generator: learning-map checkpoint links target assessments/index.html#gate-0 through #gate-9, matching current assessment section IDs.",
+        "source_evidence": [
+          "scripts/build-course.py",
+          "authoring/assessments-fragment.html"
+        ],
+        "verification_evidence": [
+          "verification/final-curriculum-audit.json"
+        ],
+        "limits": "Source and anchor agreement checked. Parent performs final regenerated-site checks; any unrelated current static-site issue is not silently marked passed."
+      }
+    },
+    {
+      "id": "IA08",
+      "priority": "P2",
+      "location": "authoring/benchmark-results.html relative evidence links",
+      "observation": "Fragment is rendered at course root but ../verification links climb outside course.",
+      "recommended_fix": "Use verification/... or @root/verification/...; preserve raw recorded construction commands while explicitly labeling their working directory.",
+      "status": "fixed by auditor; authored relative links use @root/verification/",
+      "fix_applied": "Changed evidence href to root-aware link marker consumed by the course renderer."
+    },
+    {
+      "id": "IA09",
+      "priority": "P2",
+      "location": "authoring/services.json:09-workbench load-evidence link",
+      "observation": "../verification/workbench-load.json resolves under lessons/verification from lessons/stage-9.",
+      "recommended_fix": "Use @root/verification/workbench-load.json or ../../verification/workbench-load.json.",
+      "status": "fixed by auditor; authored relative links use @root/verification/",
+      "fix_applied": "Changed evidence href to root-aware link marker consumed by the course renderer."
+    },
+    {
+      "id": "IA10",
+      "priority": "P2",
+      "location": "authoring/interface.json:06-console Independent practice",
+      "observation": "Practice says to add a watchlist editing form even though the updated baseline already contains that form and the same lesson now advertises it.",
+      "recommended_fix": "Describe independent reconstruction in a learner copy, or specify a new bounded enhancement such as dirty-input conflict handling; do not present the existing baseline feature as absent.",
+      "owner": "root",
+      "status": "reported for integration",
+      "current_resolution": {
+        "date": "2026-10-09",
+        "status": "author-side correction reviewed; independent review pending",
+        "current_state": "Resolved: 06-console explicitly asks learners to independently reconstruct the existing watchlist form in their own copy without copying the reference component, rather than claiming the baseline lacks it.",
+        "source_evidence": [
+          "authoring/interface.json:06-console Independent practice",
+          "projects/scaffolds/p11-console/instructions.html"
+        ],
+        "verification_evidence": [
+          "verification/ui-selected-project.json",
+          "verification/ui-final-checkpoint.json"
+        ],
+        "limits": "Selected learner/reference build and serving checks establish working artifact paths. They do not prove a learner independently completed the form or that browser interactions were observed."
+      }
+    },
+    {
+      "id": "IA11",
+      "priority": "P1",
+      "location": "stage-0 sequence before 00-values; authoring/prerequisites.json",
+      "observation": "The original sequence assumed terminal/file/Git familiarity and introduced checked calculator functions before explicitly teaching basic program structure, functions, control flow, and binary versus decimal integer notation.",
+      "fix_applied": "Added two substantial beginner bridge lessons: 00-workspace (2126 words) and 00-programs (2434 words). Added exact runnable hello.rs and workshop_basics.rs examples, including checked multiplication, explicit exit outcomes, and three boundary tests. Each lesson includes a concrete guided checkpoint, deliberate failure, independent task, separately revealed hints/approach, topic-specific investigation, engineering choices, evidence limits, and mastery criteria.",
+      "status": "authored, author self-review completed, targeted code/workflow verification passed; independent review pending",
+      "integration_owner": "root",
+      "integration_required": "Insert 00-workspace and 00-programs after 00-terminal and before 00-values, make 00-values depend on 00-programs, regenerate pages."
+    }
+  ],
+  "passing_static_checks": [
+    "All44 lesson prerequisite IDs resolve.",
+    "All data-code source paths exist.",
+    "No missing named Cargo package/example/test filter was found by command scan.",
+    "Rust command blocks use mise.",
+    "Assessment project-directory and lesson links resolve from assessments/index.html; map-to-gate anchor mismatch is listed separately.",
+    "Independent extensions are explicitly labeled beyond baseline reference scope.",
+    "Default native target sharing and optional small profile match current mise.toml/workspace settings."
+  ],
+  "remaining_limits": [
+    "No browser interaction, keyboard/screen-reader check or visual inspection was performed.",
+    "No independent acceptance is granted.",
+    "The audit is a static author review, not proof of every runtime behavior.",
+    "Root-owned corrections require targeted verification and a regenerated reader before old rendered pages can be treated as current.",
+    "The original prose-only audit did not rerun native tests; subsequent beginner supplement has separate targeted checks in prerequisites-examples.log and prerequisites-checks.json."
+  ],
+  "code_change_scope": "Original source-to-prose audit changed instructional text only. The later foundations supplement adds two example files without editing existing source.",
+  "supplements": [
+    {
+      "date": "2026-10-09",
+      "kind": "beginner foundations gap correction",
+      "authored_files": [
+        "authoring/prerequisites.json",
+        "projects/reference/p01-calculator/examples/hello.rs",
+        "projects/reference/p01-calculator/examples/workshop_basics.rs"
+      ],
+      "lesson_ids": [
+        "00-workspace",
+        "00-programs"
+      ],
+      "prerequisite_chain": [
+        "00-terminal",
+        "00-workspace",
+        "00-programs"
+      ],
+      "verification_logs": [
+        "verification/prerequisites-examples.log",
+        "verification/prerequisites-checks.json"
+      ],
+      "checks_passed": [
+        "Only the two new Rust files formatted and rustfmt checked with Rust1.99.0.",
+        "Both reference examples executed with expected output using outer .course-cache/native target.",
+        "workshop_basics example:3 tests passed covering ordinary/zero subtotal, overflow boundary, and delivery fee boundaries.",
+        "Clippy on both examples with -D warnings passed.",
+        "Temporary semicolon mutation emitted expected E0308 and failed compilation.",
+        "Temporary new package completed cargo run, check --locked, fmt --check, strict Clippy and cargo test (0 tests expected for generated greeting).",
+        "Temporary repository staged only selected files, reviewed staged diff, made one local commit with isolated test identity and ended clean. No global Git configuration changed.",
+        "Cargo rejected existing destination; ls rejected missing directory.",
+        "All current lesson prerequisite IDs resolve; new lesson IDs unique; new source embed paths exist."
+      ],
+      "primary_reference_check": "All twelve pinned Rust1.99 documentation paths cited by these lessons exist in the installed1.99.0 toolchain documentation. Live official Book, Cargo, mise and Git documentation also consulted; Git source links use2.51.0 documentation. External pinned Rust URLs were not accessible through the web reader, so local versioned primary documentation supplied that verification.",
+      "independent_review": "pending",
+      "browser_review": "not run; access declined",
+      "limits": [
+        "Reference checks do not verify an individual learner package or commit.",
+        "The temporary workflow exercised author commands, not interactive editor usability.",
+        "The fixture-driven executable is not an external-input order-processing application.",
+        "Root must complete sequence integration and regenerate rendered pages."
+      ]
+    },
+    {
+      "date": "2026-10-09",
+      "kind": "current resolution evidence for historical findings",
+      "preservation": "Original 44-lesson observations, original statuses and original verification scope are retained as historical records; current_resolution fields record the later corrected state.",
+      "resolved_finding_ids": [
+        "IA01",
+        "IA02",
+        "IA03",
+        "IA07",
+        "IA10"
+      ],
+      "current_curriculum_audit": "verification/final-curriculum-audit.json",
+      "independent_review": "pending",
+      "browser_review": "not performed; saved access restrictions remain"
+    }
+  ],
+  "root_integration_resolution": {
+    "date": "2026-10-09",
+    "resolved": [
+      "stage gate anchors and portable project links",
+      "version-matched paired benchmark description and report links",
+      "checked arithmetic from first guided operation",
+      "16 retained-job assessment contract",
+      "127.0.0.1 proxy origin in instructions",
+      "watchlist practice reframed as learner reconstruction",
+      "nullable history cursors and checked sequence generation",
+      "true fill acceptance order and exact ledger lookup",
+      "uncertain outcomes with retained command identity and sticky retry history",
+      "prerequisite bridge sequence and00-values dependency",
+      "folded tiered hints and solutions across foundations and systems"
+    ],
+    "independent_review": "pending",
+    "browser_review": "not performed; access declined"
+  }
+}

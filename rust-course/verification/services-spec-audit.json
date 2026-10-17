@@ -1,0 +1,132 @@
+{
+  "verified_at_utc": "2026-10-09 18:01:13 UTC",
+  "scope": "Focused author-team specification audit: P10/P14/P16 and capstone UI correspondence",
+  "independent_review": "pending",
+  "browser_used": false,
+  "versions": {
+    "rust": "1.99.0",
+    "postgresql": "16.15",
+    "sqlx": "0.9.0",
+    "axum": "0.8.9"
+  },
+  "checks": [
+    {
+      "command": "python3 rust-course/verification/services-spec-postgres.py --phase before",
+      "status": "expected regression failure",
+      "result": "Caller-mutated Lease payload became stored effect; test failed before fix. Owned temporary cluster stopped and removed.",
+      "log": "services-spec-postgres-before.log"
+    },
+    {
+      "command": "mise exec -- cargo test --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p16-workbench --test api_contract",
+      "status": "expected regression failure",
+      "result": "Poisoned /api/jobs returned400 instead of503 before fix.",
+      "log": "services-spec-before-p16.log"
+    },
+    {
+      "command": "python3 rust-course/verification/services-spec-postgres.py --phase after",
+      "status": "passed",
+      "result": "Three actual PostgreSQL integration tests passed, including immutable payload/backoff, transaction rollback, deadline decisions after an observed row-lock wait, and prior recovery/cancellation/budget tests. Fresh cluster stopped and removed.",
+      "log": "services-spec-postgres-after.log"
+    },
+    {
+      "command": "mise exec -- cargo test --config 'build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"' --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p14-scheduler --test http",
+      "status": "passed",
+      "result": "One test passed across nine real loopback HTTP cases; lazy pool, no database contact.",
+      "log": "services-spec-http.log"
+    },
+    {
+      "command": "mise exec -- cargo test --config 'build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"' --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p16-workbench --test api_contract",
+      "status": "passed",
+      "result": "One regression passed across four poisoned-state read routes; all return503.",
+      "log": "services-spec-p16.log"
+    },
+    {
+      "command": "mise exec -- cargo test --config 'build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"' --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p16-workbench --lib boundary_tests",
+      "status": "passed",
+      "result": "Two existing relevant boundary tests passed: history/request400, roles, jobs/cancellation, exact lookup, worker processing/shutdown.",
+      "log": "services-spec-p16-boundaries.log"
+    },
+    {
+      "command": "mise exec -- cargo clippy --config 'build.build-dir=\"/Users/billyribeiro/Desktop/rust-course/.course-cache/native\"' --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p14-scheduler -p p16-workbench --all-targets -- -D warnings",
+      "status": "passed",
+      "result": "Strict scoped Clippy passed.",
+      "log": "services-spec-clippy.log"
+    },
+    {
+      "command": "mise exec -- rustfmt --edition 2024 --check rust-course/projects/reference/p14-scheduler/src/lib.rs rust-course/projects/reference/p14-scheduler/src/main.rs rust-course/projects/reference/p14-scheduler/src/http.rs rust-course/projects/reference/p14-scheduler/tests/postgres.rs rust-course/projects/reference/p14-scheduler/tests/http.rs rust-course/projects/reference/p16-workbench/src/http.rs rust-course/projects/reference/p16-workbench/tests/api_contract.rs",
+      "status": "passed",
+      "result": "Owned Rust files pass formatting.",
+      "log": "services-spec-fmt.log"
+    }
+  ],
+  "results": [
+    {
+      "project": "p10-issues",
+      "status": "no new implementation defect found in reviewed scope",
+      "facts": [
+        "Runtime route tests actually enforce reader and team boundaries, exercise concurrent close and injected audit rollback. These existing passed checks were inspected rather than rerun without changes.",
+        "The optional verified-query count query matches the included .sqlx JSON and filename SHA256; prior actual prepare/check/offline evidence exists in services-final-checks.log. This checks only that query against preparation schema, not all runtime SQL or deployed schema.",
+        "Lesson05-http explicitly distinguishes structured application errors from default framework extraction rejections. Fixture identities are explicitly not deployment authentication."
+      ]
+    },
+    {
+      "project": "p14-scheduler",
+      "status": "concrete defects fixed and verification gaps closed",
+      "facts": [
+        "Completion now reads immutable payload from the locked durable row. Retry delay uses the stored attempts column instead of caller-modifiable Lease fields.",
+        "complete_with_clock samples after acquiring the row lock; binary uses now_ms callback. complete and fail with an integer now remain explicit logical-time APIs; live worker does not call fail.",
+        "Delayed-lock fixture observes PostgreSQL waiting before advancing its injected clock, then proves expired authority produces no effect. Validity is sampled under lock, not promised at physical commit completion.",
+        "Actual effect constraint failure leaves status running and no effect; after removal the valid lease can complete. Third abandoned attempt becomes dead.",
+        "HTTP router extracted without new dependencies; nine actual loopback cases test authentication/input/body rejections before database work.",
+        "Transactional outbox is taught as a pattern and extension; reference effect table is not falsely described as a delivered external relay."
+      ]
+    },
+    {
+      "project": "p16-workbench",
+      "status": "read status defect fixed; UI retry concern handed to parent and corrected there",
+      "facts": [
+        "inspect helper now distinguishes poisoned state503 from invalid history/cursor400; all four read routes verified after injected guard panic.",
+        "Existing boundary tests continue to pass for authorization, cancellation, history, lookup and joined worker shutdown.",
+        "Parent-owned replay UI/model retains exact ID/ticks after ambiguous outcomes. services.json now explains sticky uncertainty and open-page-only lifetime; see console-retry-review.html.",
+        "Capstone remains bounded, simulated, single-writer local journal; no production identity, arbitrary corruption recovery, PostgreSQL multi-account transaction or outbox relay claim was added."
+      ]
+    }
+  ],
+  "database_fixture": {
+    "existing_database_touched": false,
+    "process_ownership": "only newly initialized per-phase Unix-socket-only PostgreSQL clusters",
+    "final_cluster_stopped": true,
+    "owned_fixture_removed": true,
+    "report": "services-spec-postgres-after.json",
+    "script": "services-spec-postgres.py"
+  },
+  "build_artifacts": {
+    "target_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+    "final_build_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+    "global_config_preserved": true,
+    "inherited_build_dir_observed_in_earlier_runs": "/Users/billyribeiro/.cargo/build-shared",
+    "note": "Earlier regression/first PostgreSQL checks inherited the user build-dir setting. Final checks use command-local Cargo build.build-dir as well as target-dir; no global config or unrelated cache was changed or removed."
+  },
+  "limitations": [
+    "Author-team review is not independent review.",
+    "Seven passing test entries establish the stated scenarios, not all interleavings or external exactly-once behavior.",
+    "Local wall clock rollback and distributed clock skew remain outside scheduler guarantees.",
+    "No browser interaction was performed; UI model/build evidence is separate.",
+    "One intermediate clock-refactor compile error (missing local now) was corrected; its raw log remains services-spec-clock-first-compile.log.",
+    "Final checkpoints copy updated reference sources automatically; existing logical-time earlier checkpoint/scaffold APIs remain unchanged. No manifest, dependency, lockfile or migration schema changed."
+  ],
+  "files_sha256": {
+    "projects/reference/p14-scheduler/src/lib.rs": "47cc3be1cd5a9f1626c0c5285cb39b6f639039ae157b5dd60779e07bc1c61887",
+    "projects/reference/p14-scheduler/src/main.rs": "920a9e314c4aeb6607e7e7c8b664b2dad8950cb9f9602cb2115bc5e2b99ff131",
+    "projects/reference/p14-scheduler/src/http.rs": "f56c6506a29844f5da0dee153190ace81598ff52800c50dd1eb97a65ab9effa0",
+    "projects/reference/p14-scheduler/tests/postgres.rs": "40ced87b6215f7670ec3e2dfd5c0b10b6355fb12020f88bf83ad8b794daf4558",
+    "projects/reference/p14-scheduler/tests/http.rs": "1b97419644fbf01483cd72e459f8c337ba6c491ec38932dcc971f103e85ac1fe",
+    "projects/reference/p16-workbench/src/http.rs": "66415d56d49af6176308627a1ca3c8be1224e3b98dfa5dbb698c087f84963c3a",
+    "projects/reference/p16-workbench/tests/api_contract.rs": "b8a197e70c7791d2ec448847e0d0eeb80fd33dbbd10682429d15e21ca374bf45",
+    "authoring/services.json": "27823aae066c2ae9bfb8da3bd77d3ca1b9a10f2e0e7e827131afcc9c012d1c05"
+  },
+  "primary_sources": [
+    "https://www.postgresql.org/docs/16/functions-math.html",
+    "https://www.postgresql.org/docs/16/explicit-locking.html"
+  ]
+}

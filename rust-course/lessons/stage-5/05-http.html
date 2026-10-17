@@ -1,0 +1,356 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>HTTP contracts and authorization boundaries · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="05-http" data-lesson="05-http"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / HTTP contracts and authorization boundaries</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 05 / Networks and databases</div><h1>HTTP contracts and authorization boundaries</h1><p class="lead">Turn requests into validated domain operations and safe responses.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-5/05-chat.html">Bounded chat, slow clients, and shutdown</a></li></ul><ul><li>Separate authentication from authorization</li><li>Read HTTP requests and status codes</li><li>Use Axum extractors and explicit error responses</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#actor">actor</a> · <a href="../../glossary.html#authentication">authentication</a> · <a href="../../glossary.html#authorization">authorization</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#schema">schema</a> · <a href="../../glossary.html#stack">stack</a> · <a href="../../glossary.html#tls">TLS</a> · <a href="../../glossary.html#transaction">transaction</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p10">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-an-interface-another-program-can-trust">Purpose: an interface another program can trust</h2><p>The issue tracker lets a client create, list, and close team issues. An HTTP API is a contract between programs, not merely a set of function names. The contract includes method, path, headers, body schema, status, error shape, and permission rules. A client must be able to distinguish invalid input, missing identity, forbidden action, stale revision, and temporarily unavailable storage without inspecting a Rust stack trace.</p>
+<h2 id="plain-english-model">Plain-English model</h2><p>HTTP adds request and response semantics over a transport. A request contains a method such as GET or POST, a target path, headers, and sometimes a body. JSON is a text serialization format that represents values; it does not by itself validate business meaning. A JSON number may be syntactically valid while being an impossible page size. TLS encrypts and authenticates the transport endpoint when configured correctly. Our localhost lab uses plain HTTP and public teaching identities, so it is not a deployed identity system.</p>
+<p><em>Authentication</em> establishes who a caller is. <em>Authorization</em> decides what that caller may do to this resource. The demo fixtures map three explicit bearer strings to two teams and reader/writer roles. They exist to test authorization branches deterministically. They are not passwords, not cryptographic tokens, and not a recommended login design. For a deployment, use a maintained identity integration with an established protocol such as OpenID Connect, validate its issuer and audience, and preserve the same resource checks. Do not replace this lab with a homemade signature or password scheme.</p>
+<h2 id="predict-the-boundary">Predict the boundary</h2><p>A team-one writer knows a team-two issue ID. Should possession of that ID allow closing it? Should hiding the close button in the UI be sufficient? Predict what the API should return.</p><details><summary>Answer</summary><p>The server must constrain the operation to the authenticated actor's team. This API returns not-found for an inaccessible issue, avoiding confirmation of another team's resource. UI controls improve usability but are not a security boundary. Reader permissions also need server enforcement even when the client sends a valid writer-shaped JSON body.</p></details>
+<h2 id="small-example-validation-before-transport">Small example: validation before transport</h2><p>Run the validation example without a database. The first title becomes “fix login”; the whitespace-only title produces a domain validation error.</p>
+<div class="code-wrap" data-source="projects/reference/p10-issues/examples/validation.rs" data-sha256="7a1290ad0646ab1980a2d8886dc808f23d919a8d8ea3fbce3b9b5de538aea4d2"><div class="code-label"><a href="../../projects/reference/p10-issues/examples/validation.rs">projects/reference/p10-issues/examples/validation.rs</a></div><pre><code>fn main() {
+    for title in [&quot;  fix login  &quot;, &quot;  &quot;] {
+        match p10_issues::validate_title(title) {
+            Ok(value) =&gt; println!(&quot;accepted: {value}&quot;),
+            Err(error) =&gt; println!(&quot;rejected: {}&quot;, error.1),
+        }
+    }
+}
+</code></pre></div><pre><code>mise exec -- cargo run -p p10-issues --example validation</code></pre>
+<h2 id="read-the-handler-shape">Read the handler shape</h2><p>Axum's <code>State</code> extractor supplies shared application resources, <code>HeaderMap</code> supplies request headers, <code>Path</code> parses route values, and <code>Json</code> deserializes the body. Body-consuming extractors belong last in the handler arguments. The handler validates identity and title, awaits a parameterized database operation, then returns a typed status plus JSON. <code>IntoResponse</code> centralizes application error rendering. The public response says storage is unavailable; internal query details stay in the local service log.</p>
+<p>The 4,096-byte body limit bounds deserialization input. The title rule independently limits meaningful title characters. Those are different constraints. Axum's built-in JSON rejection responses are framework responses; this reference does not claim one uniform custom error schema for every malformed transport request. A production API may wrap extractor rejections into its chosen problem format.</p>
+<h2 id="guided-checkpoint">Guided checkpoint</h2><p>In a learner copy, first implement <code>validate_title</code> and its two tests. Then implement actor mapping and a test that a reader cannot write. The reconstructed HTTP milestone provides the complete <code>/issues/validate</code> router and handler without storing issues. Use it to test extraction and role checks. Reconstruct the final checkpoint for complete database-backed create/list/close handlers after the SQL lesson; do not create empty handler stubs and call them a working checkpoint. This order gives you a runnable domain checkpoint before a database is available. Do not replace expected input errors with unwrap.</p>
+<div class="code-wrap" data-source="projects/reference/p10-issues/src/lib.rs" data-sha256="8a63ea23ad9faa602a82b0fc4ed29f6f6d3555d11585bf0a27c7e748b6fe6450"><div class="code-label"><a href="../../projects/reference/p10-issues/src/lib.rs">projects/reference/p10-issues/src/lib.rs</a></div><pre><code>//! Local teaching API. Demo credentials are fixtures, NOT production authentication.
+use axum::{
+    Json, Router,
+    extract::{DefaultBodyLimit, Path, Query, Request, State},
+    http::{HeaderMap, StatusCode},
+    middleware::{self, Next},
+    response::{IntoResponse, Response},
+    routing::{get, post},
+};
+use serde::{Deserialize, Serialize};
+use sqlx::{PgPool, Row};
+#[derive(Clone)]
+pub struct App {
+    pub pool: PgPool,
+}
+#[derive(Debug)]
+pub struct ApiError(pub StatusCode, pub &amp;&#x27;static str);
+impl IntoResponse for ApiError {
+    fn into_response(self) -&gt; Response {
+        (self.0, Json(serde_json::json!({&quot;error&quot;:self.1}))).into_response()
+    }
+}
+fn database(error: sqlx::Error) -&gt; ApiError {
+    eprintln!(&quot;database operation failed: {error}&quot;);
+    ApiError(StatusCode::SERVICE_UNAVAILABLE, &quot;storage unavailable&quot;)
+}
+#[derive(Clone, Copy)]
+pub struct Actor {
+    pub id: i64,
+    pub team: i64,
+    pub write: bool,
+}
+pub fn actor(headers: &amp;HeaderMap, write: bool) -&gt; Result&lt;Actor, ApiError&gt; {
+    let token = headers.get(&quot;authorization&quot;).and_then(|h| h.to_str().ok());
+    let actor = match token {
+        Some(&quot;Bearer demo-team1-writer&quot;) =&gt; Actor {
+            id: 1,
+            team: 1,
+            write: true,
+        },
+        Some(&quot;Bearer demo-team1-reader&quot;) =&gt; Actor {
+            id: 2,
+            team: 1,
+            write: false,
+        },
+        Some(&quot;Bearer demo-team2-writer&quot;) =&gt; Actor {
+            id: 3,
+            team: 2,
+            write: true,
+        },
+        _ =&gt; return Err(ApiError(StatusCode::UNAUTHORIZED, &quot;demo identity required&quot;)),
+    };
+    if write &amp;&amp; !actor.write {
+        return Err(ApiError(StatusCode::FORBIDDEN, &quot;write permission required&quot;));
+    }
+    Ok(actor)
+}
+#[derive(Debug, Serialize, sqlx::FromRow)]
+pub struct Issue {
+    pub id: i64,
+    pub team_id: i64,
+    pub title: String,
+    pub closed: bool,
+    pub revision: i64,
+}
+#[derive(Deserialize)]
+pub struct NewIssue {
+    pub title: String,
+}
+#[derive(Deserialize)]
+pub struct Page {
+    pub after: Option&lt;i64&gt;,
+    pub limit: Option&lt;i64&gt;,
+}
+#[derive(Deserialize)]
+pub struct Close {
+    pub expected_revision: i64,
+}
+pub fn validate_title(title: &amp;str) -&gt; Result&lt;&amp;str, ApiError&gt; {
+    let title = title.trim();
+    if title.is_empty() || title.chars().count() &gt; 200 {
+        return Err(ApiError(
+            StatusCode::UNPROCESSABLE_ENTITY,
+            &quot;title must contain 1..200 characters&quot;,
+        ));
+    }
+    Ok(title)
+}
+async fn admission(
+    State(permits): State&lt;std::sync::Arc&lt;tokio::sync::Semaphore&gt;&gt;,
+    request: Request,
+    next: Next,
+) -&gt; Response {
+    let Ok(_permit) = permits.try_acquire_owned() else {
+        return ApiError(StatusCode::TOO_MANY_REQUESTS, &quot;request budget full&quot;).into_response();
+    };
+    match tokio::time::timeout(std::time::Duration::from_secs(5), next.run(request)).await {
+        Ok(response) =&gt; response,
+        Err(_) =&gt; ApiError(
+            StatusCode::REQUEST_TIMEOUT,
+            &quot;deadline exceeded; reconcile operation outcome&quot;,
+        )
+        .into_response(),
+    }
+}
+pub fn router(pool: PgPool) -&gt; Router {
+    Router::new()
+        .route(&quot;/health&quot;, get(|| async { &quot;ok&quot; }))
+        .route(&quot;/issues&quot;, get(list).post(create))
+        .route(&quot;/issues/{id}/close&quot;, post(close))
+        .layer(DefaultBodyLimit::max(4096))
+        .layer(middleware::from_fn_with_state(
+            std::sync::Arc::new(tokio::sync::Semaphore::new(16)),
+            admission,
+        ))
+        .with_state(App { pool })
+}
+async fn list(
+    State(app): State&lt;App&gt;,
+    headers: HeaderMap,
+    Query(page): Query&lt;Page&gt;,
+) -&gt; Result&lt;Json&lt;Vec&lt;Issue&gt;&gt;, ApiError&gt; {
+    let who = actor(&amp;headers, false)?;
+    let limit = page.limit.unwrap_or(20);
+    if !(1..=100).contains(&amp;limit) || page.after.unwrap_or(0) &lt; 0 {
+        return Err(ApiError(StatusCode::BAD_REQUEST, &quot;invalid page&quot;));
+    }
+    let rows=sqlx::query_as::&lt;_,Issue&gt;(&quot;SELECT id,team_id,title,closed,revision FROM issues WHERE team_id=$1 AND id&gt;$2 ORDER BY id LIMIT $3&quot;).bind(who.team).bind(page.after.unwrap_or(0)).bind(limit).fetch_all(&amp;app.pool).await.map_err(database)?;
+    Ok(Json(rows))
+}
+async fn create(
+    State(app): State&lt;App&gt;,
+    headers: HeaderMap,
+    Json(input): Json&lt;NewIssue&gt;,
+) -&gt; Result&lt;(StatusCode, Json&lt;Issue&gt;), ApiError&gt; {
+    let who = actor(&amp;headers, true)?;
+    let title = validate_title(&amp;input.title)?;
+    let issue=sqlx::query_as::&lt;_,Issue&gt;(&quot;INSERT INTO issues(team_id,title) VALUES($1,$2) RETURNING id,team_id,title,closed,revision&quot;).bind(who.team).bind(title).fetch_one(&amp;app.pool).await.map_err(database)?;
+    Ok((StatusCode::CREATED, Json(issue)))
+}
+async fn close(
+    State(app): State&lt;App&gt;,
+    headers: HeaderMap,
+    Path(id): Path&lt;i64&gt;,
+    Json(input): Json&lt;Close&gt;,
+) -&gt; Result&lt;Json&lt;Issue&gt;, ApiError&gt; {
+    let who = actor(&amp;headers, true)?;
+    close_issue(&amp;app.pool, who, id, input.expected_revision)
+        .await
+        .map(Json)
+}
+/// Update and audit are one transaction. Team predicate prevents cross-team access.
+pub async fn close_issue(
+    pool: &amp;PgPool,
+    who: Actor,
+    id: i64,
+    revision: i64,
+) -&gt; Result&lt;Issue, ApiError&gt; {
+    if !who.write {
+        return Err(ApiError(StatusCode::FORBIDDEN, &quot;write permission required&quot;));
+    }
+    let mut tx = pool.begin().await.map_err(database)?;
+    let row =
+        sqlx::query(&quot;SELECT revision,closed FROM issues WHERE id=$1 AND team_id=$2 FOR UPDATE&quot;)
+            .bind(id)
+            .bind(who.team)
+            .fetch_optional(&amp;mut *tx)
+            .await
+            .map_err(database)?
+            .ok_or(ApiError(StatusCode::NOT_FOUND, &quot;issue not found&quot;))?;
+    if row.get::&lt;i64, _&gt;(&quot;revision&quot;) != revision || row.get::&lt;bool, _&gt;(&quot;closed&quot;) {
+        return Err(ApiError(StatusCode::CONFLICT, &quot;revision conflict&quot;));
+    }
+    let issue=sqlx::query_as::&lt;_,Issue&gt;(&quot;UPDATE issues SET closed=true,revision=revision+1 WHERE id=$1 RETURNING id,team_id,title,closed,revision&quot;).bind(id).fetch_one(&amp;mut *tx).await.map_err(database)?;
+    sqlx::query(&quot;INSERT INTO issue_audit(issue_id,revision,actor,action) VALUES($1,$2,$3,&#x27;close&#x27;)&quot;)
+        .bind(id)
+        .bind(issue.revision)
+        .bind(who.id)
+        .execute(&amp;mut *tx)
+        .await
+        .map_err(database)?;
+    tx.commit().await.map_err(database)?;
+    Ok(issue)
+}
+#[cfg(feature = &quot;verified-query&quot;)]
+pub async fn verified_count(pool: &amp;PgPool) -&gt; Result&lt;i64, sqlx::Error&gt; {
+    let row = sqlx::query!(&quot;SELECT count(*) as \&quot;count!\&quot; FROM issues&quot;)
+        .fetch_one(pool)
+        .await?;
+    Ok(row.count)
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn title_and_roles() {
+        assert!(validate_title(&quot;   &quot;).is_err());
+        assert_eq!(validate_title(&quot;  fix me &quot;).unwrap(), &quot;fix me&quot;);
+        let mut h = HeaderMap::new();
+        h.insert(&quot;authorization&quot;, &quot;Bearer demo-team1-reader&quot;.parse().unwrap());
+        assert!(actor(&amp;h, false).is_ok());
+        assert_eq!(actor(&amp;h, true).err().unwrap().0, StatusCode::FORBIDDEN);
+    }
+}
+</code></pre></div>
+<h2 id="deliberate-mistake-and-practice">Deliberate mistake and practice</h2><p>Intentionally remove the team predicate from the close lookup in your working copy. It still compiles. The cross-team integration test must now fail. Restore it before continuing. Next design a “reopen” operation: specify permissions, legal state transition, expected revision behavior, and whether retrying the same request is success or conflict. Decide those semantics before implementing the route.</p><details><summary>Hint 1</summary><p>Start with a table of actor role, owning team, current state, and expected revision.</p></details><details><summary>Hint 2</summary><p>A state transition is different from assigning a boolean. Decide whether reopening an already open issue is meaningful.</p></details><details><summary>Reference approach</summary><p>Keep a resource-scoped lookup and optimistic revision check inside the transaction. Give reopen its own operation with writer permission. Reject stale revisions consistently, update the audit row with the new revision, and test cross-team access independently from state conflicts. An idempotent command ID is an alternative contract, but requires persisted command results.</p></details>
+<h2 id="review-and-evidence">Review and evidence</h2><p>A deliberate authorization defect is accepting team_id in the JSON body as authority. A clearer boundary derives team membership from server-side identity and ignores client claims of authority. Validation tests prove selected inputs are handled. The PostgreSQL route test proves actual reader and cross-team denials through the router. Neither proves a secure login flow because no such flow exists in the reference. Explain why TLS, authentication, authorization, CSRF protection for cookie-based clients, and input validation solve different problems.</p>
+<h2 id="playbook-investigation">Playbook investigation</h2><p>Observation: a valid writer sees 404 for one issue while another writer can close it. A tempting guess is “the migration lost the row.” Query only the dedicated test database to confirm the row exists, then inspect its team and the fixture identity. Reproduce with both identities through HTTP. A row existing globally does not imply it belongs in this caller's visible set. The correct fix may be using the intended identity, not deleting authorization. Record that disproven hypothesis and retain a regression test for the boundary.</p>
+<h2 id="mastery-check">Mastery check</h2><p>Explain an entire request from bytes to extractor to domain validation to transaction to response. Add a permission rule without relying on UI code, and show one denied test that would catch accidentally removing it.</p>
+<aside class="callout"><h2 id="when-you-get-stuck">When you get stuck</h2><p>Run <code>mise exec -- cargo test -p p10-issues title_and_roles</code>. Inspect method, path, content-type, and exact public fixture identity before changing handlers. Consult the pinned Axum extractor documentation. A useful review request includes a permission matrix, a minimal HTTP request, the expected status, and the test that fails.</p></aside><section><h2 id="reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</h2><p>Working directory: course root. This creates a complete separate source tree; it refuses an existing destination. Run the checkpoint tests before following the guided edits. The <a href="../../projects/checkpoints/p10-issues/index.html">checkpoint contract and engineering decisions</a> state exactly which features exist.</p><pre><code>python3 scripts/start-checkpoint.py p10 01-http-validation
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p10-issues/01-http-validation/Cargo.toml</code></pre><p>To compare an earlier milestone with the final reference, reconstruct each ID into a different directory. The final database integration checks still require the explicitly isolated database described in this lesson; ordinary cargo test does not execute ignored database tests.</p></section><section><h2 id="complete-earlier-milestone-source">Complete earlier milestone source</h2><p>The complete validation router stores no issues. Trace admission, JSON extraction, actor mapping, title validation, and the normalized response. The bounded service can be tested without a database.</p><div class="code-wrap" data-source="projects/checkpoints/p10-issues/01-http-validation/src/lib.rs" data-sha256="618ba2000537a66dcffc81991a244a2600d43306f8c8517b55d8db6299889126"><div class="code-label"><a href="../../projects/checkpoints/p10-issues/01-http-validation/src/lib.rs">projects/checkpoints/p10-issues/01-http-validation/src/lib.rs</a></div><pre><code>//! Pure HTTP boundary checkpoint. No issue is stored; /issues/validate only validates.
+//! Credentials are public local test fixtures, not deployable authentication.
+use axum::{
+    Json, Router,
+    extract::{DefaultBodyLimit, Request, State},
+    http::{HeaderMap, StatusCode},
+    middleware::{self, Next},
+    response::{IntoResponse, Response},
+    routing::post,
+};
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+#[derive(Deserialize)]
+struct Input {
+    title: String,
+}
+#[derive(Serialize)]
+struct Validated {
+    title: String,
+}
+async fn validate(
+    headers: HeaderMap,
+    Json(input): Json&lt;Input&gt;,
+) -&gt; Result&lt;Json&lt;Validated&gt;, StatusCode&gt; {
+    match headers.get(&quot;authorization&quot;).and_then(|v| v.to_str().ok()) {
+        Some(&quot;Bearer demo-team1-writer&quot;) =&gt; {}
+        Some(&quot;Bearer demo-team1-reader&quot;) =&gt; return Err(StatusCode::FORBIDDEN),
+        _ =&gt; return Err(StatusCode::UNAUTHORIZED),
+    }
+    let title = input.title.trim();
+    if title.is_empty() || title.chars().count() &gt; 200 {
+        return Err(StatusCode::UNPROCESSABLE_ENTITY);
+    }
+    Ok(Json(Validated {
+        title: title.to_owned(),
+    }))
+}
+async fn admit(
+    State(slots): State&lt;Arc&lt;tokio::sync::Semaphore&gt;&gt;,
+    request: Request,
+    next: Next,
+) -&gt; Response {
+    let Ok(_permit) = slots.try_acquire_owned() else {
+        return StatusCode::TOO_MANY_REQUESTS.into_response();
+    };
+    match tokio::time::timeout(std::time::Duration::from_secs(1), next.run(request)).await {
+        Ok(response) =&gt; response,
+        Err(_) =&gt; StatusCode::REQUEST_TIMEOUT.into_response(),
+    }
+}
+pub fn router() -&gt; Router {
+    Router::new()
+        .route(&quot;/issues/validate&quot;, post(validate))
+        .layer(DefaultBodyLimit::max(4096))
+        .layer(middleware::from_fn_with_state(
+            Arc::new(tokio::sync::Semaphore::new(4)),
+            admit,
+        ))
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::{
+        body::{Body, to_bytes},
+        http::Request,
+    };
+    use tower::ServiceExt;
+    async fn request(identity: &amp;str, body: String) -&gt; Response {
+        router()
+            .oneshot(
+                Request::builder()
+                    .method(&quot;POST&quot;)
+                    .uri(&quot;/issues/validate&quot;)
+                    .header(&quot;authorization&quot;, identity)
+                    .header(&quot;content-type&quot;, &quot;application/json&quot;)
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap()
+    }
+    #[tokio::test]
+    async fn writer_normalizes_without_persistence() {
+        let response = request(&quot;Bearer demo-team1-writer&quot;, r#&quot;{&quot;title&quot;:&quot; fix &quot;}&quot;#.into()).await;
+        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(
+            to_bytes(response.into_body(), 4096).await.unwrap().as_ref(),
+            br#&quot;{&quot;title&quot;:&quot;fix&quot;}&quot;#
+        );
+    }
+    #[tokio::test]
+    async fn permission_is_a_server_boundary() {
+        assert_eq!(
+            request(&quot;Bearer demo-team1-reader&quot;, r#&quot;{&quot;title&quot;:&quot;fix&quot;}&quot;#.into())
+                .await
+                .status(),
+            StatusCode::FORBIDDEN
+        );
+        assert_eq!(
+            request(&quot;unknown&quot;, r#&quot;{&quot;title&quot;:&quot;fix&quot;}&quot;#.into())
+                .await
+                .status(),
+            StatusCode::UNAUTHORIZED
+        );
+    }
+    #[tokio::test]
+    async fn expected_input_failure_is_explicit() {
+        assert_eq!(
+            request(&quot;Bearer demo-team1-writer&quot;, r#&quot;{&quot;title&quot;:&quot; &quot;}&quot;#.into())
+                .await
+                .status(),
+            StatusCode::UNPROCESSABLE_ENTITY
+        );
+        assert_eq!(
+            request(&quot;Bearer demo-team1-writer&quot;, &quot;{&quot;.into())
+                .await
+                .status(),
+            StatusCode::BAD_REQUEST
+        );
+        assert_eq!(
+            request(&quot;Bearer demo-team1-writer&quot;, &quot;x&quot;.repeat(4097))
+                .await
+                .status(),
+            StatusCode::PAYLOAD_TOO_LARGE
+        );
+    }
+}
+</code></pre></div></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://docs.rs/axum/0.8.9/axum/">Axum 0.8.9 handlers and extractors</a></li><li><a href="https://www.rfc-editor.org/rfc/rfc9110.html">HTTP semantics RFC 9110</a></li><li><a href="https://openid.net/specs/openid-connect-core-1_0.html">OpenID Connect Core</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-5/05-chat.html">Previous: Bounded chat, slow clients, and shutdown</a><a href="../../lessons/stage-5/05-sql.html">Next: Tables, indexes, transactions, and migrations</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-an-interface-another-program-can-trust">Purpose: an interface another program can trust</a><a href="#plain-english-model">Plain-English model</a><a href="#predict-the-boundary">Predict the boundary</a><a href="#small-example-validation-before-transport">Small example: validation before transport</a><a href="#read-the-handler-shape">Read the handler shape</a><a href="#guided-checkpoint">Guided checkpoint</a><a href="#deliberate-mistake-and-practice">Deliberate mistake and practice</a><a href="#review-and-evidence">Review and evidence</a><a href="#playbook-investigation">Playbook investigation</a><a href="#mastery-check">Mastery check</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</a><a href="#complete-earlier-milestone-source">Complete earlier milestone source</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

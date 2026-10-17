@@ -1,0 +1,591 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Stream logs with bounded lines and honest accounting · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="01-logs" data-lesson="01-logs"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Stream logs with bounded lines and honest accounting</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 01 / Ownership and core Rust</div><h1>Stream logs with bounded lines and honest accounting</h1><p class="lead">Stream, validate, search and summarize Unicode log records with explicit memory and work budgets.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-1/01-io.html">File IO: preserve errors and replace data carefully</a></li></ul><ul><li>Separate streaming from bounded buffering</li><li>Drain oversized records and resume at the next boundary</li><li>Prove accounting relationships over accepted and rejected lines</li><li>Perform case-sensitive UTF-8 literal search without retaining matches</li><li>Separate a large total-byte work budget from bounded line memory</li><li>Propagate partial output failures and preserve all-record accounting</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#framing">framing</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#slice">slice</a> · <a href="../../glossary.html#trait">trait</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p03">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-one-bad-line-must-not-control-memory">Purpose: one bad line must not control memory</h2>
+<p>A log analyzer may process a large file without needing all of it at once. Streaming means you consume a sequence incrementally. Bounded buffering is the stronger claim that retained data cannot grow beyond an explicit limit. Using BufRead::lines streams across records, but a single line can still be arbitrarily long. A file containing ten million bytes before its first newline defeats the casual claim that “one line at a time” guarantees small memory use.</p>
+<p>The CLI limits each line to 4096 bytes before the LF delimiter and defaults to a 64 MiB total-input budget. An explicit --max-bytes N raises that budget for larger files without raising the retained-line limit. Oversized lines are drained and counted separately. Invalid UTF-8 or malformed records are counted as malformed. IO failures and total-input exhaustion return an error rather than a misleading partial report. These are policy decisions: some applications need fail-fast ingestion, others tolerant ingestion with rejection counts. The chosen policy must be visible in both types and output.</p>
+<h2 id="prediction-before-reading-the-implementation">Prediction before reading the implementation</h2>
+<p>The sample fixture contains five lines: two INFO records, one WARN, one malformed row, and one ERROR. Predict report totals before running it. Expected: lines=5, valid=4, malformed=1, oversized=0, info=2, warnings=1, errors=1. A blank physical line counts as a malformed line; a missing final newline does not erase a final nonempty record. CRLF is accepted by stripping one carriage return before parsing, although the byte bound counts that carriage return.</p>
+<pre><code>mise exec -- cargo run -p log-detective -- reference/p03-logs/fixtures/sample.log
+mise exec -- cargo test -p log-detective tiny_buffers_and_final_line
+mise exec -- cargo test -p log-detective drain_oversized_then_recover
+mise exec -- cargo run -p log-detective -- --contains api reference/p03-logs/fixtures/sample.log</code></pre>
+<p>For the final command, predict two emitted records: timestamps 100 and 102. Search matches the complete valid line, including its service field. Stdout contains only the matching records; stderr contains the same all-record summary plus matched=2. Without a query, the existing summary remains on stdout. Zero matches is still a successful scan. Working directory for these commands: projects/.</p>
+<p>The record grammar is intentionally strict: unsigned timestamp, known uppercase level, an ASCII service identifier, then a nonempty message. Single spaces separate the first fields; remaining spaces belong to the message. There is no timezone conversion or free-form date parsing. A timestamp is an integer supplied by the log producer. Decide what a field means before choosing a parser; a sophisticated parser cannot repair an unspecified format.</p>
+<h2 id="guided-checkpoint-observe-retain-consume">Guided checkpoint: observe, retain, consume</h2>
+<p>Read read_bounded as a small state machine. fill_buf exposes available bytes borrowed from the reader. Search that slice for LF. Decide how many bytes belong to this chunk and whether retaining them would exceed the line limit. Copy only while the line remains within the bound. If it becomes oversized, clear the retained data, set the oversized flag, and keep consuming until LF or end-of-input. consume advances the reader after the borrowed buffer has been inspected.</p>
+<p>The distinction between retained bytes and consumed bytes is the core of the algorithm. Once a line is oversized, refusing to consume further bytes would revisit the same chunk forever. Returning immediately without draining would interpret the tail of the oversized line as a new record. The flag remembers that the current physical line has already been rejected while the reader moves to the next trustworthy boundary.</p>
+<div class="code-wrap" data-source="projects/reference/p03-logs/src/lib.rs" data-sha256="933837c39abd6c99c3686313a6fb24fc46589fc07b059792596d839ccf8712d3"><div class="code-label"><a href="../../projects/reference/p03-logs/src/lib.rs">projects/reference/p03-logs/src/lib.rs</a></div><pre><code>//! Bounded-memory, line-oriented log analysis with borrowed record fields.
+//! ```
+//! use log_detective::{analyze, Limits};
+//! let report = analyze(&amp;b&quot;10 INFO api ready\n11 ERROR api unavailable\n&quot;[..], Limits::default())?;
+//! assert_eq!(report.errors, 1);
+//! assert_eq!(report.valid, 2);
+//! # Ok::&lt;(), std::io::Error&gt;(())
+//! ```
+use std::io::{self, BufRead, Write};
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Level {
+    Info,
+    Warn,
+    Error,
+}
+#[derive(Debug, PartialEq, Eq)]
+pub struct Record&lt;&#x27;a&gt; {
+    pub timestamp: u64,
+    pub level: Level,
+    pub service: &amp;&#x27;a str,
+    pub message: &amp;&#x27;a str,
+}
+pub fn parse_record(input: &amp;str) -&gt; Result&lt;Record&lt;&#x27;_&gt;, &amp;&#x27;static str&gt; {
+    let mut fields = input.splitn(4, &#x27; &#x27;);
+    let timestamp = fields
+        .next()
+        .ok_or(&quot;timestamp missing&quot;)?
+        .parse()
+        .map_err(|_| &quot;invalid timestamp&quot;)?;
+    let level = match fields.next() {
+        Some(&quot;INFO&quot;) =&gt; Level::Info,
+        Some(&quot;WARN&quot;) =&gt; Level::Warn,
+        Some(&quot;ERROR&quot;) =&gt; Level::Error,
+        _ =&gt; return Err(&quot;invalid level&quot;),
+    };
+    let service = fields.next().ok_or(&quot;service missing&quot;)?;
+    if service.is_empty()
+        || !service
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b == b&#x27;-&#x27; || b == b&#x27;_&#x27;)
+    {
+        return Err(&quot;invalid service&quot;);
+    }
+    let message = fields.next().ok_or(&quot;message missing&quot;)?;
+    if message.trim().is_empty() || message.chars().any(char::is_control) {
+        return Err(&quot;invalid message&quot;);
+    }
+    Ok(Record {
+        timestamp,
+        level,
+        service,
+        message,
+    })
+}
+#[derive(Clone, Copy, Debug)]
+pub struct Limits {
+    pub max_line_bytes: usize,
+    pub max_total_bytes: u64,
+}
+impl Default for Limits {
+    fn default() -&gt; Self {
+        Self {
+            max_line_bytes: 4096,
+            max_total_bytes: 64 * 1024 * 1024,
+        }
+    }
+}
+#[derive(Default, Debug, PartialEq, Eq)]
+pub struct Report {
+    pub lines: u64,
+    pub valid: u64,
+    pub malformed: u64,
+    pub oversized: u64,
+    pub info: u64,
+    pub warnings: u64,
+    pub errors: u64,
+}
+enum Line {
+    End,
+    Data,
+    Oversized,
+}
+fn read_bounded&lt;R: BufRead&gt;(
+    reader: &amp;mut R,
+    output: &amp;mut Vec&lt;u8&gt;,
+    limit: usize,
+    total: &amp;mut u64,
+    total_limit: u64,
+) -&gt; io::Result&lt;Line&gt; {
+    output.clear();
+    let mut seen = false;
+    let mut oversized = false;
+    loop {
+        let available = match reader.fill_buf() {
+            Ok(bytes) =&gt; bytes,
+            Err(error) if error.kind() == io::ErrorKind::Interrupted =&gt; continue,
+            Err(error) =&gt; return Err(error),
+        };
+        if available.is_empty() {
+            return Ok(if !seen {
+                Line::End
+            } else if oversized {
+                Line::Oversized
+            } else {
+                Line::Data
+            });
+        }
+        let newline = available.iter().position(|&amp;b| b == b&#x27;\n&#x27;);
+        let take = newline.map_or(available.len(), |n| n + 1);
+        *total = total
+            .checked_add(take as u64)
+            .filter(|&amp;n| n &lt;= total_limit)
+            .ok_or_else(|| {
+                io::Error::new(io::ErrorKind::InvalidData, &quot;input byte limit exceeded&quot;)
+            })?;
+        let payload = if newline.is_some() { take - 1 } else { take };
+        if !oversized {
+            if payload &gt; limit.saturating_sub(output.len()) {
+                oversized = true;
+                output.clear();
+            } else {
+                output.extend_from_slice(&amp;available[..payload]);
+            }
+        }
+        reader.consume(take);
+        seen = true;
+        if newline.is_some() {
+            if oversized {
+                return Ok(Line::Oversized);
+            }
+            if output.last() == Some(&amp;b&#x27;\r&#x27;) {
+                output.pop();
+            }
+            return Ok(Line::Data);
+        }
+    }
+}
+/// At most `max_line_bytes` retained per line; an oversized line is drained.
+/// Reader buffering is additional memory controlled by the caller.
+pub fn analyze&lt;R: BufRead&gt;(reader: R, limits: Limits) -&gt; io::Result&lt;Report&gt; {
+    scan(reader, limits, None, &amp;mut io::sink()).map(|result| result.summary)
+}
+
+/// Search valid records with a case-sensitive literal UTF-8 substring.
+///
+/// The query covers the complete normalized record (including its fields).
+/// There is no case folding or Unicode normalization. Matching lines are written
+/// immediately, with one LF terminator; CRLF input is normalized to LF.
+/// Malformed and oversized lines are counted but never emitted. All valid
+/// records contribute to the summary, whether or not they match.
+///
+/// Input/output errors abort the scan: the destination may already contain a
+/// prefix, but no successful report is returned. The caller owns flushing.
+/// ```
+/// use log_detective::{search, Limits};
+/// let mut output = Vec::new();
+/// let result = search(&amp;b&quot;1 INFO api ready\n2 ERROR api retry\n&quot;[..],
+///     Limits::default(), &quot;retry&quot;, &amp;mut output)?;
+/// assert_eq!(result.matched, 1);
+/// assert_eq!(result.summary.valid, 2);
+/// assert_eq!(output, b&quot;2 ERROR api retry\n&quot;);
+/// # Ok::&lt;(), std::io::Error&gt;(())
+/// ```
+pub fn search&lt;R: BufRead, W: Write&gt;(
+    reader: R,
+    limits: Limits,
+    query: &amp;str,
+    output: &amp;mut W,
+) -&gt; io::Result&lt;SearchReport&gt; {
+    if query.is_empty() || query.len() &gt; 4096 || query.chars().any(char::is_control) {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;query must be 1..=4096 UTF-8 bytes without control characters&quot;,
+        ));
+    }
+    scan(reader, limits, Some(query), output)
+}
+
+/// Fixed-cardinality counters: no collection grows with services or matches.
+#[derive(Debug, PartialEq, Eq)]
+pub struct SearchReport {
+    pub summary: Report,
+    pub matched: u64,
+}
+
+fn scan&lt;R: BufRead, W: Write&gt;(
+    mut reader: R,
+    limits: Limits,
+    query: Option&lt;&amp;str&gt;,
+    output: &amp;mut W,
+) -&gt; io::Result&lt;SearchReport&gt; {
+    if limits.max_line_bytes == 0
+        || limits.max_line_bytes &gt; 1024 * 1024
+        || limits.max_total_bytes == 0
+    {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;line limit must be 1..=1048576 and total limit positive&quot;,
+        ));
+    }
+    let mut report = Report::default();
+    let mut matched = 0;
+    let mut line = Vec::new();
+    let mut total = 0;
+    loop {
+        match read_bounded(
+            &amp;mut reader,
+            &amp;mut line,
+            limits.max_line_bytes,
+            &amp;mut total,
+            limits.max_total_bytes,
+        )? {
+            Line::End =&gt; {
+                return Ok(SearchReport {
+                    summary: report,
+                    matched,
+                });
+            }
+            Line::Oversized =&gt; {
+                report.lines += 1;
+                report.oversized += 1;
+            }
+            Line::Data =&gt; {
+                report.lines += 1;
+                let text = std::str::from_utf8(&amp;line).map_err(|_| &quot;invalid UTF-8&quot;);
+                match text.and_then(parse_record) {
+                    Err(_) =&gt; report.malformed += 1,
+                    Ok(record) =&gt; {
+                        report.valid += 1;
+                        match record.level {
+                            Level::Info =&gt; report.info += 1,
+                            Level::Warn =&gt; report.warnings += 1,
+                            Level::Error =&gt; report.errors += 1,
+                        }
+                        // A valid record was parsed from this same UTF-8 line.
+                        // Searching its full text never indexes into a character.
+                        if let (Some(query), Ok(text)) = (query, text)
+                            &amp;&amp; text.contains(query)
+                        {
+                            output.write_all(text.as_bytes())?;
+                            output.write_all(b&quot;\n&quot;)?;
+                            matched += 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::{BufReader, Cursor};
+    #[test]
+    fn tiny_buffers_and_final_line() {
+        let input = b&quot;1 INFO api ready\r\n2 WARN db slow\n3 ERROR api failed&quot;;
+        let report = analyze(
+            BufReader::with_capacity(1, Cursor::new(input)),
+            Limits::default(),
+        )
+        .unwrap();
+        assert_eq!(
+            report,
+            Report {
+                lines: 3,
+                valid: 3,
+                info: 1,
+                warnings: 1,
+                errors: 1,
+                ..Report::default()
+            }
+        );
+    }
+    #[test]
+    fn drain_oversized_then_recover() {
+        let bytes = b&quot;aaaaaaaaaaaaaaaaaaaaaa\n1 INFO x ok\n\xff\n&quot;;
+        let report = analyze(
+            BufReader::with_capacity(3, Cursor::new(bytes)),
+            Limits {
+                max_line_bytes: 12,
+                max_total_bytes: 100,
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            (
+                report.lines,
+                report.oversized,
+                report.valid,
+                report.malformed
+            ),
+            (3, 1, 1, 1)
+        );
+    }
+    #[test]
+    fn rejects_total_exhaustion_and_invalid_limits() {
+        assert!(
+            analyze(
+                &amp;b&quot;12345&quot;[..],
+                Limits {
+                    max_line_bytes: 2,
+                    max_total_bytes: 4
+                }
+            )
+            .is_err()
+        );
+        assert!(
+            analyze(
+                &amp;b&quot;&quot;[..],
+                Limits {
+                    max_line_bytes: 0,
+                    max_total_bytes: 4
+                }
+            )
+            .is_err()
+        );
+    }
+    #[test]
+    fn accounting_property_across_buffer_sizes() {
+        let input = b&quot;1 INFO x ok\nbad\n2 ERROR y no\n\n&quot;;
+        for capacity in 1..=32 {
+            let r = analyze(
+                BufReader::with_capacity(capacity, Cursor::new(input)),
+                Limits::default(),
+            )
+            .unwrap();
+            assert_eq!(r.lines, r.valid + r.malformed + r.oversized);
+            assert_eq!(r.valid, r.info + r.warnings + r.errors);
+            assert_eq!((r.lines, r.valid), (4, 2));
+        }
+    }
+}
+</code></pre></div>
+<p>After a bounded line is complete, convert its bytes to UTF-8 and parse a borrowed Record. Increment exactly one of valid, malformed, or oversized for each counted line. For valid records, increment exactly one severity count. These relationships become testable invariants: lines equals valid plus malformed plus oversized, and valid equals info plus warnings plus errors. Accounting invariants catch missing branches even when individual example outputs look plausible.</p>
+<h2 id="guided-search-increment-emit-views-before-reusing-storage">Guided search increment: emit views before reusing storage</h2>
+<p>Literal search asks whether a sequence of characters appears inside a valid line. It does not interpret regular-expression symbols: a period matches a period. Add the SearchReport type after Report in src/lib.rs; it keeps the existing complete summary and a separate matched counter. Refactor the old loop into scan, taking an optional borrowed query and a Write destination. Keep analyze as a wrapper that supplies no query and io::sink(), a standard writer that discards bytes. This preserves the original analysis behavior while both entry points share one tested framing loop. The exact complete functions are in the source inclusion above; no omitted helper is needed.</p>
+<p>In the valid-record branch, update the all-record counters first. Only then test text.contains(query). The if let pattern obtains a query and valid text, and its following &amp;&amp; condition requires a match. A matching line is borrowed only until write_all finishes, so the next loop may safely reuse its byte buffer. W: Write means that the supplied value supports writing bytes, just as R: BufRead requires buffered reading. You will learn how these trait bounds support reusable libraries in Stage 2; here their concrete benefit is testing with a byte vector, a discard writer and a writer that deliberately fails. No collection of matching strings is needed.</p>
+<p><a href="https://doc.rust-lang.org/1.99.1/std/primitive.str.html#method.contains">Rust 1.99 str::contains</a> accepts a string pattern and finds a matching string slice. Searching validated UTF-8 avoids slicing through a character. The policy is case-sensitive and performs no Unicode normalization: café with a precomposed é differs from cafe followed by a combining accent. A query must contain 1–4096 UTF-8 bytes and no control characters. Invalid and oversized records never reach the search writer. Valid messages already reject controls, including escape characters, but the tool does not redact secrets.</p>
+<p><a href="https://doc.rust-lang.org/1.99.1/std/io/trait.Write.html#method.write_all">Write::write_all</a> repeats partial writes until all bytes are written or an error occurs. A single write call may legally accept fewer bytes than requested. Write the normalized record, then LF. CRLF input becomes LF output, and an unterminated final record gains LF: this is normalized record output, not a raw byte-for-byte copy. If the reader, total budget or writer fails after several matches, those matches may already be visible. Return the error and treat that output as an incomplete prefix. Streaming publication is not an atomic transaction.</p>
+<p>Replace the learner CLI's single-path argument handling in src/main.rs with the complete implementation below. args_os preserves native file paths. Only the query and positive decimal byte budget require Unicode text. Options precede the path; -- ends option recognition for a path beginning with a dash. The command line keeps its 4096-byte line bound. File reads use an explicit 8192-byte BufReader. The final flush must succeed before the CLI prints a success summary; a broken pipe is a failed scan with exit status 1. Failure to write a diagnostic cannot repair the original error, so main deliberately ignores that second error while retaining a failing exit status.</p>
+<div class="code-wrap" data-source="projects/reference/p03-logs/src/main.rs" data-sha256="2f3769e2d5b4d6178612e263eb77601f0ba0582de482251071cfaf905233f689"><div class="code-label"><a href="../../projects/reference/p03-logs/src/main.rs">projects/reference/p03-logs/src/main.rs</a></div><pre><code>use log_detective::{Limits, Report, analyze, search};
+use std::{
+    ffi::OsString,
+    fs::File,
+    io::{self, BufRead, BufReader, Write},
+    process::ExitCode,
+};
+
+const USAGE: &amp;str = &quot;usage: log-detective [--contains LITERAL] [--max-bytes N] [--] &lt;file|-&gt;\n\
+    Search is case-sensitive and emits valid matching records to stdout.\n\
+    Search summary goes to stderr; without search, the summary goes to stdout.\n\
+    N is a positive decimal byte budget, including discarded input; default 67108864.\n\
+    Lines retain at most 4096 bytes. Use -- before a path beginning with &#x27;-&#x27;.&quot;;
+
+#[derive(Debug)]
+struct Options {
+    path: OsString,
+    query: Option&lt;String&gt;,
+    limits: Limits,
+}
+#[derive(Debug)]
+enum Command {
+    Help,
+    Run(Options),
+}
+fn invalid(message: &amp;str) -&gt; io::Error {
+    io::Error::new(io::ErrorKind::InvalidInput, message)
+}
+fn parse_args(mut args: impl Iterator&lt;Item = OsString&gt;) -&gt; io::Result&lt;Command&gt; {
+    let mut query = None;
+    let mut budget = None;
+    while let Some(argument) = args.next() {
+        if argument == &quot;--help&quot; &amp;&amp; query.is_none() &amp;&amp; budget.is_none() {
+            return if args.next().is_none() {
+                Ok(Command::Help)
+            } else {
+                Err(invalid(&quot;--help must be used alone&quot;))
+            };
+        }
+        if argument == &quot;--contains&quot; {
+            if query.is_some() {
+                return Err(invalid(&quot;--contains was supplied twice&quot;));
+            }
+            let value = args
+                .next()
+                .ok_or_else(|| invalid(&quot;--contains needs a literal&quot;))?;
+            let value = value
+                .into_string()
+                .map_err(|_| invalid(&quot;query must be UTF-8&quot;))?;
+            if value.is_empty() || value.len() &gt; 4096 || value.chars().any(char::is_control) {
+                return Err(invalid(
+                    &quot;query must be 1..=4096 UTF-8 bytes without control characters&quot;,
+                ));
+            }
+            query = Some(value);
+        } else if argument == &quot;--max-bytes&quot; {
+            if budget.is_some() {
+                return Err(invalid(&quot;--max-bytes was supplied twice&quot;));
+            }
+            let value = args
+                .next()
+                .ok_or_else(|| invalid(&quot;--max-bytes needs a positive integer&quot;))?;
+            let text = value
+                .to_str()
+                .ok_or_else(|| invalid(&quot;byte budget must be UTF-8 decimal digits&quot;))?;
+            if text.is_empty() || !text.bytes().all(|b| b.is_ascii_digit()) {
+                return Err(invalid(&quot;byte budget must contain only decimal digits&quot;));
+            }
+            budget = Some(
+                text.parse::&lt;u64&gt;()
+                    .ok()
+                    .filter(|&amp;n| n &gt; 0)
+                    .ok_or_else(|| invalid(&quot;byte budget must be 1..=18446744073709551615&quot;))?,
+            );
+        } else {
+            let path = if argument == &quot;--&quot; {
+                args.next().ok_or_else(|| invalid(&quot;-- needs a file path&quot;))?
+            } else {
+                if argument != &quot;-&quot; &amp;&amp; argument.as_encoded_bytes().starts_with(b&quot;-&quot;) {
+                    return Err(invalid(
+                        &quot;unknown option; use -- before a path beginning with &#x27;-&#x27;&quot;,
+                    ));
+                }
+                argument
+            };
+            if args.next().is_some() {
+                return Err(invalid(&quot;expected one file path after the options&quot;));
+            }
+            return Ok(Command::Run(Options {
+                path,
+                query,
+                limits: Limits {
+                    max_total_bytes: budget.unwrap_or(Limits::default().max_total_bytes),
+                    ..Limits::default()
+                },
+            }));
+        }
+    }
+    Err(invalid(USAGE))
+}
+fn write_summary(output: &amp;mut impl Write, report: &amp;Report) -&gt; io::Result&lt;()&gt; {
+    write!(
+        output,
+        &quot;lines={} valid={} malformed={} oversized={} info={} warnings={} errors={}&quot;,
+        report.lines,
+        report.valid,
+        report.malformed,
+        report.oversized,
+        report.info,
+        report.warnings,
+        report.errors
+    )
+}
+fn process(reader: impl BufRead, options: &amp;Options) -&gt; io::Result&lt;()&gt; {
+    let mut stdout = io::stdout().lock();
+    if let Some(query) = &amp;options.query {
+        let report = search(reader, options.limits, query, &amp;mut stdout)?;
+        // Output failures, including a broken pipe, are errors. Do not print a
+        // success summary before the matching records have been flushed.
+        stdout.flush()?;
+        let mut stderr = io::stderr().lock();
+        write_summary(&amp;mut stderr, &amp;report.summary)?;
+        writeln!(stderr, &quot; matched={}&quot;, report.matched)?;
+        stderr.flush()?;
+    } else {
+        let report = analyze(reader, options.limits)?;
+        write_summary(&amp;mut stdout, &amp;report)?;
+        writeln!(stdout)?;
+        stdout.flush()?;
+    }
+    Ok(())
+}
+fn run() -&gt; io::Result&lt;()&gt; {
+    let options = match parse_args(std::env::args_os().skip(1))? {
+        Command::Help =&gt; {
+            let mut stdout = io::stdout().lock();
+            writeln!(stdout, &quot;{USAGE}&quot;)?;
+            return stdout.flush();
+        }
+        Command::Run(options) =&gt; options,
+    };
+    if options.path == &quot;-&quot; {
+        process(io::stdin().lock(), &amp;options)
+    } else {
+        let file = File::open(&amp;options.path).map_err(|error| {
+            io::Error::new(error.kind(), format!(&quot;open {:?}: {error}&quot;, options.path))
+        })?;
+        process(BufReader::with_capacity(8192, file), &amp;options)
+    }
+}
+fn main() -&gt; ExitCode {
+    match run() {
+        Ok(()) =&gt; ExitCode::SUCCESS,
+        Err(error) =&gt; {
+            // A failed diagnostic sink cannot repair the original failure.
+            let _ = writeln!(io::stderr().lock(), &quot;logs: {error}&quot;);
+            ExitCode::FAILURE
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn parse(args: &amp;[&amp;str]) -&gt; io::Result&lt;Command&gt; {
+        parse_args(args.iter().map(OsString::from))
+    }
+    #[test]
+    fn argument_contract() {
+        let Command::Run(options) =
+            parse(&amp;[&quot;--contains&quot;, &quot;café&quot;, &quot;--max-bytes&quot;, &quot;1000000000&quot;, &quot;-&quot;]).unwrap()
+        else {
+            panic!(&quot;expected run&quot;)
+        };
+        assert_eq!(options.query.as_deref(), Some(&quot;café&quot;));
+        assert_eq!(options.limits.max_total_bytes, 1_000_000_000);
+        assert_eq!(options.path, &quot;-&quot;);
+        assert!(matches!(parse(&amp;[&quot;--help&quot;]).unwrap(), Command::Help));
+        assert!(matches!(
+            parse(&amp;[&quot;--&quot;, &quot;--a-file&quot;]).unwrap(),
+            Command::Run(_)
+        ));
+        for arguments in [
+            vec![],
+            vec![&quot;--contains&quot;, &quot;&quot;, &quot;-&quot;],
+            vec![&quot;--contains&quot;],
+            vec![&quot;--max-bytes&quot;, &quot;0&quot;, &quot;-&quot;],
+            vec![&quot;--max-bytes&quot;, &quot;-1&quot;, &quot;-&quot;],
+            vec![&quot;--max-bytes&quot;, &quot;18446744073709551616&quot;, &quot;-&quot;],
+            vec![&quot;--max-bytes&quot;, &quot;5&quot;, &quot;--max-bytes&quot;, &quot;6&quot;, &quot;-&quot;],
+            vec![&quot;--contains&quot;, &quot;x&quot;, &quot;--contains&quot;, &quot;y&quot;, &quot;-&quot;],
+            vec![&quot;--unknown&quot;],
+            vec![&quot;one&quot;, &quot;two&quot;],
+            vec![&quot;--&quot;],
+            vec![&quot;--help&quot;, &quot;-&quot;],
+        ] {
+            assert!(parse(&amp;arguments).is_err(), &quot;{arguments:?}&quot;);
+        }
+    }
+    #[cfg(unix)]
+    #[test]
+    fn native_path_is_preserved_but_non_unicode_query_is_rejected() {
+        use std::os::unix::ffi::OsStringExt;
+        let path = OsString::from_vec(vec![b&#x27;f&#x27;, 0xff]);
+        let Command::Run(options) = parse_args([path.clone()].into_iter()).unwrap() else {
+            panic!(&quot;expected run&quot;)
+        };
+        assert_eq!(options.path, path);
+        assert!(
+            parse_args([OsString::from(&quot;--contains&quot;), path, OsString::from(&quot;-&quot;)].into_iter())
+                .is_err()
+        );
+    }
+}
+</code></pre></div>
+<pre><code>mise exec -- cargo test -p log-detective --locked
+mise exec -- cargo run -p log-detective -- --contains unavailable --max-bytes 10737418240 /path/to/large.log</code></pre>
+<p>The second command is a usage template: substitute an existing file. Its 10 GiB work budget is an explicit choice, not a 10 GiB allocation. All discarded bytes and line terminators count. A buffered reader may prefetch into its bounded buffer before the scanner detects budget exhaustion. The scanner stores one bounded line, a bounded query and a fixed number of counters. It therefore supports files larger than available memory, provided the reader and output destination also stream. The supplied generated-reader test exercises 67,109,888 bytes using one 1 KiB repeated record and a 257-byte reader buffer; it does not claim that this amount exceeded this computer's physical RAM or that RSS was measured.</p>
+<h2 id="playbook-a-visually-identical-word-does-not-match">Playbook: a visually identical word does not match</h2>
+<p>Observation: café matches a record copied from one producer but not a visually identical record from another. Hypothesis A: a two-byte é was split at a reader boundary. Hypothesis B: the producers used different Unicode sequences. First run the same bytes with capacities 1 and 32. The reference produces identical counts, weakening A. Then inspect the Rust string escapes in unicode_literal_matching_is_independent_of_chunk_boundaries: one contains a precomposed é and the other an e followed by a combining accent. Comparing those exact sequences supports B. The smallest sound action is to honor the declared literal contract and explain the difference. Adding normalization is a new requirement, not a buffering fix.</p>
+<p>Predict a second failure: a writer accepts five bytes, then returns BrokenPipe. The output_failure_returns_error_instead_of_successful_report test checks that this is an error, not a successful one-match report. The companion read-error test deliberately observes a complete emitted prefix followed by an input failure. Read those tests before deciding whether a downstream pipeline may trust partial output. Preserve the exit status along with the data.</p>
+<h2 id="intentional-mistake-returning-at-the-size-boundary">Intentional mistake: returning at the size boundary</h2>
+<p>In a learner copy, return Oversized as soon as retained bytes would cross the limit. With a long line followed by a valid record, the next call begins halfway through the rejected line. Your report may count several malformed fragments or lose the real next record. The fix is not to increase the default limit until the test passes. Restore the record-boundary protocol: drain the rejected physical line, then report one oversized record.</p>
+<p>A separate mistake is calling read_to_string on the entire file and then iterating its lines. That can produce correct totals for small fixtures while violating the memory contract. Tests should exercise small reader buffer capacities, long lines, invalid bytes, and a final unterminated line. Memory claims also require code-level reasoning about allocation and retention; output equality alone cannot prove a bound.</p>
+<h2 id="playbook-totals-change-with-buffer-size">Playbook: totals change with buffer size</h2>
+<p>Observation: the same bytes produce different counts when BufReader capacity changes from 1 to 4096. Hypothesis A: the record grammar depends on chunk boundaries. Hypothesis B: the implementation accidentally treats buffer chunks as complete lines. A distinguishing experiment uses a two-line fixed input and iterates capacities 1 through 32. Expected reference result: identical totals for every capacity. The grammar is defined by newline boundaries, so capacity-dependent results disprove a correct chunk-independent implementation.</p>
+<p>Now inspect where a return occurs before LF. The experiment narrows the issue to buffering state, not timestamps or severity matching. Change only the chunk-handling logic, then rerun both the capacity sweep and malformed-input fixtures. Ask AI to draw the state transitions for “within limit,” “oversized but draining,” and “end of record.” Reject a proposed repair that simply calls lines(), because it abandons the explicit memory bound under investigation.</p>
+<h2 id="reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</h2><p>This complete early checkpoint isolates bounded LF byte-line framing and draining. It deliberately precedes CRLF normalization, UTF-8 log grammar and report accounting. The <a href="../../projects/checkpoints/p03-logs/index.html">checkpoint contract and source</a> are separately preserved. From the course root, run:</p><pre><code class="language-sh">python3 scripts/start-checkpoint.py p03 01-bounded-lines
+cd learner-work/checkpoints/p03-logs/01-bounded-lines
+mise exec -- cargo test
+mise exec -- cargo run</code></pre><p>The helper refuses an existing destination; choose a new explicit destination if you already have work there. This is a complete guided comparison checkpoint, not evidence that you independently implemented the project. Make predictions, inspect each boundary test, then carry the next requirement into your own source. A separately named <code>final</code> checkpoint reconstructs the current complete reference without pretending it is this earlier milestone. Exact reconstruction and test commands are recorded in <a href="../../verification/early-checkpoints.log">the author check log</a>.</p><h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Add an optional severity filter while preserving total accounting. Decide whether valid means all syntactically valid rows or only matching rows; use a separate matched counter if both are useful. Then add a test where an oversized line appears between two valid ERROR records. Explain whether the total-input limit includes discarded bytes; in this reference it does, preventing unlimited processing of rejected data. Keep that rule when extending the analyzer.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>write down the state carried between fill_buf calls.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>test a reader with capacity 1 so every boundary becomes visible.</p></details><details><summary>Worked solution</summary><p>maintain a boolean oversized flag, stop appending after the limit, continue consume calls until newline, then increment oversized exactly once. A useful review request supplies raw input bytes, buffer capacity, limits, and expected counters. Do not paste megabytes of logs when a 30-byte fixture reproduces the boundary error.</p></details>
+<h2 id="review-limits-and-mastery">Review, limits, and mastery</h2>
+<p>The recommended analyzer bounds retained bytes and total consumed input at the point of ingestion, with explicit rejected-record accounting. A whole-file immutable buffer would simplify borrowed long-lived views but would require a different, small-file resource contract. Reader buffering still adds memory beyond the retained line Vec; the caller controls that buffer. The total byte limit bounds processed input, not elapsed wall-clock time for a slow blocking reader.</p>
+<p>Mastery means explaining why a huge line cannot make the retained line buffer grow without limit, why analysis resumes correctly afterward, and why counters remain consistent. The deterministic buffer-size sweep is finite evidence over selected inputs, not a proof for all streams. Pair it with an argument about every state transition, the injected read/write failure tests and a record of still-untested operating-system conditions. This is the first course project where the resource contract deserves as much attention as the numeric output.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><h3>Requirements and invariants</h3><p>Retain at most the configured line payload, count each physical line once, drain oversized lines, propagate read/write failures and reject input beyond its total-byte budget. Summary categories partition all counted lines; severity counters partition valid records. Search matches are a subset of valid records. UTF-8 views never outlive the stable current line. Output already written may remain when a later operation fails.</p><h3>Chosen design and concrete habits</h3><p>The shared scan state machine uses fill_buf and consume. analyze supplies a discard writer with no query; search supplies a bounded literal and the caller's writer. Fixed counters avoid a service-name map with attacker-controlled cardinality. A parsed Record borrows its fields for immediate accounting, while str::contains searches the whole validated line without byte indexing. write_all handles short writes and returns ordinary failures. The CLI uses args_os for native paths, validates textual options, owns stdout flushing and reports success only after that flush.</p><h3>Meaningful alternative and evolution threshold</h3><p>A whole-file buffer is suitable only under a separately justified small-file memory contract. Raising --max-bytes changes the allowed work, not the retained-line bound. Regular expressions, normalized or case-insensitive Unicode matching require explicit semantics and may justify a maintained library. Per-service aggregation needs bounded cardinality. A blocking byte budget does not provide a wall-clock deadline. Atomic output publication would require a separate temporary-file and replacement contract; this tool deliberately exposes streaming prefix-on-error behavior.</p><h3>Actual checks and remaining uncertainty</h3><p>The <a href="../../verification/log-search-followup.html">search follow-up</a> records unit, CLI, integration and documentation tests, strict Clippy, all-target checking and formatting. A generated reader processed 67,109,888 bytes from one 1 KiB record through a 257-byte reader, with all 65,537 records counted and matched. Unicode, partial output failures, a read error after emitted output, Interrupted retry and budget boundaries are tested. This supports the declared stream contract; it is not an RSS benchmark or proof for every input. Reader/writer storage and allocator overhead add memory. Independent review remains pending.</p></section><h2 id="explore-the-model">Explore the model</h2><section class="widget" data-widget="iterator" aria-label="A lazy iterator trace"><h3>A lazy iterator trace</h3><p>Conceptual teaching model: this trace does not show physical memory placement, prove a scheduler property, or implement consensus. Read the state explanation after each action.</p><div class="widget-visual" aria-hidden="true"></div><p data-output aria-live="polite"></p><button data-action="next">Next state</button><button data-action="reset">Reset</button><noscript>JavaScript is disabled. The lesson above contains the equivalent explanation; this optional state trace needs JavaScript.</noscript></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/io/trait.BufRead.html">BufRead</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/io/struct.BufReader.html">BufReader</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/str/fn.from_utf8.html">UTF-8 conversion</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.str.html#method.contains">Rust 1.99 str::contains: literal pattern behavior</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/io/trait.Write.html#method.write_all">Rust 1.99 Write::write_all: partial writes and errors</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-1/01-io.html">Previous: File IO: preserve errors and replace data carefully</a><a href="../../lessons/stage-2/02-traits.html">Next: Traits as required capabilities, not decoration</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-one-bad-line-must-not-control-memory">Purpose: one bad line must not control memory</a><a href="#prediction-before-reading-the-implementation">Prediction before reading the implementation</a><a href="#guided-checkpoint-observe-retain-consume">Guided checkpoint: observe, retain, consume</a><a href="#guided-search-increment-emit-views-before-reusing-storage">Guided search increment: emit views before reusing storage</a><a href="#playbook-a-visually-identical-word-does-not-match">Playbook: a visually identical word does not match</a><a href="#intentional-mistake-returning-at-the-size-boundary">Intentional mistake: returning at the size boundary</a><a href="#playbook-totals-change-with-buffer-size">Playbook: totals change with buffer size</a><a href="#reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#review-limits-and-mastery">Review, limits, and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#explore-the-model">Explore the model</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

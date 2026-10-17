@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "project": "p14-scheduler",
+  "checkpoints": [
+    {
+      "id": "00-scaffold",
+      "title": "First domain or encoding checkpoint",
+      "source": "projects/scaffolds/p14-scheduler",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p14-scheduler/locks/00-scaffold.Cargo.lock"
+    },
+    {
+      "id": "01-lease-model",
+      "title": "Deterministic lease and fencing model",
+      "source": "projects/checkpoints/p14-scheduler/01-lease-model",
+      "contract": "An in-memory queue retains at most16 jobs,256-byte payloads, three claims per job, and ten logical ticks per lease. Exact enqueue retries have no new effect; conflicting payloads fail. Expiry permits redelivery and a newer token fences old completion. Cancellation revokes completion. No database, OS clock, background worker, or external effect is implemented.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p14-scheduler/locks/01-lease-model.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete reference implementation",
+      "source": "projects/reference/p14-scheduler",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p14-scheduler/locks/final.Cargo.lock"
+    }
+  ]
+}

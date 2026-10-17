@@ -1,0 +1,227 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Validated conversions, standard traits, closures, and iterators · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="02-conversions" data-lesson="02-conversions"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Validated conversions, standard traits, closures, and iterators</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 02 / Libraries and language design</div><h1>Validated conversions, standard traits, closures, and iterators</h1><p class="lead">Design a private validated type and preserve its meaning across From, TryFrom, parsing, formatting, and lazy batch processing.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-2/02-config.html">Layer configuration, then validate the effective state</a></li></ul><ul><li>Choose From or TryFrom according to conversion direction and possible failure.</li><li>Separate parsing grammar, domain validation, Display, and Debug.</li><li>Explain closure capture and Fn, FnMut, and FnOnce at the required API boundary.</li><li>Trace borrowed and owned iterator items and preserve errors through Result collection.</li><li>Explain module paths, visibility, executable documentation, and behavioral API compatibility.</li><li>Use TryInto through its TryFrom blanket implementation and make the destination type explicit.</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#borrow">borrow</a> · <a href="../../glossary.html#closure">closure</a> · <a href="../../glossary.html#crate">crate</a> · <a href="../../glossary.html#edition">edition</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#invariant">invariant</a> · <a href="../../glossary.html#iterator">iterator</a> · <a href="../../glossary.html#mise">mise</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p04">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-conversion-is-a-contract-not-a-convenient-cast">Purpose: conversion is a contract, not a convenient cast</h2>
+<p>Configuration values often arrive as strings or general integers, while the application needs a smaller valid domain. A percentage is a useful example: the storage type <code>u8</code> accepts values through 255, but our whole-percentage contract permits only zero through one hundred. Merely changing an integer's type does not establish that rule. This lesson builds a validated percentage, gives standard traits distinct responsibilities, and then uses closures and iterators to process a batch without dropping errors.</p>
+<p>This is a focused library checkpoint supporting the configuration project. It has no environment access, files, or networking. Input grammar is one through three ASCII decimal digits, with leading zeroes permitted. Fractions, signs, surrounding whitespace, and non-ASCII digits are rejected. The result is a whole percentage; the fractional length converter remains a separate domain with a different numeric model.</p>
+<h2 id="plain-model-lossless-conversion-fallible-conversion-and-parsing">Plain model: lossless conversion, fallible conversion, and parsing</h2>
+<p><code>From&lt;Source&gt; for Destination</code> describes an infallible conversion that fits the type's intended meaning. Our valid <code>Percent</code> always fits in a <code>u16</code>, so converting out is infallible. <code>TryFrom</code> returns a <code>Result</code> because converting a general <code>u16</code> into a percentage can fail. These traits say more than the method name “convert”: callers can see whether failure must be handled. Implementing <code>From</code> also supplies the corresponding <code>Into</code> conversion through standard blanket implementations; normally implement the source-to-destination trait once.</p>
+<p><code>FromStr</code> handles parsing text. It separates accepted spelling from the numeric domain boundary. <code>Display</code> supplies the chosen user-facing spelling, and <code>Debug</code> supports developer inspection. Our error implements <code>Display</code> and <code>std::error::Error</code> so ordinary callers can preserve a structured error while choosing presentation. Those traits have different purposes; adding every standard trait automatically can accidentally promise behavior the type should not expose.</p>
+<p><code>Percent(u8)</code> is a newtype: a distinct type wrapping one value. Its field is private. External callers cannot construct <code>Percent(255)</code> directly, so the validation boundary is meaningful. It derives equality and ordering because ordinary numeric comparison matches the domain. It derives <code>Copy</code> and <code>Clone</code> because copying this tiny independent value has no ownership or resource-management consequence. A file handle or shared connection would require a different decision.</p>
+<h2 id="predict-before-running">Predict before running</h2>
+<p>Predict the results of converting 100, 101, and 300 from <code>u16</code>. Then predict parsing <code>"003"</code>, <code>"+3"</code>, and <code>"3.0"</code>. Which failures concern grammar, and which concern the valid percentage range? Finally predict whether displaying a value parsed from <code>"003"</code> preserves all three original characters. Write the contract before interpreting a surprising result.</p>
+<pre><code class="language-sh">mise exec -- cargo run -p core-rust-labs --example conversions
+mise exec -- cargo test -p core-rust-labs conversions::</code></pre>
+<p>These reference commands run from <code>projects</code>. The example selects 25 and 100 percent, printing basis points <code>[2500, 10000]</code>. One basis point is one hundredth of a percentage point. The code multiplies a validated whole percentage by one hundred, so its maximum result is 10,000 and fits in <code>u16</code>. That bound justifies the arithmetic without adding a fallible operation that cannot fail under this type's invariant.</p>
+<h2 id="read-the-complete-conversion-boundary">Read the complete conversion boundary</h2>
+<div class="code-wrap" data-source="projects/reference/p18-core-labs/src/conversions.rs" data-sha256="94875afb18de2845da1c61f2425b178cbca329ea18d05633c542a465ba49121b"><div class="code-label"><a href="../../projects/reference/p18-core-labs/src/conversions.rs">projects/reference/p18-core-labs/src/conversions.rs</a></div><pre><code>use std::fmt;
+use std::str::FromStr;
+
+/// A whole percentage in 0..=100. Safe callers cannot bypass validation.
+///
+/// ```
+/// use core_rust_labs::conversions::{Percent, PercentError};
+/// let percent = Percent::try_from(25u16)?;
+/// assert_eq!(u16::from(percent), 25);
+/// # Ok::&lt;(), PercentError&gt;(())
+/// ```
+///
+/// The tuple field remains private even though the type itself is public:
+/// ```compile_fail
+/// use core_rust_labs::conversions::Percent;
+/// let invalid = Percent(255);
+/// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Percent(u8);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PercentError {
+    Syntax,
+    OutOfRange(u16),
+}
+impl fmt::Display for PercentError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        match self {
+            Self::Syntax =&gt; f.write_str(&quot;expected 1 to 3 ASCII decimal digits&quot;),
+            Self::OutOfRange(value) =&gt; write!(f, &quot;percentage {value} is outside 0..=100&quot;),
+        }
+    }
+}
+impl std::error::Error for PercentError {}
+
+impl TryFrom&lt;u16&gt; for Percent {
+    type Error = PercentError;
+    fn try_from(value: u16) -&gt; Result&lt;Self, Self::Error&gt; {
+        if value &gt; 100 {
+            return Err(PercentError::OutOfRange(value));
+        }
+        // The validated 0..=100 range is a subset of u8&#x27;s range.
+        Ok(Self(value as u8))
+    }
+}
+impl From&lt;Percent&gt; for u16 {
+    fn from(value: Percent) -&gt; Self {
+        u16::from(value.0)
+    }
+}
+impl FromStr for Percent {
+    type Err = PercentError;
+    fn from_str(text: &amp;str) -&gt; Result&lt;Self, Self::Err&gt; {
+        if text.is_empty() || text.len() &gt; 3 || !text.bytes().all(|b| b.is_ascii_digit()) {
+            return Err(PercentError::Syntax);
+        }
+        let value = text.parse::&lt;u16&gt;().map_err(|_| PercentError::Syntax)?;
+        Self::try_from(value)
+    }
+}
+impl fmt::Display for Percent {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        write!(f, &quot;{}&quot;, self.0)
+    }
+}
+
+/// Parse the whole batch or return its first error; no partial result is published.
+pub fn parse_percentages(texts: &amp;[&amp;str]) -&gt; Result&lt;Vec&lt;Percent&gt;, PercentError&gt; {
+    texts.iter().map(|text| text.parse()).collect()
+}
+
+/// Keep input order and return basis points for values at or above the threshold.
+/// Result length is at most input length; no sorting or deduplication is implied.
+pub fn selected_basis_points(values: &amp;[Percent], threshold: Percent) -&gt; Vec&lt;u16&gt; {
+    values
+        .iter()
+        .copied()
+        .filter(|value| *value &gt;= threshold)
+        .map(|value| u16::from(value) * 100) // At most 10,000, which fits u16.
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn conversions_preserve_the_declared_range() {
+        for value in [0, 1, 99, 100] {
+            let percent = Percent::try_from(value).unwrap();
+            assert_eq!(u16::from(percent), value);
+        }
+        for value in [101, 300, u16::MAX] {
+            assert_eq!(
+                Percent::try_from(value),
+                Err(PercentError::OutOfRange(value))
+            );
+        }
+    }
+
+    #[test]
+    fn parsing_and_display_have_explicit_normalization() {
+        let percent: Percent = &quot;003&quot;.parse().unwrap();
+        assert_eq!(percent.to_string(), &quot;3&quot;);
+        assert_eq!(percent.to_string().parse::&lt;Percent&gt;(), Ok(percent));
+        for bad in [&quot;&quot;, &quot;+3&quot;, &quot;-1&quot;, &quot;1.0&quot;, &quot; 3&quot;, &quot;3 &quot;, &quot;0000&quot;, &quot;３&quot;] {
+            assert_eq!(bad.parse::&lt;Percent&gt;(), Err(PercentError::Syntax));
+        }
+        assert_eq!(&quot;101&quot;.parse::&lt;Percent&gt;(), Err(PercentError::OutOfRange(101)));
+    }
+
+    #[test]
+    fn collection_reports_first_failure_instead_of_dropping_it() {
+        assert_eq!(
+            parse_percentages(&amp;[&quot;25&quot;, &quot;101&quot;, &quot;bad&quot;]),
+            Err(PercentError::OutOfRange(101))
+        );
+        assert_eq!(
+            parse_percentages(&amp;[&quot;bad&quot;, &quot;101&quot;]),
+            Err(PercentError::Syntax)
+        );
+        assert_eq!(parse_percentages(&amp;[]), Ok(vec![]));
+    }
+
+    #[test]
+    fn filter_is_inclusive_and_preserves_order_and_duplicates() {
+        let values = parse_percentages(&amp;[&quot;100&quot;, &quot;24&quot;, &quot;25&quot;, &quot;25&quot;, &quot;0&quot;]).unwrap();
+        assert_eq!(
+            selected_basis_points(&amp;values, Percent::try_from(25).unwrap()),
+            [10000, 2500, 2500]
+        );
+        assert!(selected_basis_points(&amp;[], Percent::try_from(0).unwrap()).is_empty());
+    }
+}
+</code></pre></div>
+<div class="code-wrap" data-source="projects/reference/p18-core-labs/examples/conversions.rs" data-sha256="e45fe23156feeb386520f80c28c58c9f9e62e4c0543b29e76f0e2ec48669f4d5"><div class="code-label"><a href="../../projects/reference/p18-core-labs/examples/conversions.rs">projects/reference/p18-core-labs/examples/conversions.rs</a></div><pre><code>use core_rust_labs::conversions::{
+    Percent, PercentError, parse_percentages, selected_basis_points,
+};
+
+fn main() -&gt; Result&lt;(), PercentError&gt; {
+    let values = parse_percentages(&amp;[&quot;0&quot;, &quot;025&quot;, &quot;100&quot;])?;
+    let threshold: Percent = 25u16.try_into()?;
+    println!(&quot;threshold percent: {threshold}&quot;);
+    println!(
+        &quot;selected basis points: {:?}&quot;,
+        selected_basis_points(&amp;values, threshold)
+    );
+    let numeric: u16 = threshold.into();
+    println!(&quot;lossless numeric conversion: {numeric}&quot;);
+    Ok(())
+}
+</code></pre></div>
+<p>The <code>TryFrom</code> implementation checks the domain range before converting to the smaller storage type. Its remaining <code>as u8</code> cast is justified by the immediately preceding proof: every admitted number is at most one hundred. A cast performed before that check could truncate a larger integer. The difference is the order of validation, not a blanket prohibition on the syntax <code>as</code>.</p>
+<p>The parser first checks length and accepted digits. It then parses a <code>u16</code>, converts any syntax failure to the domain's syntax category, and calls the same validated constructor. It does not reproduce the range test in a second place. A future constructor can reuse <code>TryFrom</code> rather than creating another path into private storage. The Display implementation prints the numeric value, so <code>"003"</code> normalizes to <code>"3"</code>. Value round-tripping holds; original-byte round-tripping is not promised.</p>
+<p>In the example, <code>let numeric: u16 = threshold.into();</code> gives type inference the destination. Without context, several conversions might be possible and the compiler can ask for an annotation. Such a diagnostic is not evidence that conversion failed at runtime. The program has not yet run. State the intended destination instead of adding arbitrary casts until compilation succeeds.</p>
+<h2 id="tryinto-the-same-checked-conversion-from-the-value-side">TryInto: the same checked conversion from the value side</h2><p>The example writes <code>let threshold: Percent = 25u16.try_into()?;</code>. Read this as “try to convert this u16 into the destination type Percent.” The destination annotation matters because many types could accept an integer. Implementing <code>TryFrom&lt;u16&gt; for Percent</code> supplies the matching <code>TryInto&lt;Percent&gt;</code> through a standard-library blanket implementation: an implementation that applies to every type satisfying its stated trait bounds. We do not implement both sides separately. <code>Percent::try_from(25u16)</code> and <code>25u16.try_into()</code> reach the same validation rule and return the same error for 101. Similarly, our <code>From&lt;Percent&gt; for u16</code> supplies <code>Into&lt;u16&gt;</code>. Choose the spelling that makes the destination clearest in context. Neither spelling authorizes narrowing before checking, and the question-mark operator still propagates failure rather than inventing a replacement percentage.</p><p>Predict which annotation disappears if you write <code>let threshold = Percent::try_from(25u16)?;</code>, then make only that edit in your reconstructed example. The observed output and boundary tests should remain unchanged. This is a controlled comparison of two API spellings, not evidence that arbitrary numeric casts preserve the contract.</p><h2 id="closures-small-functions-that-can-capture-context">Closures: small functions that can capture context</h2>
+<p>A closure is a function-like value written with parameters between vertical bars: <code>|value| expression</code>. It can use values from its surrounding scope. The filter closure uses the <code>threshold</code> argument without receiving it as a second closure parameter; that is capture. Capture may borrow, mutably borrow, or own a value depending on use and explicit <code>move</code>. Adding <code>move</code> changes how captures enter the closure; it does not mean every captured value is deeply cloned.</p>
+<p>The common callable traits describe how a closure can be invoked. <code>FnOnce</code> permits a call that consumes captured ownership; <code>FnMut</code> permits mutation of captured state between calls; <code>Fn</code> permits calling through shared access. A closure that only reads a copied threshold can satisfy the stronger reusable behavior. Choose bounds according to how the receiving function uses the callback. A one-time observation API should not demand an unnecessary reusable callback merely because a familiar example did so.</p>
+<h2 id="iterators-a-lazy-sequence-of-operations">Iterators: a lazy sequence of operations</h2>
+<p><code>iter()</code> visits borrowed elements. <code>iter_mut()</code> can visit mutable references when the container is mutably borrowed. <code>into_iter()</code> commonly consumes an owned container and yields owned elements. Always inspect the actual implementation and receiver type; an iterator is a protocol for obtaining items, not a promise that every method with a similar name moves the container. In this lab, keeping the caller's vector available is part of the contract, so we begin with borrowed iteration.</p>
+<p><code>copied()</code> changes references to our Copy percentages into independent small values. <code>filter</code> asks a predicate whether to retain an item; its predicate borrows the candidate, which explains the dereference in <code>*value &gt;= threshold</code>. <code>map</code> transforms each retained value into basis points. These adapters are lazy: constructing the pipeline alone does not produce a new vector. <code>collect()</code> consumes it into the requested destination. Input order and duplicates survive unless an operation explicitly changes them.</p>
+<p>The parser's destination is <code>Result&lt;Vec&lt;Percent&gt;, PercentError&gt;</code>. Collecting iterator items that are Results returns the first error instead of publishing a partial success. Compare this with a deliberately inappropriate <code>filter_map(|text| text.parse().ok())</code>: that would silently discard failed parses. A compact pipeline is only helpful when it preserves the required semantics. An ordinary loop returning early on error is equally valid and can be clearer when control flow grows.</p>
+<h2 id="guided-checkpoint-reconstruct-explain-modify">Guided checkpoint: reconstruct, explain, modify</h2>
+<p>From the course root, create a complete standalone checkpoint. The helper refuses existing destinations and supplies the exact source and dependency-free manifest, so no hidden workspace inheritance is required.</p>
+<pre><code class="language-sh">python3 projects/reference/p18-core-labs/reconstruct.py conversions --name conversions-lab
+cd learner-work/conversions-lab
+mise exec -- cargo run --example conversions
+mise exec -- cargo test</code></pre>
+<p>Trace the input <code>["25", "101", "bad"]</code>. Mark the first successful constructor, the first error, and whether the final string is visited. Then temporarily express <code>parse_percentages</code> as an ordinary loop with <code>?</code> and a local vector. Keep the same tests and error precedence. This is a guided equivalent implementation, not a claim that iterator syntax is inherently better. Explain the return type of every intermediate expression before choosing the version you find easier to review.</p>
+<h2 id="intentional-mistake-narrowing-before-validation">Intentional mistake: narrowing before validation</h2>
+<p>In your learner copy, intentionally narrow the input to <code>u8</code> before comparing it with one hundred. Predict the result for the original <code>u16</code> value 300. Integer narrowing retains only the representable low bits, producing 44 here, so the defective check admits an invalid original input. Run the constructor boundary test, observe the failing assertion, and restore validation before narrowing. Do not change the test to accept 44; the declared input was 300 percent.</p>
+<h2 id="playbook-investigation-the-batch-became-shorter">Playbook investigation: the batch became shorter</h2>
+<p>A colleague changes Result collection to filter_map and reports that “the parser is more tolerant.” The observation is that three supplied strings produce two successful values without an error. Hypothesis A says iteration skipped a valid item. Hypothesis B says a parse failure was discarded. Compare an all-valid batch with a batch containing one invalid middle value, while keeping lengths equal. If only the invalid batch loses an item, the general iteration-skip explanation is disproved.</p>
+<p>Use the <a href="../../playbook.html">playbook</a> to record both returned values and error categories. Restore all-or-error behavior if that remains the requirement. If partial success is desired instead, return explicit per-item outcomes with positions; silently deleting an item changes correspondence to the caller's input. Your tests establish the chosen failure order for these cases. They do not establish that a future parallel implementation preserves that order automatically.</p>
+<h2 id="independent-practice-with-tiered-hints">Independent practice with tiered hints</h2>
+<p>Add a validated <code>RetryLimit</code> newtype accepting integers from one through five. Support fallible construction from <code>u16</code>, lossless extraction to <code>u16</code>, and plain decimal display. Do not copy the percentage range accidentally. Then write a function selecting limits at or above a threshold, preserving order and duplicates. Include zero, one, five, six, and a narrowing-trap input such as 257. Explain why deriving Default might promise an invalid or arbitrary retry policy.</p>
+<details><summary>Hint 1: list construction routes</summary><p>A private field is useful only if all public constructors enforce the same invariant. Write the accepted range beside every conversion direction.</p></details>
+<details><summary>Hint 2: make failure observable</summary><p>The source integer can be invalid, so use TryFrom there. Every valid retry limit fits in u16, so From is appropriate in the other direction. Filter only validated values; do not filter away constructor errors.</p></details>
+<details><summary>Reference approach after your attempt</summary><p>Validate <code>(1..=5).contains(&amp;value)</code> before storing the value. Keep range rejection separate from text syntax if you also add parsing. A loop and a lazy adapter chain are both reasonable for selection if their output order and duplicates match the specification. This independent type is not included in the runnable Percent baseline.</p></details>
+<h2 id="modules-public-boundaries-and-executable-documentation">Modules, public boundaries, and executable documentation</h2>
+<p>A Cargo package can contain a library crate and executable crates. A crate is a unit compiled by Rust; a module organizes names within that unit. In this lab, <code>src/lib.rs</code> declares <code>pub mod conversions;</code>, which loads the sibling <code>src/conversions.rs</code> module and exposes its name to users of the library. The example executable imports the public type through <code>core_rust_labs::conversions::Percent</code>. Cargo package names can contain hyphens; the Rust crate path uses underscores here. A module is not automatically another package or a network service.</p>
+<p>The <code>pub</code> keyword makes an item visible through an accessible public path. Leaving a field private prevents outside callers from bypassing its constructor. <code>pub(crate)</code> can expose a helper across the current crate without promising it to downstream users. A <code>use</code> declaration brings a name into scope; it does not copy a module or install a dependency. Paths beginning <code>crate::</code> start at the current crate root, while <code>super::</code> refers to the parent module. The tests beside the implementation can reach details that external callers cannot, so they do not alone verify the public boundary.</p>
+<p>Lines beginning <code>///</code> document the following item. Rustdoc renders that documentation, and Cargo can compile its fenced Rust examples as documentation tests. Percent's example constructs a valid value and propagates its ordinary error with <code>?</code>. The hidden final Result line gives the example an appropriate return type. Its separate <code>compile_fail</code> example tries to construct <code>Percent(255)</code> from outside the module; that is supposed to be rejected. Run <code>mise exec -- cargo test --doc</code> in the reconstructed package. A documented example that no longer compiles is a concrete interface defect, not a cosmetic documentation issue.</p>
+<p>For a guided API change, add a named read-only getter to your learner type and add a documentation example calling it. Keep the private-field compile-fail test. Then review a proposal to change the accepted maximum from 100 to 80. It can preserve the Rust method signature while rejecting formerly valid callers, so signature compatibility alone does not establish behavioral compatibility. Conversely, adding a new public error variant can affect downstream exhaustive matches. State the old contract, affected clients, migration path, and tests before declaring an API change harmless. A private helper refactor that preserves the public contract has a narrower compatibility obligation.</p>
+<p>Your independent review should distinguish four evidence sources: a module-local unit test can exercise internal cases; a separate executable or integration test uses exported paths; a documentation test checks the published example; and a compile-fail example checks a prohibited use. None establishes every future client behavior. For this small lab, the existing example executable and documentation examples exercise the public surface without adding an unnecessary separate framework.</p>
+<h2 id="engineering-decisions-evidence-and-mastery">Engineering decisions, evidence, and mastery</h2>
+<p>The chosen newtype makes a real range rule reusable; standard conversion and formatting traits let callers use familiar interfaces. Private storage and one fallible constructor prevent drift between entry points. The batch API preserves failure rather than hiding it behind a default. A simple validation function would be adequate for a one-off local calculation; a type earns its place when many functions should accept only validated values. Expanding to fractional percentages would require an explicit scale or numeric-model decision, not merely a formatting change.</p>
+<p>Four unit tests cover constructor boundaries, normalization, first-error behavior, inclusive filtering, order, and duplicates. The <a href="../../verification/core-labs-tests.log">actual lab checks</a> are author evidence, not independent acceptance. For mastery, explain conversion direction, design a newtype for a different rule, translate a pipeline into a loop, and diagnose lost errors without copying the solution. Record both behavior and the reason that behavior is required.</p>
+<aside><h3>When you get stuck</h3><p>Write the iterator Item type after each adapter and the final collect type. Run <code>mise exec -- cargo test conversions::tests::collection_reports_first_failure_instead_of_dropping_it</code>. Read the pinned From, TryFrom, Iterator, and Result collection documentation. Bring a reviewer the original input, target type, failure policy, and smallest expression whose type or behavior surprised you.</p></aside>
+
+<h2 id="edition-2024-readable-conditional-bindings">Edition 2024: readable conditional bindings</h2><p>Rust 1.88 stabilized let chains for edition 2024. A chain evaluates left to right and stops at the first failed match or false condition. Earlier bindings are available to later conditions and the successful branch. Use this when the conditions form one readable decision; use a match when the distinct failure cases need distinct handling.</p><div class="code-wrap" data-source="projects/reference/p18-core-labs/examples/let_chains.rs" data-sha256="1815ca0caa71e9703b1cc58a916cbf20d5872c1946c2b24660706f4f797ff717"><div class="code-label"><a href="../../projects/reference/p18-core-labs/examples/let_chains.rs">projects/reference/p18-core-labs/examples/let_chains.rs</a></div><pre><code>//! Edition 2024 let chains: a binding is available only after its pattern matches.
+use core_rust_labs::conversions::Percent;
+
+fn positive_percentage(text: Option&lt;&amp;str&gt;) -&gt; Option&lt;Percent&gt; {
+    if let Some(text) = text
+        &amp;&amp; let Ok(value) = text.parse::&lt;Percent&gt;()
+        &amp;&amp; u16::from(value) &gt; 0
+    {
+        Some(value)
+    } else {
+        None
+    }
+}
+
+fn main() {
+    // This example deliberately treats absence, malformed input, and zero alike.
+    // A user-facing validator should retain a Result when those causes matter.
+    assert_eq!(positive_percentage(Some(&quot;25&quot;)).map(u16::from), Some(25));
+    for text in [None, Some(&quot;0&quot;), Some(&quot;101&quot;), Some(&quot;bad&quot;)] {
+        assert_eq!(positive_percentage(text), None);
+    }
+}
+</code></pre></div><p>From <code>projects/</code>, run <code>mise exec -- cargo run -p core-rust-labs --example let_chains</code>. Predict the outcome for missing, malformed, zero and positive input before running its assertions. This example intentionally collapses rejection causes into None; preserve Result in validation APIs when callers need those causes. Nested if-let remains valid Rust.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/convert/trait.From.html">Rust 1.99: From</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/convert/trait.TryFrom.html">Rust 1.99: TryFrom</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/str/trait.FromStr.html">Rust 1.99: FromStr</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/iter/trait.Iterator.html">Rust 1.99: Iterator</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch13-01-closures.html">Rust 1.99 Book: closures</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch13-02-iterators.html">Rust 1.99 Book: iterators</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/result/enum.Result.html">Rust 1.99: Result collection</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch07-02-defining-modules-to-control-scope-and-privacy.html">Rust 1.99 Book: modules and visibility</a></li><li><a href="https://doc.rust-lang.org/1.99.1/rustdoc/write-documentation/documentation-tests.html">Rustdoc 1.99: documentation tests</a></li><li><a href="https://doc.rust-lang.org/1.99.1/cargo/reference/semver.html">Cargo 1.99: SemVer compatibility</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/convert/trait.TryInto.html">Rust 1.99.1 standard library: TryInto</a></li><li><a href="https://blog.rust-lang.org/2025/06/26/Rust-1.88.0/">Rust 1.88: let chains in edition 2024</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-2/02-config.html">Previous: Layer configuration, then validate the effective state</a><a href="../../lessons/stage-2/02-lifetimes.html">Next: Borrowed views: describe the owner instead of fighting annotations</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-conversion-is-a-contract-not-a-convenient-cast">Purpose: conversion is a contract, not a convenient cast</a><a href="#plain-model-lossless-conversion-fallible-conversion-and-parsing">Plain model: lossless conversion, fallible conversion, and parsing</a><a href="#predict-before-running">Predict before running</a><a href="#read-the-complete-conversion-boundary">Read the complete conversion boundary</a><a href="#tryinto-the-same-checked-conversion-from-the-value-side">TryInto: the same checked conversion from the value side</a><a href="#closures-small-functions-that-can-capture-context">Closures: small functions that can capture context</a><a href="#iterators-a-lazy-sequence-of-operations">Iterators: a lazy sequence of operations</a><a href="#guided-checkpoint-reconstruct-explain-modify">Guided checkpoint: reconstruct, explain, modify</a><a href="#intentional-mistake-narrowing-before-validation">Intentional mistake: narrowing before validation</a><a href="#playbook-investigation-the-batch-became-shorter">Playbook investigation: the batch became shorter</a><a href="#independent-practice-with-tiered-hints">Independent practice with tiered hints</a><a href="#modules-public-boundaries-and-executable-documentation">Modules, public boundaries, and executable documentation</a><a href="#engineering-decisions-evidence-and-mastery">Engineering decisions, evidence, and mastery</a><a href="#edition-2024-readable-conditional-bindings">Edition 2024: readable conditional bindings</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

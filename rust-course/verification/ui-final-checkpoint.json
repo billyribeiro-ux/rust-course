@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-09",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "rust-course/scripts/start-checkpoint.py",
+        "p11",
+        "final",
+        "--destination",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-final-checkpoint-hrb6xjth/final"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "metadata",
+        "--no-deps",
+        "--offline",
+        "--locked",
+        "--format-version",
+        "1",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-final-checkpoint-hrb6xjth/final/Cargo.toml"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "rust-course/scripts/build-ui.py",
+        "--project",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-final-checkpoint-hrb6xjth/final",
+        "--wasm-bindgen",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/tools/wasm-bindgen-0.2.129-aarch64-apple-darwin/wasm-bindgen",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "fix": "Nested materialized path dependency is a member of root workspace, not a competing workspace root.",
+  "browser": "unverified; permission remains blocked"
+}

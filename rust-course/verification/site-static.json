@@ -1,0 +1,9 @@
+{
+  "kind": "static checks only; not rendered browser QA",
+  "pages": 148,
+  "local_links_checked": 6705,
+  "source_inclusions_checked": 83,
+  "lessons_checked": 57,
+  "issues": [],
+  "total_issues": 0
+}

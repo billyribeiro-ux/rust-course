@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p06-kv",
+  "checkpoints": [
+    {
+      "id": "01-prefix-replay",
+      "title": "Validated miniature prefix replay before file storage",
+      "source": "projects/checkpoints/p06-kv/01-prefix-replay",
+      "contract": "Replay at most 65536 bytes of a miniature format: one length byte, payload, one wrapping-byte-sum checksum. Return complete payloads, valid byte boundary and torn-tail flag. Ignore only incomplete final records; reject complete checksum damage. This is not KV01, CRC32, or a durable file store.",
+      "commands": [
+        "cargo test",
+        "cargo run"
+      ],
+      "lockfile": "projects/checkpoints/p06-kv/locks/01-prefix-replay.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete current reference",
+      "source": "projects/reference/p06-kv",
+      "contract": "The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p06-kv/locks/final.Cargo.lock"
+    }
+  ]
+}

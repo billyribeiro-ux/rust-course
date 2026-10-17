@@ -1,0 +1,774 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Connect the operations console to a real service · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="06-console" data-lesson="06-console"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Connect the operations console to a real service</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 06 / Rust in the browser</div><h1>Connect the operations console to a real service</h1><p class="lead">Compile WASM, proxy a same-origin API, and inspect loading, error and stale states.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-6/06-state.html">Reactive state has owners and lifetimes</a></li></ul><ul><li>Build and serve a real Leptos WASM application</li><li>Trace HTTP requests and response schema validation</li><li>Handle pending forms, reconnects and bounded polling</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#authentication">authentication</a> · <a href="../../glossary.html#authorization">authorization</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#crate">crate</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#idempotency">idempotency</a> · <a href="../../glossary.html#invariant">invariant</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p11">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-a-complete-request-lifecycle">Purpose: a complete request lifecycle</h2><p>The operations console uses the same backend later examined in the capstone. You can learn its interface without yet understanding every trading invariant. The visible lesson is the lifecycle: user intent becomes a request, a server decision becomes a response, and the interface renders the result. At each step the client may know less than the server.</p>
+<h2 id="plain-model-four-separate-responsibilities">Plain model: four separate responsibilities</h2><p>The Rust compiler produces WASM. The matching wasm-bindgen tool generates JavaScript glue that loads the module and exposes browser interoperation. A small loopback server serves these assets and forwards a fixed set of API paths to the local Axum process. The Axum process owns persistent state. The proxy is a learning convenience for one origin; it is not a general public reverse proxy.</p><p>An origin consists of scheme, host and port. Browser security rules distinguish 127.0.0.1:8011 from localhost:4116 even on the same computer. Serving the UI and forwarding its API under one origin avoids a CORS configuration detour. CORS is a browser access policy, not authentication and not protection against non-browser clients.</p>
+<h2 id="prediction-a-lost-response">Prediction: a lost response</h2><p>The backend commits a simulated buy, but the browser loses its response. Does the client know the order failed? Should it immediately create a new order ID and submit again?</p><details><summary>Prediction explained</summary><p>The outcome is unknown. A new ID can create a second independent purchase. A retry protocol needs a stable ID and a backend that recognizes that ID. This client's explicit error tells you to inspect the ledger before resubmitting. It does not silently claim failure or automatically retry mutations.</p></details>
+<h2 id="build-your-own-local-state-checkpoint-first">Build your own local-state checkpoint first</h2><p>Working directory: the course folder. The immutable scaffold includes Rust source, its lockfile and an HTML loader. The project option selects the code you are editing; omitting it builds the complete reference console.</p><pre><code>python3 scripts/start-project.py p11
+mise exec -- python3 scripts/build-ui.py --project learner-work/p11-console
+python3 scripts/console-server.py --project learner-work/p11-console</code></pre><p>Install the versioned build tools shown below before running the build command. This first page has an accessible label and reactive filter text only. It does not need the API. Type a symbol, tab away and back, and explain which String owns the state. Stop that server before starting another server on port 8011. Later compare with the reference client or reconstruct its checkpoint in a different learner directory.</p><h2 id="run-the-complete-reference-console">Run the complete reference console</h2><p>Working directory: course folder. Use the exact bindgen CLI version matching the crate. A CLI installed by mise should appear in <code>mise exec</code>'s PATH:</p><pre><code>mise use cargo:wasm-bindgen-cli@0.2.129
+mise exec -- rustup target add wasm32-unknown-unknown
+mise exec -- python3 scripts/build-ui.py
+mise exec -- cargo run --manifest-path projects/Cargo.toml -p p16-workbench</code></pre><p>In a second terminal, run <code>python3 scripts/console-server.py</code> and open <a href="http://127.0.0.1:8011/">127.0.0.1:8011</a>. The backend binds port 4116 and writes its teaching journal in the working directory unless <code>WORKBENCH_LOG</code> selects another path. Use a dedicated disposable lab directory for state. Keep the journal outside the portable course package.</p><p>In a third terminal, send one synthetic tick:</p><pre><code>curl -sS http://127.0.0.1:4116/api/ticks  -H 'Authorization: Bearer demo-operator'  -H 'Content-Type: application/json'  -d '{"event_id":"console-tick-1","symbol":"RUST","price_cents":12345,"sequence":1}'</code></pre><p>The dashboard should show RUST at $123.45 after the next successful poll. Repeating the same event is a useful idempotency experiment; changing its contents under the same ID is a separate conflict case. These fixture identities are deliberately public local teaching identities, not a production login design.</p>
+<h2 id="read-the-actual-source">Read the actual source</h2><details><summary>Reference implementation, reveal after tracing the request</summary><div class="code-wrap" data-source="projects/ui-console/src/lib.rs" data-sha256="2a38a779367c75a822b7e9a6dd0be721ce38d60088e17923e08c361d73d39549"><div class="code-label"><a href="../../projects/ui-console/src/lib.rs">projects/ui-console/src/lib.rs</a></div><pre><code>use leptos::prelude::*;
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
+
+use course_ui_model::*;
+
+// The browser has one polling loop, one request at a time, and a 3-second timeout.
+// The local fixture identity is visible client code: it is NOT a secret or production auth.
+async fn get_json&lt;T: serde::de::DeserializeOwned&gt;(path: &amp;str) -&gt; Result&lt;T, String&gt; {
+    let controller = web_sys::AbortController::new().map_err(|_| &quot;AbortController unavailable&quot;)?;
+    let abort = controller.clone();
+    let timer = gloo_timers::callback::Timeout::new(3_000, move || abort.abort());
+    let response = gloo_net::http::Request::get(path)
+        .header(&quot;Authorization&quot;, &quot;Bearer demo-reader&quot;)
+        .abort_signal(Some(&amp;controller.signal()))
+        .send()
+        .await
+        .map_err(|_| &quot;Request failed or timed out. Check the local API.&quot;)?;
+    if !response.ok() {
+        return Err(format!(&quot;API returned HTTP {}&quot;, response.status()));
+    }
+    let result = response
+        .json()
+        .await
+        .map_err(|_| &quot;The response does not match the expected response schema.&quot;.into());
+    drop(timer);
+    result
+}
+
+#[component]
+fn App() -&gt; impl IntoView {
+    let (snapshot, set_snapshot) = signal(Option::&lt;Snapshot&gt;::None);
+    let (error, set_error) = signal(String::new());
+    let (filter, set_filter) = signal(String::new());
+    let (paused, set_paused) = signal(false);
+    let (status, set_status) = signal(&quot;Connecting to the local API…&quot;.to_string());
+    let (symbol, set_symbol) = signal(&quot;RUST&quot;.to_string());
+    let (quantity, set_quantity) = signal(&quot;1&quot;.to_string());
+    let (order_status, set_order_status) = signal(String::new());
+    let (pending, set_pending) = signal(false);
+    let (unresolved, set_unresolved) = signal(Option::&lt;PendingOrder&gt;::None);
+    let (history, set_history) = signal(HistoryPage::default());
+    let (jobs, set_jobs) = signal(Vec::&lt;Job&gt;::new());
+    let (watch_input, set_watch_input) = signal(&quot;RUST&quot;.to_string());
+    let (command_status, set_command_status) = signal(String::new());
+    let (command_pending, set_command_pending) = signal(false);
+    let (replay_submission, set_replay_submission) = signal(ReplaySubmission::default());
+    // This flag outlives reactive slots, so an awaited response cannot read disposed state.
+    // Relaxed is sufficient: it communicates only a boolean, not other shared data.
+    let alive = Arc::new(AtomicBool::new(true));
+    let cleanup_alive = Arc::clone(&amp;alive);
+    on_cleanup(move || cleanup_alive.store(false, Ordering::Relaxed));
+    let poll_alive = Arc::clone(&amp;alive);
+    leptos::task::spawn_local(async move {
+        while poll_alive.load(Ordering::Relaxed) {
+            if !paused.get_untracked() {
+                let result = get_json::&lt;Snapshot&gt;(&quot;/api/snapshot&quot;).await;
+                if !poll_alive.load(Ordering::Relaxed) {
+                    break;
+                }
+                match result {
+                    Ok(data) =&gt; {
+                        let after = data.events.saturating_sub(60);
+                        let history_result = get_json::&lt;HistoryPage&gt;(&amp;format!(
+                            &quot;/api/history?after={after}&amp;limit=60&quot;
+                        ))
+                        .await;
+                        if !poll_alive.load(Ordering::Relaxed) {
+                            break;
+                        }
+                        match history_result {
+                            Ok(h) =&gt; set_history.set(h),
+                            Err(e) =&gt; set_command_status.set(format!(&quot;History unavailable: {e}&quot;)),
+                        }
+                        let jobs_result = get_json::&lt;Vec&lt;Job&gt;&gt;(&quot;/api/jobs&quot;).await;
+                        if !poll_alive.load(Ordering::Relaxed) {
+                            break;
+                        }
+                        match jobs_result {
+                            Ok(j) =&gt; set_jobs.set(j),
+                            Err(e) =&gt; set_command_status.set(format!(&quot;Jobs unavailable: {e}&quot;)),
+                        }
+                        set_snapshot.set(Some(data));
+                        set_error.set(String::new());
+                        set_status.set(
+                            if paused.get_untracked() {
+                                &quot;Updates paused&quot;
+                            } else {
+                                &quot;Connected · 2-second pause between completed refresh cycles&quot;
+                            }
+                            .into(),
+                        );
+                    }
+                    Err(e) =&gt; {
+                        set_error.set(e);
+                        set_status.set(
+                            if paused.get_untracked() {
+                                &quot;Updates paused&quot;
+                            } else {
+                                &quot;Disconnected · retrying after the next interval&quot;
+                            }
+                            .into(),
+                        );
+                    }
+                }
+            }
+            gloo_timers::future::TimeoutFuture::new(2_000).await;
+        }
+    });
+    let order_alive = Arc::clone(&amp;alive);
+    let submit = move |ev: leptos::ev::SubmitEvent| {
+        ev.prevent_default();
+        if pending.get_untracked() {
+            return;
+        }
+        let retrying = unresolved.get_untracked().is_some();
+        let draft = if let Some(draft) = unresolved.get_untracked() {
+            draft // Retrying a logical instruction preserves both ID and payload.
+        } else {
+            let n = match quantity.get_untracked().parse::&lt;u64&gt;() {
+                Ok(n @ 1..=1000) =&gt; n,
+                _ =&gt; {
+                    set_order_status.set(&quot;Enter a whole quantity from 1 to 1000.&quot;.into());
+                    return;
+                }
+            };
+            let sym = symbol.get_untracked().trim().to_uppercase();
+            if sym.is_empty() || sym.len() &gt; 8 || !sym.bytes().all(|b| b.is_ascii_uppercase()) {
+                set_order_status.set(&quot;Use a symbol of 1–8 uppercase letters.&quot;.into());
+                return;
+            }
+            PendingOrder {
+                id: format!(&quot;ui-{}&quot;, uuid::Uuid::new_v4()),
+                symbol: sym,
+                quantity: n,
+            }
+        };
+        let order_id = draft.id.clone();
+        let body = draft.body();
+        set_unresolved.set(Some(draft));
+        set_pending.set(true);
+        let request_alive = Arc::clone(&amp;order_alive);
+        leptos::task::spawn_local(async move {
+            if !request_alive.load(Ordering::Relaxed) {
+                return;
+            }
+            let Ok(controller) = web_sys::AbortController::new() else {
+                set_order_status.set(&quot;Browser cancellation support is unavailable.&quot;.into());
+                set_pending.set(false);
+                return;
+            };
+            let abort = controller.clone();
+            let timer = gloo_timers::callback::Timeout::new(3_000, move || abort.abort());
+            let result = match gloo_net::http::Request::post(&quot;/api/orders&quot;)
+                .header(&quot;Authorization&quot;, &quot;Bearer demo-operator&quot;)
+                .abort_signal(Some(&amp;controller.signal()))
+                .json(&amp;body)
+            {
+                Ok(request) =&gt; request.send().await.map_err(|e| e.to_string()),
+                Err(e) =&gt; Err(e.to_string()),
+            };
+            drop(timer);
+            if !request_alive.load(Ordering::Relaxed) {
+                return;
+            }
+            let outcome = write_outcome(result.as_ref().ok().map(|r| r.status()), retrying);
+            let message = match outcome {
+                WriteOutcome::Accepted =&gt; {
+                    set_unresolved.set(None);
+                    format!(
+                        &quot;Simulated order {order_id} accepted. The next snapshot updates holdings.&quot;
+                    )
+                }
+                WriteOutcome::NotAccepted =&gt; {
+                    set_unresolved.set(None);
+                    format!(
+                        &quot;Order {order_id} was not accepted. Inspect validation, authorization and current state.&quot;
+                    )
+                }
+                WriteOutcome::Unknown =&gt; format!(
+                    &quot;Unknown outcome for {order_id}. Check its exact ledger entry or retry this same instruction. Keep this page open; new orders stay disabled until reconciliation.&quot;
+                ),
+            };
+            set_order_status.set(message);
+            set_pending.set(false);
+        });
+    };
+    let reconcile_alive = Arc::clone(&amp;alive);
+    let reconcile = move |_| {
+        if pending.get_untracked() {
+            return;
+        }
+        let Some(draft) = unresolved.get_untracked() else {
+            return;
+        };
+        set_pending.set(true);
+        let owner = Arc::clone(&amp;reconcile_alive);
+        leptos::task::spawn_local(async move {
+            let result = get_json::&lt;ExecutedOrder&gt;(&amp;format!(&quot;/api/orders/{}&quot;, draft.id)).await;
+            if !owner.load(Ordering::Relaxed) {
+                return;
+            }
+            match result {
+                Ok(fill) if fill.order_id == draft.id &amp;&amp; fill.symbol == draft.symbol &amp;&amp; fill.side == &quot;buy&quot; &amp;&amp; fill.quantity == draft.quantity as i64 =&gt; {
+                    set_order_status.set(format!(&quot;Confirmed {} in the persistent ledger at {} per unit.&quot;,fill.order_id,money(fill.price_cents)));
+                    set_unresolved.set(None);
+                }
+                Ok(_) =&gt; set_order_status.set(&quot;Ledger payload conflict: preserve the ID and request review; do not invent a new ID.&quot;.into()),
+                Err(e) =&gt; set_order_status.set(format!(&quot;Still unresolved: {e}. Even a missing entry may race an in-flight write. Retry only the retained instruction.&quot;)),
+            }
+            set_pending.set(false);
+        });
+    };
+    let watch_alive = Arc::clone(&amp;alive);
+    let update_watchlist = move |ev: leptos::ev::SubmitEvent| {
+        ev.prevent_default();
+        let symbols = watch_input
+            .get_untracked()
+            .split(&#x27;,&#x27;)
+            .map(|s| s.trim().to_uppercase())
+            .filter(|s| !s.is_empty())
+            .collect::&lt;Vec&lt;_&gt;&gt;();
+        if symbols.len() &gt; 16
+            || symbols
+                .iter()
+                .any(|s| s.len() &gt; 8 || !s.bytes().all(|b| b.is_ascii_uppercase()))
+        {
+            set_command_status.set(
+                &quot;Use at most 16 symbols of 1–8 uppercase letters, separated by commas.&quot;.into(),
+            );
+            return;
+        }
+        command(
+            &quot;PUT&quot;,
+            &quot;/api/watchlist&quot;.into(),
+            serde_json::json!({&quot;symbols&quot;:symbols}),
+            set_command_status,
+            command_pending,
+            set_command_pending,
+            Arc::clone(&amp;watch_alive),
+        );
+    };
+    let replay_alive = Arc::clone(&amp;alive);
+    let schedule_replay = move |_| {
+        if command_pending.get_untracked() {
+            return;
+        }
+        let previous = snapshot
+            .get_untracked()
+            .and_then(|s| s.quotes.into_iter().find(|q| q.symbol == &quot;LAB&quot;))
+            .map_or(0, |q| q.sequence);
+        let mut submission = replay_submission.get_untracked();
+        let body = match submission.prepare(|| format!(&quot;ui-{}&quot;, uuid::Uuid::new_v4()), previous) {
+            Ok(body) =&gt; body,
+            Err(e) =&gt; {
+                set_command_status.set(e.into());
+                return;
+            }
+        };
+        set_replay_submission.set(submission);
+        set_command_pending.set(true);
+        let owner = Arc::clone(&amp;replay_alive);
+        leptos::task::spawn_local(async move {
+            if !owner.load(Ordering::Relaxed) {
+                return;
+            }
+            let result = send_mutation(&quot;POST&quot;, &quot;/api/jobs/replay&quot;, &amp;body).await;
+            if !owner.load(Ordering::Relaxed) {
+                return;
+            }
+            let mut submission = replay_submission.get_untracked();
+            let outcome = submission.resolve(result.ok());
+            set_replay_submission.set(submission);
+            set_command_status.set(match outcome {
+                WriteOutcome::Accepted =&gt; &quot;Replay accepted. The next refresh shows its durable status.&quot;.into(),
+                WriteOutcome::NotAccepted =&gt; &quot;Replay was not accepted. Inspect validation, authorization and current state before submitting a new job.&quot;.into(),
+                WriteOutcome::Unknown =&gt; &quot;Replay outcome is unknown. Keep this page open and use Retry retained replay; it resends the exact ID and ticks, even if quotes have changed.&quot;.into(),
+            });
+            set_command_pending.set(false);
+        });
+    };
+    let cancel_alive = Arc::clone(&amp;alive);
+    view! {
+      &lt;header&gt;
+        &lt;span class=&quot;tag&quot;&gt;&quot;LOCAL LAB · SIMULATION ONLY&quot;
+        &lt;/span&gt;
+        &lt;h1&gt;&quot;Operations console&quot;
+        &lt;/h1&gt;
+        &lt;p&gt;&quot;Observe a service, trace a state change, and explain its failure boundary.&quot;
+        &lt;/p&gt;
+      &lt;/header&gt;
+      &lt;main&gt;
+        &lt;section class=&quot;toolbar&quot; aria-label=&quot;Connection controls&quot;&gt;
+          &lt;p role=&quot;status&quot;&gt;{move || status.get()}
+          &lt;/p&gt;
+          &lt;button on:click=move |_| {set_paused.update(|p|*p = !*p);set_status.set(if paused.get_untracked(){&quot;Updates paused&quot;}else{&quot;Reconnecting…&quot;}.into());}&gt;{move || if paused.get(){&quot;Resume updates&quot;}else{&quot;Pause updates&quot;}}
+          &lt;/button&gt;
+        &lt;/section&gt;
+        &lt;Show when=move || !error.get().is_empty()&gt;
+          &lt;p class=&quot;error&quot; role=&quot;alert&quot;&gt;{move || error.get()}
+          &lt;/p&gt;
+        &lt;/Show&gt;
+        &lt;Show when=move || snapshot.get().is_none()&gt;
+          &lt;p&gt;&quot;No snapshot yet. Start the backend and synthetic feed using the lesson commands.&quot;
+          &lt;/p&gt;
+        &lt;/Show&gt;
+        &lt;div class=&quot;metrics&quot;&gt;
+          &lt;article&gt;
+            &lt;h2&gt;&quot;Simulated cash&quot;
+            &lt;/h2&gt;
+            &lt;strong&gt;{move || snapshot.get().map(|s|money(s.cash_cents)).unwrap_or_else(||&quot;—&quot;.into())}
+            &lt;/strong&gt;
+          &lt;/article&gt;
+          &lt;article&gt;
+            &lt;h2&gt;&quot;Recorded events&quot;
+            &lt;/h2&gt;
+            &lt;strong&gt;{move || snapshot.get().map(|s|s.events.to_string()).unwrap_or_else(||&quot;—&quot;.into())}
+            &lt;/strong&gt;
+          &lt;/article&gt;
+          &lt;article&gt;
+            &lt;h2&gt;&quot;Mode&quot;
+            &lt;/h2&gt;
+            &lt;strong&gt;{move || if snapshot.get().is_some_and(|s|s.simulated){&quot;Paper only&quot;}else{&quot;Waiting&quot;}}
+            &lt;/strong&gt;
+          &lt;/article&gt;
+        &lt;/div&gt;
+        &lt;section&gt;
+          &lt;h2&gt;&quot;Latest quotes&quot;
+          &lt;/h2&gt;
+          &lt;label for=&quot;quote-filter&quot;&gt;&quot;Filter symbols&quot;
+          &lt;/label&gt;
+          &lt;input id=&quot;quote-filter&quot; type=&quot;search&quot; prop:value=move ||filter.get() on:input=move |ev|set_filter.set(event_target_value(&amp;ev))/&gt;
+          &lt;div class=&quot;table-scroll&quot;&gt;
+            &lt;table&gt;
+              &lt;caption&gt;&quot;Integer cents; sequence orders events within a symbol&quot;
+              &lt;/caption&gt;
+              &lt;thead&gt;
+                &lt;tr&gt;
+                  &lt;th&gt;&quot;Symbol&quot;
+                  &lt;/th&gt;
+                  &lt;th&gt;&quot;Price&quot;
+                  &lt;/th&gt;
+                  &lt;th&gt;&quot;Sequence&quot;
+                  &lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody&gt;{move || snapshot.get().unwrap_or_default().quotes.into_iter().filter(|q|q.symbol.contains(&amp;filter.get().to_uppercase())).map(|q|view!{
+                &lt;tr&gt;
+                  &lt;td&gt;{q.symbol}
+                  &lt;/td&gt;
+                  &lt;td&gt;{money(q.price_cents)}
+                  &lt;/td&gt;
+                  &lt;td&gt;{q.sequence}
+                  &lt;/td&gt;
+                &lt;/tr&gt;}).collect_view()}
+              &lt;/tbody&gt;
+            &lt;/table&gt;
+          &lt;/div&gt;
+          &lt;p&gt;{move || if let Some(current) = snapshot.get() { if current.quotes.is_empty() { &quot;No quotes. Run the synthetic feed; this is an empty state, not a $0 quote.&quot; } else if !current.quotes.iter().any(|q| q.symbol.contains(&amp;filter.get().to_uppercase())) { &quot;No symbols match this filter. Clear or change the filter.&quot; } else { &quot;&quot; } } else { &quot;&quot; }}
+          &lt;/p&gt;
+        &lt;/section&gt;
+        &lt;section&gt;
+          &lt;h2&gt;&quot;Recorded LAB price history&quot;
+          &lt;/h2&gt;
+          &lt;p&gt;&quot;Up to 60 recent event positions; unlike browser samples, points come from the persistent journal. The bounded history can expire older points.&quot;
+          &lt;/p&gt;
+          &lt;svg viewBox=&quot;0 0 600 130&quot; role=&quot;img&quot; aria-label=&quot;Recorded LAB price trend, with equivalent values below&quot;&gt;
+            &lt;polyline fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;3&quot; points=move ||{let h=history.get().points.into_iter().filter(|p|p.symbol==&quot;LAB&quot;).map(|p|p.price_cents).collect::&lt;Vec&lt;_&gt;&gt;();let min=h.iter().min().copied().unwrap_or(0);let max=h.iter().max().copied().unwrap_or(min+1);let range=(max-min).max(1) as f64;h.iter().enumerate().map(|(i,v)|format!(&quot;{},{}&quot;,i as f64*10.0,120.0-(*v-min) as f64/range*110.0)).collect::&lt;Vec&lt;_&gt;&gt;().join(&quot; &quot;)}/&gt;
+          &lt;/svg&gt;
+          &lt;details&gt;
+            &lt;summary&gt;&quot;History values and retention boundary&quot;
+            &lt;/summary&gt;
+            &lt;p&gt;{move ||{let h=history.get();match (h.oldest_position,h.latest_position) { (Some(oldest),Some(latest)) =&gt; format!(&quot;Oldest retained position: {oldest}; latest: {latest}&quot;), _ =&gt; &quot;No recorded ticks yet.&quot;.to_owned() }}}
+            &lt;/p&gt;
+            &lt;ul&gt;{move ||history.get().points.into_iter().map(|p|view!{
+              &lt;li&gt;{format!(&quot;#{} {} {} sequence {}&quot;,p.event_position,p.symbol,money(p.price_cents),p.sequence)}
+              &lt;/li&gt;}).collect_view()}
+            &lt;/ul&gt;
+          &lt;/details&gt;
+        &lt;/section&gt;
+        &lt;div class=&quot;columns&quot;&gt;
+          &lt;section&gt;
+            &lt;h2&gt;&quot;Simulated order&quot;
+            &lt;/h2&gt;
+            &lt;p&gt;&quot;Local operator fixture. No broker, real funds or external account is connected.&quot;
+            &lt;/p&gt;
+            &lt;form on:submit=submit&gt;
+              &lt;label for=&quot;symbol&quot;&gt;&quot;Symbol&quot;
+              &lt;/label&gt;
+              &lt;input id=&quot;symbol&quot; disabled=move ||unresolved.get().is_some() maxlength=&quot;8&quot; prop:value=move ||symbol.get() on:input=move |ev|set_symbol.set(event_target_value(&amp;ev))/&gt;
+              &lt;label for=&quot;quantity&quot;&gt;&quot;Whole units to buy&quot;
+              &lt;/label&gt;
+              &lt;input id=&quot;quantity&quot; disabled=move ||unresolved.get().is_some() type=&quot;number&quot; min=&quot;1&quot; max=&quot;1000&quot; prop:value=move ||quantity.get() on:input=move |ev|set_quantity.set(event_target_value(&amp;ev))/&gt;
+              &lt;button type=&quot;submit&quot; disabled=move ||pending.get()&gt;{move ||if pending.get(){&quot;Submitting…&quot;}else if unresolved.get().is_some(){&quot;Retry retained instruction&quot;}else{&quot;Submit simulated buy&quot;}}
+              &lt;/button&gt;
+            &lt;/form&gt;
+            &lt;Show when=move ||unresolved.get().is_some()&gt;
+              &lt;button on:click=reconcile.clone() disabled=move ||pending.get()&gt;&quot;Check exact ledger entry&quot;
+              &lt;/button&gt;
+              &lt;p&gt;{move ||unresolved.get().map(|d|format!(&quot;Retained instruction: {} · buy {} {}. Record this ID before leaving the page.&quot;,d.id,d.quantity,d.symbol)).unwrap_or_default()}
+              &lt;/p&gt;
+            &lt;/Show&gt;
+            &lt;p role=&quot;status&quot;&gt;{move ||order_status.get()}
+            &lt;/p&gt;
+          &lt;/section&gt;
+          &lt;section&gt;
+            &lt;h2&gt;&quot;Positions and watchlist&quot;
+            &lt;/h2&gt;
+            &lt;ul&gt;{move ||snapshot.get().unwrap_or_default().positions.into_iter().map(|p|view!{
+              &lt;li&gt;{p.symbol}&quot;: &quot;{p.quantity}&quot; units&quot;
+              &lt;/li&gt;}).collect_view()}
+            &lt;/ul&gt;
+            &lt;p&gt;{move ||format!(&quot;Watching: {}&quot;,snapshot.get().unwrap_or_default().watchlist.join(&quot;, &quot;))}
+            &lt;/p&gt;
+          &lt;/section&gt;
+        &lt;/div&gt;
+        &lt;section&gt;
+          &lt;h2&gt;&quot;Edit watchlist&quot;
+          &lt;/h2&gt;
+          &lt;form on:submit=update_watchlist&gt;
+            &lt;label for=&quot;watchlist&quot;&gt;&quot;Comma-separated symbols&quot;
+            &lt;/label&gt;
+            &lt;input id=&quot;watchlist&quot; maxlength=&quot;143&quot; prop:value=move||watch_input.get() on:input=move|ev|set_watch_input.set(event_target_value(&amp;ev))/&gt;
+            &lt;button disabled=move||command_pending.get()&gt;&quot;Save watchlist&quot;
+            &lt;/button&gt;
+          &lt;/form&gt;
+        &lt;/section&gt;
+        &lt;section&gt;
+          &lt;h2&gt;&quot;Durable replay jobs&quot;
+          &lt;/h2&gt;
+          &lt;p&gt;&quot;Queue five synthetic LAB ticks. The single worker persists its cursor. Cancellation is cooperative; completed ticks remain committed.&quot;
+          &lt;/p&gt;
+          &lt;button on:click=schedule_replay disabled=move||command_pending.get()&gt;{move || if replay_submission.get().job_id().is_some(){&quot;Retry retained replay&quot;}else{&quot;Queue synthetic replay&quot;}}
+          &lt;/button&gt;
+          &lt;p&gt;{move || replay_submission.get().job_id().map(|id| format!(&quot;Retained replay ID: {id}. Its exact ticks remain in this open page. Do not reload while the outcome is uncertain.&quot;)).unwrap_or_default()}&lt;/p&gt;
+          &lt;p role=&quot;status&quot;&gt;{move||command_status.get()}
+          &lt;/p&gt;
+          &lt;ul&gt;{move ||{let owner=Arc::clone(&amp;cancel_alive);jobs.get().into_iter().map(|j|{let id=j.job_id.clone();let active=matches!(j.status.as_str(),&quot;queued&quot;|&quot;running&quot;);let owner=Arc::clone(&amp;owner);view!{
+            &lt;li&gt;
+              &lt;span&gt;{format!(&quot;{} · {}/{} · {} {}&quot;,j.job_id,j.next,j.total,j.status,j.error.unwrap_or_default())}
+              &lt;/span&gt;
+              &lt;button disabled=move||command_pending.get()||!active on:click=move |_|command(&quot;POST&quot;,format!(&quot;/api/jobs/{id}/cancel&quot;),serde_json::json!({}),set_command_status,command_pending,set_command_pending,Arc::clone(&amp;owner))&gt;&quot;Cancel job&quot;
+              &lt;/button&gt;
+            &lt;/li&gt;}}).collect_view()}}
+          &lt;/ul&gt;
+        &lt;/section&gt;
+        &lt;section&gt;
+          &lt;h2&gt;&quot;Recent simulated order ledger&quot;
+          &lt;/h2&gt;
+          &lt;p&gt;&quot;Inspect IDs after an ambiguous outcome before submitting another instruction. The snapshot retains at most 100 recent orders; exact lookup works beyond that window. Unresolved identity is retained in this open page, not across a reload. Copy its ID before leaving.&quot;
+          &lt;/p&gt;
+          &lt;div class=&quot;table-scroll&quot;&gt;
+            &lt;table&gt;
+              &lt;thead&gt;
+                &lt;tr&gt;
+                  &lt;th&gt;&quot;Order ID&quot;
+                  &lt;/th&gt;
+                  &lt;th&gt;&quot;Symbol&quot;
+                  &lt;/th&gt;
+                  &lt;th&gt;&quot;Side&quot;
+                  &lt;/th&gt;
+                  &lt;th&gt;&quot;Units&quot;
+                  &lt;/th&gt;
+                  &lt;th&gt;&quot;Fill price&quot;
+                  &lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody&gt;{move||snapshot.get().unwrap_or_default().orders.into_iter().map(|o|view!{
+                &lt;tr&gt;
+                  &lt;td&gt;{o.order_id}
+                  &lt;/td&gt;
+                  &lt;td&gt;{o.symbol}
+                  &lt;/td&gt;
+                  &lt;td&gt;{o.side}
+                  &lt;/td&gt;
+                  &lt;td&gt;{o.quantity}
+                  &lt;/td&gt;
+                  &lt;td&gt;{money(o.price_cents)}
+                  &lt;/td&gt;
+                &lt;/tr&gt;}).collect_view()}
+              &lt;/tbody&gt;
+            &lt;/table&gt;
+          &lt;/div&gt;
+        &lt;/section&gt;
+      &lt;/main&gt;
+      &lt;footer&gt;&quot;This dashboard is a teaching client. Its fixture identities are public. Bind services to localhost.&quot;
+      &lt;/footer&gt;
+    }
+}
+// The timeout limits one request; no mutation is retried automatically.
+async fn send_mutation(method: &amp;str, path: &amp;str, body: &amp;serde_json::Value) -&gt; Result&lt;u16, String&gt; {
+    let controller = web_sys::AbortController::new()
+        .map_err(|_| &quot;Browser cancellation unavailable&quot;.to_string())?;
+    let abort = controller.clone();
+    let timer = gloo_timers::callback::Timeout::new(3000, move || abort.abort());
+    let request = if method == &quot;PUT&quot; {
+        gloo_net::http::Request::put(path)
+    } else {
+        gloo_net::http::Request::post(path)
+    };
+    let result = match request
+        .header(&quot;Authorization&quot;, &quot;Bearer demo-operator&quot;)
+        .abort_signal(Some(&amp;controller.signal()))
+        .json(body)
+    {
+        Ok(r) =&gt; r
+            .send()
+            .await
+            .map(|r| r.status())
+            .map_err(|e| e.to_string()),
+        Err(e) =&gt; Err(e.to_string()),
+    };
+    drop(timer);
+    result
+}
+// One command request is admitted at a time; errors never trigger automatic mutation retries.
+fn command(
+    method: &amp;&#x27;static str,
+    path: String,
+    body: serde_json::Value,
+    status: WriteSignal&lt;String&gt;,
+    pending: ReadSignal&lt;bool&gt;,
+    set_pending: WriteSignal&lt;bool&gt;,
+    alive: Arc&lt;AtomicBool&gt;,
+) {
+    if pending.get_untracked() {
+        return;
+    }
+    set_pending.set(true);
+    leptos::task::spawn_local(async move {
+        if !alive.load(Ordering::Relaxed) {
+            return;
+        }
+        let result = send_mutation(method, &amp;path, &amp;body).await;
+        if !alive.load(Ordering::Relaxed) {
+            return;
+        }
+        status.set(match result {Ok(200..=299)=&gt;&quot;Accepted. The next refresh confirms persistent state.&quot;.into(),Ok(code @ (408 | 409 | 500..=599))=&gt;format!(&quot;Outcome unknown (HTTP {code}). Inspect durable state before retrying.&quot;),Ok(code)=&gt;format!(&quot;Not accepted: HTTP {code}. Inspect validation and authorization.&quot;),Err(_)=&gt;&quot;Outcome unknown. Inspect jobs/watchlist before retrying; no automatic retry was sent.&quot;.into()});
+        set_pending.set(false);
+    });
+}
+#[wasm_bindgen::prelude::wasm_bindgen(start)]
+pub fn start() {
+    leptos::mount::mount_to_body(App);
+}
+</code></pre></div></details><p><code>Request::get</code> creates a browser request. The Authorization header selects the local read-only fixture. <code>send().await</code> waits for browser I/O without blocking the main event loop. The AbortController limits how long a snapshot request may remain active. Parsing into a typed Snapshot checks the expected shape; it does not prove values satisfy every business invariant. Those are enforced by the backend.</p><p>The polling loop awaits snapshot, history and job requests sequentially, then a two-second interval. It does not create a new task every timer tick, so a slow response cannot accumulate an unbounded pile of snapshot requests. The history endpoint returns at most 60 recent event positions to this view, from a server history retaining at most 1,024 points. The LAB chart uses persistent event data rather than claiming each browser poll captured every tick. The text values provide an equivalent data view. The same page can queue a five-tick synthetic replay, inspect its persisted job cursor, request cancellation, edit a watchlist and inspect recent order IDs.</p>
+<h2 id="deliberate-mistake-inventing-an-empty-success">Deliberate mistake: inventing an empty success</h2><p>Replace every fetch error with an empty default snapshot in a learner copy. Stop the API while the UI is open. The screen now looks like zero positions or zero cash rather than unavailable data. Restore a separate error path and retain clearly labeled stale data if useful. Default values can be dangerous when absence and zero have different meanings.</p>
+<h2 id="guided-checkpoint">Guided checkpoint</h2><p>Build the client, start the proxy without the API, and observe the error state. Start the API and observe reconnect. Add a tick and filter it. Submit one valid simulated buy and verify the next position/cash snapshot. Stop and restart the API with the same journal and compare the result. Each action crosses a different boundary; record which observation establishes which claim.</p>
+<h2 id="independent-practice">Independent practice</h2><p>In your learner copy, independently reconstruct the watchlist editing form using the existing PUT endpoint, without copying the reference component. Preserve user input on failure. Disable only the relevant pending action. Provide field-specific validation while preserving server errors as understandable messages. Decide whether the control is optimistic or waits for confirmation.</p><details><summary>Hint 1</summary><p>Write the form's states first: idle, edited, pending, accepted and rejected. Include an unknown-outcome case.</p></details><details><summary>Hint 2</summary><p>Use the same-origin path and the operator fixture. Read the endpoint's exact JSON contract before serializing the request.</p></details><details><summary>Worked design</summary><p>A confirmed-update form keeps an editable comma-separated input, validates bounded normalized symbols, sends one PUT with a symbols array, and changes the displayed watchlist only after success or a fresh snapshot. On failure it keeps the input and shows the response category. An optimistic form can feel faster but needs a rollback/conflict model; use the simpler policy first.</p></details>
+<h2 id="playbook-investigation-the-ui-shows-http-502">Playbook investigation: the UI shows HTTP 502</h2><p>Observation: static assets load but the snapshot fails. Hypothesis A: WASM cannot deserialize the JSON. Hypothesis B: the proxy cannot reach port 4116. The browser Network panel shows 502 before JSON parsing. A direct <code>curl http://127.0.0.1:4116/health</code> distinguishes backend availability from UI parsing. If connection fails, A cannot explain the earliest failure. Start the backend, repeat the exact request, then investigate schema only if the response arrives.</p>
+<h2 id="when-you-get-stuck">When you get stuck</h2><details><summary>Inspect the first broken boundary</summary><p>Check generated pkg assets, browser console, Network status, proxy output and backend health in that order of request flow. Include one response status and a redacted body in the review request. Do not paste bearer credentials from a real application.</p></details>
+<h2 id="review-evidence-and-mastery">Review, evidence and mastery</h2><p>A background interval that spawns requests without joining them is easy to write and hard to bound. A sequential loop has an obvious one-request budget. It can update less frequently under latency; that is an explicit tradeoff. Independently demonstrate disconnect and reconnect, explain why an HTTP success is separate from a durable business decision, and diagnose a wrong port without changing domain code.</p>
+<h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p>The current interface contract is a local, simulated service client: semantic controls, explicit loading/error/empty states, bounded sequential polling and server-authoritative mutations. Leptos 0.8.22 is used because reactive Rust state is a learning objective; the course shell itself remains static HTML. Integer-cents formatting avoids floating-point price conversion, UUID identifiers use a maintained implementation, and ambiguous writes are not automatically retried. The WASM compiler check verifies the target-specific APIs; runtime browser behavior remains pending because the saved browser permission setting blocks localhost access. The reference source is embedded directly and hashed by the course renderer.</p><p>An SSR client would be a reasonable alternative if initial content without WASM became a requirement. A push stream would require measured polling costs plus a bounded reconnect and slow-consumer contract. These are requirement changes, not corrections to an intentionally poor first design. Your checkpoint must include a named state transition, a failure case and the evidence that distinguishes it from a plausible alternative cause.</p><h2 id="reconcile-a-write-before-making-another">Reconcile a write before making another</h2><p>A timeout describes the client’s observation, not whether a durable order exists. The reference keeps a <code>PendingOrder</code> containing one UUID, symbol and quantity. An uncertain response keeps that value and disables edits to the instruction. Retry sends the identical payload; Check exact ledger entry calls <code>GET /api/orders/{id}</code> even when the fill has fallen out of the latest-100 snapshot. A matching durable fill releases the pending state. A missing entry does not prove an earlier request cannot still finish. HTTP 408, 409 and server errors remain uncertain until reconciled; no mutation retries happen automatically.</p><p>This client retains an unresolved instruction only while the page remains open. Record the displayed ID before leaving or reloading. A production workflow that must survive browser crashes needs durable client command storage and a recovery UI; that is an explicit further requirement, not an inferred guarantee. Replay-job commands show their uncertain outcome and must be inspected in the durable job list before another job is created.</p><p>The native <code>course-ui-model</code> crate extracts transport schemas and pure decisions from the browser runtime. Its tests decode empty history with null cursors, distinguish uncertain HTTP outcomes and reject a sequence range that would overflow. These checks do not exercise clicking, focus or a browser’s network cancellation implementation.</p><div class="code-wrap" data-source="projects/reference/p11-ui-model/src/lib.rs" data-sha256="b4510c4c374df5bb9610a393fa226e6684abf921ebad3e009fbc0a87ea831de1"><div class="code-label"><a href="../../projects/reference/p11-ui-model/src/lib.rs">projects/reference/p11-ui-model/src/lib.rs</a></div><pre><code>//! Transport models and pure presentation decisions, shared with the WASM client.
+use serde::Deserialize;
+
+#[derive(Clone, Debug, Default, Deserialize)]
+pub struct Quote {
+    pub symbol: String,
+    pub price_cents: i64,
+    pub sequence: u64,
+}
+#[derive(Clone, Debug, Default, Deserialize)]
+pub struct Position {
+    pub symbol: String,
+    pub quantity: i64,
+}
+#[derive(Clone, Debug, Default, Deserialize)]
+pub struct ExecutedOrder {
+    pub order_id: String,
+    pub symbol: String,
+    pub side: String,
+    pub quantity: i64,
+    pub price_cents: i64,
+}
+#[derive(Clone, Debug, Default, Deserialize)]
+pub struct HistoryPoint {
+    pub event_position: u64,
+    pub symbol: String,
+    pub price_cents: i64,
+    pub sequence: u64,
+}
+#[derive(Clone, Debug, Default, Deserialize)]
+pub struct HistoryPage {
+    pub points: Vec&lt;HistoryPoint&gt;,
+    pub oldest_position: Option&lt;u64&gt;,
+    pub latest_position: Option&lt;u64&gt;,
+}
+#[derive(Clone, Debug, Default, Deserialize)]
+pub struct Job {
+    pub job_id: String,
+    pub next: usize,
+    pub total: usize,
+    pub status: String,
+    pub error: Option&lt;String&gt;,
+}
+#[derive(Clone, Debug, Default, Deserialize)]
+pub struct Snapshot {
+    pub simulated: bool,
+    pub cash_cents: i64,
+    pub quotes: Vec&lt;Quote&gt;,
+    pub positions: Vec&lt;Position&gt;,
+    pub orders: Vec&lt;ExecutedOrder&gt;,
+    pub watchlist: Vec&lt;String&gt;,
+    pub events: u64,
+}
+pub fn money(cents: i64) -&gt; String {
+    let sign = if cents &lt; 0 { &quot;-&quot; } else { &quot;&quot; };
+    let magnitude = cents.unsigned_abs();
+    format!(&quot;{sign}${}.{:02}&quot;, magnitude / 100, magnitude % 100)
+}
+
+/// An uncertain response cannot authorize inventing a new command identity.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum WriteOutcome {
+    Accepted,
+    NotAccepted,
+    Unknown,
+}
+pub fn write_outcome(status: Option&lt;u16&gt;, earlier_uncertain: bool) -&gt; WriteOutcome {
+    match status {
+        Some(200..=299) =&gt; WriteOutcome::Accepted,
+        Some(408 | 409 | 500..=599) | None =&gt; WriteOutcome::Unknown,
+        Some(_) if earlier_uncertain =&gt; WriteOutcome::Unknown,
+        Some(_) =&gt; WriteOutcome::NotAccepted,
+    }
+}
+/// The same logical instruction retains its identity and payload on retry.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PendingOrder {
+    pub id: String,
+    pub symbol: String,
+    pub quantity: u64,
+}
+impl PendingOrder {
+    pub fn body(&amp;self) -&gt; serde_json::Value {
+        serde_json::json!({&quot;order_id&quot;:self.id,&quot;symbol&quot;:self.symbol,&quot;side&quot;:&quot;buy&quot;,&quot;quantity&quot;:self.quantity})
+    }
+}
+/// Five LAB ticks require five consecutive representable sequence numbers.
+pub fn replay_ticks(job: &amp;str, previous: u64) -&gt; Result&lt;Vec&lt;serde_json::Value&gt;, &amp;&#x27;static str&gt; {
+    previous
+        .checked_add(5)
+        .ok_or(&quot;LAB sequence is exhausted; no job was submitted.&quot;)?;
+    Ok((1..=5u64).map(|i| serde_json::json!({&quot;event_id&quot;:format!(&quot;{job}-{i}&quot;),&quot;symbol&quot;:&quot;LAB&quot;,&quot;price_cents&quot;:9975+i*25,&quot;sequence&quot;:previous+i})).collect())
+}
+
+/// The open page retains the entire replay request until its outcome is known.
+/// A refreshed quote must not change the payload of an uncertain retry.
+#[derive(Clone, Debug, Default)]
+pub struct ReplaySubmission {
+    draft: Option&lt;(String, serde_json::Value)&gt;,
+    earlier_uncertain: bool,
+}
+impl ReplaySubmission {
+    pub fn job_id(&amp;self) -&gt; Option&lt;&amp;str&gt; {
+        self.draft.as_ref().map(|(id, _)| id.as_str())
+    }
+    pub fn prepare(
+        &amp;mut self,
+        new_id: impl FnOnce() -&gt; String,
+        previous: u64,
+    ) -&gt; Result&lt;serde_json::Value, &amp;&#x27;static str&gt; {
+        if let Some((_, body)) = &amp;self.draft {
+            return Ok(body.clone());
+        }
+        let job_id = new_id();
+        let ticks = replay_ticks(&amp;job_id, previous)?;
+        let body = serde_json::json!({&quot;job_id&quot;:job_id,&quot;ticks&quot;:ticks});
+        self.draft = Some((job_id, body.clone()));
+        Ok(body)
+    }
+    pub fn resolve(&amp;mut self, status: Option&lt;u16&gt;) -&gt; WriteOutcome {
+        if self.draft.is_none() {
+            return WriteOutcome::Unknown;
+        }
+        let outcome = write_outcome(status, self.earlier_uncertain);
+        if outcome == WriteOutcome::Unknown {
+            self.earlier_uncertain = true;
+        } else {
+            self.draft = None;
+            self.earlier_uncertain = false;
+        }
+        outcome
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn empty_history_decodes_without_a_fabricated_cursor() {
+        let page: HistoryPage =
+            serde_json::from_str(r#&quot;{&quot;points&quot;:[],&quot;oldest_position&quot;:null,&quot;latest_position&quot;:null}&quot;#)
+                .unwrap();
+        assert!(page.points.is_empty());
+        assert_eq!(page.oldest_position, None);
+        assert_eq!(page.latest_position, None);
+    }
+    #[test]
+    fn boundary_sequences_do_not_wrap() {
+        assert!(replay_ticks(&quot;j&quot;, u64::MAX).is_err());
+        assert!(replay_ticks(&quot;j&quot;, u64::MAX - 4).is_err());
+        let ticks = replay_ticks(&quot;j&quot;, u64::MAX - 5).unwrap();
+        assert_eq!(ticks[4][&quot;sequence&quot;], u64::MAX);
+        assert_eq!(replay_ticks(&quot;j&quot;, 0).unwrap()[0][&quot;sequence&quot;], 1);
+    }
+    #[test]
+    fn uncertain_http_outcomes_remain_uncertain() {
+        for status in [None, Some(408), Some(409), Some(500), Some(503)] {
+            assert_eq!(write_outcome(status, false), WriteOutcome::Unknown);
+        }
+        assert_eq!(write_outcome(Some(200), false), WriteOutcome::Accepted);
+        assert_eq!(write_outcome(Some(422), false), WriteOutcome::NotAccepted);
+        assert_eq!(write_outcome(Some(401), false), WriteOutcome::NotAccepted);
+    }
+    #[test]
+    fn retry_rejection_does_not_resolve_an_earlier_attempt() {
+        for status in [401, 422, 429] {
+            assert_eq!(write_outcome(Some(status), true), WriteOutcome::Unknown);
+        }
+        assert_eq!(write_outcome(Some(200), true), WriteOutcome::Accepted);
+    }
+    #[test]
+    fn money_is_exact_integer_formatting_including_minimum() {
+        assert_eq!(money(10005), &quot;$100.05&quot;);
+        assert_eq!(money(-1), &quot;-$0.01&quot;);
+        assert_eq!(money(i64::MIN), &quot;-$92233720368547758.08&quot;);
+    }
+    #[test]
+    fn replay_retry_retains_identity_and_ticks_across_new_quotes_and_rejections() {
+        let mut submission = ReplaySubmission::default();
+        let original = submission.prepare(|| &quot;first&quot;.into(), 20).unwrap();
+        for status in [None, Some(409), Some(422), Some(429), Some(503)] {
+            assert_eq!(submission.resolve(status), WriteOutcome::Unknown);
+            let retry = submission
+                .prepare(
+                    || panic!(&quot;a retry must not generate another identity&quot;),
+                    u64::MAX,
+                )
+                .unwrap();
+            assert_eq!(retry, original);
+            assert_eq!(submission.job_id(), Some(&quot;first&quot;));
+        }
+        assert_eq!(submission.resolve(Some(200)), WriteOutcome::Accepted);
+        assert_eq!(submission.job_id(), None);
+        let next = submission.prepare(|| &quot;second&quot;.into(), 25).unwrap();
+        assert_ne!(next, original);
+        assert_eq!(next[&quot;ticks&quot;][0][&quot;sequence&quot;], 26);
+    }
+    #[test]
+    fn replay_first_rejection_or_local_validation_does_not_hold_a_draft() {
+        let mut submission = ReplaySubmission::default();
+        assert!(submission.prepare(|| &quot;exhausted&quot;.into(), u64::MAX).is_err());
+        assert_eq!(submission.job_id(), None);
+        submission.prepare(|| &quot;rejected&quot;.into(), 0).unwrap();
+        assert_eq!(submission.resolve(Some(422)), WriteOutcome::NotAccepted);
+        assert_eq!(submission.job_id(), None);
+        submission.prepare(|| &quot;fresh&quot;.into(), 5).unwrap();
+        assert_eq!(submission.resolve(Some(401)), WriteOutcome::NotAccepted);
+        assert_eq!(submission.job_id(), None);
+    }
+}
+</code></pre></div><p>The proxy admits at most 16 connections before starting handler threads and uses a five-second idle socket timeout, a 16 KiB request-body limit and a 1 MiB upstream-response limit. An idle timeout bounds waiting between socket activity; it is not a total deadline against a client that drips bytes. The server stays loopback-only. A socket fixture verified excess admission returns 503 and idle bodies release capacity; it does not verify browser behavior.</p><h2 id="retain-a-replay-request-across-an-uncertain-response">Retain a replay request across an uncertain response</h2><p>A timeout does not tell the page whether the server committed a replay job. The console therefore keeps a <code>ReplaySubmission</code> containing the exact job ID and all five ticks. After an uncertain response, the button becomes “Retry retained replay.” A newer quote must not change those ticks: the backend compares both identity and payload when deduplicating. A later validation rejection cannot disprove an earlier successful request whose response was lost, so it leaves the original request unresolved. A successful response clears it. This state lives in the open page; reloading loses it. Copy the visible ID and inspect durable jobs before leaving.</p><p>Work through the investigation: suppose the first response is lost and the LAB quote advances before you retry. Predict whether generating new tick sequences is safe. In <code>course_ui_model::ReplaySubmission</code>, the retry branch returns the retained body before it calls the ID generator or reads the new sequence. The native test <code>replay_retry_retains_identity_and_ticks_across_new_quotes_and_rejections</code> supplies an ID generator that deliberately panics if called on retry, changes the quote sequence, and checks that the whole request remains identical through timeout, conflict and rejection responses. The intentional panic belongs only to this test oracle. It is not recommended application error handling.</p><p>From the course root, run <code>mise exec -- cargo test --locked --manifest-path projects/Cargo.toml -p course-ui-model replay_</code>. These tests verify the pure retry decisions. The separate WASM build verifies integration with Leptos types. Neither establishes browser focus, network timing or rendered behavior; those require the real-browser checklist. An alternative is persisting pending commands across reloads, which needs storage failure handling, expiry and identity reconciliation. This teaching client declares an open-page contract instead.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://docs.rs/gloo-net/0.7.0/gloo_net/http/index.html">gloo-net 0.7.0</a></li><li><a href="https://wasm-bindgen.github.io/wasm-bindgen/">wasm-bindgen guide</a></li><li><a href="https://book.leptos.dev/async/index.html">Leptos async</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-6/06-state.html">Previous: Reactive state has owners and lifetimes</a><a href="../../lessons/stage-6/06-boundaries.html">Next: Rendering, security and alternative clients</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-a-complete-request-lifecycle">Purpose: a complete request lifecycle</a><a href="#plain-model-four-separate-responsibilities">Plain model: four separate responsibilities</a><a href="#prediction-a-lost-response">Prediction: a lost response</a><a href="#build-your-own-local-state-checkpoint-first">Build your own local-state checkpoint first</a><a href="#run-the-complete-reference-console">Run the complete reference console</a><a href="#read-the-actual-source">Read the actual source</a><a href="#deliberate-mistake-inventing-an-empty-success">Deliberate mistake: inventing an empty success</a><a href="#guided-checkpoint">Guided checkpoint</a><a href="#independent-practice">Independent practice</a><a href="#playbook-investigation-the-ui-shows-http-502">Playbook investigation: the UI shows HTTP 502</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#review-evidence-and-mastery">Review, evidence and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#reconcile-a-write-before-making-another">Reconcile a write before making another</a><a href="#retain-a-replay-request-across-an-uncertain-response">Retain a replay request across an uncertain response</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

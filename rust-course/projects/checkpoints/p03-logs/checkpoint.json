@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p03-logs",
+  "checkpoints": [
+    {
+      "id": "01-bounded-lines",
+      "title": "Bounded LF framing before log grammar",
+      "source": "projects/checkpoints/p03-logs/01-bounded-lines",
+      "contract": "Read one LF-delimited byte line while retaining at most max bytes (1..=4096). Drain an oversized line before the next call; treat a nonempty final unterminated line as a line; propagate I/O errors. CR remains payload at this stage, and UTF-8/record grammar are not yet interpreted.",
+      "commands": [
+        "cargo test",
+        "cargo run"
+      ],
+      "lockfile": "projects/checkpoints/p03-logs/locks/01-bounded-lines.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete current reference",
+      "source": "projects/reference/p03-logs",
+      "contract": "Complete bounded log grammar, all-record summary, case-sensitive Unicode literal search with immediate LF-normalized output, explicit line/total-byte budgets and I/O failure propagation. CLI --contains and --max-bytes allow large streams without whole-file retention; see the reference README.html for precise policies. This is the final checkpoint, not the earlier framing milestone.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p03-logs/locks/final.Cargo.lock"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-09T17:57:35.231206+00:00",
+  "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+  "checks": [
+    {
+      "name": "native-tests",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "course-ui-model"
+      ],
+      "build_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "exit_code": 0
+    },
+    {
+      "name": "native-clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "course-ui-model",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "build_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "exit_code": 0
+    },
+    {
+      "name": "wasm-clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "projects/ui-console/Cargo.toml",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "build_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm",
+      "exit_code": 0
+    },
+    {
+      "name": "wasm-build",
+      "command": [
+        "python3",
+        "scripts/build-ui.py",
+        "--wasm-bindgen",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/tools/wasm-bindgen-0.2.129-aarch64-apple-darwin/wasm-bindgen",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm"
+      ],
+      "build_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Native retry-model decisions and WASM integration; no browser behavior claim."
+}

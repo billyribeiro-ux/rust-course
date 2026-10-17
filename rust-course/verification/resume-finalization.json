@@ -1,0 +1,69 @@
+{
+  "verified_at_utc": "2026-10-09T20:25:47.175798+00:00",
+  "kind": "Resumed author review, coordinated baseline and generation finalization; not independent acceptance",
+  "baseline_checks": 13,
+  "native_test_entries": {
+    "passed": 218,
+    "failed": 0,
+    "ignored": 4
+  },
+  "progress_data_tests": 8,
+  "checks": "checks.json",
+  "baseline_log": "check-tests.log",
+  "new_regression": "P07 closes stdout pipe before child startup: observes completed indexing, exit 1, BrokenPipe and no panic.",
+  "prior_scoped_evidence": [
+    "reader-conflict-checks.json",
+    "database-guard-tests.json",
+    "database-fixture-checks.json",
+    "database-url-redaction.json",
+    "lifecycle-guard-checks.json",
+    "log-search-followup.json",
+    "indexer-progress-followup.json",
+    "cli-boundary-followup.json",
+    "tick-replay-followup.json",
+    "cli-output-followup.json",
+    "service-output-followup.json",
+    "packaging-followup.json"
+  ],
+  "resolved_construction_gaps": [
+    "P03 streaming literal search and configurable byte budget",
+    "P07 bounded live progress and fallible result output",
+    "P12 bounded synthetic tick input and deterministic exact aggregates",
+    "P06/P08/P12 native arguments and arity validation before work",
+    "P10/P14 structured disposable database targeting"
+  ],
+  "review_scope": "Reviewed new lesson explanations against scoped correction reports and current source; regenerated all displayed source. Existing baseline checks rerun on current native sources. Existing scoped process/database evidence retained with original dates and limits.",
+  "initial_environment_failure": "First baseline attempt could not bind local test sockets inside the sandbox. Authorized rerun outside that sandbox passed. Browser permissions were not changed.",
+  "limits": [
+    "Browser rendering and interaction remain blocked by the saved localhost preference.",
+    "Independent curriculum acceptance remains pending.",
+    "Four ignored database entries passed in the earlier owned PostgreSQL fixture; this continuation did not rerun that cluster.",
+    "Prior Miri, benchmark, WASM and HTTP campaigns retain their original source scopes; no new execution is claimed.",
+    "Cargo entry count includes doctests and one P06 parent no-op subprocess helper; it is not a count of independent correctness claims."
+  ],
+  "source_sha256": {
+    "assets/course.js": "1dcdf9e4c936195d7cc5abf4656f9a250177748fa0755fdfc68d41871288b689",
+    "assets/progress-data.js": "6552072dd9c9f53e74d0980c026d2638abed4d952cfb65f077a13c624332940b",
+    "authoring/README.html": "4c4b4728d9582102a4f083bc64fbc1d165574886907529c686adff3946011e8d",
+    "authoring/conversion.json": "dae4441a81d24a50728e8900c9e799cf67655de130a233ff32c251fc2dbe80bd",
+    "authoring/foundations.json": "06a787c0dd641b14ccd2d246fb179393fc80ddc3c5dd2b44b2aa3b9d2db3e012",
+    "authoring/prerequisites.json": "969c6ee67a7cdcdc1757bcbae1f9202fc1e6ec50d5399d669f4daeb1bbbff114",
+    "authoring/services.json": "9f5868ff14a51ea2eebece3a7b74fa940ebf37fbe3cdc238a612dffbc96e3514",
+    "authoring/systems.json": "371a74ae05cd9f2a88105e21031531fcba9dc02c1f45ce714218300641a998e5",
+    "projects/reference/p07-indexer/src/lib.rs": "a86a23003bcc00cda19e1f1a1fb90c253b3d3ad16d436609f4000d26e3cf3808",
+    "projects/reference/p07-indexer/src/main.rs": "09444a3d901a36a7f99d2abd4b7a0fb4b9a0a16494ddbdb337a7c79326926561",
+    "projects/reference/p07-indexer/tests/cli.rs": "be10107080c3fbeac4d68dfab190c9b1c158f7f86731e5b2d8d36cb9524b6b88",
+    "projects/reference/p09-chat/src/main.rs": "21c5beb717738260324e5c9fc75c91983288764987d3fdade09377d5cdb02124",
+    "projects/reference/p10-issues/src/main.rs": "ccfc10f0d8a5c3d6fb30dfb45c413384a73bd049731dd539efd2f1126e6609a7",
+    "projects/reference/p13-unsafe/src/main.rs": "a495092a13f377aea390ae3a68d1e07d23858c31a6ae98b39fc436a5c073744a",
+    "projects/reference/p14-scheduler/src/main.rs": "e4962cbbc9dd98ff36ef3f21f9ecd14f3e32184237deb3eba373961d68d76b4e",
+    "projects/reference/p15-replication/src/main.rs": "d31d93eccbcb8a60c895fb36aa85a42551ac3cd0766d97715db52ceed4051e57",
+    "projects/reference/p16-workbench/src/main.rs": "982ccc8f510eb4216a25eee8f219a4942c10391b7d52d90dd3811cbd1d972435",
+    "scripts/pack.py": "7c9a832e3682f0b59c582b69d60613e1aac6fffb449a81d7c9f5bac7bbdaa749",
+    "scripts/test-databases.py": "c8b89c1e4529d3b40967ec714c2202adec793dbff2cfb656a1716ccb2b90249d",
+    "scripts/verify.py": "cdb3756f87fb138dd0d3c019b5507e4cae69ab3e5a5db96ee58248d8fdfc67f2",
+    "verification/progress-data.test.cjs": "9229684befe0b98e2f77d49f006aea3ffaf8845e6285e401a6b4241ca6d7fb50"
+  },
+  "latest_browser_evidence": "browser-status.json",
+  "historical_browser_note": "Any earlier localhost-block statement records the pre-browser-test snapshot; access now works. See browser-live.html for current results and remaining file-import/download limits."
+}

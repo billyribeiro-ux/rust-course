@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p01-calculator",
+  "checkpoints": [
+    {
+      "id": "01-checked-add",
+      "title": "Checked scalar addition before units",
+      "source": "projects/checkpoints/p01-calculator/01-checked-add",
+      "contract": "Parse two bounded signed decimal i64 strings and return their checked sum. Invalid numbers and arithmetic overflow are different errors. This stage deliberately has no units, operator selection, or general CLI parser. The executable propagates output-write/flush failures instead of panicking; arithmetic errors remain distinct in the library.",
+      "commands": [
+        "cargo test",
+        "cargo run"
+      ],
+      "lockfile": "projects/checkpoints/p01-calculator/locks/01-checked-add.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete current reference",
+      "source": "projects/reference/p01-calculator",
+      "contract": "The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p01-calculator/locks/final.Cargo.lock"
+    }
+  ]
+}

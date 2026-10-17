@@ -1,0 +1,509 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Evaluate safely and test properties without overstating them · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="02-evaluator" data-lesson="02-evaluator"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Evaluate safely and test properties without overstating them</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 02 / Libraries and language design</div><h1>Evaluate safely and test properties without overstating them</h1><p class="lead">Connect recursive evaluation, checked arithmetic, deterministic property checks, and a completed project review.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-2/02-parser.html">Parse expressions with precedence, byte spans, and limits</a></li></ul><ul><li>Evaluate an AST in a specified order with checked operations</li><li>Distinguish example tests, finite properties, and proofs</li><li>Write a project review grounded in actual validation evidence</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#ast">AST</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#invariant">invariant</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#panic">panic</a> · <a href="../../glossary.html#stack">stack</a> · <a href="../../glossary.html#utf-8">UTF-8</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p05">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-a-correct-tree-still-needs-correct-execution">Purpose: a correct tree still needs correct execution</h2>
+<p>A parser establishes structure. Evaluation gives that structure a result or a runtime domain error. The expression 8 / 0 is syntactically valid but cannot produce an integer under our arithmetic contract. The expression 1 2 is syntactically invalid and never reaches evaluation. Keeping those failures separate helps users and tests identify the boundary that rejected the input. Your finished project should make successful results, syntax failures, arithmetic failures, and resource-limit failures all deliberate outcomes.</p>
+<p>The evaluator recursively visits Expr nodes. A number returns its stored i64. Unary negation evaluates its operand and uses checked_neg. A binary node evaluates its left child, then its right child, and applies the corresponding checked operation. This order is observable when more than one subtree could fail: the first error stops evaluation through ?. The language has no side effects, but error ordering still affects diagnostics. Do not assume that pure arithmetic means evaluation order is irrelevant to every user-visible result.</p>
+<h2 id="prediction-where-should-the-error-point">Prediction: where should the error point?</h2>
+<p>Predict the error for 8 / 0. Expected: division by zero at bytes 2..3, the slash. The full expression span remains available on the AST, while operator_span identifies the failing operation. For 9223372036854775807 + 1, expected failure is arithmetic overflow at the plus. For the literal 9223372036854775808, overflow happens during lexing before an AST is built. The same broad word “overflow” refers to different boundaries in these cases.</p>
+<pre><code>mise exec -- cargo run -p expression-language -- &#x27;8 / 0&#x27;
+mise exec -- cargo run -p expression-language -- &#x27;9223372036854775807 + 1&#x27;
+mise exec -- cargo test -p expression-language precise_error_spans
+mise exec -- cargo test -p expression-language deterministic_exhaustive_small_integer_properties</code></pre>
+<p>A direct literal for i64::MIN is deliberately not supported by this grammar: unary minus applies to a nonnegative literal that must itself fit in i64. Write -9223372036854775807 - 1 to produce the minimum value. This limit is documented, not silently repaired in the lexer. If you later support the direct spelling, design how literal magnitudes and unary operations interact before changing parse types opportunistically.</p>
+<h2 id="guided-checkpoint-one-recursive-contract">Guided checkpoint: one recursive contract</h2>
+<p>Read Expr::evaluate and state its contract for each node variant. All successful values fit in i64. Division by zero gets its own message; checked_div still handles minimum divided by -1 as overflow. Negating the minimum similarly fails with checked_neg. The evaluator preserves the operator&#x27;s source span when reporting arithmetic failure. The error payload is small and structured, allowing the CLI, tests, or a future editor to present it differently.</p>
+<div class="code-wrap" data-source="projects/reference/p05-expressions/src/lib.rs" data-sha256="8e7449135dc5f8c100168994ddac2d4ddd4702d4dcbe861a107049bba00f227b"><div class="code-label"><a href="../../projects/reference/p05-expressions/src/lib.rs">projects/reference/p05-expressions/src/lib.rs</a></div><pre><code>//! An integer expression language with byte spans and explicit resource limits.
+//! ```
+//! assert_eq!(expression_language::evaluate(&quot;2 + 3 * 4&quot;)?, 14);
+//! assert_eq!(expression_language::evaluate(&quot;(2 + 3) * 4&quot;)?, 20);
+//! assert!(expression_language::evaluate(&quot;8 / 0&quot;).is_err());
+//! # Ok::&lt;(), expression_language::Error&gt;(())
+//! ```
+use std::fmt;
+pub const MAX_SOURCE_BYTES: usize = 4096;
+pub const MAX_TOKENS: usize = 512;
+pub const MAX_DEPTH: usize = 64;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Span {
+    pub start: usize,
+    pub end: usize,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Error {
+    pub span: Span,
+    pub message: &amp;&#x27;static str,
+}
+impl fmt::Display for Error {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        write!(
+            f,
+            &quot;{} at bytes {}..{}&quot;,
+            self.message, self.span.start, self.span.end
+        )
+    }
+}
+impl std::error::Error for Error {}
+fn error(span: Span, message: &amp;&#x27;static str) -&gt; Error {
+    Error { span, message }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Kind {
+    Number(i64),
+    Plus,
+    Minus,
+    Star,
+    Slash,
+    Open,
+    Close,
+}
+#[derive(Clone, Copy, Debug)]
+struct Token {
+    kind: Kind,
+    span: Span,
+}
+fn lex(source: &amp;str) -&gt; Result&lt;Vec&lt;Token&gt;, Error&gt; {
+    if source.len() &gt; MAX_SOURCE_BYTES {
+        return Err(error(
+            Span {
+                start: 0,
+                end: source.len(),
+            },
+            &quot;source byte limit exceeded&quot;,
+        ));
+    }
+    let bytes = source.as_bytes();
+    let mut index = 0;
+    let mut tokens = Vec::new();
+    while index &lt; bytes.len() {
+        if bytes[index].is_ascii_whitespace() {
+            index += 1;
+            continue;
+        }
+        let start = index;
+        let kind = match bytes[index] {
+            b&#x27;0&#x27;..=b&#x27;9&#x27; =&gt; {
+                while index &lt; bytes.len() &amp;&amp; bytes[index].is_ascii_digit() {
+                    index += 1;
+                }
+                let value = source[start..index]
+                    .parse()
+                    .map_err(|_| error(Span { start, end: index }, &quot;integer literal overflow&quot;))?;
+                Kind::Number(value)
+            }
+            byte =&gt; {
+                index += 1;
+                match byte {
+                    b&#x27;+&#x27; =&gt; Kind::Plus,
+                    b&#x27;-&#x27; =&gt; Kind::Minus,
+                    b&#x27;*&#x27; =&gt; Kind::Star,
+                    b&#x27;/&#x27; =&gt; Kind::Slash,
+                    b&#x27;(&#x27; =&gt; Kind::Open,
+                    b&#x27;)&#x27; =&gt; Kind::Close,
+                    _ =&gt; {
+                        return Err(error(
+                            Span {
+                                start,
+                                end: start
+                                    + source[start..]
+                                        .chars()
+                                        .next()
+                                        .expect(&quot;start is a remaining UTF-8 character boundary&quot;)
+                                        .len_utf8(),
+                            },
+                            &quot;unexpected character&quot;,
+                        ));
+                    }
+                }
+            }
+        };
+        if tokens.len() == MAX_TOKENS {
+            return Err(error(Span { start, end: index }, &quot;token limit exceeded&quot;));
+        }
+        tokens.push(Token {
+            kind,
+            span: Span { start, end: index },
+        });
+    }
+    Ok(tokens)
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Operator {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+}
+#[derive(Debug)]
+enum Node {
+    Number(i64),
+    Negate {
+        operand: Box&lt;Expr&gt;,
+        operator_span: Span,
+    },
+    Binary {
+        left: Box&lt;Expr&gt;,
+        op: Operator,
+        right: Box&lt;Expr&gt;,
+        operator_span: Span,
+    },
+}
+/// Fields are private so callers cannot bypass the parser&#x27;s depth invariant.
+#[derive(Debug)]
+pub struct Expr {
+    node: Node,
+    span: Span,
+    depth: usize,
+}
+impl Expr {
+    pub fn span(&amp;self) -&gt; Span {
+        self.span
+    }
+    pub fn depth(&amp;self) -&gt; usize {
+        self.depth
+    }
+    pub fn evaluate(&amp;self) -&gt; Result&lt;i64, Error&gt; {
+        match &amp;self.node {
+            Node::Number(value) =&gt; Ok(*value),
+            Node::Negate {
+                operand,
+                operator_span,
+            } =&gt; operand
+                .evaluate()?
+                .checked_neg()
+                .ok_or_else(|| error(*operator_span, &quot;arithmetic overflow&quot;)),
+            Node::Binary {
+                left,
+                op,
+                right,
+                operator_span,
+            } =&gt; {
+                let left = left.evaluate()?;
+                let right = right.evaluate()?;
+                let value = match op {
+                    Operator::Add =&gt; left.checked_add(right),
+                    Operator::Subtract =&gt; left.checked_sub(right),
+                    Operator::Multiply =&gt; left.checked_mul(right),
+                    Operator::Divide =&gt; {
+                        if right == 0 {
+                            return Err(error(*operator_span, &quot;division by zero&quot;));
+                        }
+                        left.checked_div(right)
+                    }
+                };
+                value.ok_or_else(|| error(*operator_span, &quot;arithmetic overflow&quot;))
+            }
+        }
+    }
+}
+struct Parser {
+    tokens: Vec&lt;Token&gt;,
+    cursor: usize,
+    source_len: usize,
+}
+impl Parser {
+    fn peek(&amp;self) -&gt; Option&lt;Token&gt; {
+        self.tokens.get(self.cursor).copied()
+    }
+    fn next(&amp;mut self) -&gt; Option&lt;Token&gt; {
+        let token = self.peek();
+        if token.is_some() {
+            self.cursor += 1;
+        }
+        token
+    }
+    fn current_span(&amp;self) -&gt; Span {
+        self.peek().map_or(
+            Span {
+                start: self.source_len,
+                end: self.source_len,
+            },
+            |t| t.span,
+        )
+    }
+    fn expression(&amp;mut self, minimum: u8, nesting: usize) -&gt; Result&lt;Expr, Error&gt; {
+        if nesting &gt;= MAX_DEPTH {
+            return Err(error(self.current_span(), &quot;nesting limit exceeded&quot;));
+        }
+        let token = self
+            .next()
+            .ok_or_else(|| error(self.current_span(), &quot;expected an expression&quot;))?;
+        let mut left = match token.kind {
+            Kind::Number(value) =&gt; Expr {
+                node: Node::Number(value),
+                span: token.span,
+                depth: 1,
+            },
+            Kind::Minus =&gt; {
+                let operand = self.expression(3, nesting + 1)?;
+                let depth = operand.depth + 1;
+                if depth &gt; MAX_DEPTH {
+                    return Err(error(token.span, &quot;AST depth limit exceeded&quot;));
+                }
+                Expr {
+                    span: Span {
+                        start: token.span.start,
+                        end: operand.span.end,
+                    },
+                    depth,
+                    node: Node::Negate {
+                        operand: Box::new(operand),
+                        operator_span: token.span,
+                    },
+                }
+            }
+            Kind::Open =&gt; {
+                let mut inner = self.expression(0, nesting + 1)?;
+                let close = self
+                    .next()
+                    .ok_or_else(|| error(self.current_span(), &quot;expected closing parenthesis&quot;))?;
+                if close.kind != Kind::Close {
+                    return Err(error(close.span, &quot;expected closing parenthesis&quot;));
+                }
+                inner.span = Span {
+                    start: token.span.start,
+                    end: close.span.end,
+                };
+                inner
+            }
+            _ =&gt; {
+                return Err(error(
+                    token.span,
+                    &quot;expected a number, minus, or opening parenthesis&quot;,
+                ));
+            }
+        };
+        while let Some(token) = self.peek() {
+            let (precedence, op) = match token.kind {
+                Kind::Plus =&gt; (1, Operator::Add),
+                Kind::Minus =&gt; (1, Operator::Subtract),
+                Kind::Star =&gt; (2, Operator::Multiply),
+                Kind::Slash =&gt; (2, Operator::Divide),
+                _ =&gt; break,
+            };
+            if precedence &lt; minimum {
+                break;
+            }
+            self.next();
+            let right = self.expression(precedence + 1, nesting + 1)?;
+            let depth = 1 + left.depth.max(right.depth);
+            if depth &gt; MAX_DEPTH {
+                return Err(error(token.span, &quot;AST depth limit exceeded&quot;));
+            }
+            left = Expr {
+                span: Span {
+                    start: left.span.start,
+                    end: right.span.end,
+                },
+                depth,
+                node: Node::Binary {
+                    left: Box::new(left),
+                    op,
+                    right: Box::new(right),
+                    operator_span: token.span,
+                },
+            };
+        }
+        Ok(left)
+    }
+}
+pub fn parse(source: &amp;str) -&gt; Result&lt;Expr, Error&gt; {
+    let mut parser = Parser {
+        tokens: lex(source)?,
+        cursor: 0,
+        source_len: source.len(),
+    };
+    let expression = parser.expression(0, 0)?;
+    if parser.peek().is_some() {
+        return Err(error(parser.current_span(), &quot;unexpected trailing token&quot;));
+    }
+    Ok(expression)
+}
+pub fn evaluate(source: &amp;str) -&gt; Result&lt;i64, Error&gt; {
+    parse(source)?.evaluate()
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn precedence_associativity_unary() {
+        for (source, value) in [
+            (&quot;2 + 3 * 4&quot;, 14),
+            (&quot;(2 + 3) * 4&quot;, 20),
+            (&quot;20 - 5 - 3&quot;, 12),
+            (&quot;24 / 4 / 2&quot;, 3),
+            (&quot;-3 * -2&quot;, 6),
+            (&quot;--3&quot;, 3),
+            (&quot;-7/2&quot;, -3),
+        ] {
+            assert_eq!(evaluate(source).unwrap(), value, &quot;{source}&quot;);
+        }
+    }
+    #[test]
+    fn precise_error_spans() {
+        let e = evaluate(&quot;8 / 0&quot;).unwrap_err();
+        assert_eq!(e.span, Span { start: 2, end: 3 });
+        assert_eq!(e.message, &quot;division by zero&quot;);
+        let e = parse(&quot;2 + 🦀&quot;).unwrap_err();
+        assert_eq!(e.span, Span { start: 4, end: 8 });
+        for source in [
+            &quot;&quot;,
+            &quot;1 2&quot;,
+            &quot;(1&quot;,
+            &quot;1)&quot;,
+            &quot;+1&quot;,
+            &quot;1+&quot;,
+            &quot;9223372036854775808&quot;,
+            &quot;9223372036854775807+1&quot;,
+        ] {
+            assert!(evaluate(source).is_err(), &quot;{source}&quot;);
+        }
+    }
+    #[test]
+    fn every_arithmetic_overflow_reports_its_operator() {
+        // Form MIN by subtraction because unsigned integer tokens cannot hold 2^63.
+        // These boundary checks must behave identically in debug and release builds.
+        for (source, start) in [
+            (&quot;9223372036854775807 + 1&quot;, 20),
+            (&quot;(-9223372036854775807 - 1) - 1&quot;, 27),
+            (&quot;9223372036854775807 * 2&quot;, 20),
+            (&quot;-(-9223372036854775807 - 1)&quot;, 0),
+            (&quot;(-9223372036854775807 - 1) / -1&quot;, 27),
+        ] {
+            assert_eq!(
+                evaluate(source),
+                Err(Error {
+                    span: Span {
+                        start,
+                        end: start + 1
+                    },
+                    message: &quot;arithmetic overflow&quot;,
+                }),
+                &quot;{source}&quot;
+            );
+        }
+        for (source, expected) in [
+            (&quot;9223372036854775807 + 0&quot;, i64::MAX),
+            (&quot;-9223372036854775807 - 1&quot;, i64::MIN),
+            (&quot;9223372036854775807 * 1&quot;, i64::MAX),
+            (&quot;(-9223372036854775807 - 1) / 1&quot;, i64::MIN),
+            (&quot;-(-9223372036854775807)&quot;, i64::MAX),
+        ] {
+            assert_eq!(evaluate(source), Ok(expected), &quot;{source}&quot;);
+        }
+    }
+    #[test]
+    fn resource_limits_are_errors() {
+        assert!(parse(&amp;&quot;(&quot;.repeat(100)).is_err());
+        assert!(parse(&amp;&quot;-&quot;.repeat(100)).is_err());
+        assert!(parse(&amp;vec![&quot;1&quot;; 100].join(&quot;+&quot;)).is_err());
+        assert!(parse(&amp;vec![&quot;1&quot;; 300].join(&quot;+&quot;)).is_err());
+        assert!(parse(&amp;&quot; &quot;.repeat(MAX_SOURCE_BYTES + 1)).is_err());
+    }
+    #[test]
+    fn exact_byte_and_token_limits_have_distinct_diagnostics() {
+        let at_bytes = format!(&quot;1{}&quot;, &quot; &quot;.repeat(MAX_SOURCE_BYTES - 1));
+        assert_eq!(evaluate(&amp;at_bytes), Ok(1));
+        let over_bytes = format!(&quot;{at_bytes} &quot;);
+        assert_eq!(
+            parse(&amp;over_bytes).unwrap_err(),
+            error(
+                Span {
+                    start: 0,
+                    end: MAX_SOURCE_BYTES + 1
+                },
+                &quot;source byte limit exceeded&quot;
+            )
+        );
+
+        // 128 leaves give 127 operators and 254 parentheses: 509 tokens.
+        // Three unary minuses reach 512 without approaching either depth limit.
+        let mut balanced = &quot;1&quot;.to_owned();
+        for _ in 0..7 {
+            balanced = format!(&quot;({balanced}+{balanced})&quot;);
+        }
+        let at_tokens = format!(&quot;---{balanced}&quot;);
+        assert_eq!(lex(&amp;at_tokens).unwrap().len(), MAX_TOKENS);
+        assert_eq!(evaluate(&amp;at_tokens), Ok(-128));
+        let over_tokens = format!(&quot;-{at_tokens}&quot;);
+        assert_eq!(
+            parse(&amp;over_tokens).unwrap_err(),
+            error(
+                Span {
+                    start: 512,
+                    end: 513
+                },
+                &quot;token limit exceeded&quot;
+            )
+        );
+    }
+    #[test]
+    fn recursive_nesting_and_constructed_tree_depth_are_separate_limits() {
+        // Top-level expression is recursion level one. 63 pairs use 64 calls,
+        // but parentheses do not add AST nodes: the resulting tree has depth 1.
+        let at_nesting = format!(&quot;{}1{}&quot;, &quot;(&quot;.repeat(63), &quot;)&quot;.repeat(63));
+        assert_eq!(parse(&amp;at_nesting).unwrap().depth(), 1);
+        let over_nesting = format!(&quot;({at_nesting})&quot;);
+        assert_eq!(
+            parse(&amp;over_nesting).unwrap_err(),
+            error(Span { start: 64, end: 65 }, &quot;nesting limit exceeded&quot;)
+        );
+
+        // A flat left-associative chain uses shallow parser recursion while its
+        // result gets one level deeper per number. It exercises the other guard.
+        let at_depth = vec![&quot;1&quot;; MAX_DEPTH].join(&quot;+&quot;);
+        let tree = parse(&amp;at_depth).unwrap();
+        assert_eq!(tree.depth(), MAX_DEPTH);
+        assert_eq!(tree.evaluate(), Ok(64));
+        assert_eq!(
+            parse(&amp;format!(&quot;{at_depth}+1&quot;)).unwrap_err(),
+            error(
+                Span {
+                    start: 127,
+                    end: 128
+                },
+                &quot;AST depth limit exceeded&quot;
+            )
+        );
+    }
+    #[test]
+    fn deterministic_exhaustive_small_integer_properties() {
+        // Finite exhaustive domain, not randomized fuzzing and not a proof for all i64.
+        for a in -8_i64..=8 {
+            for b in -8_i64..=8 {
+                for c in -4_i64..=4 {
+                    assert_eq!(evaluate(&amp;format!(&quot;({a})+({b})*({c})&quot;)).unwrap(), a + b * c);
+                    assert_eq!(
+                        evaluate(&amp;format!(&quot;(({a})+({b}))*({c})&quot;)).unwrap(),
+                        (a + b) * c
+                    );
+                    assert_eq!(
+                        evaluate(&amp;format!(&quot;({a})+({b})&quot;)).unwrap(),
+                        evaluate(&amp;format!(&quot;({b})+({a})&quot;)).unwrap()
+                    );
+                    // Subtraction distinguishes left from right associativity.
+                    // Parenthesizing each operand does not group the operations.
+                    assert_eq!(
+                        evaluate(&amp;format!(&quot;({a})-({b})-({c})&quot;)).unwrap(),
+                        (a - b) - c
+                    );
+                }
+            }
+        }
+    }
+}
+</code></pre></div>
+<p>The parser has already enforced AST depth and keeps Expr fields private, so evaluation receives a bounded tree from the public parse API. That is a cross-layer invariant worth documenting: evaluation relies on construction constraints. A future public constructor or deserializer could invalidate the argument unless it also checks depth. A good review traces not only each function body but also every route by which its inputs can be constructed.</p>
+<h2 id="examples-properties-and-independent-expectations">Examples, properties, and independent expectations</h2>
+<p>An example test asserts one known result, such as 2 + 3 * 4 = 14. A property states a relationship over a set of inputs, such as addition commutativity. The reference loops over small finite integer domains and checks expressions against direct Rust arithmetic that is safe within those chosen bounds. This is deterministic exhaustive checking over the specified domain. It is not randomized property testing, fuzzing, or a proof over all i64 values and all source strings.</p>
+<p>The oracle matters. If a test computes its expected result using the same parser under test, the two sides can share the same defect. Comparing a parsed expression with a straightforward host-language expression on small bounded integers provides a more independent expectation. Even that oracle has assumptions: keep values small enough that ordinary arithmetic cannot overflow, and account for the same integer division semantics. Write those assumptions near the test rather than relying on intuition.</p>
+<h2 id="intentional-mistake-a-property-outside-its-preconditions">Intentional mistake: a property outside its preconditions</h2>
+<p>A tempting property is (a / b) * b == a for every nonzero b. Integer division truncates, so it fails whenever a is not divisible by b. For a=7 and b=2, the left side is 6. A failing test can expose a false test assumption instead of an implementation bug. Refine the property to cases with exact divisibility, or assert the appropriate quotient-and-remainder relationship with carefully stated sign behavior. Never patch correct code merely to satisfy an incorrect property.</p>
+<p>Another tempting claim is that addition associativity holds for every checked operation sequence. Mathematically it does over unbounded integers, but intermediate overflow can make one grouping fail while another succeeds. Distinguish mathematical identities from identities of a finite checked computation. Restrict the domain or compare success/error behavior under a precisely stated condition. Property tests require more specification, not less.</p>
+<h2 id="playbook-a-generated-case-fails">Playbook: a generated case fails</h2>
+<p>Observation: a proposed division property fails for 7 and 2 even though the evaluator returns the documented quotient 3. Hypothesis A: the parser groups division incorrectly. Hypothesis B: the property assumes exact division where the language truncates. Distinguishing experiment: evaluate 7 / 2 directly and compare with ordinary i64 division, then test 8 / 2 under the property. Expected results: both evaluators return 3 for the first, while the divisible case satisfies the proposed equation. This disproves a parser explanation for that reproduction and supports a missing property precondition.</p>
+<p>Capture the minimized counterexample, the original claim, and the revised domain. Do not delete the failing case without explanation; preserve it as evidence of the semantic distinction. Ask AI to search for a counterexample to a property before generating hundreds of tests. Then verify its counterexample manually and through execution. This uses assistance to challenge assumptions rather than rubber-stamp a test suite.</p>
+<h2 id="separate-an-evaluation-result-from-its-presentation">Separate an evaluation result from its presentation</h2><p>The evaluator remains a pure function. The executable writes its result with fallible writeln!, flushes normal output, and reports a closed sink as an ordinary failure. Error diagnostics are best effort if stderr is unavailable. The <a href="../../verification/cli-output-followup.html">output regression</a> forces a broken pipe before process startup; existing corpus tests continue to establish expression semantics separately. A nonzero exit is therefore not enough to diagnose invalid syntax: read the available error category and reproduce the output conditions.</p><h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Add a table of boundary expressions: maximum plus one, minimum minus one, minimum divided by -1, negated minimum, zero divisor, and a valid near-boundary result. Specify expected error category and operator span. Next extend the finite property domain with whitespace variations that preserve evaluation. Avoid generating inputs beyond the resource limits unless the property you are testing is predictable rejection. Keep arithmetic semantics and resource semantics separate in your assertions.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>minimize a failing generated expression to the smallest numbers and operators that retain the difference.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>compare AST grouping before comparing arithmetic values.</p></details><details><summary>Worked solution</summary><p>for a,b,c in a deliberately small domain, assert evaluate(&quot;(a)+(b)*(c)&quot;) equals a+b*c and evaluate(&quot;((a)+(b))*(c)&quot;) equals (a+b)*c. Parenthesize inserted negative values so your generator does not accidentally change the grammar. A review request should state the property&#x27;s domain, oracle, counterexample, and remaining uncertainty.</p></details>
+<h2 id="completed-project-review-and-mastery">Completed-project review and mastery</h2>
+<p>Review the five foundation projects as a progression. The calculator established explicit arithmetic contracts. The journal added valid state and persistent input. Logs added resource bounds and borrowed views. Configuration added deterministic precedence and validated types. Expressions combined recursive structure, spans, arithmetic, and layered testing. Each project moved an assumption to a visible boundary and added evidence appropriate to that boundary.</p>
+<p>For this project&#x27;s final review, run unit, integration, and documentation tests and record actual commands and outcomes. Read the resource-limit tests and identify which cases they cover; inspect the construction argument for the cases they do not enumerate. A passing finite suite is code-verified evidence for executed checks, while independent review remains pending until someone separate actually examines the work. Mastery means defending both the implementation and the limits of your claims, and proposing the next most informative experiment when uncertainty remains.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><h3>Requirements and invariants</h3><p>The grammar specifies precedence, left associativity, unary minus, whole-input consumption, and UTF-8 byte spans. Arithmetic is checked. Source bytes, token count, parser nesting, and AST depth are bounded separately. Private Expr construction preserves the depth invariant used by recursive evaluation and destruction.</p><h3>Chosen design and concrete habits</h3><p>Lexing, parsing, and evaluation have distinct failure boundaries. The parser stores operator spans so runtime errors identify the responsible operation. Evaluation propagates typed errors with ? and uses checked operations for every arithmetic case. The lexer character expect documents a remaining nonempty valid-boundary invariant; no user syntax failure relies on panic. Doctests propagate errors rather than teaching routine unwrap.</p><h3>Meaningful alternative and evolution threshold</h3><p>An arena or explicit evaluation stack becomes useful for languages that must accept much deeper trees. A parser library can help when grammar recovery, many operators, or complex declarations become requirements. Direct i64 minimum literal support needs a magnitude design; it cannot be added honestly by changing one display rule. New constructors or deserializers must preserve resource invariants.</p><h3>Actual checks and remaining uncertainty</h3><p>Native precedence, associativity, Unicode spans, malformed input, arithmetic errors, limits, fixed corpus, documentation, and finite exhaustive small-integer properties passed in verification/native-tests.log and passed again in verification/patch001-foundations-tests.log after the patch audit. These properties use a bounded independent arithmetic oracle and are not randomized fuzzing or universal proofs. Independent review remains pending.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.i64.html#method.checked_div">i64 checked division</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch11-01-writing-tests.html">Rust testing</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/boxed/struct.Box.html">Box</a></li><li><a href="https://doc.rust-lang.org/1.99.1/book/ch09-02-recoverable-errors-with-result.html">Result propagation</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-2/02-parser.html">Previous: Parse expressions with precedence, byte spans, and limits</a><a href="../../lessons/stage-3/03-tests.html">Next: Tests are executable claims</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-a-correct-tree-still-needs-correct-execution">Purpose: a correct tree still needs correct execution</a><a href="#prediction-where-should-the-error-point">Prediction: where should the error point?</a><a href="#guided-checkpoint-one-recursive-contract">Guided checkpoint: one recursive contract</a><a href="#examples-properties-and-independent-expectations">Examples, properties, and independent expectations</a><a href="#intentional-mistake-a-property-outside-its-preconditions">Intentional mistake: a property outside its preconditions</a><a href="#playbook-a-generated-case-fails">Playbook: a generated case fails</a><a href="#separate-an-evaluation-result-from-its-presentation">Separate an evaluation result from its presentation</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#completed-project-review-and-mastery">Completed-project review and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

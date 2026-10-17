@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-09T19:12:30.391226+00:00",
+  "kind": "Expected failing fixture setup; no database connection attempted",
+  "checks": [
+    {
+      "project": "p10-issues",
+      "argv": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "p10-issues",
+        "--test",
+        "postgres",
+        "postgres_authorization_transaction_pagination",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "expected_exit_code": 101,
+      "actual_exit_code": 101,
+      "passed": true,
+      "secret_marker_absent": true,
+      "database_contacted": false
+    },
+    {
+      "project": "p14-scheduler",
+      "argv": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "p14-scheduler",
+        "--test",
+        "postgres",
+        "crash_redelivery_fencing_dedup_cancellation",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture"
+      ],
+      "expected_exit_code": 101,
+      "actual_exit_code": 101,
+      "passed": true,
+      "secret_marker_absent": true,
+      "database_contacted": false
+    }
+  ],
+  "passed": true
+}

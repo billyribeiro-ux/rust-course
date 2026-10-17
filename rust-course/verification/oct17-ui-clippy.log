@@ -1,0 +1,9 @@
+$ cargo +1.99.1 clippy --locked --manifest-path projects/ui-console/Cargo.toml --target wasm32-unknown-unknown --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/wasm -- -D warnings
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+    Checking gloo-timers v0.4.0
+    Checking uuid v1.28.0
+    Checking course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+    Checking gloo-utils v0.3.0
+    Checking gloo-net v0.7.0
+    Checking operations-console v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.94s

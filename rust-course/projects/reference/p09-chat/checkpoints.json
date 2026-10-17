@@ -1,0 +1,22 @@
+{
+  "project": "p09-chat",
+  "mechanism": "Each listed source checkpoint reconstructs with scripts/start-checkpoint.py into a fresh standalone Cargo project. No learner directory is overwritten.",
+  "manifest": "projects/checkpoints/p09-chat/checkpoint.json",
+  "steps": [
+    {
+      "checkpoint": "00-scaffold",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p09 00-scaffold"
+    },
+    {
+      "checkpoint": "01-framing",
+      "contract": "A synchronous byte-stream codec accepts UTF-8 frames of1..1024 bytes without control characters; distinguishes clean EOF from truncated input; bounds allocation before reading payload. No TCP listener, Tokio task, broadcast, or shutdown behavior exists in this milestone.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p09 01-framing"
+    },
+    {
+      "checkpoint": "final",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p09 final"
+    }
+  ]
+}

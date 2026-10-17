@@ -1,0 +1,493 @@
+{
+  "started_utc": "2026-10-17T11:50:04.312807+00:00",
+  "finished_utc": "2026-10-17T11:50:08.715951+00:00",
+  "command": [
+    "python3",
+    "verification/svelte-http-audit.py",
+    "--binary",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native/debug/p16-workbench"
+  ],
+  "overall": "passed",
+  "checks": [
+    {
+      "check": "real Rust snapshot through Vite preserves integer text, ledger and32-symbol budget",
+      "result": "passed",
+      "response_bytes": 1780,
+      "events": 33
+    },
+    {
+      "check": "actual JavaScript client and lossless decoder consume real proxy response",
+      "result": "passed",
+      "stdout": "actual client.load decoded bigint snapshot"
+    },
+    {
+      "check": "read-only route, body, origin and identity rejection preserves state",
+      "result": "passed"
+    },
+    {
+      "check": "HTML entry and development module assets are served successfully",
+      "result": "passed"
+    },
+    {
+      "check": "four real upstream requests enforce fifth-request admission429",
+      "result": "passed"
+    },
+    {
+      "check": "capacity returns after real responses close",
+      "result": "passed"
+    },
+    {
+      "check": "real client/proxy timeout produces bounded failure",
+      "result": "passed",
+      "error": "AbortError",
+      "message": "This operation was aborted",
+      "elapsed_ms": 3003.5095420000002
+    },
+    {
+      "check": "server state and proxy recover after timeout",
+      "result": "passed"
+    }
+  ],
+  "requests": [
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "expected": 200,
+      "bytes": 22
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "expected": 200,
+      "bytes": 444
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 422,
+      "expected": 422,
+      "bytes": 25
+    },
+    {
+      "base": "http://127.0.0.1:4116",
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 200,
+      "expected": 200,
+      "bytes": 33
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "bytes": 1780
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "POST",
+      "path": "/api/snapshot",
+      "status": 405,
+      "expected": 405,
+      "bytes": 0
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 404,
+      "expected": 404,
+      "bytes": 0
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 404,
+      "expected": 404,
+      "bytes": 0
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 400,
+      "expected": 400,
+      "bytes": 0
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 403,
+      "expected": 403,
+      "bytes": 0
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 401,
+      "expected": 401,
+      "bytes": 40
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "bytes": 1780
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "expected": 200,
+      "bytes": 444
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/src/main.js",
+      "status": 200,
+      "expected": 200,
+      "bytes": 1342
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/src/App.svelte",
+      "status": 200,
+      "expected": 200,
+      "bytes": 22273
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/src/client.js",
+      "status": 200,
+      "expected": 200,
+      "bytes": 29808
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/@vite/client",
+      "status": 200,
+      "expected": 200,
+      "bytes": 222559
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 429,
+      "expected": 429,
+      "bytes": 0
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "bytes": 1780
+    },
+    {
+      "base": "http://127.0.0.1:4176",
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "bytes": 1780
+    }
+  ],
+  "processes": [
+    {
+      "label": "rust",
+      "pid": 73076,
+      "exit": 0
+    },
+    {
+      "label": "vite",
+      "pid": 73077,
+      "exit": -2
+    }
+  ],
+  "process_logs": {
+    "rust": "LISTEN_ADDR=127.0.0.1:4116\nSIMULATED ONLY; one journal writer and replay worker; journal=\"/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-svelte-http-3ftaufxe/events.jsonl\"\n",
+    "vite": "7:50:04 AM [vite] (client) Re-optimizing dependencies because lockfile has changed\n7:50:04 AM [vite] (ssr) Re-optimizing dependencies because lockfile has changed\n\n  VITE v8.3.4  ready in 504 ms\n\n  \u279c  Local:   http://127.0.0.1:4176/\n"
+  },
+  "failure": null,
+  "binary_sha256": "2d0cbe621bdd22f464161db18081abb21e40c12556b738615a9b9a7230405a7c",
+  "limits": [
+    "No browser was opened or automated. These are real HTTP and Node-client module checks, not rendered component interaction.",
+    "Only owned Rust/Vite processes and a temporary synthetic journal were used; occupied ports cause refusal.",
+    "SIGSTOP/SIGCONT targeted the owned Rust child to create a controlled slow upstream; no user processes or databases were touched.",
+    "Screen-reader behavior, keyboard interaction, visual layout and Svelte DOM lifecycle remain unverified."
+  ]
+}

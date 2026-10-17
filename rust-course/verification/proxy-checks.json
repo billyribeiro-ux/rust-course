@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/billyribeiro/.local/share/mise/installs/python/3.14.8/bin/python3",
+    "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/console-server.py",
+    "--port",
+    "0"
+  ],
+  "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+  "passed": true,
+  "checks": [
+    "17th connection rejected with503 while16 bodies remain incomplete",
+    "idle inbound bodies release slots; subsequent static request returns200"
+  ],
+  "limits": "Loopback only. Five-second idle socket timeout, not total request deadline. No browser claim."
+}

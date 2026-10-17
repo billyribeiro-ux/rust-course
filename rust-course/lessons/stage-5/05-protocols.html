@@ -1,0 +1,337 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>From TCP bytes to complete messages · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="05-protocols" data-lesson="05-protocols"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / From TCP bytes to complete messages</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 05 / Networks and databases</div><h1>From TCP bytes to complete messages</h1><p class="lead">Specify and test a framed protocol before building a chat service.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-4/04-monitor.html">A bounded local health monitor</a></li></ul><ul><li>Distinguish TCP transport from message boundaries</li><li>Validate length before allocating</li><li>Explain UTF-8 byte lengths and read cancellation</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#framing">framing</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#ownership">ownership</a> · <a href="../../glossary.html#slice">slice</a> · <a href="../../glossary.html#tcp">TCP</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p09">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-messages-are-an-application-decision">Purpose: messages are an application decision</h2><p>A chat user types “hello” once, but a TCP receiver is not promised one matching read. TCP supplies an ordered byte stream while a connection works. A read might receive one byte, two messages together, or an incomplete message followed by a disconnect. <em>Framing</em> is our rule for finding message boundaries inside that stream. Our application cannot delegate this rule to packet boundaries or the timing of writes.</p>
+<h2 id="plain-english-model">Plain-English model</h2><p>Imagine a parcel carrying a label with its payload size. Our frame has a four-byte, unsigned, big-endian length, followed by that many UTF-8 bytes. Big-endian means the most significant byte comes first: the prefix 00 00 00 02 describes two payload bytes. This analogy explains parsing only; TCP does not preserve parcels and does not promise delivery after a crash. A message is accepted only after every payload byte has arrived and validation succeeds. This protocol allows 1 through 1,024 bytes and rejects control characters. It is a deliberately small text protocol, not an Internet standard.</p>
+<p>UTF-8 encodes Unicode characters using variable numbers of bytes. “é” has two UTF-8 bytes here. A Rust <code>String::len()</code> counts bytes, not what a reader perceives as characters. Checking the byte budget before allocating prevents a peer from requesting a four-gigabyte vector. Checking text after the bounded read prevents malformed UTF-8 from leaking into the domain model.</p>
+<h2 id="predict-before-running">Predict before running</h2><p>The example below feeds the bytes 00 00 00 02 C3 A9. Will it print one character, two characters, or an error? If the prefix is changed to three, does the missing byte become zero automatically? Explain your prediction before opening the answer.</p>
+<details><summary>Prediction explained</summary><p>It prints <code>é: 2 bytes</code>. Declaring three bytes produces an unexpected end-of-file error because the reader must supply all three. The initialized vector does contain zeros initially, but <code>read_exact</code> does not report success for a partially filled payload.</p></details>
+<h2 id="small-runnable-example">Small runnable example</h2><p>Working directory: <code>rust-course/projects</code>. Tokio supplies the asynchronous I/O traits; its version and features are pinned by the workspace.</p>
+<div class="code-wrap" data-source="projects/reference/p09-chat/examples/frame.rs" data-sha256="4d0cfc15c8192f2208b70cf6c5bbfac897fae2a1365012d4f9497d2a9f97e61a"><div class="code-label"><a href="../../projects/reference/p09-chat/examples/frame.rs">projects/reference/p09-chat/examples/frame.rs</a></div><pre><code>#[tokio::main]
+async fn main() -&gt; std::io::Result&lt;()&gt; {
+    let mut bytes = &amp;[0, 0, 0, 2, 0xc3, 0xa9][..];
+    let message = p09_chat::read_frame(&amp;mut bytes).await?;
+    println!(&quot;{message}: {} bytes&quot;, message.len());
+    Ok(())
+}
+</code></pre></div><pre><code>mise exec -- cargo run -p p09-chat --example frame</code></pre>
+<h2 id="follow-the-unfamiliar-operations">Follow the unfamiliar operations</h2><p>The slice reference is a reader over memory, so the example isolates decoding from actual networking. <code>read_u32</code> decodes the prefix. The integer is bounded before becoming a vector length. <code>read_exact</code> loops internally until the requested buffer is full or an error occurs. <code>String::from_utf8</code> validates encoding and takes ownership of the bytes. <code>map_err</code> changes an error into the protocol's I/O error category without pretending it was successful. The <code>?</code> operator returns early on a failed step.</p>
+<h2 id="intentional-failure-and-first-checkpoint">Intentional failure and first checkpoint</h2><p>In your learner copy, implement a decoder that calls a single <code>read</code> for the whole payload and incorrectly treats the returned count as a complete message. This is a deliberate runtime logic defect, not a compiler failure. Reproduce it using the fragmented-frame test, then replace that operation with <code>read_exact</code>. Keep the maximum-length check before allocation. The reconstructed <code>01-framing</code> library contains complete synchronous frame functions and fragmented-reader tests. Compare its byte contract with the final Tokio codec, then reconstruct final to study the complete server after these framing tests pass.</p>
+<div class="code-wrap" data-source="projects/reference/p09-chat/src/lib.rs" data-sha256="ca145a0b627d59c6b806c698293d687a10524467a9e6302a56494b58b463eb89"><div class="code-label"><a href="../../projects/reference/p09-chat/src/lib.rs">projects/reference/p09-chat/src/lib.rs</a></div><pre><code>//! A length-prefixed, bounded, local teaching chat service. No authentication/TLS.
+use std::{io, sync::Arc, time::Duration};
+use tokio::{
+    io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt},
+    net::TcpListener,
+    sync::{Semaphore, broadcast, watch},
+    task::JoinSet,
+    time::timeout,
+};
+pub const MAX_FRAME: usize = 1024;
+/// A four-byte big-endian length followed by UTF-8 bytes. Empty frames are invalid.
+pub async fn read_frame&lt;R: AsyncRead + Unpin&gt;(reader: &amp;mut R) -&gt; io::Result&lt;String&gt; {
+    let len = reader.read_u32().await? as usize;
+    if len == 0 || len &gt; MAX_FRAME {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            &quot;frame length outside 1..=1024&quot;,
+        ));
+    }
+    let mut bytes = vec![0; len];
+    reader.read_exact(&amp;mut bytes).await?;
+    let text = String::from_utf8(bytes)
+        .map_err(|_| io::Error::new(io::ErrorKind::InvalidData, &quot;invalid UTF-8&quot;))?;
+    if text.chars().any(|c| c.is_control()) {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            &quot;control character&quot;,
+        ));
+    }
+    Ok(text)
+}
+pub async fn write_frame&lt;W: AsyncWrite + Unpin&gt;(writer: &amp;mut W, text: &amp;str) -&gt; io::Result&lt;()&gt; {
+    if text.is_empty() || text.len() &gt; MAX_FRAME || text.chars().any(|c| c.is_control()) {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;invalid frame length&quot;,
+        ));
+    }
+    writer.write_u32(text.len() as u32).await?;
+    writer.write_all(text.as_bytes()).await?;
+    writer.flush().await
+}
+/// At most 32 clients and 32 retained messages. A lagging client is disconnected.
+/// Shutdown aborts connection tasks: the protocol has no durable delivery promise.
+/// A true watch value or closure of all senders requests shutdown; false is not a stop.
+pub async fn serve(listener: TcpListener, mut stop: watch::Receiver&lt;bool&gt;) -&gt; io::Result&lt;()&gt; {
+    let permits = Arc::new(Semaphore::new(32));
+    let (bus, _) = broadcast::channel::&lt;String&gt;(32);
+    let mut clients = JoinSet::new();
+    let result = loop {
+        // Observe the state before waiting: a receiver may already hold true.
+        if *stop.borrow_and_update() {
+            break Ok(());
+        }
+        tokio::select! {
+            changed=stop.changed()=&gt;{if changed.is_err(){break Ok(());}},
+            Some(_)=clients.join_next(), if !clients.is_empty()=&gt;{},
+            incoming=listener.accept()=&gt; {
+                let (stream,_) = match incoming {
+                    Ok(connection) =&gt; connection,
+                    Err(error) =&gt; break Err(error),
+                };
+                let Ok(permit)=permits.clone().try_acquire_owned() else { drop(stream); continue; };
+                let sender=bus.clone(); let mut messages=bus.subscribe();
+                clients.spawn(async move {
+                    let _permit=permit;
+                    let (mut read,mut write)=stream.into_split();
+                    // Dedicated reader owns partially consumed frames across writes.
+                    let mut reader=Box::pin(async move {
+                        loop { let text=timeout(Duration::from_secs(30),read_frame(&amp;mut read)).await.map_err(|_|io::Error::new(io::ErrorKind::TimedOut,&quot;read deadline&quot;))??;
+                            let _=sender.send(text);
+                        }
+                        #[allow(unreachable_code)] Ok::&lt;(),io::Error&gt;(())
+                    });
+                    loop { tokio::select! {
+                        _=&amp;mut reader=&gt;break,
+                        message=messages.recv()=&gt; {
+                            let Ok(text)=message else { break; };
+                            if !matches!(timeout(Duration::from_secs(2),write_frame(&amp;mut write,&amp;text)).await,Ok(Ok(()))) {break;}
+                        }
+                    }}
+                });
+            }
+        }
+    };
+    clients.abort_all();
+    while clients.join_next().await.is_some() {}
+    result
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn malformed_text_and_empty_frames_are_rejected() {
+        for fixture in [vec![0, 0, 0, 0], vec![0, 0, 0, 1, 255], vec![0, 0, 0, 1, 0]] {
+            assert_eq!(
+                read_frame(&amp;mut fixture.as_slice())
+                    .await
+                    .unwrap_err()
+                    .kind(),
+                io::ErrorKind::InvalidData
+            );
+        }
+        let mut output = Vec::new();
+        assert!(write_frame(&amp;mut output, &quot;line\nbreak&quot;).await.is_err());
+        assert!(output.is_empty());
+    }
+    #[tokio::test]
+    async fn fragmented_frame_and_utf8() {
+        let (mut tx, mut rx) = tokio::io::duplex(64);
+        let task = tokio::spawn(async move {
+            for b in [0, 0, 0, 2, 0xc3, 0xa9] {
+                tx.write_all(&amp;[b]).await.unwrap();
+                tokio::task::yield_now().await;
+            }
+        });
+        assert_eq!(read_frame(&amp;mut rx).await.unwrap(), &quot;é&quot;);
+        task.await.unwrap();
+    }
+    #[tokio::test]
+    async fn coalesced_frames_obey_the_exact_byte_boundary() {
+        let maximum = &quot;é&quot;.repeat(MAX_FRAME / 2);
+        assert_eq!(maximum.len(), MAX_FRAME);
+        let mut wire = Vec::new();
+        write_frame(&amp;mut wire, &amp;maximum).await.unwrap();
+        write_frame(&amp;mut wire, &quot;after&quot;).await.unwrap();
+        let mut input = wire.as_slice();
+        assert_eq!(read_frame(&amp;mut input).await.unwrap(), maximum);
+        assert_eq!(read_frame(&amp;mut input).await.unwrap(), &quot;after&quot;);
+        assert!(input.is_empty());
+
+        let mut output = vec![99];
+        assert_eq!(
+            write_frame(&amp;mut output, &amp;format!(&quot;{maximum}x&quot;))
+                .await
+                .unwrap_err()
+                .kind(),
+            io::ErrorKind::InvalidInput
+        );
+        assert_eq!(output, [99]); // Validation precedes even the prefix write.
+        let header = (MAX_FRAME as u32 + 1).to_be_bytes();
+        assert_eq!(
+            read_frame(&amp;mut header.as_slice()).await.unwrap_err().kind(),
+            io::ErrorKind::InvalidData
+        );
+    }
+    #[tokio::test]
+    async fn retaining_the_same_future_preserves_partial_prefix_progress() {
+        use std::{future::Future, task::Poll};
+        let (mut tx, mut rx) = tokio::io::duplex(8);
+        tx.write_all(&amp;[0, 0]).await.unwrap();
+        let mut frame = Box::pin(read_frame(&amp;mut rx));
+        std::future::poll_fn(|context| {
+            assert!(frame.as_mut().poll(context).is_pending());
+            Poll::Ready(())
+        })
+        .await;
+        // Other work can finish while the pinned decoder retains its first two
+        // bytes. This checks the ownership pattern, not a timed socket schedule.
+        tx.write_all(&amp;[0, 2, 0xc3, 0xa9]).await.unwrap();
+        assert_eq!(frame.await.unwrap(), &quot;é&quot;);
+    }
+    #[tokio::test]
+    async fn oversized_rejected_before_body() {
+        let mut bytes = &amp;[0, 0, 8, 0][..];
+        assert_eq!(
+            read_frame(&amp;mut bytes).await.unwrap_err().kind(),
+            io::ErrorKind::InvalidData
+        );
+    }
+    #[tokio::test]
+    async fn truncated_body_fails() {
+        let mut bytes = &amp;[0, 0, 0, 3, b&#x27;a&#x27;][..];
+        assert_eq!(
+            read_frame(&amp;mut bytes).await.unwrap_err().kind(),
+            io::ErrorKind::UnexpectedEof
+        );
+    }
+    #[tokio::test]
+    async fn lag_is_visible() {
+        let (tx, mut rx) = broadcast::channel(2);
+        for n in 0..3 {
+            tx.send(n).unwrap();
+        }
+        assert!(matches!(
+            rx.recv().await,
+            Err(broadcast::error::RecvError::Lagged(1))
+        ));
+    }
+    #[tokio::test]
+    async fn loopback_and_shutdown() {
+        let listener = TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+        let addr = listener.local_addr().unwrap();
+        let (tx, rx) = watch::channel(false);
+        let server = tokio::spawn(serve(listener, rx));
+        let mut client = tokio::net::TcpStream::connect(addr).await.unwrap();
+        write_frame(&amp;mut client, &quot;hello&quot;).await.unwrap();
+        assert_eq!(
+            timeout(Duration::from_secs(2), read_frame(&amp;mut client))
+                .await
+                .unwrap()
+                .unwrap(),
+            &quot;hello&quot;
+        );
+        tx.send(true).unwrap();
+        server.await.unwrap().unwrap();
+    }
+    #[tokio::test]
+    async fn shutdown_already_requested_does_not_wait_for_a_second_change() {
+        let listener = TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+        let (_sender, receiver) = watch::channel(true);
+        timeout(Duration::from_secs(2), serve(listener, receiver))
+            .await
+            .expect(&quot;an already-requested stop must complete&quot;)
+            .unwrap();
+    }
+    #[tokio::test]
+    async fn false_notifications_do_not_stop_and_sender_drop_does() {
+        let listener = TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let (sender, receiver) = watch::channel(false);
+        let server = tokio::spawn(serve(listener, receiver));
+        let mut client = tokio::net::TcpStream::connect(address).await.unwrap();
+        for text in [&quot;before&quot;, &quot;after&quot;] {
+            sender.send(false).unwrap();
+            write_frame(&amp;mut client, text).await.unwrap();
+            assert_eq!(
+                timeout(Duration::from_secs(2), read_frame(&amp;mut client))
+                    .await
+                    .unwrap()
+                    .unwrap(),
+                text
+            );
+        }
+        drop(sender);
+        timeout(Duration::from_secs(2), server)
+            .await
+            .unwrap()
+            .unwrap()
+            .unwrap();
+    }
+}
+</code></pre></div>
+<h2 id="independent-practice">Independent practice</h2><p>Add tests for a zero-length prefix, a 1,024-byte ASCII payload, an invalid UTF-8 sequence, and a control character. Decide whether line breaks should be legal inside a future chat message. Document the rule before changing both writer and reader validation. Explain why a character-count limit alone does not enforce a wire-byte limit.</p>
+<details><summary>Hint 1: identify the boundary</summary><p>Separate prefix validation from content validation; invalid length should fail before reading a body.</p></details><details><summary>Hint 2: build a fixture</summary><p>A byte slice implements the reader interface. Prefixes and malformed payloads need no network connection.</p></details><details><summary>Worked approach</summary><p>Use <code>[0,0,0,0]</code> for empty input and a length of one followed by FF for invalid UTF-8. For the boundary success case, construct 1,024 ASCII bytes and a big-endian prefix. Change the writer to share the same validation helper if you need symmetrical validation; otherwise document that the receiver remains authoritative.</p></details>
+<h2 id="review-and-evidence">Review and evidence</h2><p>A deliberate review defect is repeatedly appending reads until “nothing else arrives.” Timing is not framing. The idiomatic design expresses exact lengths and typed errors. Space is O(maximum frame size), and decoding time is O(payload bytes). Tests establish behavior for selected fragments and invalid inputs; they do not prove resistance to every network attack. Run <code>mise exec -- cargo test -p p09-chat</code> and inspect the named boundary tests.</p>
+<h2 id="playbook-investigation">Playbook investigation</h2><p>Observation: short local messages pass, but messages sometimes lose their first character under load. A plausible guess is a UTF-8 bug. Distinguishing experiment: send ASCII only while splitting the four prefix bytes across separate writes. The same failure disproves the UTF-8 hypothesis. Instrument bytes consumed, not just final text. Another possible cause is cancelling a partially consumed frame read in a select loop and starting over. The server keeps one reader future alive across outgoing writes. That fix preserves decoder progress; it does not create reliable delivery after disconnection.</p>
+<h2 id="mastery-check">Mastery check</h2><p>Without the reference, draw the decoder states, show a partial-prefix trace, explain the memory budget, and implement a bounded frame decoder for a new binary payload. A correct output on one local run is insufficient evidence: explain the failure cases you tested.</p>
+<aside class="callout"><h2 id="when-you-get-stuck">When you get stuck</h2><p>Run <code>mise exec -- cargo test -p p09-chat fragmented_frame_and_utf8 -- --nocapture</code>. Read Tokio AsyncReadExt documentation for the exact operation you used. Request review with the byte fixture, expected state transitions, actual error, and the smallest decoder that reproduces it; do not send only “networking is broken.”</p></aside><section><h2 id="reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</h2><p>Working directory: course root. This creates a complete separate source tree; it refuses an existing destination. Run the checkpoint tests before following the guided edits. The <a href="../../projects/checkpoints/p09-chat/index.html">checkpoint contract and engineering decisions</a> state exactly which features exist.</p><pre><code>python3 scripts/start-checkpoint.py p09 01-framing
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p09-chat/01-framing/Cargo.toml</code></pre><p>To compare an earlier milestone with the final reference, reconstruct each ID into a different directory. Run the final project’s own boundary fixtures as described in its contract; the chat and workbench use loopback services, and the workbench uses a dedicated disposable journal. These projects do not require PostgreSQL. Passing ordinary unit tests does not establish every network or restart behavior.</p></section><section><h2 id="complete-earlier-milestone-source">Complete earlier milestone source</h2><p>Read the first-byte EOF branch, the length check before allocation, and the fragmented reader. This is the synchronous byte-contract checkpoint; the Tokio codec adds waiting and cancellation responsibilities later.</p><div class="code-wrap" data-source="projects/checkpoints/p09-chat/01-framing/src/lib.rs" data-sha256="ad68802629987f52934c016172c16a69a7f9757443e949a89ddcfb39def9d3b2"><div class="code-label"><a href="../../projects/checkpoints/p09-chat/01-framing/src/lib.rs">projects/checkpoints/p09-chat/01-framing/src/lib.rs</a></div><pre><code>//! Bounded synchronous framing checkpoint, before Tokio or a chat service.
+use std::io::{self, Read, Write};
+pub const MAX_FRAME: usize = 1024;
+fn invalid(reason: &amp;&#x27;static str) -&gt; io::Error {
+    io::Error::new(io::ErrorKind::InvalidData, reason)
+}
+pub fn encode(mut output: impl Write, text: &amp;str) -&gt; io::Result&lt;()&gt; {
+    if text.is_empty() || text.len() &gt; MAX_FRAME || text.chars().any(char::is_control) {
+        return Err(invalid(&quot;invalid frame text&quot;));
+    }
+    output.write_all(&amp;(text.len() as u32).to_be_bytes())?;
+    output.write_all(text.as_bytes())
+}
+pub fn decode(mut input: impl Read) -&gt; io::Result&lt;Option&lt;String&gt;&gt; {
+    let mut header = [0; 4];
+    match input.read_exact(&amp;mut header[..1]) {
+        Ok(()) =&gt; {}
+        Err(error) if error.kind() == io::ErrorKind::UnexpectedEof =&gt; return Ok(None),
+        Err(error) =&gt; return Err(error),
+    }
+    input.read_exact(&amp;mut header[1..])?;
+    let length = u32::from_be_bytes(header) as usize;
+    if !(1..=MAX_FRAME).contains(&amp;length) {
+        return Err(invalid(&quot;frame length outside budget&quot;));
+    }
+    let mut payload = vec![0; length];
+    input.read_exact(&amp;mut payload)?;
+    let text = String::from_utf8(payload).map_err(|_| invalid(&quot;invalid UTF-8&quot;))?;
+    if text.chars().any(char::is_control) {
+        return Err(invalid(&quot;control characters&quot;));
+    }
+    Ok(Some(text))
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    struct Fragmented&lt;&#x27;a&gt;(&amp;&#x27;a [u8]);
+    impl Read for Fragmented&lt;&#x27;_&gt; {
+        fn read(&amp;mut self, output: &amp;mut [u8]) -&gt; io::Result&lt;usize&gt; {
+            let take = output.len().min(1);
+            self.0.read(&amp;mut output[..take])
+        }
+    }
+    #[test]
+    fn fragmented_utf8_roundtrip() {
+        let mut bytes = Vec::new();
+        encode(&amp;mut bytes, &quot;café&quot;).unwrap();
+        assert_eq!(&amp;bytes[..4], &amp;[0, 0, 0, 5]);
+        assert_eq!(decode(Fragmented(&amp;bytes)).unwrap(), Some(&quot;café&quot;.into()));
+    }
+    #[test]
+    fn clean_eof_differs_from_truncation() {
+        assert_eq!(decode(&amp;[][..]).unwrap(), None);
+        assert_eq!(
+            decode(&amp;[0, 0][..]).unwrap_err().kind(),
+            io::ErrorKind::UnexpectedEof
+        );
+        assert_eq!(
+            decode(&amp;[0, 0, 0, 2, b&#x27;x&#x27;][..]).unwrap_err().kind(),
+            io::ErrorKind::UnexpectedEof
+        );
+    }
+    #[test]
+    fn reject_before_unbounded_allocation() {
+        assert!(decode(&amp;[255, 255, 255, 255][..]).is_err());
+        assert!(decode(&amp;[0, 0, 0, 1, 255][..]).is_err());
+        assert!(decode(&amp;[0, 0, 0, 1, b&#x27;\n&#x27;][..]).is_err());
+        assert!(encode(Vec::new(), &quot;hello\n&quot;).is_err());
+    }
+}
+</code></pre></div></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://docs.rs/tokio/1.53.3/tokio/io/trait.AsyncReadExt.html">Tokio AsyncReadExt</a></li><li><a href="https://www.rfc-editor.org/rfc/rfc9293.html">TCP specification RFC 9293</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-4/04-monitor.html">Previous: A bounded local health monitor</a><a href="../../lessons/stage-5/05-chat.html">Next: Bounded chat, slow clients, and shutdown</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-messages-are-an-application-decision">Purpose: messages are an application decision</a><a href="#plain-english-model">Plain-English model</a><a href="#predict-before-running">Predict before running</a><a href="#small-runnable-example">Small runnable example</a><a href="#follow-the-unfamiliar-operations">Follow the unfamiliar operations</a><a href="#intentional-failure-and-first-checkpoint">Intentional failure and first checkpoint</a><a href="#independent-practice">Independent practice</a><a href="#review-and-evidence">Review and evidence</a><a href="#playbook-investigation">Playbook investigation</a><a href="#mastery-check">Mastery check</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</a><a href="#complete-earlier-milestone-source">Complete earlier milestone source</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

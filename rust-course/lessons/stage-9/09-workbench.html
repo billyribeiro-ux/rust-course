@@ -1,0 +1,974 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Connect a Rust UI to a durable local workbench · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="09-workbench" data-lesson="09-workbench"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Connect a Rust UI to a durable local workbench</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 09 / The independent capstone</div><h1>Connect a Rust UI to a durable local workbench</h1><p class="lead">Compose domain, persistence, authorization, and browser state while keeping failure visible.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-9/09-domain.html">Paper-trading invariants and deterministic event replay</a></li><li><a href="../../lessons/stage-6/06-console.html">Connect the operations console to a real service</a></li></ul><ul><li>Trace a simulated order across the complete stack</li><li>Explain commit uncertainty and restart behavior</li><li>Design bounded snapshots, loading states and retries</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#async">async</a> · <a href="../../glossary.html#authentication">authentication</a> · <a href="../../glossary.html#authorization">authorization</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#checksum">checksum</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#durability">durability</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p16">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-and-milestone-boundary">Purpose and milestone boundary</h2><p>The working capstone milestone combines the earlier Rust browser console with an Axum service, deterministic domain engine, append-only event journal, watchlist, cash, positions, and recent fills. Use the selected Leptos interface from Stage6 as the client and this project's JSON routes as its backend. The delivered modular application uses one local journal writer and one owned background replay worker. It includes persisted job state and cursor recovery, a bounded chart-history endpoint, and a tested read migration from version1 journal records to version2 position-checked records. PostgreSQL-backed multi-experiment transactions and a deployment rollout pipeline remain the independent specification change in the final review; the single-account local application does not claim those capabilities.</p>
+<h2 id="plain-english-model-command-and-read-model">Plain-English model: command and read model</h2><p>A command asks the service to change authoritative state. A snapshot describes state for display. The browser may cache a snapshot, but it cannot decide that an order is valid by checking cached cash alone. The server validates against current state, persists the event, applies it, and returns a result. After a timeout, the browser has uncertainty, not permission to create a new logical order. It retries with the same order ID or refreshes authoritative state.</p>
+<p>Leptos owns reactive browser state, while Rust on the server owns domain state. They are different processes with different memory. A signal update does not create a server transaction. Browser WebAssembly cannot use arbitrary server filesystem paths or TCP sockets; it crosses the boundary through browser networking APIs. The course proxy serves UI and API under one local origin, simplifying browser permissions without inventing a cross-origin authentication design.</p>
+<h2 id="prediction">Prediction</h2><p>The server appends an event, calls sync_data successfully, and applies it in memory. The network disconnects before the client sees the response. After restart, should the event replay? Should the UI automatically submit a fresh ID?</p><details><summary>Answer</summary><p>The complete accepted record should replay under the stated filesystem assumptions. The client should preserve the original logical ID. A fresh ID creates another command. A successful sync_data is evidence about the file operation, not a universal guarantee against every hardware or filesystem failure.</p></details>
+<h2 id="run-the-complete-local-milestone">Run the complete local milestone</h2><p>From <code>rust-course/projects</code>, run the backend. The journal path defaults to your current directory; choose a dedicated learner-data directory outside the immutable reference source. Start only one backend writer for that path. Run the UI with the Stage6 launch instructions, whose proxy points to port4116.</p>
+<pre><code>mkdir -p ../learner-data
+WORKBENCH_LOG=../learner-data/workbench-events.jsonl mise exec -- cargo run -p p16-workbench
+# Another terminal, same projects directory:
+python3 reference/p16-workbench/synthetic.py
+curl -H "Authorization: Bearer demo-reader" http://127.0.0.1:4116/api/snapshot</code></pre>
+<p>The synthetic helper submits four deterministic RUST prices and one buy twice. The repeated order should report applied:false. Re-running the helper against unchanged state is safe for its exact IDs; reusing those IDs with edited payloads is intentionally a conflict. The snapshot reports <code>simulated:true</code>, integer cents, quotes, positions, recent fills, watchlist, and accepted-event count.</p>
+<h2 id="guided-integration">Guided integration</h2><p>Begin with read-only snapshot polling. Display loading before the first response, empty state when no quote exists, an error with a retry action when fetching fails, and stale-state information if an earlier snapshot remains visible. Add a labeled order form only after that flow works. Validate obvious input locally for usability, but retain server validation as authority. Disable repeated submission while a request is pending, and keep the same logical order ID until its outcome is resolved.</p>
+<p>Inspect the HTTP module. Public demo-reader and demo-operator identities exercise read/write boundaries on loopback. Unauthorized requests fail; reader mutations are forbidden. This is not a login implementation. The JSON body is limited to16,384 bytes to accommodate bounded replay specifications. An outer semaphore admits at most16 active requests and applies a five-second handler/body deadline. A second semaphore admits at most eight snapshot, mutation, or replay blocking jobs; excess requests receive429. A deadline can expire while already-started blocking work continues, so408 means an uncertain command outcome and retries must preserve logical identity. File operations run through spawn_blocking so a synchronous disk sync does not block a Tokio worker thread. The standard mutex protects the complete validation-persist-apply operation and is never held across an await point in async code.</p>
+<div class="code-wrap" data-source="projects/reference/p16-workbench/src/http.rs" data-sha256="66415d56d49af6176308627a1ca3c8be1224e3b98dfa5dbb698c087f84963c3a"><div class="code-label"><a href="../../projects/reference/p16-workbench/src/http.rs">projects/reference/p16-workbench/src/http.rs</a></div><pre><code>use crate::{Event, Order, Store, Tick};
+use axum::{
+    Json, Router,
+    extract::{DefaultBodyLimit, Path, Query, Request, State},
+    http::{HeaderMap, StatusCode},
+    middleware::{self, Next},
+    response::{IntoResponse, Response},
+    routing::{get, post, put},
+};
+use std::sync::{Arc, Mutex};
+pub type Shared = Arc&lt;Mutex&lt;Store&gt;&gt;;
+static WORK: tokio::sync::Semaphore = tokio::sync::Semaphore::const_new(8);
+pub struct Error(StatusCode, &amp;&#x27;static str);
+impl IntoResponse for Error {
+    fn into_response(self) -&gt; Response {
+        (self.0, Json(serde_json::json!({&quot;error&quot;:self.1}))).into_response()
+    }
+}
+fn authorize(headers: &amp;HeaderMap, write: bool) -&gt; Result&lt;(), Error&gt; {
+    match headers.get(&quot;authorization&quot;).and_then(|v| v.to_str().ok()) {
+        Some(&quot;Bearer demo-operator&quot;) =&gt; Ok(()),
+        Some(&quot;Bearer demo-reader&quot;) if !write =&gt; Ok(()),
+        Some(&quot;Bearer demo-reader&quot;) =&gt; Err(Error(StatusCode::FORBIDDEN, &quot;operator required&quot;)),
+        _ =&gt; Err(Error(
+            StatusCode::UNAUTHORIZED,
+            &quot;local demo identity required&quot;,
+        )),
+    }
+}
+#[derive(Clone)]
+struct Admission {
+    permits: Arc&lt;tokio::sync::Semaphore&gt;,
+    deadline: std::time::Duration,
+}
+async fn admit(State(budget): State&lt;Admission&gt;, request: Request, next: Next) -&gt; Response {
+    let Ok(_permit) = budget.permits.try_acquire_owned() else {
+        return Error(StatusCode::TOO_MANY_REQUESTS, &quot;request budget full&quot;).into_response();
+    };
+    match tokio::time::timeout(budget.deadline, next.run(request)).await {
+        Ok(response) =&gt; response,
+        Err(_) =&gt; Error(
+            StatusCode::REQUEST_TIMEOUT,
+            &quot;request deadline; retry with same logical identity&quot;,
+        )
+        .into_response(),
+    }
+}
+pub fn router(store: Shared) -&gt; Router {
+    router_with_admission(
+        store,
+        Admission {
+            permits: Arc::new(tokio::sync::Semaphore::new(16)),
+            deadline: std::time::Duration::from_secs(5),
+        },
+    )
+}
+fn router_with_admission(store: Shared, admission: Admission) -&gt; Router {
+    Router::new()
+        .route(&quot;/health&quot;, get(|| async { &quot;simulated workbench ok&quot; }))
+        .route(&quot;/api/snapshot&quot;, get(snapshot))
+        .route(&quot;/api/ticks&quot;, post(tick))
+        .route(&quot;/api/orders&quot;, post(order))
+        .route(&quot;/api/orders/{id}&quot;, get(order_result))
+        .route(&quot;/api/watchlist&quot;, put(watchlist))
+        .route(&quot;/api/history&quot;, get(history))
+        .route(&quot;/api/jobs&quot;, get(jobs))
+        .route(&quot;/api/jobs/replay&quot;, post(schedule))
+        .route(&quot;/api/jobs/{id}/cancel&quot;, post(cancel))
+        .layer(DefaultBodyLimit::max(16384))
+        .layer(middleware::from_fn_with_state(admission, admit))
+        .with_state(store)
+}
+async fn snapshot(State(s): State&lt;Shared&gt;, h: HeaderMap) -&gt; Result&lt;Json&lt;crate::Snapshot&gt;, Error&gt; {
+    authorize(&amp;h, false)?;
+    let permit = WORK
+        .try_acquire()
+        .map_err(|_| Error(StatusCode::TOO_MANY_REQUESTS, &quot;work budget full&quot;))?;
+    let value = tokio::task::spawn_blocking(move || {
+        let _permit = permit;
+        s.lock().map(|s| s.engine.snapshot()).map_err(|_| ())
+    })
+    .await
+    .map_err(|_| Error(StatusCode::SERVICE_UNAVAILABLE, &quot;worker unavailable&quot;))?
+    .map_err(|_| Error(StatusCode::SERVICE_UNAVAILABLE, &quot;state unavailable&quot;))?;
+    Ok(Json(value))
+}
+async fn commit(s: Shared, event: Event) -&gt; Result&lt;Json&lt;serde_json::Value&gt;, Error&gt; {
+    let permit = WORK
+        .try_acquire()
+        .map_err(|_| Error(StatusCode::TOO_MANY_REQUESTS, &quot;work budget full&quot;))?;
+    let applied = tokio::task::spawn_blocking(move || {
+        let _permit = permit;
+        s.lock()
+            .map_err(|_| crate::CommitError::Storage(&quot;state unavailable&quot;.into()))?
+            .commit(event)
+    })
+    .await
+    .map_err(|_| Error(StatusCode::SERVICE_UNAVAILABLE, &quot;worker unavailable&quot;))?
+    .map_err(|error| match error {
+        crate::CommitError::Rejected(reason) =&gt; Error(StatusCode::UNPROCESSABLE_ENTITY, reason),
+        crate::CommitError::Conflict(reason) =&gt; Error(StatusCode::CONFLICT, reason),
+        crate::CommitError::Storage(reason) =&gt; {
+            eprintln!(&quot;workbench storage outcome uncertain: {reason}&quot;);
+            Error(
+                StatusCode::SERVICE_UNAVAILABLE,
+                &quot;storage unavailable; preserve logical identity and reconcile&quot;,
+            )
+        }
+    })?;
+    Ok(Json(
+        serde_json::json!({&quot;applied&quot;:applied,&quot;simulated&quot;:true}),
+    ))
+}
+async fn tick(
+    State(s): State&lt;Shared&gt;,
+    h: HeaderMap,
+    Json(t): Json&lt;Tick&gt;,
+) -&gt; Result&lt;Json&lt;serde_json::Value&gt;, Error&gt; {
+    authorize(&amp;h, true)?;
+    commit(s, Event::Tick(t)).await
+}
+async fn order(
+    State(s): State&lt;Shared&gt;,
+    h: HeaderMap,
+    Json(o): Json&lt;Order&gt;,
+) -&gt; Result&lt;Json&lt;serde_json::Value&gt;, Error&gt; {
+    authorize(&amp;h, true)?;
+    commit(s, Event::Order(o)).await
+}
+#[derive(serde::Deserialize)]
+struct Watchlist {
+    symbols: Vec&lt;String&gt;,
+}
+async fn watchlist(
+    State(s): State&lt;Shared&gt;,
+    h: HeaderMap,
+    Json(w): Json&lt;Watchlist&gt;,
+) -&gt; Result&lt;Json&lt;serde_json::Value&gt;, Error&gt; {
+    authorize(&amp;h, true)?;
+    commit(s, Event::Watchlist(w.symbols)).await
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::{body::Body, http::Request};
+    use tower::ServiceExt;
+    #[tokio::test]
+    async fn read_and_write_boundary() {
+        let path = std::env::temp_dir().join(format!(
+            &quot;course-auth-{}-{}.jsonl&quot;,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let app = router(Arc::new(Mutex::new(Store::open(&amp;path).unwrap())));
+        let response = app
+            .clone()
+            .oneshot(
+                Request::builder()
+                    .uri(&quot;/api/snapshot&quot;)
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+        let response = app
+            .clone()
+            .oneshot(
+                Request::builder()
+                    .uri(&quot;/api/snapshot&quot;)
+                    .header(&quot;authorization&quot;, &quot;Bearer demo-reader&quot;)
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::OK);
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(&quot;POST&quot;)
+                    .uri(&quot;/api/orders&quot;)
+                    .header(&quot;authorization&quot;, &quot;Bearer demo-reader&quot;)
+                    .header(&quot;content-type&quot;, &quot;application/json&quot;)
+                    .body(Body::from(
+                        r#&quot;{&quot;order_id&quot;:&quot;x&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;side&quot;:&quot;buy&quot;,&quot;quantity&quot;:1}&quot;#,
+                    ))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::FORBIDDEN);
+        std::fs::remove_file(path).unwrap();
+    }
+}
+
+#[derive(serde::Deserialize)]
+struct HistoryPage {
+    after: Option&lt;u64&gt;,
+    limit: Option&lt;usize&gt;,
+}
+async fn inspect&lt;T: Send + &#x27;static&gt;(
+    s: Shared,
+    read: impl FnOnce(&amp;crate::Engine) -&gt; Result&lt;T, &amp;&#x27;static str&gt; + Send + &#x27;static,
+) -&gt; Result&lt;T, Error&gt; {
+    let permit = WORK
+        .try_acquire()
+        .map_err(|_| Error(StatusCode::TOO_MANY_REQUESTS, &quot;work budget full&quot;))?;
+    tokio::task::spawn_blocking(move || {
+        let _permit = permit;
+        let store = s
+            .lock()
+            .map_err(|_| Error(StatusCode::SERVICE_UNAVAILABLE, &quot;state unavailable&quot;))?;
+        read(&amp;store.engine)
+            .map_err(|_| Error(StatusCode::BAD_REQUEST, &quot;invalid request or expired cursor&quot;))
+    })
+    .await
+    .map_err(|_| Error(StatusCode::SERVICE_UNAVAILABLE, &quot;worker unavailable&quot;))?
+}
+async fn history(
+    State(s): State&lt;Shared&gt;,
+    h: HeaderMap,
+    Query(p): Query&lt;HistoryPage&gt;,
+) -&gt; Result&lt;Json&lt;crate::replay::History&gt;, Error&gt; {
+    authorize(&amp;h, false)?;
+    inspect(s, move |e| {
+        e.history(p.after.unwrap_or(0), p.limit.unwrap_or(100))
+    })
+    .await
+    .map(Json)
+}
+async fn jobs(
+    State(s): State&lt;Shared&gt;,
+    h: HeaderMap,
+) -&gt; Result&lt;Json&lt;Vec&lt;crate::replay::JobView&gt;&gt;, Error&gt; {
+    authorize(&amp;h, false)?;
+    inspect(s, |e| Ok(e.jobs())).await.map(Json)
+}
+async fn schedule(
+    State(s): State&lt;Shared&gt;,
+    h: HeaderMap,
+    Json(spec): Json&lt;crate::replay::ReplaySpec&gt;,
+) -&gt; Result&lt;Json&lt;serde_json::Value&gt;, Error&gt; {
+    authorize(&amp;h, true)?;
+    commit(s, Event::ScheduleReplay(spec)).await
+}
+async fn cancel(
+    State(s): State&lt;Shared&gt;,
+    h: HeaderMap,
+    Path(id): Path&lt;String&gt;,
+) -&gt; Result&lt;Json&lt;serde_json::Value&gt;, Error&gt; {
+    authorize(&amp;h, true)?;
+    commit(s, Event::CancelReplay { job_id: id }).await
+}
+/// One worker, one durable tick per poll; shares the request admission budget.
+pub async fn worker(store: Shared, mut stop: tokio::sync::watch::Receiver&lt;bool&gt;) {
+    let mut interval = tokio::time::interval(std::time::Duration::from_millis(100));
+    loop {
+        tokio::select! {_=stop.changed()=&gt;break,_=interval.tick()=&gt;{
+         let Ok(permit)=WORK.try_acquire() else{continue;};let state=store.clone();
+         match tokio::task::spawn_blocking(move||{let _permit=permit;state.lock().map_err(|_|crate::CommitError::Storage(&quot;state unavailable&quot;.into()))?.advance_replay()}).await{Ok(Ok(_))=&gt;{},Ok(Err(error))=&gt;{eprintln!(&quot;replay worker stopped after storage error: {error}&quot;);break;},Err(error)=&gt;{eprintln!(&quot;replay worker join error: {error}&quot;);break;}}
+        }}
+    }
+}
+#[cfg(test)]
+mod boundary_tests {
+    use super::*;
+    use axum::{
+        body::{Body, to_bytes},
+        http::Request,
+    };
+    use tower::ServiceExt;
+    fn fixture() -&gt; (Shared, std::path::PathBuf) {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        // Relaxed ordering suffices: this counter allocates unique fixture names only.
+        let ordinal = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let path = std::env::temp_dir().join(format!(
+            &quot;course-boundary-{}-{}-{}.jsonl&quot;,
+            ordinal,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        (Arc::new(Mutex::new(Store::open(&amp;path).unwrap())), path)
+    }
+    async fn request(
+        app: Router,
+        method: &amp;str,
+        path: &amp;str,
+        role: &amp;str,
+        body: &amp;str,
+    ) -&gt; (StatusCode, serde_json::Value) {
+        let r = app
+            .oneshot(
+                Request::builder()
+                    .method(method)
+                    .uri(path)
+                    .header(&quot;authorization&quot;, format!(&quot;Bearer {role}&quot;))
+                    .header(&quot;content-type&quot;, &quot;application/json&quot;)
+                    .body(Body::from(body.to_owned()))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        let status = r.status();
+        let b = to_bytes(r.into_body(), 65536).await.unwrap();
+        (
+            status,
+            serde_json::from_slice(&amp;b).unwrap_or(serde_json::Value::Null),
+        )
+    }
+    #[tokio::test]
+    async fn replay_routes_reader_denial_history_and_cancellation() {
+        let (store, path) = fixture();
+        let app = router(store.clone());
+        let body = r#&quot;{&quot;job_id&quot;:&quot;route-job&quot;,&quot;ticks&quot;:[{&quot;event_id&quot;:&quot;j1&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;price_cents&quot;:100,&quot;sequence&quot;:1},{&quot;event_id&quot;:&quot;j2&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;price_cents&quot;:102,&quot;sequence&quot;:2}]}&quot;#;
+        assert_eq!(
+            request(app.clone(), &quot;POST&quot;, &quot;/api/jobs/replay&quot;, &quot;demo-reader&quot;, body)
+                .await
+                .0,
+            StatusCode::FORBIDDEN
+        );
+        assert_eq!(
+            request(
+                app.clone(),
+                &quot;POST&quot;,
+                &quot;/api/jobs/replay&quot;,
+                &quot;demo-operator&quot;,
+                body
+            )
+            .await
+            .0,
+            StatusCode::OK
+        );
+        assert_eq!(
+            request(
+                app.clone(),
+                &quot;POST&quot;,
+                &quot;/api/jobs/replay&quot;,
+                &quot;demo-operator&quot;,
+                body
+            )
+            .await
+            .1[&quot;applied&quot;],
+            false
+        );
+        store.lock().unwrap().advance_replay().unwrap();
+        let (status, history) = request(
+            app.clone(),
+            &quot;GET&quot;,
+            &quot;/api/history?limit=1&quot;,
+            &quot;demo-reader&quot;,
+            &quot;&quot;,
+        )
+        .await;
+        assert_eq!(status, StatusCode::OK);
+        assert_eq!(history[&quot;points&quot;].as_array().unwrap().len(), 1);
+        assert_eq!(
+            request(
+                app.clone(),
+                &quot;GET&quot;,
+                &quot;/api/history?limit=999999&quot;,
+                &quot;demo-reader&quot;,
+                &quot;&quot;
+            )
+            .await
+            .0,
+            StatusCode::BAD_REQUEST
+        );
+        assert_eq!(
+            request(
+                app.clone(),
+                &quot;POST&quot;,
+                &quot;/api/jobs/route-job/cancel&quot;,
+                &quot;demo-reader&quot;,
+                &quot;&quot;
+            )
+            .await
+            .0,
+            StatusCode::FORBIDDEN
+        );
+        assert_eq!(
+            request(
+                app.clone(),
+                &quot;POST&quot;,
+                &quot;/api/jobs/route-job/cancel&quot;,
+                &quot;demo-operator&quot;,
+                &quot;&quot;
+            )
+            .await
+            .0,
+            StatusCode::OK
+        );
+        assert_eq!(
+            request(app.clone(), &quot;GET&quot;, &quot;/api/jobs&quot;, &quot;demo-reader&quot;, &quot;&quot;)
+                .await
+                .1[0][&quot;status&quot;],
+            &quot;cancelled&quot;
+        );
+        let order = r#&quot;{&quot;order_id&quot;:&quot;lookup-order&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;side&quot;:&quot;buy&quot;,&quot;quantity&quot;:1}&quot;#;
+        assert_eq!(
+            request(app.clone(), &quot;POST&quot;, &quot;/api/orders&quot;, &quot;demo-operator&quot;, order)
+                .await
+                .0,
+            StatusCode::OK
+        );
+        let (status, fill) = request(
+            app.clone(),
+            &quot;GET&quot;,
+            &quot;/api/orders/lookup-order&quot;,
+            &quot;demo-reader&quot;,
+            &quot;&quot;,
+        )
+        .await;
+        assert_eq!(status, StatusCode::OK);
+        assert_eq!(fill[&quot;order_id&quot;], &quot;lookup-order&quot;);
+        assert_eq!(fill[&quot;price_cents&quot;], 100);
+        assert_eq!(
+            request(
+                app.clone(),
+                &quot;GET&quot;,
+                &quot;/api/orders/not-present&quot;,
+                &quot;demo-reader&quot;,
+                &quot;&quot;
+            )
+            .await
+            .0,
+            StatusCode::NOT_FOUND
+        );
+        assert_eq!(
+            request(app, &quot;GET&quot;, &quot;/api/orders/lookup-order&quot;, &quot;unknown&quot;, &quot;&quot;)
+                .await
+                .0,
+            StatusCode::UNAUTHORIZED
+        );
+        drop(store);
+        std::fs::remove_file(path).unwrap();
+    }
+    #[tokio::test]
+    async fn worker_processes_and_joins_after_shutdown() {
+        let (store, path) = fixture();
+        store
+            .lock()
+            .unwrap()
+            .commit(Event::ScheduleReplay(crate::replay::ReplaySpec {
+                job_id: &quot;worker&quot;.into(),
+                ticks: vec![Tick {
+                    event_id: &quot;worker-t&quot;.into(),
+                    symbol: &quot;RUST&quot;.into(),
+                    price_cents: 1,
+                    sequence: 1,
+                }],
+            }))
+            .unwrap();
+        let (tx, rx) = tokio::sync::watch::channel(false);
+        let handle = tokio::spawn(worker(store.clone(), rx));
+        tokio::time::timeout(std::time::Duration::from_secs(2), async {
+            loop {
+                if store.lock().unwrap().engine.jobs()[0].status
+                    == crate::replay::ReplayStatus::Completed
+                {
+                    break;
+                }
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        tx.send(true).unwrap();
+        handle.await.unwrap();
+        drop(store);
+        std::fs::remove_file(path).unwrap();
+    }
+}
+
+#[cfg(test)]
+mod admission_tests {
+    use super::*;
+    use axum::{body::Body, http::Request as HttpRequest};
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
+    use tower::ServiceExt;
+    fn fixture() -&gt; (Shared, std::path::PathBuf) {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        // Relaxed ordering suffices: this counter allocates unique fixture names only.
+        let ordinal = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let path = std::env::temp_dir().join(format!(
+            &quot;course-admission-{}-{}-{}.jsonl&quot;,
+            ordinal,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        (Arc::new(Mutex::new(Store::open(&amp;path).unwrap())), path)
+    }
+    #[tokio::test]
+    async fn overload_rejects_before_domain_work() {
+        let (store, path) = fixture();
+        let permits = Arc::new(tokio::sync::Semaphore::new(1));
+        let held = permits.clone().acquire_owned().await.unwrap();
+        let app = router_with_admission(
+            store.clone(),
+            Admission {
+                permits,
+                deadline: std::time::Duration::from_secs(1),
+            },
+        );
+        let response = app
+            .oneshot(
+                HttpRequest::builder()
+                    .uri(&quot;/api/snapshot&quot;)
+                    .header(&quot;authorization&quot;, &quot;Bearer demo-reader&quot;)
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::TOO_MANY_REQUESTS);
+        assert_eq!(store.lock().unwrap().engine.snapshot().events, 0);
+        drop(held);
+        drop(store);
+        std::fs::remove_file(path).unwrap();
+    }
+    #[tokio::test]
+    async fn slow_request_body_hits_deadline() {
+        let (store, path) = fixture();
+        let app = router_with_admission(
+            store.clone(),
+            Admission {
+                permits: Arc::new(tokio::sync::Semaphore::new(1)),
+                deadline: std::time::Duration::from_millis(30),
+            },
+        );
+        let listener = tokio::net::TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+        let addr = listener.local_addr().unwrap();
+        let server = tokio::spawn(async move {
+            axum::serve(listener, app).await.unwrap();
+        });
+        let mut client = tokio::net::TcpStream::connect(addr).await.unwrap();
+        client.write_all(b&quot;POST /api/orders HTTP/1.1\r\nHost: localhost\r\nAuthorization: Bearer demo-operator\r\nContent-Type: application/json\r\nContent-Length: 100\r\nConnection: close\r\n\r\n{&quot;).await.unwrap();
+        let mut bytes = [0; 1024];
+        let count =
+            tokio::time::timeout(std::time::Duration::from_secs(2), client.read(&amp;mut bytes))
+                .await
+                .unwrap()
+                .unwrap();
+        assert!(String::from_utf8_lossy(&amp;bytes[..count]).starts_with(&quot;HTTP/1.1 408&quot;));
+        assert_eq!(store.lock().unwrap().engine.snapshot().events, 0);
+        drop(client);
+        server.abort();
+        let _ = server.await;
+        drop(store);
+        std::fs::remove_file(path).unwrap();
+    }
+}
+
+async fn order_result(
+    State(s): State&lt;Shared&gt;,
+    h: HeaderMap,
+    Path(id): Path&lt;String&gt;,
+) -&gt; Result&lt;Json&lt;crate::Fill&gt;, Error&gt; {
+    authorize(&amp;h, false)?;
+    let result = inspect(s, move |e| Ok(e.fill(&amp;id).cloned())).await?;
+    result
+        .map(Json)
+        .ok_or(Error(StatusCode::NOT_FOUND, &quot;order not found&quot;))
+}
+
+#[cfg(test)]
+mod commit_status_tests {
+    use super::*;
+    use axum::{body::Body, http::Request};
+    use tower::ServiceExt;
+    async fn post(app: Router, path: &amp;str, body: &amp;str) -&gt; StatusCode {
+        app.oneshot(
+            Request::builder()
+                .method(&quot;POST&quot;)
+                .uri(path)
+                .header(&quot;authorization&quot;, &quot;Bearer demo-operator&quot;)
+                .header(&quot;content-type&quot;, &quot;application/json&quot;)
+                .body(Body::from(body.to_owned()))
+                .unwrap(),
+        )
+        .await
+        .unwrap()
+        .status()
+    }
+    #[tokio::test]
+    async fn domain_rejection_is_definite_and_identity_conflict_is_distinct() {
+        let path = std::env::temp_dir().join(format!(
+            &quot;course-status-domain-{}-{}.jsonl&quot;,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let store = Arc::new(Mutex::new(Store::open(&amp;path).unwrap()));
+        let app = router(store.clone());
+        let missing = r#&quot;{&quot;order_id&quot;:&quot;missing-quote&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;side&quot;:&quot;buy&quot;,&quot;quantity&quot;:1}&quot;#;
+        assert_eq!(
+            post(app.clone(), &quot;/api/orders&quot;, missing).await,
+            StatusCode::UNPROCESSABLE_ENTITY
+        );
+        assert_eq!(store.lock().unwrap().snapshot().events, 0);
+        assert_eq!(
+            post(
+                app.clone(),
+                &quot;/api/ticks&quot;,
+                r#&quot;{&quot;event_id&quot;:&quot;t&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;price_cents&quot;:1000,&quot;sequence&quot;:1}&quot;#
+            )
+            .await,
+            StatusCode::OK
+        );
+        let before = store.lock().unwrap().snapshot();
+        assert_eq!(
+            post(
+                app.clone(),
+                &quot;/api/orders&quot;,
+                r#&quot;{&quot;order_id&quot;:&quot;too-expensive&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;side&quot;:&quot;buy&quot;,&quot;quantity&quot;:10000}&quot;#
+            )
+            .await,
+            StatusCode::UNPROCESSABLE_ENTITY
+        );
+        assert_eq!(store.lock().unwrap().snapshot(), before);
+        assert_eq!(
+            post(
+                app.clone(),
+                &quot;/api/orders&quot;,
+                r#&quot;{&quot;order_id&quot;:&quot;known&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;side&quot;:&quot;buy&quot;,&quot;quantity&quot;:1}&quot;#
+            )
+            .await,
+            StatusCode::OK
+        );
+        assert_eq!(
+            post(
+                app,
+                &quot;/api/orders&quot;,
+                r#&quot;{&quot;order_id&quot;:&quot;known&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;side&quot;:&quot;buy&quot;,&quot;quantity&quot;:2}&quot;#
+            )
+            .await,
+            StatusCode::CONFLICT
+        );
+        drop(store);
+        std::fs::remove_file(path).unwrap();
+    }
+    #[tokio::test]
+    async fn write_failure_and_poison_report_uncertainty_not_validation() {
+        let path = std::env::temp_dir().join(format!(
+            &quot;course-status-storage-{}-{}.jsonl&quot;,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let store = Arc::new(Mutex::new(Store::open(&amp;path).unwrap()));
+        let app = router(store.clone());
+        store.lock().unwrap().file = std::fs::File::open(&amp;path).unwrap();
+        let tick = r#&quot;{&quot;event_id&quot;:&quot;t&quot;,&quot;symbol&quot;:&quot;RUST&quot;,&quot;price_cents&quot;:1000,&quot;sequence&quot;:1}&quot;#;
+        assert_eq!(
+            post(app.clone(), &quot;/api/ticks&quot;, tick).await,
+            StatusCode::SERVICE_UNAVAILABLE
+        );
+        assert_eq!(
+            post(app, &quot;/api/ticks&quot;, tick).await,
+            StatusCode::SERVICE_UNAVAILABLE
+        );
+        assert_eq!(store.lock().unwrap().snapshot().events, 0);
+        assert!(store.lock().unwrap().poisoned);
+        drop(store);
+        std::fs::remove_file(path).unwrap();
+    }
+}
+</code></pre></div>
+<h2 id="persistence-and-intentional-failure">Persistence and intentional failure</h2><p>Each new journal record carries version2, a contiguous record position, and one event. The reader accepts legacy version1 fixtures, supplies their historical position while replaying, and writes subsequent records in version2. A migration test loads a real version1 fixture, appends a version2 record, reopens it, then rejects a deliberately corrupted position. Startup reads at most16,384 bytes per record and rejects incomplete or oversized records. It also enforces a10,000-record session limit. There is no checksum or automatic tail repair in this capstone store. It rejects detected framing, schema, position, and domain violations and asks you to preserve the file for diagnosis. Valid-looking alterations can still pass: without a checksum, changing a price to another legal price may produce a different valid replay. It does not authenticate history or detect every corruption. The earlier key-value project teaches more elaborate corruption handling; reusing its lessons here requires explicit engineering and tests.</p>
+<p>In a copied disposable journal, append an incomplete JSON fragment. Restart should fail, not silently ignore the record. Never perform this experiment on your only learner history. If a live append or sync fails, the Store marks itself uncertain and rejects later writes. That prevents compounding an ambiguous partial write. Recovery requires inspection and a tested policy, not simply clearing the error flag.</p>
+<h2 id="independent-practice">Independent practice</h2><p>Extend the existing chart endpoint with time-bucket aggregation, preserving its event-position cursor and maximum response size. Then add experiment-scoped replay reports while retaining the current persisted job cursor and cancellation semantics. Decide whether a report represents every accepted tick or an aggregation, and how input identity prevents a retry becoming a new job. Write acceptance criteria first and include reconnect, duplicate submission, slow client, and restart scenarios.</p><details><summary>Hint 1</summary><p>Chart rendering should not force the server to return an unbounded lifetime history.</p></details><details><summary>Hint 2</summary><p>A replay job should emit deterministic domain events or a versioned report, not mutate UI state directly.</p></details><details><summary>Reference approach</summary><p>Keep immutable source events, a bounded query result, and a clear cursor contract. A job owns its input range and parameters; retries reuse that job ID. Publish progress as an observed value, and distinguish a cancellation request from proof that no work occurred. If migrating to PostgreSQL, atomically persist command identity and domain changes together.</p></details>
+<h2 id="review-and-evidence">Review and evidence</h2><p>Tests establish domain invariants, HTTP role boundaries, restart from complete records, persisted job cursor/cancellation recovery, history bounds, legacy migration, injected append failure, overload rejection before mutation, an actual slow-body deadline, and worker shutdown. The concurrency budgets protect active handlers and blocking work, while pre-handler network connections and OS-level disk quotas remain separate operational concerns. Polling full bounded snapshots supports simple reconnection, but it does not provide a continuous event stream or guarantee no intermediate quote is missed. Do not call this a real-time market feed.</p>
+<h2 id="playbook-investigation-and-mastery">Playbook investigation and mastery</h2><p>Observation: the UI shows old cash after a successful order. Tempting hypothesis: persistence failed. Compare the HTTP command result, a fresh snapshot, and a reopened journal. If both server views agree, persistence failure is disproven for this case; inspect reactive state replacement, fetch caching, and request ordering. An older poll response can overwrite a newer one unless the client compares event counts or sequences requests. Implement that guard, then explain its limits under multiple independent accounts and future snapshot versions.</p>
+<aside class="callout"><h2 id="when-you-get-stuck">When you get stuck</h2><p>Run the domain example first, then <code>python3 reference/p16-workbench/synthetic.py</code> with the backend running. Compare raw snapshot JSON with displayed values. Consult the Stage6 Leptos resource/action guidance for client state. Ask for review with request order, event counts, journal path, and one minimal stale-render reproduction.</p></aside><h2 id="historical-replay-and-persistent-background-work">Historical replay and persistent background work</h2><p><code>POST /api/jobs/replay</code> accepts <code>{"job_id":"replay-1","ticks":[{"event_id":"replay-1-t1","symbol":"LAB","price_cents":125,"sequence":1}]}</code> under the operator fixture. Each job holds1 through64 validated tick descriptions; at most16 jobs are retained. An identical submission returns applied:false, and conflicting reuse of a job ID is rejected. The worker processes one tick per100ms poll. A ReplayStep journal event identifies the job and expected cursor; replay of that event updates the quote/history and cursor together. Restart resumes the next persisted cursor. An invalid domain tick becomes a persisted failed job without partially changing the quote.</p><p><code>GET /api/jobs</code> returns bounded progress summaries. <code>POST /api/jobs/{id}/cancel</code> records cancellation and rejects later unprocessed steps. A cancellation racing with a step is serialized by the same store ownership: an already committed step remains real, while later steps stop. This job performs only local deterministic domain work, so it does not need an external-effect lease protocol; use Project14 when execution crosses process/effect boundaries.</p><p><code>GET /api/history?after=0&amp;limit=100</code> returns chart points with event_position, symbol, integer price, and per-symbol sequence. At most1,024 points are retained in the read model and a page returns at most256. Old cursors are rejected rather than silently returning a gap. The complete bounded journal reconstructs this read model on startup. These positions order accepted events; they are not wall-clock timestamps. Multi-source physical-time analysis is a further domain choice.</p><div class="code-wrap" data-source="projects/reference/p16-workbench/src/replay.rs" data-sha256="959bef5c826786fc734ff3a9c4f4b1f618ed103905731838dcfd00bf21fe9fc7"><div class="code-label"><a href="../../projects/reference/p16-workbench/src/replay.rs">projects/reference/p16-workbench/src/replay.rs</a></div><pre><code>//! Persisted, bounded replay jobs inside the single-writer modular application.
+//! Every step journals the job cursor and tick effect together; no external effects.
+use crate::{Engine, Event, Store, Tick};
+use serde::{Deserialize, Serialize};
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ReplaySpec {
+    pub job_id: String,
+    pub ticks: Vec&lt;Tick&gt;,
+}
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[serde(rename_all = &quot;snake_case&quot;)]
+pub enum ReplayStatus {
+    Queued,
+    Running,
+    Completed,
+    Cancelled,
+    Failed,
+}
+#[derive(Debug, Clone)]
+pub(crate) struct ReplayJob {
+    pub spec: ReplaySpec,
+    pub next: usize,
+    pub status: ReplayStatus,
+    pub error: Option&lt;String&gt;,
+}
+impl ReplayJob {
+    pub fn active(&amp;self) -&gt; bool {
+        matches!(self.status, ReplayStatus::Queued | ReplayStatus::Running)
+    }
+}
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct JobView {
+    pub job_id: String,
+    pub next: usize,
+    pub total: usize,
+    pub status: ReplayStatus,
+    pub error: Option&lt;String&gt;,
+}
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct ChartPoint {
+    pub event_position: u64,
+    pub symbol: String,
+    pub price_cents: i64,
+    pub sequence: u64,
+}
+#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+pub struct History {
+    pub points: Vec&lt;ChartPoint&gt;,
+    pub oldest_position: Option&lt;u64&gt;,
+    pub latest_position: Option&lt;u64&gt;,
+}
+impl Engine {
+    pub fn jobs(&amp;self) -&gt; Vec&lt;JobView&gt; {
+        self.jobs
+            .values()
+            .map(|j| JobView {
+                job_id: j.spec.job_id.clone(),
+                next: j.next,
+                total: j.spec.ticks.len(),
+                status: j.status.clone(),
+                error: j.error.clone(),
+            })
+            .collect()
+    }
+    pub fn history(&amp;self, after: u64, limit: usize) -&gt; Result&lt;History, &amp;&#x27;static str&gt; {
+        if !(1..=256).contains(&amp;limit) {
+            return Err(&quot;history limit outside 1..=256&quot;);
+        }
+        let oldest = self.history.front().map(|p| p.event_position);
+        if after != 0 &amp;&amp; oldest.is_some_and(|p| after &lt; p.saturating_sub(1)) {
+            return Err(&quot;history cursor expired; restart from after=0&quot;);
+        }
+        Ok(History {
+            points: self
+                .history
+                .iter()
+                .filter(|p| p.event_position &gt; after)
+                .take(limit)
+                .cloned()
+                .collect(),
+            oldest_position: oldest,
+            latest_position: self.history.back().map(|p| p.event_position),
+        })
+    }
+}
+impl Store {
+    /// Executes one bounded, durable cursor increment. A process restart resumes the cursor.
+    /// No retry timer is needed for CPU-only deterministic work; invalid domain input becomes failed.
+    pub fn advance_replay(&amp;mut self) -&gt; Result&lt;bool, crate::CommitError&gt; {
+        let Some(job) = self.engine.jobs.values().find(|j| j.active()) else {
+            return Ok(false);
+        };
+        let event = Event::ReplayStep {
+            job_id: job.spec.job_id.clone(),
+            index: job.next,
+        };
+        let event = match self.engine.validate(&amp;event) {
+            Ok(_) =&gt; event,
+            Err(reason) =&gt; Event::FailReplay {
+                job_id: job.spec.job_id.clone(),
+                reason: reason.to_owned(),
+            },
+        };
+        self.commit(event)
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn path(label: &amp;str) -&gt; std::path::PathBuf {
+        std::env::temp_dir().join(format!(
+            &quot;course-replay-{label}-{}-{}.jsonl&quot;,
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ))
+    }
+    fn spec(id: &amp;str) -&gt; ReplaySpec {
+        ReplaySpec {
+            job_id: id.into(),
+            ticks: (1..=3)
+                .map(|n| Tick {
+                    event_id: format!(&quot;{id}-{n}&quot;),
+                    symbol: &quot;RUST&quot;.into(),
+                    price_cents: 100 + n as i64,
+                    sequence: n,
+                })
+                .collect(),
+        }
+    }
+    #[test]
+    fn job_restart_atomic_cursor_duplicate_and_cancellation() {
+        let path = path(&quot;restart&quot;);
+        let input = spec(&quot;job1&quot;);
+        {
+            let mut store = Store::open(&amp;path).unwrap();
+            assert!(store.commit(Event::ScheduleReplay(input.clone())).unwrap());
+            assert!(!store.commit(Event::ScheduleReplay(input.clone())).unwrap());
+            assert!(store.advance_replay().unwrap());
+            assert_eq!(store.engine.jobs()[0].next, 1);
+        }
+        {
+            let mut store = Store::open(&amp;path).unwrap();
+            assert_eq!(store.engine.jobs()[0].next, 1);
+            assert_eq!(store.engine.history(0, 10).unwrap().points.len(), 1);
+            assert!(store.advance_replay().unwrap());
+            store
+                .commit(Event::CancelReplay {
+                    job_id: &quot;job1&quot;.into(),
+                })
+                .unwrap();
+            assert!(!store.advance_replay().unwrap());
+            assert_eq!(store.engine.jobs()[0].status, ReplayStatus::Cancelled);
+            assert!(
+                store
+                    .commit(Event::ReplayStep {
+                        job_id: &quot;job1&quot;.into(),
+                        index: 2
+                    })
+                    .is_err()
+            );
+        }
+        let store = Store::open(&amp;path).unwrap();
+        assert_eq!(store.engine.jobs()[0].next, 2);
+        assert_eq!(store.engine.jobs()[0].status, ReplayStatus::Cancelled);
+        drop(store);
+        std::fs::remove_file(path).unwrap();
+    }
+    #[test]
+    fn completed_history_and_invalid_job_fail_deterministically() {
+        let path = path(&quot;complete&quot;);
+        let mut s = Store::open(&amp;path).unwrap();
+        s.commit(Event::ScheduleReplay(spec(&quot;a&quot;))).unwrap();
+        while s.advance_replay().unwrap() {}
+        assert_eq!(s.engine.jobs()[0].status, ReplayStatus::Completed);
+        let history = s.engine.history(0, 2).unwrap();
+        assert_eq!(history.points.len(), 2);
+        let last = history.points.last().unwrap().event_position;
+        assert_eq!(s.engine.history(last, 2).unwrap().points.len(), 1);
+        s.commit(Event::ScheduleReplay(spec(&quot;b&quot;))).unwrap();
+        s.advance_replay().unwrap();
+        assert_eq!(s.engine.jobs()[1].status, ReplayStatus::Failed);
+        assert_eq!(s.engine.history(0, 10).unwrap().points.len(), 3);
+        drop(s);
+        std::fs::remove_file(path).unwrap();
+    }
+    #[test]
+    fn legacy_migration_and_position_corruption() {
+        let path = path(&quot;migration&quot;);
+        std::fs::write(&amp;path, include_bytes!(&quot;../fixtures/legacy-v1.jsonl&quot;)).unwrap();
+        {
+            let mut s = Store::open(&amp;path).unwrap();
+            assert_eq!(s.engine.snapshot().cash_cents, 999750);
+            s.commit(Event::Watchlist(vec![&quot;RUST&quot;.into(), &quot;LAB&quot;.into()]))
+                .unwrap();
+        }
+        let data = std::fs::read_to_string(&amp;path).unwrap();
+        assert!(data.contains(&quot;\&quot;version\&quot;:2,\&quot;position\&quot;:3&quot;));
+        assert!(Store::open(&amp;path).is_ok());
+        std::fs::write(&amp;path, data.replace(&quot;\&quot;position\&quot;:3&quot;, &quot;\&quot;position\&quot;:99&quot;)).unwrap();
+        assert!(Store::open(&amp;path).is_err());
+        std::fs::remove_file(path).unwrap();
+    }
+    #[test]
+    fn history_memory_and_cursor_are_bounded() {
+        let mut e = Engine::default();
+        for n in 1..=1100 {
+            e.apply(Event::Tick(Tick {
+                event_id: format!(&quot;t-{n}&quot;),
+                symbol: &quot;RUST&quot;.into(),
+                price_cents: 100,
+                sequence: n,
+            }))
+            .unwrap();
+        }
+        assert_eq!(e.history.len(), 1024);
+        assert!(e.history(1, 10).is_err());
+        assert_eq!(e.history(0, 256).unwrap().points.len(), 256);
+        assert!(e.history(0, 257).is_err());
+    }
+}
+
+#[cfg(test)]
+mod budget_tests {
+    use super::*;
+    #[test]
+    fn accepted_replay_reserves_capacity_against_later_live_ticks() {
+        let mut e = Engine::default();
+        e.apply(Event::ScheduleReplay(ReplaySpec {
+            job_id: &quot;reserved&quot;.into(),
+            ticks: (1..=2)
+                .map(|n| Tick {
+                    event_id: format!(&quot;replay-{n}&quot;),
+                    symbol: &quot;LAB&quot;.into(),
+                    price_cents: 100,
+                    sequence: n,
+                })
+                .collect(),
+        }))
+        .unwrap();
+        for n in 1..=9997 {
+            e.apply(Event::Tick(Tick {
+                event_id: format!(&quot;live-{n}&quot;),
+                symbol: &quot;RUST&quot;.into(),
+                price_cents: 100,
+                sequence: n,
+            }))
+            .unwrap();
+        }
+        assert!(
+            e.apply(Event::Tick(Tick {
+                event_id: &quot;too-many&quot;.into(),
+                symbol: &quot;RUST&quot;.into(),
+                price_cents: 100,
+                sequence: 9998
+            }))
+            .is_err()
+        );
+        for index in 0..2 {
+            e.apply(Event::ReplayStep {
+                job_id: &quot;reserved&quot;.into(),
+                index,
+            })
+            .unwrap();
+        }
+        assert_eq!(e.jobs()[0].status, ReplayStatus::Completed);
+        assert_eq!(e.snapshot().events, 10_000);
+    }
+}
+</code></pre></div><h2 id="migration-and-rollback-checkpoint">Migration and rollback checkpoint</h2><p>Copy the legacy fixture into a new disposable learner-data path, start the service on it, and inspect the restored cash and holdings. Submit a watchlist change and confirm the new record has version2 and position3. Preserve a backup before the experiment. The old version1-only binary cannot read the new records, so binary-only rollback after a new write is incompatible. Rollback requires the preserved old journal or an explicitly tested reverse migration that accounts for new job event kinds; the course does not silently discard those events.</p><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Scope and invariants:</strong> one simulated account, whole units/integer cents, bounded symbol/event/job/history sizes, immutable logical identity, one journal owner, persisted replay cursor, reader/operator route boundary. <strong>Why this design:</strong> a modular process and deterministic engine make invariant and restart reasoning direct; a bounded blocking pool keeps synchronous journal operations out of runtime threads. The mutex spans validation, durable append, and application so those checked facts cannot change between steps. No synchronous guard crosses await.</p><p><strong>Concrete habits:</strong> validate every mutation first; use checked arithmetic; preserve command IDs after timeout; fail closed on incomplete records; bound history pages and worker steps; test authorization at HTTP boundaries. Every expect in domain application describes an invariant just checked under exclusive ownership, while untrusted input returns an error. <strong>Alternative:</strong> PostgreSQL is appropriate when independent writers, richer transactions, or queryable histories become requirements; Project10 supplies the transaction pattern. <strong>Evidence:</strong> tests cover domain invariants, migration, restart, cancellation, append failure, overload and slow bodies; no hardware durability, authentication, or unmeasured capacity claim follows. <strong>Evolution threshold:</strong> move beyond one writer only with a new transaction/identity contract and concurrency tests. Production identity, TLS, OS connection/disk limits, and a full restore rehearsal remain explicit deployment work.</p><h2 id="reproducible-local-load-scenario">Reproducible local load scenario</h2><p>The included <code>projects/reference/p16-workbench/load.py</code> starts a separate server on an automatically selected loopback port with a temporary journal, submits200 distinct one-unit orders plus20 exact retries, verifies cash and holdings, and stops its owned child. From the workspace run <code>mise exec -- cargo build -p p16-workbench</code>, then invoke the helper with <code>--binary</code> pointing to that build and <code>--output</code> pointing to your measurement JSON. Do not substitute the URL of an existing learner service.</p><p>The recorded2026-10-09 debug-build baseline on this macOS arm64 host took1.0526 seconds for200 logical orders plus20 duplicate attempts; median order latency was4.970ms and p95 was7.149ms. The journal occupied26,628 bytes, cash was980,000 cents, and holdings were200 units. These are one serial workload measurements including storage sync, with no warm-up exclusion. They are not a maximum-capacity or reliability claim. The raw record is <a href="../../verification/workbench-load.json">workbench-load.json</a>. Re-run on your machine and compare only workloads with the same semantics and build profile.</p><h2 id="preserving-the-storage-boundary-and-reconciling-old-commands">Preserving the storage boundary and reconciling old commands</h2><p>Store exposes <code>commit</code> for mutation and a read-only <code>snapshot</code>; its engine is not a public mutable field. A compile-fail documentation test demonstrates that external callers cannot bypass the journal through that field. During recovery, a duplicate already-applied logical command is rejected as malformed journal history rather than silently counted. This preserves agreement between physical records and accepted events, and the writer independently enforces its physical10,000-record limit.</p><p><code>GET /api/orders/{id}</code> returns the original persisted fill even after it leaves the latest100 snapshot entries. This gives a reconnecting client a precise reconciliation path. IDs are identity, not chronology: newest fills are tracked by acceptance order. Read permission is checked before lookup, and an unknown ID returns404. A timeout followed by a found fill establishes an accepted command; absence alone still needs the application’s current uncertainty policy if a write may be in progress.</p><h2 id="a-definite-rejection-is-different-from-an-uncertain-commit">A definite rejection is different from an uncertain commit</h2><p>The store now returns a typed CommitError. Expected validation failures detected before append—such as a missing quote, insufficient simulated cash, or a full budget—produce HTTP422 and a safe domain explanation. Reusing a known event, order, or job ID with different content produces409. An I/O failure, a poisoned store, or any inconsistency after append produces503; the store stops further writes when its journal state is uncertain. No failure after the append boundary is reported as a definite input rejection.</p><p>For a first attempt,422 means that attempt did not commit and the form can be edited. After an earlier unknown outcome, a retry receiving422 or429 does not prove the earlier attempt failed: its retained identity must remain until exact result reconciliation. API regression tests distinguish missing-quote and insufficient-cash422 responses, conflicting identity409, and injected writer failure plus poisoned-store503 responses. Tests also assert that definite rejection leaves domain state unchanged.</p><section><h2 id="reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</h2><p>Working directory: course root. This creates a complete separate source tree; it refuses an existing destination. Run the checkpoint tests before following the guided edits. The <a href="../../projects/checkpoints/p16-workbench/index.html">checkpoint contract and engineering decisions</a> state exactly which features exist.</p><pre><code>python3 scripts/start-checkpoint.py p16 final
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p16-workbench/final/Cargo.toml</code></pre><p>To compare an earlier milestone with the final reference, reconstruct each ID into a different directory. Run the final project’s own boundary fixtures as described in its contract; the chat and workbench use loopback services, and the workbench uses a dedicated disposable journal. These projects do not require PostgreSQL. Passing ordinary unit tests does not establish every network or restart behavior.</p></section><h2 id="configuration-is-an-input-boundary-too">Configuration is an input boundary too</h2><p>The executable reads WORKBENCH_LOG as a native path with var_os and PathBuf: a native filename must not silently become the default journal merely because text conversion fails. WORKBENCH_ADDR is text and must parse as a loopback socket address. Only absence selects its default; invalid text is an error before journal I/O. A focused executable fixture rejects malformed and non-loopback addresses without creating state, then starts successfully with a Unicode native filename. This macOS filesystem rejected a non-UTF-8 byte filename; the executable propagated that I/O failure without creating a fallback journal. This checks the local configuration boundary; it is separate from the HTTP acceptance suite.</p><h2 id="test-exact-persistence-boundaries">Test exact persistence boundaries</h2><p>The focused persistence_edges tests construct owned temporary journals with an exactly 16,384-byte record, a 16,385-byte record, a missing final newline, exactly 10,000 records, and 10,001 records. The accepted boundary replays; each rejected input remains byte-for-byte unchanged. An attempted new command at the full session limit is rejected before append. These constructed files test parsing and admission, not 10,000 separately synchronized acknowledgments or power-loss behavior.</p><pre><code>mise exec -- cargo test -p p16-workbench --test persistence_edges</code></pre><p>A second counterexample changes a valid synthetic price while preserving JSON and positions. Replay accepts it and produces a different ledger: this is the expected limitation of a journal without integrity protection. Compare this with the earlier KV01 length-damage example. Explain why neither parser success nor position continuity proves that stored history was never altered. Keep the explicit single-process writer and creation-directory durability limitations in your runbook.</p><h2 id="read-failures-retain-their-meaning">Read failures retain their meaning</h2><p>Jobs, history and exact order lookup share a bounded inspect helper. A bad history limit or expired cursor is HTTP400; an unavailable or poisoned state owner is HTTP503. Combining those errors would tell a caller to change a valid request when the service actually needs recovery. The api_contract regression deliberately panics while holding the mutex in an owned fixture, then checks all four read routes. Ordinary snapshot reads and mutation errors already used503; the audit corrected the other readers to match. This injected panic tests classification, not a claim that every application panic is recoverable.</p><pre><code>mise exec -- cargo test -p p16-workbench --test api_contract</code></pre><h2 id="replay-requests-need-retained-identity-too">Replay requests need retained identity too</h2><p>The Leptos console retains the exact replay job ID and tick payload after an ambiguous response and offers Retry retained replay. Later quotes cannot change that retry. A later422 or429 cannot erase uncertainty from an earlier attempt; acceptance or a definite rejection of the first attempt clears the retained submission. New replay identity stays blocked while it is unresolved. This state belongs to the open page and does not persist across reload: keep the page open and reconcile durable jobs before creating another instruction. The shared native model tests these transitions, while real browser interaction remains a separate check. See <a href="../../verification/console-retry-review.html">the console retry evidence</a>.</p>
+<h3>A server banner must not launch unobserved work</h3><p>Both required startup lines are written and flushed before spawning the replay worker. If stdout is closed, startup returns an ordinary I/O error; opening the configured journal may have created an empty file, but the worker has not been launched to commit replay steps. A child-process check uses a private journal, observes BrokenPipe without a panic, and confirms the empty journal remains empty.</p><p>The main task retains the shutdown sender even if serving fails. It selects one pinned server future against Ctrl-C, signals graceful shutdown, and awaits that same future. After serving ends for any reason, it signals and joins the replay worker before returning a saved server, worker or signal-registration error. The owned-process smoke test fetches health and then sends SIGINT, while the larger runtime audit separately covers replay, overload and restart behavior. These scopes are distinguished in <a href="../../verification/service-output-followup.html">the output/lifecycle report</a>.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://docs.rs/axum/0.8.9/axum/extract/struct.State.html">Axum state</a></li><li><a href="https://docs.rs/tokio/1.53.3/tokio/task/fn.spawn_blocking.html">Tokio spawn_blocking</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/fs/struct.File.html#method.sync_data">Rust File sync_data</a></li><li><a href="https://book.leptos.dev/">Leptos book</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-9/09-domain.html">Previous: Paper-trading invariants and deterministic event replay</a><a href="../../lessons/stage-9/09-review.html">Next: Independent capstone change, incident, design review, and performance inquiry</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-and-milestone-boundary">Purpose and milestone boundary</a><a href="#plain-english-model-command-and-read-model">Plain-English model: command and read model</a><a href="#prediction">Prediction</a><a href="#run-the-complete-local-milestone">Run the complete local milestone</a><a href="#guided-integration">Guided integration</a><a href="#persistence-and-intentional-failure">Persistence and intentional failure</a><a href="#independent-practice">Independent practice</a><a href="#review-and-evidence">Review and evidence</a><a href="#playbook-investigation-and-mastery">Playbook investigation and mastery</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#historical-replay-and-persistent-background-work">Historical replay and persistent background work</a><a href="#migration-and-rollback-checkpoint">Migration and rollback checkpoint</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#reproducible-local-load-scenario">Reproducible local load scenario</a><a href="#preserving-the-storage-boundary-and-reconciling-old-commands">Preserving the storage boundary and reconciling old commands</a><a href="#a-definite-rejection-is-different-from-an-uncertain-commit">A definite rejection is different from an uncertain commit</a><a href="#reconstruct-this-runnable-checkpoint">Reconstruct this runnable checkpoint</a><a href="#configuration-is-an-input-boundary-too">Configuration is an input boundary too</a><a href="#test-exact-persistence-boundaries">Test exact persistence boundaries</a><a href="#read-failures-retain-their-meaning">Read failures retain their meaning</a><a href="#replay-requests-need-retained-identity-too">Replay requests need retained identity too</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

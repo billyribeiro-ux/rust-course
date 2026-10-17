@@ -1,0 +1,276 @@
+$ mise exec -- rustfmt --edition 2024 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p01-calculator/01-checked-add/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p01-calculator/01-checked-add/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p02-journal/01-domain/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p02-journal/01-domain/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p03-logs/01-bounded-lines/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p03-logs/01-bounded-lines/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p04-config/01-effective-port/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p04-config/01-effective-port/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p05-expressions/01-token-spans/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p05-expressions/01-token-spans/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p06-kv/01-prefix-replay/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p06-kv/01-prefix-replay/src/main.rs
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p01 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator
+Parse two bounded signed decimal i64 strings and return their checked sum. Invalid numbers and arithmetic overflow are different errors. This stage deliberately has no units, operator selection, or general CLI parser.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+   Compiling checkpoint-p01-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.26s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p01_calculator-ae7cd933a152cfd4)
+
+running 3 tests
+test tests::minimum_and_zero_are_valid ... ok
+test tests::overflow_is_distinct_from_parsing ... ok
+test tests::normal_and_negative_sums ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p01_calculator-33c0c115b629c8b8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p01_calculator
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit: 0
+
+$ mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+    Blocking waiting for file lock on build directory
+   Compiling checkpoint-p01-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.43s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/checkpoint-p01-calculator`
+12
+
+exit: 0
+
+$ mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+    Blocking waiting for file lock on build directory
+    Checking checkpoint-p01-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.33s
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p01 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator; choose a new --destination
+
+exit: 1
+
+$ python3 scripts/start-checkpoint.py p02 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal
+Keep at most 32 tasks with private fields, nonempty titles of at most 200 UTF-8 bytes and no control characters. Add validates before mutation; complete is idempotent and reports missing IDs. This stage has no file format or I/O.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+   Compiling checkpoint-p02-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.33s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p02_journal-ad20fface279c450)
+
+running 3 tests
+test tests::owns_title_and_completion_is_idempotent ... ok
+test tests::capacity_boundary_preserves_last_state ... ok
+test tests::rejected_input_preserves_state ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p02_journal-a2c114473456ddc7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p02_journal
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit: 0
+
+$ mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+   Compiling checkpoint-p02-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/checkpoint-p02-journal`
+1 Done: learn ownership
+
+exit: 0
+
+$ mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+    Blocking waiting for file lock on build directory
+    Checking checkpoint-p02-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.25s
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p02 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal; choose a new --destination
+
+exit: 1
+
+$ python3 scripts/start-checkpoint.py p03 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs
+Read one LF-delimited byte line while retaining at most max bytes (1..=4096). Drain an oversized line before the next call; treat a nonempty final unterminated line as a line; propagate I/O errors. CR remains payload at this stage, and UTF-8/record grammar are not yet interpreted.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+   Compiling checkpoint-p03-logs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.28s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p03_logs-8dc893f61f5f5c63)
+
+running 4 tests
+test tests::oversized_line_is_drained ... ok
+test tests::io_failure_is_not_end ... ok
+test tests::empty_line_and_exact_bound_are_distinct_from_eof ... ok
+test tests::chunk_boundaries_do_not_change_lines ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p03_logs-b023a76a0238535d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p03_logs
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit: 0
+
+$ mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+    Blocking waiting for file lock on build directory
+   Compiling checkpoint-p03-logs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.18s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/checkpoint-p03-logs`
+Oversized
+Bytes([111, 107])
+Bytes([108, 97, 115, 116])
+End
+
+exit: 0
+
+$ mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+    Checking checkpoint-p03-logs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.22s
+
+exit: 0
+
+$ python3 scripts/start-checkpoint.py p03 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs; choose a new --destination
+
+exit: 1
+
+$ python3 scripts/start-checkpoint.py p04 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config
+Resolve at most eight optional textual port layers, with later present values winning and default 8080. Validate only the effective value as a nonzero u16. The result stores a private validated port; this milestone does not read process environment/files or manage secrets.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit: 0
+
+$ mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+   Compiling checkpoint-p04-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.28s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p04_config-8ace7d70add798be)
+
+running 3 tests
+test tests::defaults_and_later_override ... ok
+test tests::effective_invalid_is_rejected ... ok
+test tests::exact_numeric_and_layer_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p04_config-69d61382c58c7a55)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p04_config
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit: 0
+
+$ mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+   Compiling checkpoint-p04-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.11s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/checkpoint-p04-config`
+effective port: 9000
+
+exit: 0
+
+$ mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings
+cwd: /Users/billyribeiro/Desktop/rust-course/rust-course
+    Blocking waiting for file lock on build directory
+    Checking checkpoint-p04-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config)
+error: unnecessary `if let` since only the `Some` variant of the iterator element is used
+  --> src/lib.rs:30:5
+   |
+30 | /     for layer in layers {
+31 | |         if let Some(value) = layer {
+32 | |             effective = value;
+33 | |         }
+34 | |     }
+   | |_____^
+   |
+help: try `.flatten()` and remove the `if let` statement in the for loop
+  --> src/lib.rs:31:9
+   |
+31 | /         if let Some(value) = layer {
+32 | |             effective = value;
+33 | |         }
+   | |_________^
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.99.0/index.html#manual_flatten
+   = note: `-D clippy::manual-flatten` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::manual_flatten)]`
+help: try
+   |
+30 ~     for value in layers.iter().flatten() {
+31 +         effective = value;
+32 +     }
+   |
+
+error: could not compile `checkpoint-p04-config` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `checkpoint-p04-config` (lib test) due to 1 previous error
+
+exit: 101

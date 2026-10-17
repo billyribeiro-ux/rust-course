@@ -1,0 +1,41 @@
+{
+  "status": "typechecked_only",
+  "independent_review": "pending",
+  "results": [
+    {
+      "project": "p01-calculator",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p01-calculator/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "stderr": "    Checking workshop-calculator-scaffold v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p01-calculator)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s\n",
+      "execution_status": "tests deliberately not executed; TODO contracts are incomplete"
+    },
+    {
+      "project": "p02-journal",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p02-journal/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "stderr": "    Checking task-journal-scaffold v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p02-journal)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s\n",
+      "execution_status": "tests deliberately not executed; TODO contracts are incomplete"
+    },
+    {
+      "project": "p03-logs",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p03-logs/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "stderr": "    Checking log-detective-scaffold v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p03-logs)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s\n",
+      "execution_status": "tests deliberately not executed; TODO contracts are incomplete"
+    },
+    {
+      "project": "p04-config",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p04-config/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "stderr": "    Checking typed-config-scaffold v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p04-config)\nwarning: field `token` is never read\n  --> src/lib.rs:12:5\n   |\n10 | pub struct Config {\n   |            ------ field in this struct\n11 |     port: u16,\n12 |     token: Option<String>,\n   |     ^^^^^\n   |\n   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default\n\nwarning: `typed-config-scaffold` (lib test) generated 1 warning\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s\n",
+      "execution_status": "tests deliberately not executed; TODO contracts are incomplete"
+    },
+    {
+      "project": "p05-expressions",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p05-expressions/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "stderr": "    Checking expression-language-scaffold v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p05-expressions)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s\n",
+      "execution_status": "tests deliberately not executed; TODO contracts are incomplete"
+    }
+  ]
+}

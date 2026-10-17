@@ -1,0 +1,6 @@
+[package]
+name = "learner-p15-replication"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+[workspace]

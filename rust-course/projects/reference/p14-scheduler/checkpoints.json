@@ -1,0 +1,22 @@
+{
+  "project": "p14-scheduler",
+  "mechanism": "Each listed source checkpoint reconstructs with scripts/start-checkpoint.py into a fresh standalone Cargo project. No learner directory is overwritten.",
+  "manifest": "projects/checkpoints/p14-scheduler/checkpoint.json",
+  "steps": [
+    {
+      "checkpoint": "00-scaffold",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p14 00-scaffold"
+    },
+    {
+      "checkpoint": "01-lease-model",
+      "contract": "An in-memory queue retains at most16 jobs,256-byte payloads, three claims per job, and ten logical ticks per lease. Exact enqueue retries have no new effect; conflicting payloads fail. Expiry permits redelivery and a newer token fences old completion. Cancellation revokes completion. No database, OS clock, background worker, or external effect is implemented.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p14 01-lease-model"
+    },
+    {
+      "checkpoint": "final",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p14 final"
+    }
+  ]
+}

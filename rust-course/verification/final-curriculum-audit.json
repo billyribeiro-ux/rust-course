@@ -1,0 +1,2538 @@
+{
+  "date": "2026-10-09",
+  "review_kind": "author-team curriculum and source-to-prose alignment audit",
+  "independent_review": "pending",
+  "acceptance": "not an independent acceptance or learner mastery certificate",
+  "method": [
+    "Read canonical JSON lesson prose and HTML project/checkpoint guidance; checked substantive objective groups against explanations, independent practice, linked source and stage gates.",
+    "Used static checks for unique lesson IDs, prerequisite targets, embedded source files, @root targets, line-start Cargo commands, selected recurring lesson sections, all requirement-map targets and gate anchors. Structural markers and word counts do not establish instructional quality.",
+    "Deeply reviewed and executed the new core laboratories and owned early/final checkpoint reconstructions. Reviewed other authors' new bridge prose and recorded evidence scopes; did not rerun their entire systems, database, performance or browser verification.",
+    "Primary Rust Weak/TryInto documentation was read from the installed Rust 1.99.0 rustdoc tree after the web tool could not retrieve the corresponding versioned URLs. No browser access was attempted for this audit."
+  ],
+  "static_results": {
+    "canonical_lessons": 57,
+    "required_objective_groups": 83,
+    "duplicate_ids": [],
+    "unique_embedded_source_paths": 57,
+    "problems": [],
+    "lesson_words": {
+      "04-atomics": 1770,
+      "04-pinning": 1790,
+      "01-collections": 1831,
+      "02-conversions": 2446,
+      "03-interior": 2332,
+      "05-web-boundaries": 2256,
+      "04-parallel-tools": 1668,
+      "07-layout": 1695,
+      "07-allocation-dispatch": 1860,
+      "03-fuzz": 1783,
+      "00-conversions": 1852,
+      "00-terminal": 1171,
+      "00-values": 1276,
+      "00-calculator": 1472,
+      "01-ownership": 1111,
+      "01-modeling": 1269,
+      "01-journal": 1160,
+      "01-io": 1445,
+      "01-logs": 1497,
+      "02-traits": 1106,
+      "02-config": 1496,
+      "02-lifetimes": 1214,
+      "02-parser": 1319,
+      "02-evaluator": 1479,
+      "06-browser": 1174,
+      "06-state": 1290,
+      "06-console": 1645,
+      "06-boundaries": 1162,
+      "00-workspace": 2126,
+      "00-programs": 2434,
+      "05-protocols": 1068,
+      "05-chat": 1298,
+      "05-http": 1123,
+      "05-sql": 1218,
+      "05-tracker": 1303,
+      "08-delivery": 1146,
+      "08-scheduler": 1451,
+      "08-replication": 1297,
+      "08-operations": 1121,
+      "09-domain": 1256,
+      "09-workbench": 2421,
+      "09-review": 1276,
+      "07-traits": 1147,
+      "07-macros": 1137,
+      "07-ffi": 1204,
+      "03-tests": 1519,
+      "03-raii": 1439,
+      "03-log-store": 1467,
+      "03-recovery": 1421,
+      "04-threads": 1374,
+      "04-indexer": 1374,
+      "04-futures": 1411,
+      "04-monitor": 1399,
+      "07-performance": 1528,
+      "07-replay": 1438,
+      "07-unsafe": 1398,
+      "07-auditing": 1575
+    }
+  },
+  "actual_owned_verification": {
+    "core_labs": "13 unit tests and 3 doctests passed; strict Clippy, three examples, three reconstructed packages, no-overwrite rejection and two expected failing mutations passed.",
+    "early_checkpoints": "21 distinct early unit tests across p01\u2013p06 passed, with runnable demonstrations and strict Clippy. The resolved first p04 lint failure is retained.",
+    "final_checkpoints": "Six complete reference reconstructions passed cargo test. Twelve fresh early/final copies passed offline locked metadata with normalized per-checkpoint lockfiles.",
+    "commands_and_results": [
+      "verification/core-labs-tests.log",
+      "verification/core-labs-checks.json",
+      "verification/early-checkpoints.json",
+      "verification/early-final-checkpoints.json"
+    ]
+  },
+  "findings": [
+    {
+      "id": "FCA01",
+      "issue": "Compound collections, standard conversion traits and interior mutability lacked focused beginner-to-middle instruction and runnable checkpoints.",
+      "status": "fixed",
+      "locations": [
+        "authoring/completion-foundations.json",
+        "projects/reference/p18-core-labs"
+      ],
+      "resolution": "Added 01-collections, 02-conversions and 03-interior, complete examples and reconstruction helper, bounded contracts, meaningful tests, independent tasks, folded hints, engineering decisions and topic-specific investigations. Added actual TryInto usage, public-path doctests, a private-representation compile failure and Weak observer lifecycle test; explained strong ownership cycles without claiming the acyclic log already contains one.",
+      "evidence": [
+        "verification/core-labs-tests.log",
+        "verification/core-labs-checkpoints.log",
+        "verification/core-labs-checks.json"
+      ]
+    },
+    {
+      "id": "FCA02",
+      "issue": "Early main-project checkpoints were not uniformly complete source states that learners could reconstruct.",
+      "status": "fixed_for_owned_projects",
+      "locations": [
+        "projects/checkpoints/p01-calculator",
+        "projects/checkpoints/p02-journal",
+        "projects/checkpoints/p03-logs",
+        "projects/checkpoints/p04-config",
+        "projects/checkpoints/p05-expressions",
+        "projects/checkpoints/p06-kv",
+        "authoring/foundations.json",
+        "authoring/systems.json"
+      ],
+      "resolution": "Authored six genuinely smaller complete standalone milestones plus explicit final checkpoints, per-checkpoint contracts and engineering decisions, no-overwrite helper integration, and dedicated lockfiles. Earlier framing-only p06 has no persistence claim and explicitly does not recommend a weak checksum for the durable store. Source snapshots contain no build cache.",
+      "evidence": [
+        "verification/early-checkpoints.log",
+        "verification/early-checkpoints.json",
+        "verification/early-final-checkpoints.log",
+        "verification/early-final-checkpoints.json"
+      ]
+    },
+    {
+      "id": "FCA03",
+      "issue": "Several objective groups linked to stage gates were taught but not explicitly assessed there.",
+      "status": "fixed",
+      "locations": [
+        "authoring/assessments-fragment.html"
+      ],
+      "resolution": "Added concrete gates for workspace/Git/binary/program structure, collection contracts, conversion and public API evolution, RefCell/Weak lifecycle and fuzz-oracle revision, atomicity and retained futures, HTTP/browser security boundaries, semantic browser controls/rendering modes, advanced type/macro/FFI/no_std boundaries, and measured operations/rollback. Evidence requires a prediction, a discriminating experiment and justified limits; unavailable browser checks remain open."
+    },
+    {
+      "id": "FCA04",
+      "issue": "Final performance assessment requested an impossible unmodified journal size.",
+      "status": "fixed",
+      "locations": [
+        "authoring/assessments-fragment.html"
+      ],
+      "resolution": "Uses 100, 1000 and near-cap workloads within the 10,000-record budget, fresh storage for each trial and explicit accounting for setup records and the exact boundary. Larger workloads require a specified architecture change."
+    },
+    {
+      "id": "FCA05",
+      "issue": "00-conversions and both new performance bridges revealed practice hints/solutions immediately.",
+      "status": "fixed",
+      "locations": [
+        "authoring/conversion.json",
+        "authoring/completion-performance.json"
+      ],
+      "resolution": "Independent specifications remain visible; hints and worked directions are separately revealed through details/summary. Performance bridge owner made its prose changes and added exact p12 reconstruction commands."
+    },
+    {
+      "id": "FCA06",
+      "issue": "Earlier audit gaps in atomics, pinning, HTTP middleware/cookie/TLS boundaries, resource profiling and real fuzzing needed genuine instruction and executable evidence.",
+      "status": "resolved_by_coordinated_authors",
+      "locations": [
+        "authoring/completion-concurrency.json",
+        "authoring/completion-network.json",
+        "authoring/completion-performance.json",
+        "authoring/completion-testing.json"
+      ],
+      "resolution": "Reviewed these authored bridges for concrete model, controlled example, failure experiment, scope and gate alignment. The pinned-future lesson distinguishes deadline semantics and retained state; the HTTP bridge separates authentication, authorization and browser policies; profiling distinguishes resource counters from CPU samples; fuzzing includes an intentionally false Unicode oracle and revised invariant. Their own verification logs remain authoritative, not this prose audit."
+    },
+    {
+      "id": "FCA07",
+      "issue": "Requirement map omitted some actual foundational teaching locations and implied keyword coverage for TryInto/Weak before explicit practice existed.",
+      "status": "fixed",
+      "locations": [
+        "authoring/requirements-map.json",
+        "authoring/completion-foundations.json"
+      ],
+      "resolution": "Parent aligned terminal/binary/closure/doc-test mappings; actual TryInto and Weak examples and investigation now substantiate those claims. All 83 mapped objective groups resolve to canonical lessons, a present gate and existing evidence files."
+    },
+    {
+      "id": "FCA08",
+      "issue": "First p04 early checkpoint Clippy run rejected a manual flatten pattern.",
+      "status": "fixed_and_rechecked",
+      "locations": [
+        "projects/checkpoints/p04-config/01-effective-port/src/lib.rs",
+        "verification/early-checkpoints.json"
+      ],
+      "resolution": "Used iter().flatten() for present-layer traversal without changing precedence semantics. The historical failing command remains in the log; subsequent p04 tests, execution and strict Clippy passed. This is a retained resolved failure, not a claim every historical command succeeded."
+    },
+    {
+      "id": "FCA09",
+      "issue": "The requested Rayon comparison needed an explicit assessed scheduling decision alongside the existing serial/scoped-thread teaching.",
+      "status": "fixed",
+      "locations": [
+        "authoring/completion-parallel-tools.json",
+        "authoring/assessments-fragment.html:gate-4",
+        "authoring/requirements-map.json"
+      ],
+      "resolution": "The new 04-parallel-tools lesson compares three actual implementations over the same bounded borrowed input; explains local pool installation, ordered outputs, I/O versus CPU work and the payload/thread budgets; avoids an unmeasured speed ranking. Gate 4 now requires an uneven fixture, complete output equality, omitted-chunk diagnosis, local-pool evidence and a workload-based selection with explicit budgets.",
+      "evidence": [
+        "verification/rayon-comparison.json"
+      ]
+    },
+    {
+      "id": "FCA10",
+      "issue": "The fuzz lesson requested an associativity oracle, but its worked direction originally used explicit grouping that could not distinguish left from right subtraction association.",
+      "status": "fixed_by_root_and_reviewed",
+      "locations": [
+        "authoring/completion-testing.json",
+        "projects/reference/p05-expressions/src/lib.rs"
+      ],
+      "resolution": "The worked direction now compares unparenthesized a-b-c against (a-b)-c, with the concrete 8-3-2 counterexample. Root added the corresponding finite-domain property test. Explicit (a+b)*c is correctly labeled as grouping evidence. Nightly installation instructions now use mise install rust@nightly-2026-10-08, and the atomics lesson explicitly includes a non-atomic access in its data-race definition.",
+      "evidence": [
+        "verification/check-tests.log",
+        "verification/concurrency-labs-tests.log",
+        "verification/fuzz-expression.json"
+      ]
+    }
+  ],
+  "requirement_alignment": [
+    {
+      "objective": "Terminal navigation, files, relative paths and reading tool output",
+      "instruction": [
+        {
+          "lesson": "00-terminal",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "f6b8cc6faaf328b95929cb93f9242912b3b4635dee620244c2690769d63a93a3"
+        },
+        {
+          "lesson": "00-workspace",
+          "canonical_source": "authoring/prerequisites.json",
+          "body_sha256": "9c70c8d0bcb25ca818030ed3cab14a6737489c3cd26a3c54fa801cfd7a5488c0"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "application_projects": [
+        "p01"
+      ],
+      "evidence_files": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Git working tree, changes, commits and preserving learner work",
+      "instruction": [
+        {
+          "lesson": "00-workspace",
+          "canonical_source": "authoring/prerequisites.json",
+          "body_sha256": "9c70c8d0bcb25ca818030ed3cab14a6737489c3cd26a3c54fa801cfd7a5488c0"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "application_projects": [
+        "p01"
+      ],
+      "evidence_files": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "mise, Cargo, rustup, compilation, dependencies, lockfiles and workspace structure",
+      "instruction": [
+        {
+          "lesson": "00-workspace",
+          "canonical_source": "authoring/prerequisites.json",
+          "body_sha256": "9c70c8d0bcb25ca818030ed3cab14a6737489c3cd26a3c54fa801cfd7a5488c0"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "application_projects": [
+        "p01"
+      ],
+      "evidence_files": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Functions, values, expressions, control flow and problem decomposition",
+      "instruction": [
+        {
+          "lesson": "00-programs",
+          "canonical_source": "authoring/prerequisites.json",
+          "body_sha256": "eeb4b25afb79fb0bdb3fd09ff9d047902bd2a8f5acf45b00f97eb7d6ada9153b"
+        },
+        {
+          "lesson": "00-calculator",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "a027c9cfa98e7eb15576af05cd073f704605505cc287f0f746a480da27b20e32"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "application_projects": [
+        "p01"
+      ],
+      "evidence_files": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Binary and decimal representation, scalar types, checked overflow and floating-point limits",
+      "instruction": [
+        {
+          "lesson": "00-values",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "f6c0e0ee233d3b5e681b5cb3f9648f48b7925143bf21ee7ea23b5a151baf181f"
+        },
+        {
+          "lesson": "00-conversions",
+          "canonical_source": "authoring/conversion.json",
+          "body_sha256": "cbe101ce7749ab30b7fdf577c1519e5ee670352a138b513b942868c2b106b87f"
+        },
+        {
+          "lesson": "00-programs",
+          "canonical_source": "authoring/prerequisites.json",
+          "body_sha256": "eeb4b25afb79fb0bdb3fd09ff9d047902bd2a8f5acf45b00f97eb7d6ada9153b"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "application_projects": [
+        "p01"
+      ],
+      "evidence_files": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Validated CLI input, unit conversion, arithmetic contracts and meaningful tests",
+      "instruction": [
+        {
+          "lesson": "00-calculator",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "a027c9cfa98e7eb15576af05cd073f704605505cc287f0f746a480da27b20e32"
+        },
+        {
+          "lesson": "00-conversions",
+          "canonical_source": "authoring/conversion.json",
+          "body_sha256": "cbe101ce7749ab30b7fdf577c1519e5ee670352a138b513b942868c2b106b87f"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "application_projects": [
+        "p01"
+      ],
+      "evidence_files": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "rustfmt, Clippy, compiler diagnostics and the limits of tool acceptance",
+      "instruction": [
+        {
+          "lesson": "00-workspace",
+          "canonical_source": "authoring/prerequisites.json",
+          "body_sha256": "9c70c8d0bcb25ca818030ed3cab14a6737489c3cd26a3c54fa801cfd7a5488c0"
+        },
+        {
+          "lesson": "00-calculator",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "a027c9cfa98e7eb15576af05cd073f704605505cc287f0f746a480da27b20e32"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-0",
+      "application_projects": [
+        "p01"
+      ],
+      "evidence_files": [
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Bindings, mutability, moves and ownership-driven APIs",
+      "instruction": [
+        {
+          "lesson": "01-ownership",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "3d8c6c2a34bff8cc8c24f37125d45111f58a499359cb169f9489741c8056e6bd"
+        },
+        {
+          "lesson": "01-modeling",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "6195b618354a2807466d959450f108559af43ca70ddcb225323f6cf18506b0a9"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Borrow scopes, shared and exclusive references, slices and lifetime needs",
+      "instruction": [
+        {
+          "lesson": "01-ownership",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "3d8c6c2a34bff8cc8c24f37125d45111f58a499359cb169f9489741c8056e6bd"
+        },
+        {
+          "lesson": "02-lifetimes",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "219a9df24b471a7be4d1d126efd601be728b13ff92643bbeabe5c607f25462bf"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Stack and heap as a conceptual model, with allocation and placement limits",
+      "instruction": [
+        {
+          "lesson": "01-ownership",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "3d8c6c2a34bff8cc8c24f37125d45111f58a499359cb169f9489741c8056e6bd"
+        },
+        {
+          "lesson": "03-raii",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "66330e49ee2e27b52bcf85f66a448133d4598614cc0135715e96f59439df0a9b"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Strings, UTF-8 byte boundaries and bounded text processing",
+      "instruction": [
+        {
+          "lesson": "01-ownership",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "3d8c6c2a34bff8cc8c24f37125d45111f58a499359cb169f9489741c8056e6bd"
+        },
+        {
+          "lesson": "01-io",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "e273fcac20020b2894090852de98ef5f96448f672d7134ff32b90f9e78cc2482"
+        },
+        {
+          "lesson": "01-logs",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "7268d81e5525c95d83ba94473cf784bfde0de11b12be038ceb3a6999e2e4dc6d"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Structs, enums, pattern matching, Option and Result",
+      "instruction": [
+        {
+          "lesson": "01-modeling",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "6195b618354a2807466d959450f108559af43ca70ddcb225323f6cf18506b0a9"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Tuples, arrays, slices, Vec, HashMap and deterministic output order",
+      "instruction": [
+        {
+          "lesson": "01-collections",
+          "canonical_source": "authoring/completion-foundations.json",
+          "body_sha256": "2ef25c9c2264477156c462814d920fe7a7c3797863c5797e5bcad5707b44003c"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Task validation, state transitions, a versioned file format and save failure limits",
+      "instruction": [
+        {
+          "lesson": "01-journal",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "a5f09a6b5ded5f686eae6f2863afab9667f3155eaee06ca0124f4d73e816f873"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Buffered streaming I/O, structured parse errors, CLI contracts and memory bounds",
+      "instruction": [
+        {
+          "lesson": "01-io",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "e273fcac20020b2894090852de98ef5f96448f672d7134ff32b90f9e78cc2482"
+        },
+        {
+          "lesson": "01-logs",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "7268d81e5525c95d83ba94473cf784bfde0de11b12be038ceb3a6999e2e4dc6d"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-1",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Iterator laziness, closures and readable pipelines",
+      "instruction": [
+        {
+          "lesson": "01-logs",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "7268d81e5525c95d83ba94473cf784bfde0de11b12be038ceb3a6999e2e4dc6d"
+        },
+        {
+          "lesson": "02-conversions",
+          "canonical_source": "authoring/completion-foundations.json",
+          "body_sha256": "00504874d44c6d0b48832eacb42c16c2459cd9102b9508568cf159a13afc9bb5"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p02",
+        "p03"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log",
+        "verification/foundations-content.json",
+        "verification/foundations-diagnostics.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Modules, visibility, crate paths, documentation examples and API evolution",
+      "instruction": [
+        {
+          "lesson": "02-conversions",
+          "canonical_source": "authoring/completion-foundations.json",
+          "body_sha256": "00504874d44c6d0b48832eacb42c16c2459cd9102b9508568cf159a13afc9bb5"
+        },
+        {
+          "lesson": "02-config",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "5a4f10565b43d5f020d3c5b78fbd465b57ed89765fec0e1a2099e094198d67a3"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p04",
+        "p05"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Error design, standard error traits, context and redaction",
+      "instruction": [
+        {
+          "lesson": "02-config",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "5a4f10565b43d5f020d3c5b78fbd465b57ed89765fec0e1a2099e094198d67a3"
+        },
+        {
+          "lesson": "02-conversions",
+          "canonical_source": "authoring/completion-foundations.json",
+          "body_sha256": "00504874d44c6d0b48832eacb42c16c2459cd9102b9508568cf159a13afc9bb5"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p04",
+        "p05"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Generics, traits, static and dynamic dispatch",
+      "instruction": [
+        {
+          "lesson": "02-traits",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "7eca1a061eb23668e73ea3c086629d5b8d85e961df7449f07a6dec04e7d8e5ea"
+        },
+        {
+          "lesson": "07-allocation-dispatch",
+          "canonical_source": "authoring/completion-performance.json",
+          "body_sha256": "40b1506ae22d0cd710cd7f7866c59da68243d9e5948c027e769942c919d576ed"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p04",
+        "p05"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Concrete lifetimes, borrowed versus owned configuration and avoiding unnecessary lifetime complexity",
+      "instruction": [
+        {
+          "lesson": "02-lifetimes",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "219a9df24b471a7be4d1d126efd601be728b13ff92643bbeabe5c607f25462bf"
+        },
+        {
+          "lesson": "02-config",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "5a4f10565b43d5f020d3c5b78fbd465b57ed89765fec0e1a2099e094198d67a3"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p04",
+        "p05"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "From, Into, TryFrom, TryInto, standard traits and invariant-preserving newtypes",
+      "instruction": [
+        {
+          "lesson": "02-conversions",
+          "canonical_source": "authoring/completion-foundations.json",
+          "body_sha256": "00504874d44c6d0b48832eacb42c16c2459cd9102b9508568cf159a13afc9bb5"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p04",
+        "p05"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Layered settings, validation, secret redaction and documented library contracts",
+      "instruction": [
+        {
+          "lesson": "02-config",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "5a4f10565b43d5f020d3c5b78fbd465b57ed89765fec0e1a2099e094198d67a3"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p04",
+        "p05"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Tokenization, recursive ASTs, Box, precedence, associativity and source spans",
+      "instruction": [
+        {
+          "lesson": "02-parser",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "13280143f687d3dc728948599669dca2e67fb642a447a536bcaea6a22df7cd7e"
+        },
+        {
+          "lesson": "02-evaluator",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "43b416b5173475ebcec48287e41db609523b791c962122ec5db8aec64274d243"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p04",
+        "p05"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Parser algorithmic cost, malicious-depth limits and semantic property checks",
+      "instruction": [
+        {
+          "lesson": "02-parser",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "13280143f687d3dc728948599669dca2e67fb642a447a536bcaea6a22df7cd7e"
+        },
+        {
+          "lesson": "02-evaluator",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "43b416b5173475ebcec48287e41db609523b791c962122ec5db8aec64274d243"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-2",
+      "application_projects": [
+        "p04",
+        "p05"
+      ],
+      "evidence_files": [
+        "verification/core-labs-checks.json",
+        "verification/check-tests.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Unit, integration and doc tests, fixtures and deterministic test design",
+      "instruction": [
+        {
+          "lesson": "03-tests",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "420eea552347ac108449daeb383960d2f8def3e0ba685da887b3d924fce2f2c2"
+        },
+        {
+          "lesson": "02-conversions",
+          "canonical_source": "authoring/completion-foundations.json",
+          "body_sha256": "00504874d44c6d0b48832eacb42c16c2459cd9102b9508568cf159a13afc9bb5"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "application_projects": [
+        "p05",
+        "p06"
+      ],
+      "evidence_files": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Property tests, finite domains, fuzzing oracles, minimization and regressions",
+      "instruction": [
+        {
+          "lesson": "02-evaluator",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "43b416b5173475ebcec48287e41db609523b791c962122ec5db8aec64274d243"
+        },
+        {
+          "lesson": "03-fuzz",
+          "canonical_source": "authoring/completion-testing.json",
+          "body_sha256": "9d2dd234fc7876d80b07700f9abbc49e019498dc1d6b823a8ad28030c97c9ebc"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "application_projects": [
+        "p05",
+        "p06"
+      ],
+      "evidence_files": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json",
+        "verification/fuzz-expression.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Smart pointers, Drop, RAII and destruction ownership",
+      "instruction": [
+        {
+          "lesson": "03-raii",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "66330e49ee2e27b52bcf85f66a448133d4598614cc0135715e96f59439df0a9b"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "application_projects": [
+        "p05",
+        "p06"
+      ],
+      "evidence_files": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Cell, RefCell, runtime borrowing, Rc, Weak and cycle decisions",
+      "instruction": [
+        {
+          "lesson": "03-interior",
+          "canonical_source": "authoring/completion-foundations.json",
+          "body_sha256": "38b238b922f552e517b75098c3568817407047aad26320e50980d1455f080593"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "application_projects": [
+        "p05",
+        "p06"
+      ],
+      "evidence_files": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Collection contracts, append-only log design, replay and checksums",
+      "instruction": [
+        {
+          "lesson": "03-log-store",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "2c07a6774a9b482f3d359c1156813854f427c94c2044ae7e292501b45d770794"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "application_projects": [
+        "p05",
+        "p06"
+      ],
+      "evidence_files": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Partial tails, corruption, compaction, flush versus durability and crash windows",
+      "instruction": [
+        {
+          "lesson": "03-recovery",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "767072b393a0643ff9658094d8ffc5a4168cd27e7e2c6e8392da630b4ff0bbc1"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-3",
+      "application_projects": [
+        "p05",
+        "p06"
+      ],
+      "evidence_files": [
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "OS threads, scoped ownership, channels, Send and Sync",
+      "instruction": [
+        {
+          "lesson": "04-threads",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "7f4bfb1457390a320cb4fb73926589f61c5723058d23bc7ae8669c3d9986c651"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "application_projects": [
+        "p07",
+        "p08"
+      ],
+      "evidence_files": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Mutexes, lock order, deadlocks, races versus data races",
+      "instruction": [
+        {
+          "lesson": "04-threads",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "7f4bfb1457390a320cb4fb73926589f61c5723058d23bc7ae8669c3d9986c651"
+        },
+        {
+          "lesson": "04-atomics",
+          "canonical_source": "authoring/completion-concurrency.json",
+          "body_sha256": "dcd96b3c495659fc813a71289cd315741fe1e28300e00e3f1e0b66b6632101c1"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "application_projects": [
+        "p07",
+        "p08"
+      ],
+      "evidence_files": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Atomic read-modify-write, Relaxed, release/acquire and SeqCst limits",
+      "instruction": [
+        {
+          "lesson": "04-atomics",
+          "canonical_source": "authoring/completion-concurrency.json",
+          "body_sha256": "dcd96b3c495659fc813a71289cd315741fe1e28300e00e3f1e0b66b6632101c1"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "application_projects": [
+        "p07",
+        "p08"
+      ],
+      "evidence_files": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Bounded file work, cancellation, progress, deterministic aggregation and throughput",
+      "instruction": [
+        {
+          "lesson": "04-indexer",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "fe1e8058bc053cb38d5825e5eb69582f6d67c3a7781ad9f0e95eb9b0fc7e30fa"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "application_projects": [
+        "p07",
+        "p08"
+      ],
+      "evidence_files": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Serial versus threads and parallel tools; CPU versus I/O work",
+      "instruction": [
+        {
+          "lesson": "04-indexer",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "fe1e8058bc053cb38d5825e5eb69582f6d67c3a7781ad9f0e95eb9b0fc7e30fa"
+        },
+        {
+          "lesson": "04-futures",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "42ab412d0a4e8b672e35be03c3c432606f2fc158b3106f095697973569e0f113"
+        },
+        {
+          "lesson": "04-parallel-tools",
+          "canonical_source": "authoring/completion-parallel-tools.json",
+          "body_sha256": "476d224a5360b9f2759b87c910b665d7d976098d398946bdd562d921f1ff4d3a"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "application_projects": [
+        "p07",
+        "p08"
+      ],
+      "evidence_files": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json",
+        "verification/rayon-comparison.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Async/await, futures, task scheduling, wakeups and Tokio",
+      "instruction": [
+        {
+          "lesson": "04-futures",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "42ab412d0a4e8b672e35be03c3c432606f2fc158b3106f095697973569e0f113"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "application_projects": [
+        "p07",
+        "p08"
+      ],
+      "evidence_files": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Pin, Unpin, retained futures, absolute deadlines and cancellation safety",
+      "instruction": [
+        {
+          "lesson": "04-pinning",
+          "canonical_source": "authoring/completion-concurrency.json",
+          "body_sha256": "bad0927c54c41e9978519c3e414250966e8f051471ceeee246e5d0c92b515ba4"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "application_projects": [
+        "p07",
+        "p08"
+      ],
+      "evidence_files": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "Bounded health checks, local failure injection, retry budgets and graceful shutdown",
+      "instruction": [
+        {
+          "lesson": "04-monitor",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "6a5c7d396378bee008d11a9b62da929673712aec07e35043d9f8cc0cca870477"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-4",
+      "application_projects": [
+        "p07",
+        "p08"
+      ],
+      "evidence_files": [
+        "verification/concurrency-labs-checks.json",
+        "verification/concurrency-labs-tests.log",
+        "verification/check-tests.log",
+        "verification/patch001-systems.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Instruction and applied practice; mastery requires the linked independent assessment."
+    },
+    {
+      "objective": "TCP byte streams, framing, disconnects and protocol validation",
+      "instruction": [
+        {
+          "lesson": "05-protocols",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "bf6abf019c46a614012b44a39fa2c7059e0b32b39f0e240a2cc621509457fb9a"
+        },
+        {
+          "lesson": "05-chat",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "02af1abe2eeee95e46ac80cc2194793270396c232dbd8650635c4e8d2ac407be"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Message limits, slow consumers, bounded service resources and shutdown ownership",
+      "instruction": [
+        {
+          "lesson": "05-chat",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "02af1abe2eeee95e46ac80cc2194793270396c232dbd8650635c4e8d2ac407be"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "HTTP methods/statuses, JSON, schema contracts and API boundaries",
+      "instruction": [
+        {
+          "lesson": "05-http",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "6f75a2f5fdc4cfedcdea5d00308168b7c16fe2e3158fd970551922a54879674b"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Axum extractors, middleware ordering, request validation and structured errors",
+      "instruction": [
+        {
+          "lesson": "05-http",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "6f75a2f5fdc4cfedcdea5d00308168b7c16fe2e3158fd970551922a54879674b"
+        },
+        {
+          "lesson": "05-web-boundaries",
+          "canonical_source": "authoring/completion-network.json",
+          "body_sha256": "d385d02dfa8ca38b7c86cb43cecfd7b228b61a8713ae3720eaa06f8b993e487f"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Authentication versus authorization, cookies, bearer credentials, CSRF, CORS and TLS",
+      "instruction": [
+        {
+          "lesson": "05-web-boundaries",
+          "canonical_source": "authoring/completion-network.json",
+          "body_sha256": "d385d02dfa8ca38b7c86cb43cecfd7b228b61a8713ae3720eaa06f8b993e487f"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Local protocol and HTTP/SQL boundaries are tested. Real identity-provider integration, browser CSRF enforcement and TLS termination are design exercises; no production authentication is claimed."
+    },
+    {
+      "objective": "SQL, indexes, parameterized queries, pool limits and pagination",
+      "instruction": [
+        {
+          "lesson": "05-sql",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "05753d460e764b4ad950ab32354dd564fc6bc63027f9c7a702070759dfd104d1"
+        },
+        {
+          "lesson": "05-tracker",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "ece656044923f695d2e086d1fa3b0e433a3d18cf9a7b4cc119b7770b141d5fcd"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Transactions, isolation, optimistic revision checks and tenant authorization",
+      "instruction": [
+        {
+          "lesson": "05-sql",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "05753d460e764b4ad950ab32354dd564fc6bc63027f9c7a702070759dfd104d1"
+        },
+        {
+          "lesson": "05-tracker",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "ece656044923f695d2e086d1fa3b0e433a3d18cf9a7b4cc119b7770b141d5fcd"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "SQLx verified queries, offline metadata and live-schema limitations",
+      "instruction": [
+        {
+          "lesson": "05-tracker",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "ece656044923f695d2e086d1fa3b0e433a3d18cf9a7b4cc119b7770b141d5fcd"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "Migrations and integration tests against isolated PostgreSQL",
+      "instruction": [
+        {
+          "lesson": "05-tracker",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "ece656044923f695d2e086d1fa3b0e433a3d18cf9a7b4cc119b7770b141d5fcd"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-5",
+      "application_projects": [
+        "p09",
+        "p10"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/web-boundaries.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Review exact API and database fixtures; passing a query check does not verify a deployment schema."
+    },
+    {
+      "objective": "HTML, CSS, DOM, events, semantic controls, forms and responsive accessibility",
+      "instruction": [
+        {
+          "lesson": "06-browser",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "82f1581d18e1f30a90de113f85466c237f31aa4ad08b3f2139ba399be97945dd"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "application_projects": [
+        "p11"
+      ],
+      "evidence_files": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "WASM constraints, network boundaries, rendering modes and hydration",
+      "instruction": [
+        {
+          "lesson": "06-state",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "326357089dff7067c346f2ef3b5331cc4bb424b570cd1dfe7dc327a6cd507ff0"
+        },
+        {
+          "lesson": "06-boundaries",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "e377fd7b9a63fe2963e9d91270070aaffe3839e54a05fd540752704e0124ad8e"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "application_projects": [
+        "p11"
+      ],
+      "evidence_files": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "Leptos ownership/state model and compatible stable framework choice",
+      "instruction": [
+        {
+          "lesson": "06-state",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "326357089dff7067c346f2ef3b5331cc4bb424b570cd1dfe7dc327a6cd507ff0"
+        },
+        {
+          "lesson": "06-console",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "79840b51feb7c4673da24b2e1220436331bc437d0427e80b5a3c5c56963c35da"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "application_projects": [
+        "p11"
+      ],
+      "evidence_files": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "Loading/error/empty states, filters, keyboard interaction and status updates",
+      "instruction": [
+        {
+          "lesson": "06-console",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "79840b51feb7c4673da24b2e1220436331bc437d0427e80b5a3c5c56963c35da"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "application_projects": [
+        "p11"
+      ],
+      "evidence_files": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "Uncertain mutations, stable IDs, reconciliation and browser lifecycle limits",
+      "instruction": [
+        {
+          "lesson": "06-console",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "79840b51feb7c4673da24b2e1220436331bc437d0427e80b5a3c5c56963c35da"
+        },
+        {
+          "lesson": "06-boundaries",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "e377fd7b9a63fe2963e9d91270070aaffe3839e54a05fd540752704e0124ad8e"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "application_projects": [
+        "p11"
+      ],
+      "evidence_files": [
+        "verification/ui-selected-project.json",
+        "verification/ui-current-build.log",
+        "verification/ui-current-clippy.log"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Rust/WASM compiled and asset loading checked by HTTP; real-browser behavior remains unverified because saved localhost permission blocks the browser tool."
+    },
+    {
+      "objective": "Optional framework-neutral Svelte 5 bridge",
+      "instruction": [
+        {
+          "lesson": "06-boundaries",
+          "canonical_source": "authoring/interface.json",
+          "body_sha256": "e377fd7b9a63fe2963e9d91270070aaffe3839e54a05fd540752704e0124ad8e"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-6",
+      "application_projects": [
+        "p11"
+      ],
+      "evidence_files": [
+        "verification/svelte-bridge.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Optional runnable Svelte 5.57.2 client with exact integer decoding and bounded read requests; compatible Vite build and nine Node tests executed. Leptos is the main path. No SvelteKit is used. Browser interaction remains unverified."
+    },
+    {
+      "objective": "Profiling, benchmark design, allocation counts, working sets and honest speed claims",
+      "instruction": [
+        {
+          "lesson": "07-layout",
+          "canonical_source": "authoring/completion-performance.json",
+          "body_sha256": "38e468e951fa382ea65cfd1c957d5be7732a3ddbfbf5e88d2ac813a06a05f4cd"
+        },
+        {
+          "lesson": "07-allocation-dispatch",
+          "canonical_source": "authoring/completion-performance.json",
+          "body_sha256": "40b1506ae22d0cd710cd7f7866c59da68243d9e5948c027e769942c919d576ed"
+        },
+        {
+          "lesson": "07-performance",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "8decf6abbe60144155766e5cd629c58010a8f484011fcb4258f0c77e6db29747"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Data layout, cache locality, AoS/SoA and measured tradeoffs",
+      "instruction": [
+        {
+          "lesson": "07-layout",
+          "canonical_source": "authoring/completion-performance.json",
+          "body_sha256": "38e468e951fa382ea65cfd1c957d5be7732a3ddbfbf5e88d2ac813a06a05f4cd"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Static/dynamic dispatch, borrowed/owned parsing and qualified zero-copy claims",
+      "instruction": [
+        {
+          "lesson": "07-allocation-dispatch",
+          "canonical_source": "authoring/completion-performance.json",
+          "body_sha256": "40b1506ae22d0cd710cd7f7866c59da68243d9e5948c027e769942c919d576ed"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Algorithm selection, pipeline backpressure, async bottlenecks and overload",
+      "instruction": [
+        {
+          "lesson": "07-performance",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "8decf6abbe60144155766e5cd629c58010a8f484011fcb4258f0c77e6db29747"
+        },
+        {
+          "lesson": "07-replay",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "e78af8770a41db27e52c22ca30e1021a7ea6950edfc12073edba8f7aee129b8b"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Fixed-point arithmetic, event order, bounded replay and deterministic aggregation",
+      "instruction": [
+        {
+          "lesson": "07-replay",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "e78af8770a41db27e52c22ca30e1021a7ea6950edfc12073edba8f7aee129b8b"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Safe baseline, unsafe validity/alignment/aliasing/initialization and Drop contracts",
+      "instruction": [
+        {
+          "lesson": "07-unsafe",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "f554e3bb7480169ae0df8d0843e5b3d3369671f1bde0ca45ef03821bc4fbb52f"
+        },
+        {
+          "lesson": "07-auditing",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "b581d673b284dcbd32b7c2b7c9bd32dd65c65ca5d2eefcb17a88afec9619de24"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Fixed capacity, zero-sized types, bounds, overflow and panic safety",
+      "instruction": [
+        {
+          "lesson": "07-unsafe",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "f554e3bb7480169ae0df8d0843e5b3d3369671f1bde0ca45ef03821bc4fbb52f"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Unsafe auditing and applicable Miri evidence versus soundness proofs",
+      "instruction": [
+        {
+          "lesson": "07-auditing",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "b581d673b284dcbd32b7c2b7c9bd32dd65c65ca5d2eefcb17a88afec9619de24"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Pattern ergonomics, coherence/orphan rules and dyn compatibility",
+      "instruction": [
+        {
+          "lesson": "07-traits",
+          "canonical_source": "authoring/specializations.json",
+          "body_sha256": "eaa83fc23612bcb98012ba3437a2b744610af417e4bffd4efbe3144a92a6ad9f"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Associated types, higher-ranked trait bounds, advanced lifetimes and const generics",
+      "instruction": [
+        {
+          "lesson": "07-traits",
+          "canonical_source": "authoring/specializations.json",
+          "body_sha256": "eaa83fc23612bcb98012ba3437a2b744610af417e4bffd4efbe3144a92a6ad9f"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "Declarative/procedural macros, hygiene, evaluation counts and library compatibility",
+      "instruction": [
+        {
+          "lesson": "07-macros",
+          "canonical_source": "authoring/specializations.json",
+          "body_sha256": "6933ba7df4140fb00bab496e5c05d910e6df346475c393d76824254452f0a071"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "FFI ABI/ownership/unwinding and a small safe wrapper",
+      "instruction": [
+        {
+          "lesson": "07-ffi",
+          "canonical_source": "authoring/specializations.json",
+          "body_sha256": "91812b78ebe17b171006846a6cac093ca57d699ca334a92523beb66834ee0f4f"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Finite tests, recorded profiles and Miri are scoped evidence. No universal performance advantage or unsafe soundness proof is claimed."
+    },
+    {
+      "objective": "no_std, allocation and embedded target concepts",
+      "instruction": [
+        {
+          "lesson": "07-ffi",
+          "canonical_source": "authoring/specializations.json",
+          "body_sha256": "91812b78ebe17b171006846a6cac093ca57d699ca334a92523beb66834ee0f4f"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-7",
+      "application_projects": [
+        "p12",
+        "p13"
+      ],
+      "evidence_files": [
+        "verification/performance-bridge-profile.json",
+        "verification/benchmark-summary.json",
+        "verification/miri-tests.log",
+        "verification/auxiliary-checks.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Specialization: no_std is checked on the host; no board support, MMIO, interrupts or embedded executable is verified."
+    },
+    {
+      "objective": "Process boundaries, partial failure, idempotency and uncertain outcomes",
+      "instruction": [
+        {
+          "lesson": "08-delivery",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "bd26b04fc45f3ac7bcd60a1e12c6d10dc48b5ef5b3eb15b9b9a385e3e9962a02"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "application_projects": [
+        "p14",
+        "p15"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "At-least-once delivery, deduplication, transactional outbox and external effects",
+      "instruction": [
+        {
+          "lesson": "08-delivery",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "bd26b04fc45f3ac7bcd60a1e12c6d10dc48b5ef5b3eb15b9b9a385e3e9962a02"
+        },
+        {
+          "lesson": "08-scheduler",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "5f32a15c498b619e1c3c48ee99c2210c2f3aed3dbf463bfdb455424c58fbe54e"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "application_projects": [
+        "p14",
+        "p15"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Persistent jobs, leases, clock assumptions, bounded workers and retry policy",
+      "instruction": [
+        {
+          "lesson": "08-scheduler",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "5f32a15c498b619e1c3c48ee99c2210c2f3aed3dbf463bfdb455424c58fbe54e"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "application_projects": [
+        "p14",
+        "p15"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Cancellation semantics, fencing, crash recovery and duplicate execution",
+      "instruction": [
+        {
+          "lesson": "08-scheduler",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "5f32a15c498b619e1c3c48ee99c2210c2f3aed3dbf463bfdb455424c58fbe54e"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "application_projects": [
+        "p14",
+        "p15"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Deterministic replicas, drops, delays, partitions and restarts",
+      "instruction": [
+        {
+          "lesson": "08-replication",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "1e5bcd683861ea695dd85210b6eef427ba24ef2adb17e78c3ecb66ecdaca6506"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "application_projects": [
+        "p14",
+        "p15"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Narrow safety/liveness properties and consensus limitations",
+      "instruction": [
+        {
+          "lesson": "08-replication",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "1e5bcd683861ea695dd85210b6eef427ba24ef2adb17e78c3ecb66ecdaca6506"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "application_projects": [
+        "p14",
+        "p15"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Observability, SLOs, configuration, deployment, rollback and operational debugging",
+      "instruction": [
+        {
+          "lesson": "08-operations",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "c8e3086e51c7bbf21be66242ca969dff1d79ad24c957a356e25d70b08f5bd981"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-8",
+      "application_projects": [
+        "p14",
+        "p15"
+      ],
+      "evidence_files": [
+        "verification/services-final-checks.json",
+        "verification/postgres-tests.log",
+        "verification/final-runtime-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Replication is a fixed-leader educational simulator, not Raft or production consensus. Deployment and SLO work are local operational exercises; no measured production reliability is claimed."
+    },
+    {
+      "objective": "Modular full-stack application, watchlists, charts and synthetic streams",
+      "instruction": [
+        {
+          "lesson": "09-workbench",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "321940dfee4d7814b818ad8c8de1c80ef662b07f3a89da1078dfc149d3ec9713"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Simulated order invariants, position ledger, cents, timestamps and event IDs",
+      "instruction": [
+        {
+          "lesson": "09-domain",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "1b113b903c384c006c4f3d7614aa20b825311b35a0bf499593bb5c2bce4f43ea"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Duplicate/out-of-order events, history, replay and persistent jobs",
+      "instruction": [
+        {
+          "lesson": "09-domain",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "1b113b903c384c006c4f3d7614aa20b825311b35a0bf499593bb5c2bce4f43ea"
+        },
+        {
+          "lesson": "09-workbench",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "321940dfee4d7814b818ad8c8de1c80ef662b07f3a89da1078dfc149d3ec9713"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Authorization, failed transactions, migrations and restart recovery",
+      "instruction": [
+        {
+          "lesson": "09-workbench",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "321940dfee4d7814b818ad8c8de1c80ef662b07f3a89da1078dfc149d3ec9713"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Reconnects, slow clients, overload, cancellation and observability",
+      "instruction": [
+        {
+          "lesson": "09-workbench",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "321940dfee4d7814b818ad8c8de1c80ef662b07f3a89da1078dfc149d3ec9713"
+        },
+        {
+          "lesson": "09-review",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "cc62a8bde97191bff7d978d82162d3bbd7f6dc384b4a0b0239449ba63a5f3a53"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Architecture alternatives, reproducible load, measured performance and runbook",
+      "instruction": [
+        {
+          "lesson": "09-review",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "cc62a8bde97191bff7d978d82162d3bbd7f6dc384b4a0b0239449ba63a5f3a53"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Independent specification change, incident, design review and performance investigation",
+      "instruction": [
+        {
+          "lesson": "09-review",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "cc62a8bde97191bff7d978d82162d3bbd7f6dc384b4a0b0239449ba63a5f3a53"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/final-runtime-audit.json",
+        "verification/workbench-load.json",
+        "verification/backend-status-regressions.log",
+        "verification/ui-selected-project.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "All trading is simulated. Local HTTP failure injection is recorded separately from the blocked browser gate and pending independent acceptance."
+    },
+    {
+      "objective": "Investigation loop: observations, reproduction, boundaries, hypotheses, experiments, sound fixes and evidence",
+      "instruction": [
+        {
+          "lesson": "00-terminal",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "f6b8cc6faaf328b95929cb93f9242912b3b4635dee620244c2690769d63a93a3"
+        },
+        {
+          "lesson": "01-ownership",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "3d8c6c2a34bff8cc8c24f37125d45111f58a499359cb169f9489741c8056e6bd"
+        },
+        {
+          "lesson": "03-fuzz",
+          "canonical_source": "authoring/completion-testing.json",
+          "body_sha256": "9d2dd234fc7876d80b07700f9abbc49e019498dc1d6b823a8ad28030c97c9ebc"
+        },
+        {
+          "lesson": "04-pinning",
+          "canonical_source": "authoring/completion-concurrency.json",
+          "body_sha256": "bad0927c54c41e9978519c3e414250966e8f051471ceeee246e5d0c92b515ba4"
+        },
+        {
+          "lesson": "05-web-boundaries",
+          "canonical_source": "authoring/completion-network.json",
+          "body_sha256": "d385d02dfa8ca38b7c86cb43cecfd7b228b61a8713ae3720eaa06f8b993e487f"
+        },
+        {
+          "lesson": "09-review",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "cc62a8bde97191bff7d978d82162d3bbd7f6dc384b4a0b0239449ba63a5f3a53"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p01",
+        "p02",
+        "p03",
+        "p04",
+        "p05",
+        "p06",
+        "p07",
+        "p08",
+        "p09",
+        "p10",
+        "p11",
+        "p12",
+        "p13",
+        "p14",
+        "p15",
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/instructional-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Every authored lesson includes a topic-specific playbook application; the final assignments require independent decisions and explanation. Author audit cannot establish learner competence."
+    },
+    {
+      "objective": "Design loop: constraints, unknowns, invariants, prototypes and incremental end-to-end slices",
+      "instruction": [
+        {
+          "lesson": "00-calculator",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "a027c9cfa98e7eb15576af05cd073f704605505cc287f0f746a480da27b20e32"
+        },
+        {
+          "lesson": "02-config",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "5a4f10565b43d5f020d3c5b78fbd465b57ed89765fec0e1a2099e094198d67a3"
+        },
+        {
+          "lesson": "04-indexer",
+          "canonical_source": "authoring/systems.json",
+          "body_sha256": "fe1e8058bc053cb38d5825e5eb69582f6d67c3a7781ad9f0e95eb9b0fc7e30fa"
+        },
+        {
+          "lesson": "09-review",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "cc62a8bde97191bff7d978d82162d3bbd7f6dc384b4a0b0239449ba63a5f3a53"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p01",
+        "p04",
+        "p07",
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/instructional-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "Practice uses the downloadable design template and project engineering decisions. Human design review remains pending."
+    },
+    {
+      "objective": "Responsible AI use: explanations, competing hypotheses, reviewed diffs, verification and independent explanation",
+      "instruction": [
+        {
+          "lesson": "00-terminal",
+          "canonical_source": "authoring/foundations.json",
+          "body_sha256": "f6b8cc6faaf328b95929cb93f9242912b3b4635dee620244c2690769d63a93a3"
+        },
+        {
+          "lesson": "09-review",
+          "canonical_source": "authoring/services.json",
+          "body_sha256": "cc62a8bde97191bff7d978d82162d3bbd7f6dc384b4a0b0239449ba63a5f3a53"
+        }
+      ],
+      "assessment": "assessments/index.html#gate-9",
+      "application_projects": [
+        "p01",
+        "p16"
+      ],
+      "evidence_files": [
+        "verification/instructional-audit.json"
+      ],
+      "review_status": "author_alignment_reviewed",
+      "scope": "The learner must defend the result independently; copied solutions or passing builds alone do not satisfy the rubric."
+    }
+  ],
+  "owned_checkpoint_inventory": [
+    {
+      "project": "p01-calculator",
+      "checkpoint": "01-checked-add",
+      "source": "projects/checkpoints/p01-calculator/01-checked-add",
+      "lockfile": "projects/checkpoints/p01-calculator/locks/01-checked-add.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p01-calculator",
+      "checkpoint": "final",
+      "source": "projects/reference/p01-calculator",
+      "lockfile": "projects/checkpoints/p01-calculator/locks/final.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p02-journal",
+      "checkpoint": "01-domain",
+      "source": "projects/checkpoints/p02-journal/01-domain",
+      "lockfile": "projects/checkpoints/p02-journal/locks/01-domain.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p02-journal",
+      "checkpoint": "final",
+      "source": "projects/reference/p02-journal",
+      "lockfile": "projects/checkpoints/p02-journal/locks/final.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p03-logs",
+      "checkpoint": "01-bounded-lines",
+      "source": "projects/checkpoints/p03-logs/01-bounded-lines",
+      "lockfile": "projects/checkpoints/p03-logs/locks/01-bounded-lines.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p03-logs",
+      "checkpoint": "final",
+      "source": "projects/reference/p03-logs",
+      "lockfile": "projects/checkpoints/p03-logs/locks/final.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p04-config",
+      "checkpoint": "01-effective-port",
+      "source": "projects/checkpoints/p04-config/01-effective-port",
+      "lockfile": "projects/checkpoints/p04-config/locks/01-effective-port.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p04-config",
+      "checkpoint": "final",
+      "source": "projects/reference/p04-config",
+      "lockfile": "projects/checkpoints/p04-config/locks/final.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p05-expressions",
+      "checkpoint": "01-token-spans",
+      "source": "projects/checkpoints/p05-expressions/01-token-spans",
+      "lockfile": "projects/checkpoints/p05-expressions/locks/01-token-spans.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p05-expressions",
+      "checkpoint": "final",
+      "source": "projects/reference/p05-expressions",
+      "lockfile": "projects/checkpoints/p05-expressions/locks/final.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p06-kv",
+      "checkpoint": "01-prefix-replay",
+      "source": "projects/checkpoints/p06-kv/01-prefix-replay",
+      "lockfile": "projects/checkpoints/p06-kv/locks/01-prefix-replay.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    },
+    {
+      "project": "p06-kv",
+      "checkpoint": "final",
+      "source": "projects/reference/p06-kv",
+      "lockfile": "projects/checkpoints/p06-kv/locks/final.Cargo.lock",
+      "source_exists": true,
+      "lockfile_exists": true
+    }
+  ],
+  "remaining_limits": [
+    "The author team cannot independently accept its own course. Independent instructional review and learner attempts remain pending.",
+    "No browser interaction, visual layout, keyboard behavior or assistive-technology behavior was verified by this audit; saved browser access restrictions remain a separate root-owned verification limitation.",
+    "Static source paths and a stage-gate specification do not prove a learner can complete the exercise; the assessment requires observable independent work and explanation.",
+    "Native tests cover recorded input families and platforms, not arbitrary crash/power-loss behavior, every unsafe execution, production identity/TLS deployments, consensus, hardware firmware or sustained capacity. Relevant lessons explicitly limit those claims.",
+    "The shared lesson reconstruction callout and p16 storage-specific prose are integrated in canonical source. The parent owns final rendered-site regeneration and static/runtime verification. This audit covers canonical sources at the recorded hashes and does not independently repeat those integration checks."
+  ],
+  "canonical_source_hashes": {
+    "authoring/README.html": "8b381d94ecb6c5c1f7dcb454e6cf91577f928ddfc1db79876a4be487feab517b",
+    "authoring/assessments-fragment.html": "e0878a61cd6ed032bfecccc75a2c7a80fc3f68c8b0c626ff71dc16b97d8c1054",
+    "authoring/benchmark-results.html": "f317290277428c25b647e221a82523407b9a642a1a3b5632cb6a275f0790e6d0",
+    "authoring/completion-concurrency.json": "1fef01451e95a44b8338cad4ec255db02818cb616c380e914e6d2cc49d25ee94",
+    "authoring/completion-foundations.json": "d4675dea6d290a9cd5e30b30bc0a124c8639d895fca85be973a817d0a2969722",
+    "authoring/completion-network.json": "2473ac66c6d863014566ed2f5bcfe488215abadb29adb22a9ab245685c0d1c6a",
+    "authoring/completion-parallel-tools.json": "d9c3632f1f04b774998d266a8ac540bdbff3f6d8d9fb4169b10aea650a39726e",
+    "authoring/completion-performance.json": "5d19eec4a7430bd70c1c9b9297f720aba37c0ea9827c9e8bc784650001b912c9",
+    "authoring/completion-testing.json": "4cbcfb74f265583bf36f9655354eeb55ccdca75b90112e69a1b83cb296d054f9",
+    "authoring/conversion.json": "1843bbdac6d38aa3634c804e76782a49b3b85751d1aa8b45357aee8d42dddaef",
+    "authoring/evidence-fragment.html": "b8a32f60cc35135a9177a8dc4a8f86da6b4423299fa757bbe0bf640427940c9a",
+    "authoring/foundations.json": "301602aca6b4018817dbf3d94a4beeda24930d7d7b7d4e6c043129ea669d1937",
+    "authoring/generation-requirements.html": "29cf342e26c696f76f0550f472f9e0f20c205bf00e975d1c2ca934b1f2707d20",
+    "authoring/glossary.html": "7bde0be2b6d499b71559cfdccaa31cf85c85deecdf3e9bea8fea5ed7097ffecc",
+    "authoring/intentional-failures.html": "689c541f5b65049cb0b2728644be4318a48032f87abbf5c1c534f98520aafab7",
+    "authoring/interface.json": "6b19ad3e001b3d55e5a1061dcde6ba7add8030a724cb77e7c241a564eca7e652",
+    "authoring/optional-svelte.html": "442add40979d06329447341ef1d0aa10d84374cb028019ae8c6839ae7684e2fa",
+    "authoring/patch-001.html": "7cec954ec77bf687039933a481d7b3079392d362fa0397838a748cf8dace64b3",
+    "authoring/playbook.html": "7533f61994effe293670162e1341cfe3f987d235ee2f139784922ba5e142f372",
+    "authoring/prerequisites.json": "a34dddb6146ece11098562fb2266c28b00f93f2279d8f3bdb07ac2fe3036187c",
+    "authoring/requirements-map.json": "7e9e265df0b32f750271a60ed058bd1ce7172f0f5755ebd75d3e2a1d1b09baba",
+    "authoring/review.html": "94069e46c19168f3006ab23aa327dccebaa5d670632119bf55f46ad4b2782c5e",
+    "authoring/services.json": "74f7a7022fe08d91ac0ac1dfab2b77a5dc548c3d2b86c2f4e0a2d742889f0e82",
+    "authoring/specializations.json": "b32c329364e7af758818f67f4c138b408179b5fae86656322773b02a54d37894",
+    "authoring/systems.json": "e87ff902d6992b2d9672a798bd6635b4ee1d88e71db952f8d3a3a33effaeafa9"
+  },
+  "project_guidance_files_reviewed": [
+    "projects/checkpoints/index.html",
+    "projects/checkpoints/p01-calculator/index.html",
+    "projects/checkpoints/p02-journal/index.html",
+    "projects/checkpoints/p03-logs/index.html",
+    "projects/checkpoints/p04-config/index.html",
+    "projects/checkpoints/p05-expressions/index.html",
+    "projects/checkpoints/p06-kv/index.html",
+    "projects/checkpoints/p07-indexer/index.html",
+    "projects/checkpoints/p08-monitor/index.html",
+    "projects/checkpoints/p09-chat/index.html",
+    "projects/checkpoints/p10-issues/index.html",
+    "projects/checkpoints/p12-replay/index.html",
+    "projects/checkpoints/p13-unsafe/index.html",
+    "projects/checkpoints/p14-scheduler/index.html",
+    "projects/checkpoints/p15-replication/index.html",
+    "projects/checkpoints/p16-workbench/index.html",
+    "projects/experiments/p07-rayon/README.html",
+    "projects/reference/p01-calculator/README.html",
+    "projects/reference/p01-calculator/decisions.html",
+    "projects/reference/p02-journal/README.html",
+    "projects/reference/p02-journal/decisions.html",
+    "projects/reference/p03-logs/README.html",
+    "projects/reference/p03-logs/decisions.html",
+    "projects/reference/p04-config/README.html",
+    "projects/reference/p04-config/decisions.html",
+    "projects/reference/p05-expressions/README.html",
+    "projects/reference/p05-expressions/decisions.html",
+    "projects/reference/p06-kv/decisions.html",
+    "projects/reference/p07-indexer/decisions.html",
+    "projects/reference/p08-monitor/decisions.html",
+    "projects/reference/p12-replay/decisions.html",
+    "projects/reference/p13-unsafe/decisions.html",
+    "projects/reference/p18-core-labs/README.html",
+    "projects/reference/p18-core-labs/decisions.html",
+    "projects/scaffolds/p01-calculator/README.html",
+    "projects/scaffolds/p02-journal/README.html",
+    "projects/scaffolds/p03-logs/README.html",
+    "projects/scaffolds/p04-config/README.html",
+    "projects/scaffolds/p05-expressions/README.html",
+    "projects/scaffolds/p06-kv/instructions.html",
+    "projects/scaffolds/p07-indexer/instructions.html",
+    "projects/scaffolds/p08-monitor/instructions.html",
+    "projects/scaffolds/p11-console/index.html",
+    "projects/scaffolds/p11-console/instructions.html",
+    "projects/scaffolds/p12-replay/instructions.html",
+    "projects/scaffolds/p13-unsafe/instructions.html",
+    "projects/ui-console/index.html"
+  ],
+  "interpretation": "No additional unaddressed foundational topic or misleading completed-feature claim was identified within the reviewed canonical scope after the listed corrections. This conclusion is an author audit with stated limits; it is not a claim that browser QA, independent review or learner mastery is complete.",
+  "followup_2026_10_09": {
+    "date": "2026-10-09T14:18:19.781108+00:00",
+    "review_kind": "author-team correction and re-verification; independent review remains pending",
+    "lesson_ids": [
+      "02-parser",
+      "02-evaluator",
+      "03-tests",
+      "03-raii",
+      "03-log-store",
+      "03-recovery",
+      "07-replay",
+      "09-workbench"
+    ],
+    "project_ids": [
+      "p05",
+      "p06",
+      "p12",
+      "p16"
+    ],
+    "evidence": [
+      "persistence-followup.html",
+      "release-followup.html",
+      "reader-followup.html",
+      "mcp-followup.html",
+      "checks.json",
+      "site-static.json"
+    ],
+    "note": "Original hashes above identify the prior audit snapshot. Changed source/prose hashes are recorded in the scoped follow-up reports and refreshed course-status.json fingerprints; the historical audit was not retroactively rewritten."
+  },
+  "continuation_2026_10_09_1750": {
+    "review_kind": "author-team focused regression and contract audit",
+    "independent_review": "pending",
+    "changed_lesson_ids": [
+      "00-terminal",
+      "02-parser",
+      "02-evaluator",
+      "05-protocols",
+      "07-unsafe",
+      "07-auditing",
+      "08-replication",
+      "06-console",
+      "06-boundaries",
+      "08-delivery",
+      "08-scheduler",
+      "09-workbench"
+    ],
+    "changed_project_ids": [
+      "p05",
+      "p09",
+      "p15",
+      "p11",
+      "p14",
+      "p16"
+    ],
+    "reports": [
+      "cold-start-followup.html",
+      "services-spec-audit.html",
+      "advanced-boundary-audit.html",
+      "console-retry-review.html"
+    ],
+    "checks": "checks.json",
+    "scope": "Original audit hashes identify their historical snapshot. Current source fingerprints are in the scoped reports and course-status.json. No browser verification or independent acceptance claimed."
+  }
+}

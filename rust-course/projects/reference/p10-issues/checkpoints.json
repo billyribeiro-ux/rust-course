@@ -1,0 +1,22 @@
+{
+  "project": "p10-issues",
+  "mechanism": "Each listed source checkpoint reconstructs with scripts/start-checkpoint.py into a fresh standalone Cargo project. No learner directory is overwritten.",
+  "manifest": "projects/checkpoints/p10-issues/checkpoint.json",
+  "steps": [
+    {
+      "checkpoint": "00-scaffold",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p10 00-scaffold"
+    },
+    {
+      "checkpoint": "01-http-validation",
+      "contract": "An in-process Axum service exposes POST /issues/validate; the writer fixture receives a normalized title, a reader receives403, unknown identity401, invalid title422, invalid JSON400, and oversized body413. Four admitted requests, a one-second deadline, and4096-byte bodies are bounded. Nothing is persisted and this endpoint never creates an issue.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p10 01-http-validation"
+    },
+    {
+      "checkpoint": "final",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p10 final"
+    }
+  ]
+}

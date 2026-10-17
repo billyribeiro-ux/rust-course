@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rust Operations Console · Simulation</title>
+  <link rel="stylesheet" href="console.css">
+</head>
+<body>
+  <p id="boot-status" role="status">Starting the Rust console. The portable archive contains source;
+    first run <code>python3 scripts/build-ui.py</code> from the course folder, then
+    <code>python3 scripts/console-server.py</code>. Stage 6 explains the required tools.</p>
+  <noscript>This Leptos client requires JavaScript and WebAssembly. The course lessons remain readable without them.</noscript>
+  <script type="module">
+    const status = document.querySelector('#boot-status');
+    try {
+      // Dynamic import lets the same failure message cover a not-yet-built package.
+      const { default: init } = await import('./pkg/operations_console.js');
+      await init();
+      status.remove();
+    } catch (error) {
+      status.textContent = 'The Rust UI could not load. From the course folder, run scripts/build-ui.py with Python 3, then serve it with scripts/console-server.py. ' + error.message;
+    }
+  </script>
+</body>
+</html>

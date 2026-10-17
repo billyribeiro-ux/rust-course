@@ -1,0 +1,227 @@
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ mise --version
+exit: 0 (expected 0)
+2026.10.4 macos-arm64 (2026-10-07)
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ python3 --version
+exit: 0 (expected 0)
+Python 3.14.8
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ git --version
+exit: 0 (expected 0)
+git version 2.56.0
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ mise exec -- rustc --version
+exit: 0 (expected 0)
+rustc 1.99.0 (b940084d7 2026-09-28)
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ mise exec -- cargo --version
+exit: 0 (expected 0)
+cargo 1.99.0 (5f94df478 2026-08-27)
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ python3 scripts/serve.py --help
+exit: 0 (expected 0)
+usage: serve.py [-h] [--port PORT]
+
+options:
+  -h, --help   show this help message and exit
+  --port PORT
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ python3 scripts/start-project.py p01
+exit: 0 (expected 0)
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/p01-calculator. The reference and original scaffold remain unchanged.
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ python3 scripts/start-project.py p01
+exit: 1 (expected 1)
+
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/p01-calculator. Choose --name another-name.
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ mise exec -- cargo test --manifest-path learner-work/p01-calculator/Cargo.toml --offline --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+exit: 101 (expected 101)
+
+running 4 tests
+test tests::overflow ... FAILED
+test tests::sum ... FAILED
+test tests::unit_error ... FAILED
+test tests::zero_error ... FAILED
+
+failures:
+
+---- tests::overflow stdout ----
+
+thread 'tests::overflow' (3156193) panicked at src/lib.rs:12:5:
+not yet implemented: parse quantities, validate units, then use checked arithmetic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- tests::sum stdout ----
+
+thread 'tests::sum' (3156194) panicked at src/lib.rs:12:5:
+not yet implemented: parse quantities, validate units, then use checked arithmetic
+
+---- tests::unit_error stdout ----
+
+thread 'tests::unit_error' (3156195) panicked at src/lib.rs:12:5:
+not yet implemented: parse quantities, validate units, then use checked arithmetic
+
+---- tests::zero_error stdout ----
+
+thread 'tests::zero_error' (3156196) panicked at src/lib.rs:12:5:
+not yet implemented: parse quantities, validate units, then use checked arithmetic
+
+
+failures:
+    tests::overflow
+    tests::sum
+    tests::unit_error
+    tests::zero_error
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+   Compiling workshop-calculator-scaffold v0.1.0 (/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/p01-calculator)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/workshop_calculator_scaffold-ba7493a513b0b00b)
+error: test failed, to rerun pass `--lib`
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/p01-calculator
+$ mise exec -- cargo locate-project --message-format plain
+exit: 0 (expected 0)
+/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/p01-calculator/Cargo.toml
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ python3 scripts/start-checkpoint.py p01 01-checked-add
+exit: 0 (expected 0)
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/01-checked-add
+Parse two bounded signed decimal i64 strings and return their checked sum. Invalid numbers and arithmetic overflow are different errors. This stage deliberately has no units, operator selection, or general CLI parser.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path '/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/01-checked-add/Cargo.toml'
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ python3 scripts/start-checkpoint.py p01 01-checked-add
+exit: 1 (expected 1)
+
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/01-checked-add; choose a new --destination
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ mise exec -- cargo test --locked --offline --manifest-path '/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/01-checked-add/Cargo.toml' --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+exit: 0 (expected 0)
+
+running 3 tests
+test tests::minimum_and_zero_are_valid ... ok
+test tests::normal_and_negative_sums ... ok
+test tests::overflow_is_distinct_from_parsing ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p01_calculator-ae7cd933a152cfd4)
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p01_calculator-33c0c115b629c8b8)
+   Doc-tests checkpoint_p01_calculator
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ mise exec -- cargo run --locked --offline --manifest-path '/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/01-checked-add/Cargo.toml' --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+exit: 0 (expected 0)
+12
+
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/checkpoint-p01-calculator`
+
+Harness correction: early example is add_text("7", "5") and correctly printed 12; the initial harness incorrectly expected42. Source was not changed; successful command did not need repeating.
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ python3 scripts/start-checkpoint.py p01 final
+exit: 0 (expected 0)
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path '/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/final/Cargo.toml'
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ python3 scripts/start-checkpoint.py p01 final
+exit: 1 (expected 1)
+
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/final; choose a new --destination
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy
+$ mise exec -- cargo test --locked --offline --manifest-path '/Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/learner-work/checkpoints/p01-calculator/final/Cargo.toml' --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+exit: 0 (expected 0)
+
+running 8 tests
+test conversion::tests::avoids_false_intermediate_overflow_and_rejects_real_range_loss ... ok
+test conversion::tests::common_fractional_signed_and_scientific_values ... ok
+test conversion::tests::explicit_zero_is_valid_and_negative_zero_keeps_its_sign ... ok
+test conversion::tests::every_unit_pair_agrees_with_independent_expected_values ... ok
+test tests::recoverable_errors ... ok
+test conversion::tests::invalid_units_numbers_and_nonfinite_inputs_are_errors ... ok
+test tests::units_and_integer_division ... ok
+test tests::exhaustive_small_addition_commutes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 5 tests
+test non_unicode_operand_is_a_usage_error ... ok
+test adding_conversion_does_not_silently_change_integer_arithmetic ... ok
+test conversion_cli_accepts_fractional_signed_and_scientific_values ... ok
+test cli_separates_success_domain_and_usage ... ok
+test conversion_cli_reports_validation_and_range_errors_without_success_output ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+
+running 2 tests
+test src/conversion.rs - conversion (line 3) ... ok
+test src/lib.rs - (line 2) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.52s; merged doctests compilation took 0.33s
+
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/workshop_calculator-12117b5c740cfbdd)
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/workshop_calculator-f76f9be1c0e7d010)
+     Running tests/cli.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/cli-7e259a931c3db2ae)
+   Doc-tests workshop_calculator
+
+cwd: /Users/billyribeiro/Desktop/rust-course/.course-cache/cold-start-_rbc7kj_/Rust Workshop Fresh Copy/projects
+$ mise exec -- cargo run -p workshop-calculator --locked --offline --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -- 12m + 3m
+exit: 0 (expected 0)
+15m
+
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running `/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/workshop-calculator 12m + 3m`

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "project": "p16-workbench",
+  "checkpoints": [
+    {
+      "id": "00-scaffold",
+      "title": "First domain or encoding checkpoint",
+      "source": "projects/scaffolds/p16-workbench",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p16-workbench/locks/00-scaffold.Cargo.lock"
+    },
+    {
+      "id": "01-order-domain",
+      "title": "Deterministic simulated order domain",
+      "source": "projects/checkpoints/p16-workbench/01-order-domain",
+      "contract": "A single synthetic symbol uses integer cents and whole shares. Quotes require increasing sequence numbers; orders retain stable logical IDs and an original accepted price. Purchases and sales use checked arithmetic, prohibit negative cash/shares, retain at most64 orders, and reject without partial state changes. No files, HTTP, watchlists, replay jobs, chart, or actual trading exists.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p16-workbench/locks/01-order-domain.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete reference implementation",
+      "source": "projects/reference/p16-workbench",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p16-workbench/locks/final.Cargo.lock"
+    }
+  ]
+}

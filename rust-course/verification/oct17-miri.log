@@ -1,0 +1,29 @@
+$ cargo +nightly-2026-10-17 miri test --locked --manifest-path projects/Cargo.toml -p p13-unsafe
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+   Compiling p13-unsafe v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.38s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/miri-oct17/aarch64-apple-darwin/debug/build/p13-unsafe/d257508ff9b707b6/out/p13_unsafe-d257508ff9b707b6)
+
+running 7 tests
+test tests::a_single_destructor_panic_leaves_empty_reusable_storage ... ok
+test tests::agrees_with_safe_baseline_under_many_operations ... ok
+test tests::alignment_is_preserved ... ok
+test tests::empty_zero_capacity_and_bounds ... ok
+test tests::values_are_dropped_exactly_once_and_rejected_value_is_returned ... ok
+test tests::zero_sized_destructors_run_for_every_element ... ok
+test tests::zero_sized_values_are_logical_elements ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/miri-oct17/aarch64-apple-darwin/debug/build/p13-unsafe/cae40f515f52d85f/out/p13_unsafe-cae40f515f52d85f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+   Doc-tests p13_unsafe
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

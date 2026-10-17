@@ -1,0 +1,8 @@
+    Checking p06-kv v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv)
+    Checking tokio v1.53.2
+    Checking hyper v1.12.0
+    Checking tower v0.5.3
+    Checking hyper-util v0.1.21
+    Checking axum v0.8.9
+    Checking p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.10s

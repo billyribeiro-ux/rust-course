@@ -1,0 +1,109 @@
+[
+  {
+    "source": "rust-course/projects/scaffolds/p09-chat/src/main.rs",
+    "compile_command": [
+      "rustc",
+      "--edition",
+      "2024",
+      "--test",
+      "rust-course/projects/scaffolds/p09-chat/src/main.rs",
+      "-o",
+      ".course-cache/services-exercises/p09-chat"
+    ],
+    "compile_exit": 0,
+    "test_exit": 0,
+    "output": "\nrunning 1 test\ntest tests::length_is_bytes ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+  },
+  {
+    "source": "rust-course/projects/scaffolds/p10-issues/src/main.rs",
+    "compile_command": [
+      "rustc",
+      "--edition",
+      "2024",
+      "--test",
+      "rust-course/projects/scaffolds/p10-issues/src/main.rs",
+      "-o",
+      ".course-cache/services-exercises/p10-issues"
+    ],
+    "compile_exit": 0,
+    "test_exit": 0,
+    "output": "\nrunning 1 test\ntest tests::invalid_title ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+  },
+  {
+    "source": "rust-course/projects/scaffolds/p14-scheduler/src/main.rs",
+    "compile_command": [
+      "rustc",
+      "--edition",
+      "2024",
+      "--test",
+      "rust-course/projects/scaffolds/p14-scheduler/src/main.rs",
+      "-o",
+      ".course-cache/services-exercises/p14-scheduler"
+    ],
+    "compile_exit": 0,
+    "test_exit": 0,
+    "output": "\nrunning 1 test\ntest tests::cannot_skip_running ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+  },
+  {
+    "source": "rust-course/projects/scaffolds/p15-replication/src/main.rs",
+    "compile_command": [
+      "rustc",
+      "--edition",
+      "2024",
+      "--test",
+      "rust-course/projects/scaffolds/p15-replication/src/main.rs",
+      "-o",
+      ".course-cache/services-exercises/p15-replication"
+    ],
+    "compile_exit": 0,
+    "test_exit": 0,
+    "output": "\nrunning 1 test\ntest tests::duplicate_is_idempotent ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+  },
+  {
+    "source": "rust-course/projects/scaffolds/p16-workbench/src/main.rs",
+    "compile_command": [
+      "rustc",
+      "--edition",
+      "2024",
+      "--test",
+      "rust-course/projects/scaffolds/p16-workbench/src/main.rs",
+      "-o",
+      ".course-cache/services-exercises/p16-workbench"
+    ],
+    "compile_exit": 0,
+    "test_exit": 0,
+    "output": "\nrunning 1 test\ntest tests::bounded_purchase ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+  },
+  {
+    "source": "rust-course/exercises/services/partial-read-broken.rs",
+    "compile_command": [
+      "rustc",
+      "--edition",
+      "2024",
+      "--test",
+      "rust-course/exercises/services/partial-read-broken.rs",
+      "-o",
+      ".course-cache/services-exercises/partial-read-broken"
+    ],
+    "compile_exit": 0,
+    "test_exit": 101,
+    "expected_test_exit": 101,
+    "output": "\nrunning 1 test\ntest a_frame_is_not_one_read ... FAILED\n\nfailures:\n\n---- a_frame_is_not_one_read stdout ----\n\nthread 'a_frame_is_not_one_read' (489667) panicked at rust-course/exercises/services/partial-read-broken.rs:30:5:\nassertion `left == right` failed\n  left: \"h\"\n right: \"hello\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\n\nfailures:\n    a_frame_is_not_one_read\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+  },
+  {
+    "source": "rust-course/exercises/services/partial-read-solution.rs",
+    "compile_command": [
+      "rustc",
+      "--edition",
+      "2024",
+      "--test",
+      "rust-course/exercises/services/partial-read-solution.rs",
+      "-o",
+      ".course-cache/services-exercises/partial-read-solution"
+    ],
+    "compile_exit": 0,
+    "test_exit": 0,
+    "expected_test_exit": 0,
+    "output": "\nrunning 2 tests\ntest a_frame_is_not_one_read ... ok\ntest incomplete_payload_fails ... ok\n\ntest result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+  }
+]

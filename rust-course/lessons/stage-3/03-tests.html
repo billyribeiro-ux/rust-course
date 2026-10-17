@@ -1,0 +1,441 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Tests are executable claims · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="03-tests" data-lesson="03-tests"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Tests are executable claims</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 03 / Testing and durable storage</div><h1>Tests are executable claims</h1><p class="lead">Use a log parser to turn requirements into falsifiable examples, boundary tests, and an evidence record.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-2/02-evaluator.html">Evaluate safely and test properties without overstating them</a></li></ul><ul><li>Write a behavioral contract before implementing a parser</li><li>Separate corruption, incomplete input and I/O failure</li><li>Choose assertions that detect a meaningful regression</li><li>Use failing tests to narrow a hypothesis rather than edit at random</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#authentication">authentication</a> · <a href="../../glossary.html#checksum">checksum</a> · <a href="../../glossary.html#compaction">compaction</a> · <a href="../../glossary.html#durability">durability</a> · <a href="../../glossary.html#framing">framing</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#replay">replay</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p06">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-make-a-storage-claim-observable">Purpose: make a storage claim observable</h2>
+<p>A program can compile, print a plausible result, and still lose information after restart. The purpose of this lesson is to replace “it works” with a smaller claim that an experiment can challenge. Our subject is the replay function in P06. It consumes records and reconstructs a key map. Its contract distinguishes an empty stream, validated records, an incomplete declared header or payload, detected framing or checksum violations, and an actual read error. These parser categories do not identify every physical cause: bounded length damage can make an originally complete record appear incomplete. These are different observations with different consequences. Write those categories in your notebook before opening the implementation. A test is useful when you can name the requirement it would catch someone violating.</p>
+<h2 id="model-arrange-a-state-perform-one-action-inspect-evidence">Model: arrange a state, perform one action, inspect evidence</h2>
+<p>Most tests have an arrangement, an action, and assertions. Arrangement constructs a known input without depending on yesterday's filesystem. The action crosses the boundary being tested. Assertions describe externally meaningful behavior. For a replay parser, asserting the number of recovered records is insufficient: a broken parser might count a damaged record and still return the right number. Check the recovered values and the valid byte boundary. A unit test can isolate decoding; an integration test can verify that opening a real file actually truncates a torn tail before appending. Neither observation alone establishes resistance to sudden power loss.</p>
+<h2 id="predict-before-running">Predict before running</h2>
+<p>Imagine a valid record for key a followed by the first two bytes of a second record. Predict the recovered map, record count, valid byte offset and torn-tail flag. Now change the last byte of a complete record. Should this be treated as a harmless tail? Commit your answer before executing anything. The reference rejects a complete checksum mismatch because silently discarding it would hide corruption. A partial record has an unavoidable ambiguity: it might be an interrupted append or a damaged file that only resembles one. Recovery policy must state that assumption instead of claiming perfect diagnosis.</p>
+<pre><code>cd rust-course/projects
+mise exec -- cargo test -p p06-kv every_torn_suffix
+mise exec -- cargo test -p p06-kv checksum_mismatch_with_complete_declared_payload
+mise exec -- cargo test -p p06-kv read_error</code></pre>
+<h2 id="read-the-runnable-example">Read the runnable example</h2>
+<div class="code-wrap" data-source="projects/reference/p06-kv/src/lib.rs" data-sha256="aa70dac72ad8889ab9954de6f45e01d23c817297c8e89dd01dfb0a6dcce1d7e9"><div class="code-label"><a href="../../projects/reference/p06-kv/src/lib.rs">projects/reference/p06-kv/src/lib.rs</a></div><pre><code>//! Single-writer educational log store. CRC checks complete declared records, not tampering.
+//! An incomplete declared suffix is discarded; bounded length damage can look incomplete.
+//! Successful writes call sync_all; hardware/filesystem power-loss guarantees vary.
+use std::{
+    collections::BTreeMap,
+    fs::{self, File, OpenOptions},
+    io::{self, Read, Write},
+    path::{Path, PathBuf},
+};
+
+const MAGIC: &amp;[u8; 4] = b&quot;KV01&quot;;
+const HEADER: usize = 16;
+pub const MAX_KEY: usize = 4096;
+pub const MAX_VALUE: usize = 1_048_576;
+
+fn invalid(message: &amp;str) -&gt; io::Error {
+    io::Error::new(io::ErrorKind::InvalidData, message)
+}
+
+/// IEEE CRC-32, reflected polynomial; deliberately transparent rather than optimized.
+pub fn crc32(bytes: &amp;[u8]) -&gt; u32 {
+    let mut crc = !0u32;
+    for &amp;byte in bytes {
+        crc ^= u32::from(byte);
+        for _ in 0..8 {
+            crc = (crc &gt;&gt; 1) ^ (0xedb8_8320 &amp; (0u32.wrapping_sub(crc &amp; 1)));
+        }
+    }
+    !crc
+}
+
+fn encode(key: &amp;[u8], value: Option&lt;&amp;[u8]&gt;) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+    if key.is_empty() || key.len() &gt; MAX_KEY || value.is_some_and(|v| v.len() &gt; MAX_VALUE) {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;key/value length outside bounds&quot;,
+        ));
+    }
+    let mut record = Vec::with_capacity(HEADER + key.len() + value.map_or(0, &lt;[u8]&gt;::len));
+    record.extend_from_slice(MAGIC);
+    record.extend_from_slice(&amp;(key.len() as u32).to_le_bytes());
+    record.extend_from_slice(&amp;value.map_or(u32::MAX, |v| v.len() as u32).to_le_bytes());
+    record.extend_from_slice(&amp;0u32.to_le_bytes());
+    record.extend_from_slice(key);
+    if let Some(value) = value {
+        record.extend_from_slice(value);
+    }
+    let checksum = crc32(&amp;[&amp;record[..12], &amp;record[16..]].concat());
+    record[12..16].copy_from_slice(&amp;checksum.to_le_bytes());
+    Ok(record)
+}
+
+#[derive(Debug, Default, PartialEq, Eq)]
+pub struct Recovery {
+    pub entries: BTreeMap&lt;Vec&lt;u8&gt;, Vec&lt;u8&gt;&gt;,
+    pub valid_bytes: u64,
+    pub records: usize,
+    pub torn_tail: bool,
+}
+
+/// Replay bounded individual records. The live key map itself grows with the data set.
+/// An incomplete declared header/payload returns the validated prefix. Detected magic,
+/// length-bound and checksum violations are errors. CRC is checked only after reading
+/// the declared payload: a damaged but bounded length can resemble an interrupted append.
+pub fn replay(mut input: impl Read) -&gt; io::Result&lt;Recovery&gt; {
+    let mut result = Recovery::default();
+    loop {
+        let mut header = [0u8; HEADER];
+        let n = read_prefix(&amp;mut input, &amp;mut header)?;
+        if n == 0 {
+            return Ok(result);
+        }
+        if n != HEADER {
+            result.torn_tail = true;
+            return Ok(result);
+        }
+        if &amp;header[..4] != MAGIC {
+            return Err(invalid(&quot;bad record magic&quot;));
+        }
+        let key_len = u32::from_le_bytes(header[4..8].try_into().unwrap()) as usize;
+        let raw_value_len = u32::from_le_bytes(header[8..12].try_into().unwrap());
+        let deleted = raw_value_len == u32::MAX;
+        let value_len = if deleted { 0 } else { raw_value_len as usize };
+        if key_len == 0 || key_len &gt; MAX_KEY || value_len &gt; MAX_VALUE {
+            return Err(invalid(&quot;invalid record length&quot;));
+        }
+        let mut payload = vec![0; key_len + value_len];
+        if read_prefix(&amp;mut input, &amp;mut payload)? != payload.len() {
+            result.torn_tail = true;
+            return Ok(result);
+        }
+        let expected = u32::from_le_bytes(header[12..16].try_into().unwrap());
+        if crc32(&amp;[&amp;header[..12], &amp;payload].concat()) != expected {
+            return Err(invalid(&quot;record checksum mismatch&quot;));
+        }
+        let key = payload[..key_len].to_vec();
+        if deleted {
+            result.entries.remove(&amp;key);
+        } else {
+            result.entries.insert(key, payload[key_len..].to_vec());
+        }
+        result.valid_bytes += (HEADER + payload.len()) as u64;
+        result.records += 1;
+    }
+}
+
+fn read_prefix(input: &amp;mut impl Read, buf: &amp;mut [u8]) -&gt; io::Result&lt;usize&gt; {
+    let mut used = 0;
+    while used &lt; buf.len() {
+        match input.read(&amp;mut buf[used..]) {
+            Ok(0) =&gt; break,
+            Ok(n) =&gt; used += n,
+            Err(error) if error.kind() == io::ErrorKind::Interrupted =&gt; continue,
+            Err(error) =&gt; return Err(error),
+        }
+    }
+    Ok(used)
+}
+
+fn sibling(path: &amp;Path, suffix: &amp;str) -&gt; PathBuf {
+    let mut name = path.as_os_str().to_os_string();
+    name.push(suffix);
+    PathBuf::from(name)
+}
+
+fn sync_parent(path: &amp;Path) -&gt; io::Result&lt;()&gt; {
+    #[cfg(unix)]
+    {
+        let parent = path
+            .parent()
+            .filter(|p| !p.as_os_str().is_empty())
+            .unwrap_or(Path::new(&quot;.&quot;));
+        File::open(parent)?.sync_all()
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = path;
+        Ok(())
+    }
+}
+
+pub struct Store {
+    path: PathBuf,
+    file: File,
+    _lock: File, // Separate inode: compaction replaces the data file, never this lock.
+    entries: BTreeMap&lt;Vec&lt;u8&gt;, Vec&lt;u8&gt;&gt;,
+    poisoned: bool,
+    pub recovered_torn_tail: bool,
+}
+
+impl Store {
+    pub fn open(path: impl AsRef&lt;Path&gt;) -&gt; io::Result&lt;Self&gt; {
+        // Freeze the opening cwd before retaining paths used by later compaction.
+        // This does not resolve symlinks or protect against external path replacement.
+        let path = std::path::absolute(path)?;
+        let lock = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .truncate(false)
+            .open(sibling(&amp;path, &quot;.lock&quot;))?;
+        lock.try_lock().map_err(io::Error::other)?;
+        let file = OpenOptions::new()
+            .read(true)
+            .append(true)
+            .create(true)
+            .open(&amp;path)?;
+        let recovery = replay(&amp;file)?;
+        if recovery.torn_tail {
+            file.set_len(recovery.valid_bytes)?;
+        }
+        file.sync_all()?;
+        sync_parent(&amp;path)?;
+        Ok(Self {
+            path,
+            file,
+            _lock: lock,
+            entries: recovery.entries,
+            poisoned: false,
+            recovered_torn_tail: recovery.torn_tail,
+        })
+    }
+    pub fn get(&amp;self, key: &amp;[u8]) -&gt; Option&lt;&amp;[u8]&gt; {
+        self.entries.get(key).map(Vec::as_slice)
+    }
+    pub fn len(&amp;self) -&gt; usize {
+        self.entries.len()
+    }
+    pub fn is_empty(&amp;self) -&gt; bool {
+        self.entries.is_empty()
+    }
+    pub fn put(&amp;mut self, key: &amp;[u8], value: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
+        self.change(key, Some(value))
+    }
+    pub fn delete(&amp;mut self, key: &amp;[u8]) -&gt; io::Result&lt;()&gt; {
+        self.change(key, None)
+    }
+    fn ready(&amp;self) -&gt; io::Result&lt;()&gt; {
+        if self.poisoned {
+            Err(io::Error::other(
+                &quot;store write failed; drop and reopen before further mutations&quot;,
+            ))
+        } else {
+            Ok(())
+        }
+    }
+    fn change(&amp;mut self, key: &amp;[u8], value: Option&lt;&amp;[u8]&gt;) -&gt; io::Result&lt;()&gt; {
+        self.ready()?;
+        let record = encode(key, value)?;
+        if let Err(error) = self
+            .file
+            .write_all(&amp;record)
+            .and_then(|()| self.file.sync_all())
+        {
+            self.poisoned = true;
+            return Err(error);
+        }
+        if let Some(value) = value {
+            self.entries.insert(key.to_vec(), value.to_vec());
+        } else {
+            self.entries.remove(key);
+        }
+        Ok(())
+    }
+    /// Unix rename + parent sync protocol. Windows replacement semantics are not modeled.
+    #[cfg(unix)]
+    pub fn compact(&amp;mut self) -&gt; io::Result&lt;()&gt; {
+        self.ready()?;
+        let temporary = sibling(&amp;self.path, &quot;.compact&quot;);
+        let mut next = OpenOptions::new()
+            .read(true)
+            .append(true)
+            .create_new(true)
+            .open(&amp;temporary)?;
+        for (key, value) in &amp;self.entries {
+            next.write_all(&amp;encode(key, Some(value))?)?;
+        }
+        next.sync_all()?;
+        fs::rename(&amp;temporary, &amp;self.path)?;
+        self.file = next;
+        if let Err(error) = sync_parent(&amp;self.path) {
+            self.poisoned = true;
+            return Err(error);
+        }
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
+    struct Scratch(PathBuf);
+    impl Scratch {
+        fn new() -&gt; Self {
+            let p = std::env::temp_dir().join(format!(
+                &quot;rust-course-kv-{}-{}&quot;,
+                std::process::id(),
+                NEXT.fetch_add(1, Ordering::Relaxed)
+            ));
+            fs::create_dir(&amp;p).unwrap();
+            Self(p)
+        }
+    }
+    impl Drop for Scratch {
+        fn drop(&amp;mut self) {
+            let _ = fs::remove_dir_all(&amp;self.0);
+        }
+    }
+    #[test]
+    fn crc_known_vector() {
+        assert_eq!(crc32(b&quot;123456789&quot;), 0xcbf4_3926);
+    }
+    #[test]
+    fn every_torn_suffix_recovers_only_the_complete_prefix() {
+        let first = encode(b&quot;a&quot;, Some(b&quot;one&quot;)).unwrap();
+        let second = encode(b&quot;b&quot;, Some(b&quot;two&quot;)).unwrap();
+        for cut in 1..second.len() {
+            let bytes = [&amp;first[..], &amp;second[..cut]].concat();
+            let recovered = replay(&amp;bytes[..]).unwrap();
+            assert_eq!(recovered.records, 1);
+            assert!(recovered.torn_tail);
+            assert_eq!(recovered.valid_bytes, first.len() as u64);
+        }
+    }
+    #[test]
+    fn checksum_mismatch_with_complete_declared_payload_is_rejected() {
+        let mut bytes = encode(b&quot;a&quot;, Some(b&quot;one&quot;)).unwrap();
+        *bytes.last_mut().unwrap() ^= 1;
+        assert_eq!(
+            replay(&amp;bytes[..]).unwrap_err().kind(),
+            io::ErrorKind::InvalidData
+        );
+    }
+    #[test]
+    fn malicious_length_is_rejected_before_allocation() {
+        let mut bytes = encode(b&quot;a&quot;, Some(b&quot;one&quot;)).unwrap();
+        bytes[4..8].copy_from_slice(&amp;u32::MAX.to_le_bytes());
+        assert!(replay(&amp;bytes[..]).is_err());
+    }
+    #[test]
+    fn overwritten_deleted_and_empty_values_replay() {
+        let bytes = [
+            encode(b&quot;a&quot;, Some(b&quot;one&quot;)).unwrap(),
+            encode(b&quot;a&quot;, Some(b&quot;&quot;)).unwrap(),
+            encode(b&quot;b&quot;, Some(b&quot;two&quot;)).unwrap(),
+            encode(b&quot;b&quot;, None).unwrap(),
+        ]
+        .concat();
+        let recovered = replay(&amp;bytes[..]).unwrap();
+        assert_eq!(recovered.entries.get(b&quot;a&quot;.as_slice()), Some(&amp;vec![]));
+        assert_eq!(recovered.entries.len(), 1);
+    }
+    #[test]
+    fn read_error_is_not_misclassified_as_torn_tail() {
+        struct Failed;
+        impl Read for Failed {
+            fn read(&amp;mut self, _: &amp;mut [u8]) -&gt; io::Result&lt;usize&gt; {
+                Err(io::Error::other(&quot;injected read failure&quot;))
+            }
+        }
+        assert_eq!(replay(Failed).unwrap_err().kind(), io::ErrorKind::Other);
+    }
+    #[test]
+    fn reopen_repairs_tail_and_can_append() {
+        let dir = Scratch::new();
+        let p = dir.0.join(&quot;data&quot;);
+        {
+            let mut s = Store::open(&amp;p).unwrap();
+            s.put(b&quot;a&quot;, b&quot;one&quot;).unwrap();
+            assert!(Store::open(&amp;p).is_err());
+        }
+        OpenOptions::new()
+            .append(true)
+            .open(&amp;p)
+            .unwrap()
+            .write_all(b&quot;KV&quot;)
+            .unwrap();
+        {
+            let mut s = Store::open(&amp;p).unwrap();
+            assert!(s.recovered_torn_tail);
+            s.put(b&quot;b&quot;, b&quot;two&quot;).unwrap();
+        }
+        let s = Store::open(&amp;p).unwrap();
+        assert_eq!(s.get(b&quot;a&quot;), Some(b&quot;one&quot;.as_slice()));
+        assert_eq!(s.get(b&quot;b&quot;), Some(b&quot;two&quot;.as_slice()));
+    }
+    #[test]
+    fn failed_write_keeps_acknowledged_state_and_poison_requires_reopen() {
+        let dir = Scratch::new();
+        let p = dir.0.join(&quot;data&quot;);
+        let mut s = Store::open(&amp;p).unwrap();
+        s.put(b&quot;a&quot;, b&quot;one&quot;).unwrap();
+        // Fault injection: replace only the data handle with a read-only descriptor.
+        // Keep the real lock held and exercise Store::change&#x27;s actual error path.
+        s.file = File::open(&amp;p).unwrap();
+        assert!(s.put(b&quot;b&quot;, b&quot;two&quot;).is_err());
+        assert!(s.poisoned);
+        assert_eq!(s.get(b&quot;b&quot;), None);
+        assert_eq!(
+            s.put(b&quot;c&quot;, b&quot;three&quot;).unwrap_err().kind(),
+            io::ErrorKind::Other
+        );
+        assert_eq!(s.get(b&quot;a&quot;), Some(b&quot;one&quot;.as_slice()));
+        drop(s);
+        let mut s = Store::open(&amp;p).unwrap();
+        s.put(b&quot;b&quot;, b&quot;two&quot;).unwrap();
+        assert_eq!(s.len(), 2);
+    }
+    #[cfg(unix)]
+    #[test]
+    fn stale_compaction_file_is_visible_and_original_remains_writable() {
+        let dir = Scratch::new();
+        let p = dir.0.join(&quot;data&quot;);
+        let mut s = Store::open(&amp;p).unwrap();
+        s.put(b&quot;a&quot;, b&quot;one&quot;).unwrap();
+        fs::write(sibling(&amp;p, &quot;.compact&quot;), b&quot;uncommitted temporary bytes&quot;).unwrap();
+        assert_eq!(
+            s.compact().unwrap_err().kind(),
+            io::ErrorKind::AlreadyExists
+        );
+        assert_eq!(
+            fs::read(sibling(&amp;p, &quot;.compact&quot;)).unwrap(),
+            b&quot;uncommitted temporary bytes&quot;
+        );
+        s.put(b&quot;b&quot;, b&quot;two&quot;).unwrap();
+        drop(s);
+        assert_eq!(Store::open(&amp;p).unwrap().len(), 2);
+    }
+    #[cfg(unix)]
+    #[test]
+    fn compaction_preserves_state_and_lock() {
+        let dir = Scratch::new();
+        let p = dir.0.join(&quot;data&quot;);
+        let mut s = Store::open(&amp;p).unwrap();
+        s.put(b&quot;a&quot;, b&quot;old&quot;).unwrap();
+        s.put(b&quot;a&quot;, b&quot;new&quot;).unwrap();
+        s.put(b&quot;b&quot;, b&quot;gone&quot;).unwrap();
+        s.delete(b&quot;b&quot;).unwrap();
+        let before = fs::metadata(&amp;p).unwrap().len();
+        s.compact().unwrap();
+        assert!(fs::metadata(&amp;p).unwrap().len() &lt; before);
+        assert!(Store::open(&amp;p).is_err());
+        s.put(b&quot;c&quot;, b&quot;after&quot;).unwrap();
+        drop(s);
+        let s = Store::open(&amp;p).unwrap();
+        assert_eq!(s.get(b&quot;a&quot;), Some(b&quot;new&quot;.as_slice()));
+        assert_eq!(s.len(), 2);
+    }
+}
+</code></pre></div>
+<p>Find the test named every_torn_suffix_recovers_only_the_complete_prefix. The first encoded record remains intact. The loop varies every nonempty incomplete prefix of the second record. Concatenation creates a new input for each cut, replay interprets it, and assertions compare the valid prefix length with the first record's actual encoded length. This avoids a fragile handwritten offset. The range excludes a complete second record, which should have different expected behavior. Next read crc_known_vector: an independently known CRC value helps catch an encoder and decoder that agree only because they share the same wrong algorithm.</p>
+<h2 id="intentional-failure-and-guided-checkpoint">Intentional failure and guided checkpoint</h2>
+<p>In your working copy, temporarily change replay's checksum mismatch branch into a successful return. Run only the complete-declared-payload checksum-mismatch test and preserve the failure message. This is a small mutation experiment: it asks whether your test suite detects a specific defect. Restore the branch immediately afterward. Then implement the miniature parser in scaffolds/p06-kv. Its byte-sum checksum is intentionally simpler than KV01's CRC. Keep its format separate in your notes. The checkpoint is not copying the reference parser; it is explaining why a length must be validated before a slice or allocation and why a zero-length payload can still be a complete record.</p>
+<pre><code>mise exec -- cargo test --manifest-path scaffolds/p06-kv/Cargo.toml</code></pre>
+<h2 id="playbook-investigation-the-last-value-disappeared">Playbook investigation: the last value disappeared</h2>
+<p>Observation: a supplied file recovers one key, while a teammate expected two. Guess A says the replay loop stops too early. Guess B says the second append never formed a complete record. Guess C says a complete record failed its checksum. First record file length and the expected record boundaries. Then replay an in-memory concatenation of two independently encoded complete records. If both appear, that experiment disproves the broad claim that replay always stops after one record. Truncate the second record at several offsets and compare the recovered boundary. Finally flip one payload bit in a complete record. Each experiment changes one factor and produces a different predicted outcome.</p>
+<p>A useful fix report names the observed failure class and the precise branch changed. It includes the smallest failing input, the old and new result, and the regression test. Its limitation statement says that synthetic truncation does not simulate every filesystem ordering or device failure. Avoid “all edge cases covered.” A finite suite covers the cases it contains and supports a reasoned argument about nearby cases. Keep the competing hypotheses, including the one disproved, in the investigation record.</p>
+<h2 id="independent-practice-and-tiered-hints">Independent practice and tiered hints</h2>
+<p>Add an input reader that returns Interrupted once and then returns ordinary data. Decide whether replay should fail, retry, or discard a tail. Add a separate reader that returns an ordinary error halfway through a header. The two readers should not have identical expected results. </p><details><summary>Hint 1: choose the next observation</summary><p>inspect read_prefix rather than the CRC function.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>EOF is represented by a successful zero-byte read; an error is another variant.</p></details><details><summary>Worked solution</summary><p>Solution outline: retry Interrupted without increasing the used count, propagate other errors, and classify only actual EOF after a prefix as an incomplete tail. Keep the full answer folded in your notes until your own test exists.</p></details>
+<details><summary>Solution reasoning</summary><p>The retry loop owns used, so a transient interruption preserves both buffer contents and position. A successful read advances used by its reported size. Returning an ordinary error keeps permission failures and device failures visible. Treating every error as EOF would silently reinterpret infrastructure failures as recoverable storage tails.</p></details>
+<aside class="stuck"><h3>When you get stuck</h3><p>Run one named test with -- --nocapture, inspect the assertion's left and right values, and draw byte offsets on paper. Read the standard Read documentation for the distinction between zero bytes and an error. Ask for review with the exact input bytes, command, expected result, actual result and smallest changed function. “The storage tests fail” does not identify an experiment another person can reproduce.</p></aside>
+<h2 id="reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</h2><p>This complete early checkpoint replays a bounded miniature byte-sum format, preserving valid-prefix evidence. It is not the KV01/CRC32 format or a durable file store. The <a href="../../projects/checkpoints/p06-kv/index.html">checkpoint contract and source</a> are separately preserved. From the course root, run:</p><pre><code class="language-sh">python3 scripts/start-checkpoint.py p06 01-prefix-replay
+cd learner-work/checkpoints/p06-kv/01-prefix-replay
+mise exec -- cargo test
+mise exec -- cargo run</code></pre><p>The helper refuses an existing destination; choose a new explicit destination if you already have work there. This is a complete guided comparison checkpoint, not evidence that you independently implemented the project. Make predictions, inspect each boundary test, then carry the next requirement into your own source. A separately named <code>final</code> checkpoint reconstructs the current complete reference without pretending it is this earlier milestone. Exact reconstruction and test commands are recorded in <a href="../../verification/early-checkpoints.log">the author check log</a>.</p><h2 id="review-evidence-and-mastery">Review, evidence and mastery</h2>
+<p>Submit a contract table, one detected mutation, the interruption test and a brief investigation log. Explain one test that would still pass under a plausible bug, then strengthen it. You are ready to continue when you can distinguish test evidence from a durability guarantee, predict a failure before running it, and make a regression test smaller without removing the behavior that triggers it.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Current scope and invariants.</strong> One cooperating writer owns the separate lock; only a validated record changes the map or recovery boundary. A failed write leaves the last acknowledged map readable and blocks further mutations until reopen.</p><p><strong>Why this is the current recommended shape.</strong> A small binary protocol and BTreeMap keep framing and replay visible. Bounds precede allocation, typed io::Result values preserve failures, and owned File handles tie cleanup to scope. write_all and sync_all precede acknowledgment; compaction uses a separate lock inode and replaces the active data handle.</p><p><strong>Reasonable alternative and tradeoff.</strong> An embedded database would provide a broader tested storage contract and should be preferred when a real application needs transactions, indexing, migrations or concurrent readers. This implementation is appropriate for learning one explicit single-writer log protocol; adding a framework would conceal the decisions being studied.</p><p><strong>Evidence and limits.</strong> Native reference tests were run through mise in the coordinated course verification; inspect the current verification record for exact results. CRC known vector; every truncated suffix of the tested record; checksum mismatch after a complete declared payload; invalid length; read failure; tombstones and empty values; tail repair; lock retention across compaction. Additional self-review regressions cover write-error poisoning and stale temporary files. The live map grows with the data set. CRC is not authentication. A bounded damaged length can resemble a torn tail and cause truncation of an originally complete record; the interrupted-append policy assumes earlier valid bytes were not damaged. Sync/rename tests do not reproduce every power-loss ordering. Unix compaction and cooperating advisory locks are explicit scope limits.</p><p><strong>Requirement that would justify evolution.</strong> Adopt or evaluate an established storage engine when the requirements include multi-key atomicity, large state, coordinated concurrent readers or portable power-loss guarantees. Do not grow the current log by silently adding assumptions.</p><p>In your review, explain this choice in your own words, preserve the behavioral contract during changes, and name the evidence that would make you choose the alternative. Deliberately broken variants above are diagnostic exercises, never recommended implementation stages.</p></section><p class="evidence"><strong>Patch verification:</strong> the coordinated targeted suite passed after adding P06 write-failure and stale-compaction regressions and making P12 accounting private. The exact execution is recorded in verification/patch001-targeted.log; independent review remains pending.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/book/ch11-01-writing-tests.html">Rust Book: writing automated tests</a></li><li><a href="https://doc.rust-lang.org/std/io/trait.Read.html">Read contract</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-2/02-evaluator.html">Previous: Evaluate safely and test properties without overstating them</a><a href="../../lessons/stage-3/03-fuzz.html">Next: Fuzz the parser, and test your own assumptions</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-make-a-storage-claim-observable">Purpose: make a storage claim observable</a><a href="#model-arrange-a-state-perform-one-action-inspect-evidence">Model: arrange a state, perform one action, inspect evidence</a><a href="#predict-before-running">Predict before running</a><a href="#read-the-runnable-example">Read the runnable example</a><a href="#intentional-failure-and-guided-checkpoint">Intentional failure and guided checkpoint</a><a href="#playbook-investigation-the-last-value-disappeared">Playbook investigation: the last value disappeared</a><a href="#independent-practice-and-tiered-hints">Independent practice and tiered hints</a><a href="#reconstruct-the-complete-early-checkpoint">Reconstruct the complete early checkpoint</a><a href="#review-evidence-and-mastery">Review, evidence and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

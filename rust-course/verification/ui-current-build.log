@@ -1,0 +1,8 @@
+   Compiling gloo-timers v0.4.0
+   Compiling uuid v1.27.0
+   Compiling course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+   Compiling gloo-utils v0.3.0
+   Compiling gloo-net v0.7.0
+   Compiling operations-console v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.62s
+Built operations-console: /Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console/pkg. Serve with console-server.py --project /Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console

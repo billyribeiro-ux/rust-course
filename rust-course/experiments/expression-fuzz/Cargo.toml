@@ -1,0 +1,24 @@
+[package]
+name = "expression-fuzz"
+version = "0.1.0"
+publish = false
+edition = "2024"
+rust-version = "1.99"
+[package.metadata]
+cargo-fuzz = true
+[workspace]
+[dependencies]
+libfuzzer-sys = "=0.4.13"
+expression-language = { path = "../../projects/reference/p05-expressions" }
+[[bin]]
+name = "expression"
+path = "fuzz_targets/expression.rs"
+test = false
+doc = false
+bench = false
+[[bin]]
+name = "bad-oracle"
+path = "fuzz_targets/bad_oracle.rs"
+test = false
+doc = false
+bench = false

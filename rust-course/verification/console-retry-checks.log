@@ -1,0 +1,56 @@
+
+$ mise exec -- cargo test --locked --manifest-path projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p course-ui-model
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling serde_core v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling syn v3.0.6
+   Compiling serde_derive v1.0.229
+   Compiling serde v1.0.229
+   Compiling course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.12s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/course_ui_model-905f831849994fdd)
+
+running 7 tests
+test tests::retry_rejection_does_not_resolve_an_earlier_attempt ... ok
+test tests::uncertain_http_outcomes_remain_uncertain ... ok
+test tests::money_is_exact_integer_formatting_including_minimum ... ok
+test tests::empty_history_decodes_without_a_fabricated_cursor ... ok
+test tests::boundary_sequences_do_not_wrap ... ok
+test tests::replay_first_rejection_or_local_validation_does_not_hold_a_draft ... ok
+test tests::replay_retry_retains_identity_and_ticks_across_new_quotes_and_rejections ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests course_ui_model
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+$ mise exec -- cargo clippy --locked --manifest-path projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p course-ui-model --all-targets -- -D warnings
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Checking serde_core v1.0.229
+    Checking serde v1.0.229
+    Checking serde_json v1.0.151
+    Checking course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.34s
+
+$ mise exec -- cargo clippy --locked --manifest-path projects/ui-console/Cargo.toml --target wasm32-unknown-unknown --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/wasm -- -D warnings
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm
+    Checking course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+    Checking operations-console v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.01s
+
+$ python3 scripts/build-ui.py --wasm-bindgen /Users/billyribeiro/Desktop/rust-course/.course-cache/tools/wasm-bindgen-0.2.129-aarch64-apple-darwin/wasm-bindgen --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/wasm
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm
+   Compiling course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+   Compiling operations-console v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.86s
+Built operations-console: /Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console/pkg. Serve with console-server.py --project /Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console

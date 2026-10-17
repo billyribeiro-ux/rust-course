@@ -1,0 +1,5 @@
+$ python3 verification/svelte-http-audit.py --binary /Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native/debug/p16-workbench
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+Port4116 is already occupied or unavailable; no existing process was touched: [Errno 1] Operation not permitted
+
+exit=1

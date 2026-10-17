@@ -1,0 +1,11 @@
+$ cargo +1.99.1 update --manifest-path /Users/billyribeiro/Desktop/rust-course/Cargo.toml
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+    Updating crates.io index
+     Locking 6 packages to highest Rust 1.99 compatible versions
+    Updating libc v0.2.190 -> v0.2.191
+    Updating serde_json v1.0.151 -> v1.0.154
+    Updating smallvec v1.16.2 -> v1.16.3
+    Updating syn v3.0.6 -> v3.0.9
+    Updating tokio v1.53.2 -> v1.53.3
+    Updating unicode-ident v1.0.26 -> v1.0.27
+note: pass `--verbose` to see 1 unchanged dependencies behind latest

@@ -1,0 +1,412 @@
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/00-scaffold/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/learner_p09_chat-cc7438227a08958a)
+
+running 2 tests
+test tests::length_is_bytes ... ok
+test tests::control_characters_are_rejected ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat 01-framing --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/01-framing
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/01-framing
+A synchronous byte-stream codec accepts UTF-8 frames of1..1024 bytes without control characters; distinguishes clean EOF from truncated input; bounds allocation before reading payload. No TCP listener, Tokio task, broadcast, or shutdown behavior exists in this milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/01-framing/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/01-framing/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p09_chat_01_framing-cc11a037762938d5)
+
+running 3 tests
+test tests::clean_eof_differs_from_truncation ... ok
+test tests::fragmented_utf8_roundtrip ... ok
+test tests::reject_before_unbounded_allocation ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p09_chat_01_framing
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09-chat final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p09_chat-a9c2f44729b4a941)
+
+running 6 tests
+test tests::lag_is_visible ... ok
+test tests::truncated_body_fails ... ok
+test tests::oversized_rejected_before_body ... ok
+test tests::malformed_text_and_empty_frames_are_rejected ... ok
+test tests::fragmented_frame_and_utf8 ... ok
+test tests::loopback_and_shutdown ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p09_chat-e21e4a0c08686027)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p09_chat
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/00-scaffold/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/learner_p10_issues-86a481156fb6ea60)
+
+running 1 test
+test tests::invalid_title ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues 01-http-validation --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/01-http-validation
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/01-http-validation
+An in-process Axum service exposes POST /issues/validate; the writer fixture receives a normalized title, a reader receives403, unknown identity401, invalid title422, invalid JSON400, and oversized body413. Four admitted requests, a one-second deadline, and4096-byte bodies are bounded. Nothing is persisted and this endpoint never creates an issue.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/01-http-validation/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/01-http-validation/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p10_issues_01_http_validation-dafacf5af6e41b83)
+
+running 3 tests
+test tests::writer_normalizes_without_persistence ... ok
+test tests::permission_is_a_server_boundary ... ok
+test tests::expected_input_failure_is_explicit ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p10_issues_01_http_validation
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10-issues final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p10_issues-0fe9826c4b5e7367)
+
+running 1 test
+test tests::title_and_roles ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p10_issues-7c572867506caf6e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/postgres.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/postgres-472ac58eca00c125)
+
+running 1 test
+test postgres_authorization_transaction_pagination ... ignored, requires COURSE_TEST_DATABASE_URL pointing to a disposable course database
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/web_boundaries.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/web_boundaries-4bda024b08836b1f)
+
+running 6 tests
+test repeated_router_layers_wrap_in_reverse_request_order ... ok
+test an_origin_header_is_not_an_identity_or_authorization_check ... ok
+test no_cross_origin_preflight_permission_is_granted ... ok
+test ambient_cookie_and_spoofed_proxy_headers_do_not_identify_an_actor ... ok
+test recognized_reader_is_still_forbidden_to_mutate ... ok
+test extraction_can_reject_before_in_handler_identity_checks ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+   Doc-tests p10_issues
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/00-scaffold/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/learner_p14_scheduler-d58fc536b9a650cd)
+
+running 1 test
+test tests::cannot_skip_running ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler 01-lease-model --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/01-lease-model
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/01-lease-model
+An in-memory queue retains at most16 jobs,256-byte payloads, three claims per job, and ten logical ticks per lease. Exact enqueue retries have no new effect; conflicting payloads fail. Expiry permits redelivery and a newer token fences old completion. Cancellation revokes completion. No database, OS clock, background worker, or external effect is implemented.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/01-lease-model/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/01-lease-model/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p14_scheduler_01_lease_model-12d104dcd06bb3a2)
+
+running 4 tests
+test tests::cancellation_revokes_completion ... ok
+test tests::bad_clock_does_not_partially_claim ... ok
+test tests::expiry_redelivers_and_fences_old_worker ... ok
+test tests::retry_conflict_and_capacity ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p14_scheduler_01_lease_model
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14-scheduler final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p14_scheduler-219e53ab0ef33fa7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p14_scheduler-c681cd68fd228358)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/postgres.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/postgres-9bf481fab821c34b)
+
+running 1 test
+test crash_redelivery_fencing_dedup_cancellation ... ignored, requires isolated COURSE_SCHEDULER_TEST_DATABASE_URL
+
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p14_scheduler
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/00-scaffold/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/learner_p15_replication-efef6ee526fd11ba)
+
+running 1 test
+test tests::duplicate_is_idempotent ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication 01-append-transport --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/01-append-transport
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/01-append-transport
+A fixed leader proposes up to8 values and produces at most16 pending packets for two followers. A caller can take, delay, drop, or deliver packets. Duplicate delivery is idempotent; gaps, conflicts, and invalid follower indices fail. No acknowledgments, committed prefix, elections, process persistence, or consensus guarantee exists here.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/01-append-transport/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/01-append-transport/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p15_replication_01_append_transport-932b0c1c3f9593c9)
+
+running 3 tests
+test tests::duplicate_delivery_has_one_effect ... ok
+test tests::invalid_target_and_capacity_are_explicit ... ok
+test tests::delay_can_create_a_gap_without_corrupting_prefix ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p15_replication_01_append_transport
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15-replication final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p15_replication-62354a5113a8fa74)
+
+running 3 tests
+test tests::conflicting_append_cannot_replace_prefix ... ok
+test tests::partition_blocks_commit_until_heal ... ok
+test tests::duplicates_restarts_delay_and_loss ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p15_replication-09d3566f92fbc583)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p15_replication
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench 00-scaffold --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/00-scaffold
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/00-scaffold/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/learner_p16_workbench-635955ba8bd79406)
+
+running 1 test
+test tests::bounded_purchase ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench 01-order-domain --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/01-order-domain
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/01-order-domain
+A single synthetic symbol uses integer cents and whole shares. Quotes require increasing sequence numbers; orders retain stable logical IDs and an original accepted price. Purchases and sales use checked arithmetic, prohibit negative cash/shares, retain at most64 orders, and reject without partial state changes. No files, HTTP, watchlists, replay jobs, chart, or actual trading exists.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/01-order-domain/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/01-order-domain/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.00s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/checkpoint_p16_workbench_01_order_domain-d00325c1cdfe5663)
+
+running 4 tests
+test tests::rejection_has_no_partial_ledger_effect ... ok
+test tests::integer_purchase_and_sale_balance ... ok
+test tests::duplicate_preserves_original_fill_after_quote_changes ... ok
+test tests::admission_is_bounded_but_exact_retries_still_work ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests checkpoint_p16_workbench_01_order_domain
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16-workbench final --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/final
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit=0
+$ mise exec -- cargo test --offline --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/final/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running unittests src/lib.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p16_workbench-f0337d4858204175)
+
+running 19 tests
+test tests::duplicate_out_of_order_and_conflicts ... ok
+test tests::rejected_order_is_atomic ... ok
+test review_regressions::recent_orders_follow_acceptance_order_not_identifier_sort ... ok
+test replay::tests::history_memory_and_cursor_are_bounded ... ok
+test tests::buy_sell_conserves_cash_without_fees ... ok
+test storage_failure_tests::failed_append_does_not_change_memory_and_poison_rejects_later_work ... ok
+test replay::budget_tests::accepted_replay_reserves_capacity_against_later_live_ticks ... ok
+test http::commit_status_tests::write_failure_and_poison_report_uncertainty_not_validation ... ok
+test review_regressions::duplicate_durable_record_is_rejected_not_silently_counted ... ok
+test tests::restart_replays_and_truncated_tail_fails ... ok
+test replay::tests::legacy_migration_and_position_corruption ... ok
+test http::admission_tests::overload_rejects_before_domain_work ... ok
+test replay::tests::job_restart_atomic_cursor_duplicate_and_cancellation ... ok
+test http::tests::read_and_write_boundary ... ok
+test http::commit_status_tests::domain_rejection_is_definite_and_identity_conflict_is_distinct ... ok
+test http::admission_tests::slow_request_body_hits_deadline ... ok
+test replay::tests::completed_history_and_invalid_job_fail_deterministically ... ok
+test http::boundary_tests::replay_routes_reader_denial_history_and_cancellation ... ok
+test http::boundary_tests::worker_processes_and_joins_after_shutdown ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.12s
+
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/deps/p16_workbench-09bbc6cc823009eb)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p16_workbench
+
+running 1 test
+test src/lib.rs - Store (line 433) - compile fail ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09 01-framing --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/existing
+Refusing to overwrite /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/existing; choose a new --destination
+exit=1

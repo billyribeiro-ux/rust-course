@@ -1,0 +1,24 @@
+RUST WORKSHOP — INVESTIGATION RECORD
+Problem / expected behavior:
+Observed behavior (facts, not causes):
+Success criterion:
+Working directory and exact command:
+Inputs / fixture / event IDs:
+Versions and relevant configuration (no secrets):
+Minimal reproducer or preserved intermittent conditions:
+Boundary under investigation:
+Earliest diagnostic / causal evidence:
+Hypothesis A and predicted observation:
+Hypothesis B and predicted observation:
+Uncertainty list:
+Small distinguishing experiment:
+Prediction BEFORE running:
+Actual result:
+Which assumption was weakened or disproved:
+Smallest sound fix and preserved invariant:
+Original-case verification:
+Nearby edge cases / failure paths:
+Untested claims and limitations:
+Regression test / reusable prevention:
+Review request and specific question:
+Independent explanation in my own words:

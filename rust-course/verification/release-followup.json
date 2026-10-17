@@ -1,0 +1,288 @@
+{
+  "date": "2026-10-09",
+  "scope": "Author-side optimized-behavior and portable-checkpoint follow-up; no browser work",
+  "result": "passed",
+  "independent_review": "pending",
+  "global_course_status_changed": false,
+  "working_directory": "/Users/billyribeiro/Desktop/rust-course",
+  "toolchain": {
+    "rustc": "1.99.0",
+    "rustc_commit": "b940084d7eb6a299eb4bfeb8e34901bc051e7ac4",
+    "rustc_commit_date": "2026-09-28",
+    "cargo": "1.99.0 (5f94df478 2026-08-27)",
+    "host": "aarch64-apple-darwin",
+    "llvm": "23.1.1",
+    "manager": "mise"
+  },
+  "profile_inspection": {
+    "workspace_manifest": "projects/Cargo.toml",
+    "release_profile_override": false,
+    "found_cargo_config_files_in_outer_ancestors_or_home": [],
+    "relevant_profile_environment": {},
+    "existing_target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+    "note": "Cargo reports release [optimized]; no release debug-assertions/overflow-check override, RUSTFLAGS, CARGO_ENCODED_RUSTFLAGS, or matching CARGO_PROFILE_RELEASE_* override was present. No profiles or toolchain defaults were changed."
+  },
+  "source_review": [
+    {
+      "project": "p01-calculator",
+      "conclusion": "No correctness dependency on debug overflow checks or debug assertions found.",
+      "evidence": "Integer operators use checked_add/sub/mul/div; division zero and unit mismatches return errors. Length conversion checks finite input/result and nonzero-to-zero range loss, multiplying by a fixed unit ratio first. Runtime boundary/CLI tests passed optimized.",
+      "bounded_plain_arithmetic": "Unit ratios come from four fixed positive finite scales; workshop subtotal uses checked multiplication."
+    },
+    {
+      "project": "p05-expressions",
+      "conclusion": "All five arithmetic branches return explicit overflow errors in release.",
+      "evidence": "checked_neg/add/sub/mul/div, private AST, parser source/token/depth limits; new test asserts each operator byte span and nearby representable boundary.",
+      "bounded_plain_arithmetic": "Byte indices stay within 4096; token cursor within 512; precedence is 1 or 2; each depth/nesting increment is at most 65 before rejection, so usize/u8 overflow is unreachable through parsing."
+    },
+    {
+      "project": "p12-replay",
+      "conclusion": "Rejected overflow preserves the complete state in release.",
+      "evidence": "Checked sequence, accepted count and accumulated notional are calculated before state commits; new test injects each counter maximum and tests both a place and an existing-order cancellation. Existing accounting overflow test also passes.",
+      "bounded_plain_arithmetic": "Validated price <= 10^12 ticks and quantity <= 10^9 make individual u128 product <= 10^21. Fraction padding never exceeds 9999. Synthetic indices <= 10,000,000 bound ordinary arithmetic. Digest wrapping multiplication is an explicit hash choice, not domain arithmetic.",
+      "debug_assertions": "Only the benchmark executable and layout profiling example test cfg!(debug_assertions), to refuse timing in debug builds; no domain validation depends on it."
+    },
+    {
+      "project": "p13-unsafe",
+      "conclusion": "Safe API invariants survive the optimized tests; unsafe soundness is not established by these tests alone.",
+      "evidence": "Private initialized-prefix length remains <= N. push rejects full storage before increment; pop rejects empty storage before decrement; clear publishes empty before destructor calls. Seven release tests cover zero capacity, safe-baseline operation sequences, moves/drops, ZSTs, alignment, mutable access and one destructor panic.",
+      "bounded_plain_arithmetic": "len < N before increment guarantees representability even for a hypothetical maximum usize capacity. Test PRNG wrapping is intentional. No debug assertions enforce initialization or capacity."
+    }
+  ],
+  "changes": [
+    {
+      "path": "projects/reference/p05-expressions/src/lib.rs",
+      "kind": "test only",
+      "test": "every_arithmetic_overflow_reports_its_operator",
+      "gap_closed": "Subtraction, multiplication, negation and MIN/-1 overflow had no dedicated operator-span boundary coverage; also check nonoverflowing neighboring extrema."
+    },
+    {
+      "path": "projects/reference/p12-replay/src/lib.rs",
+      "kind": "test only",
+      "test": "injected_counter_overflow_preserves_complete_state",
+      "gap_closed": "Sequence and accepted-counter overflow branches lacked complete-state rejection coverage for place and cancel; injected states are clearly labeled."
+    }
+  ],
+  "checks": [
+    {
+      "name": "optimized all-target tests",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "workshop-calculator",
+        "-p",
+        "expression-language",
+        "-p",
+        "p12-replay",
+        "-p",
+        "p13-unsafe",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "log": "release-followup-tests.log",
+      "log_sha256": "1ea40f47f64e6da98878bf6bbc303a0beb6228b32016b8fa892bd1860f506b4d",
+      "passed_tests": 41,
+      "profile_evidence": [
+        "Finished `release` profile [optimized] target(s) in 0.45s"
+      ],
+      "shell_redirection": "> rust-course/verification/release-followup-tests.log 2>&1"
+    },
+    {
+      "name": "optimized doctests",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "workshop-calculator",
+        "-p",
+        "expression-language",
+        "-p",
+        "p12-replay",
+        "-p",
+        "p13-unsafe",
+        "--doc"
+      ],
+      "exit_code": 0,
+      "log": "release-followup-docs.log",
+      "log_sha256": "15b1e8914dbebd751d82552c50d5201640f2697029ed897333297176402d083a",
+      "passed_tests": 3,
+      "profile_evidence": [
+        "Finished `release` profile [optimized] target(s) in 0.01s"
+      ],
+      "shell_redirection": "> rust-course/verification/release-followup-docs.log 2>&1"
+    },
+    {
+      "name": "affected debug all-target tests",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "expression-language",
+        "-p",
+        "p12-replay",
+        "--all-targets"
+      ],
+      "exit_code": 0,
+      "log": "release-followup-debug.log",
+      "log_sha256": "11ae3de0e67fce3a555807871f099b38131e326e22c3f8883b2e909e6137d09c",
+      "passed_tests": 18,
+      "profile_evidence": [
+        "Finished `test` profile [unoptimized + debuginfo] target(s) in 0.83s"
+      ],
+      "shell_redirection": "> rust-course/verification/release-followup-debug.log 2>&1"
+    },
+    {
+      "name": "affected strict all-target Clippy",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "rust-course/projects/Cargo.toml",
+        "--target-dir",
+        ".course-cache/native",
+        "-p",
+        "expression-language",
+        "-p",
+        "p12-replay",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log": "release-followup-clippy.log",
+      "log_sha256": "a084ef1f864e07bb0678e54a1f5d7901c1ab9006870af828740bad03914907c5",
+      "passed_tests": 0,
+      "profile_evidence": [
+        "Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.45s"
+      ],
+      "shell_redirection": "> rust-course/verification/release-followup-clippy.log 2>&1"
+    }
+  ],
+  "reviewed_source_hashes": [
+    {
+      "path": "projects/reference/p01-calculator/examples/hello.rs",
+      "sha256": "5f9c2ac19aaaf7f518bcd719c9ddd74e1cbaddc41718bdfb66b76ea003473060"
+    },
+    {
+      "path": "projects/reference/p01-calculator/examples/roundoff.rs",
+      "sha256": "eac565091bd1bd57578f9ec9a9d1d2cd4414a5a30fb98f1f71dc10414f0c2689"
+    },
+    {
+      "path": "projects/reference/p01-calculator/examples/workshop_basics.rs",
+      "sha256": "ba2f97f922e850be495abfd6eb4f80f9f4d1a09d29501efa109ca86432009ef4"
+    },
+    {
+      "path": "projects/reference/p01-calculator/src/conversion.rs",
+      "sha256": "1ba2007bc7d5fb119220db3b777aea752f55ce078d010804abbd26ae8abcb1ff"
+    },
+    {
+      "path": "projects/reference/p01-calculator/src/lib.rs",
+      "sha256": "f79ed74a2fa6e0c52162f61dbaa45f9df4b919b90c9b748bd90b189cb832115a"
+    },
+    {
+      "path": "projects/reference/p01-calculator/src/main.rs",
+      "sha256": "7ec511d26d8dd508ab17012b6969739eeed2ef7626f47f818744082253c2d1e5"
+    },
+    {
+      "path": "projects/reference/p01-calculator/tests/cli.rs",
+      "sha256": "929e392218cac9342de224ed72ae111182e0aa09ca6b7c736322b8cb306b9cb1"
+    },
+    {
+      "path": "projects/reference/p05-expressions/src/lib.rs",
+      "sha256": "7d6ea105649223d111d83b632bd24231029eff494f6bfdb9ce9470ad45bdac15"
+    },
+    {
+      "path": "projects/reference/p05-expressions/src/main.rs",
+      "sha256": "1ded6a8bd1ec4f2e7c85678a29c39930a362b312dceab616d142194f9407c41d"
+    },
+    {
+      "path": "projects/reference/p05-expressions/tests/corpus.rs",
+      "sha256": "d007fd1d3fbe9caa179902f5bcaf14ab331f8de115b5e7cf8afc66efad6d1640"
+    },
+    {
+      "path": "projects/reference/p12-replay/examples/dispatch_allocation.rs",
+      "sha256": "cd4f7b73095f99c7b3a182a09ee7f3cae62032d54c505f4393527c4c923112da"
+    },
+    {
+      "path": "projects/reference/p12-replay/examples/layout_profile.rs",
+      "sha256": "11131b3ae4a5b109acb0f6213e9eab29f83f2679d3e7d643f7aa30f96c8ce6c3"
+    },
+    {
+      "path": "projects/reference/p12-replay/src/bin/benchmark.rs",
+      "sha256": "fa5ae599102aec6723aafae5a7a7996f653d8009cdbc614ae941125f3ee9d0a4"
+    },
+    {
+      "path": "projects/reference/p12-replay/src/lib.rs",
+      "sha256": "152c26eac2c3578e85510d174bf6e18f59d499f94246039de4d98cbb921b277c"
+    },
+    {
+      "path": "projects/reference/p12-replay/src/main.rs",
+      "sha256": "518c107925d6ad0bec06634ddc3f152f7b4f49d903dd77b483ccad6ad8467006"
+    },
+    {
+      "path": "projects/reference/p13-unsafe/src/lib.rs",
+      "sha256": "20ed4f3c55d798d7da29edce0174ca55c0187ca02a4a992ed043addd6196b502"
+    },
+    {
+      "path": "projects/reference/p13-unsafe/src/main.rs",
+      "sha256": "88acfcd58c81b200cf27f992842c0f32bdca1b78708293ef9ffc3c025116d62b"
+    }
+  ],
+  "portability": {
+    "result": "passed",
+    "report": "release-followup-checkpoints.json",
+    "log": "release-followup-checkpoints.log",
+    "reproducer": "release-followup-checkpoints.py",
+    "archive_sha256": "6365e960ae7077affceadc8881b2ecd3b24643a11f859e8bc2a18c8f574631df",
+    "archive_members": 656,
+    "lessons": 57,
+    "checkpoint_projects": 16,
+    "checkpoints": 37,
+    "full_dependency_resolution": "37 fresh standalone copies passed cargo metadata --offline --locked; local package manifests remained inside each copy; canonical lock bytes unchanged; all external versions/checksums were subsets of the corresponding reference lock.",
+    "p11_lock_rule": "P11 copies the Cargo.lock already present in its source instead of naming a separate manifest lockfile field. Both UI checkpoint graphs passed.",
+    "retained_source_metadata_bytes": 10252776,
+    "build_output_duplicated": false,
+    "archive_note": "Snapshot predates the two test additions and this evidence. Root must package final source after integrating final evidence; manifest/lock compatibility was verified on the identified exact snapshot."
+  },
+  "limitations": [
+    "This is author-side verification, not independent acceptance or a measure of learner competence.",
+    "Finite test cases and code review do not prove all arithmetic/resource cases; P13 release tests supplement prior Miri evidence and its explicit safety reasoning, not replace them.",
+    "Counter maxima are injected privately in tests because executing 2^64 events is not feasible; accepted-count overflow is a defensive branch unreachable under the normal counter relation.",
+    "Default unwind behavior was tested, including one destructor panic; panic=abort and simultaneous destructor panics were not exercised.",
+    "Metadata validates graph resolution and path containment, not compilation of every reconstructed copy in this run; prior checkpoint compilation evidence remains separate.",
+    "No browser access or rendering verification occurred.",
+    "The shared native cache was reused. Source and raw metadata audit copies remain in the reported outer cache, not in the portable course."
+  ]
+}

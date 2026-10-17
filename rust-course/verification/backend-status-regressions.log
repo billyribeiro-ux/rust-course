@@ -1,0 +1,6 @@
+Verification2026-10-09. Explicit shared target /Users/billyribeiro/Desktop/rust-course/.course-cache/native.
+Command: mise exec -- cargo test --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p16-workbench
+Result:19 unit tests passed,0failed;1compile-fail documentation test passed. New tests domain_rejection_is_definite_and_identity_conflict_is_distinct and write_failure_and_poison_report_uncertainty_not_validation passed.
+Contract:422 only definite pre-append domain rejection;409 logical identity conflict;503 storage failure/poison/any post-append inconsistency. Existing body/authorization/admission status rules remain.
+Command: mise exec -- cargo clippy --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p16-workbench --all-targets -- -D warnings
+Result: passed,exit0,dev profile3.29s.

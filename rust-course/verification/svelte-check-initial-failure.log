@@ -1,0 +1,29 @@
+npm notice run rust-course-svelte-bridge@0.1.0 check
+npm notice run svelte-check --fail-on-warnings
+Loading svelte-check in workspace: /Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge
+Getting Svelte diagnostics...
+
+/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/src/client.js:23:37
+Error: Object literal may only specify known properties, and 'numberParser' does not exist in type 'ParseOptions | NumberParser'. 
+export function decodeSnapshot(text) {
+  const value = parse(text, null, { numberParser: (number) => {
+    if (!/^-?\d+$/.test(number) || number.length > 21) throw new Error('Expected bounded integer JSON');
+
+/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/src/client.js:23:52
+Error: Parameter 'number' implicitly has an 'any' type. 
+export function decodeSnapshot(text) {
+  const value = parse(text, null, { numberParser: (number) => {
+    if (!/^-?\d+$/.test(number) || number.length > 21) throw new Error('Expected bounded integer JSON');
+
+/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/src/App.svelte:14:45
+Error: Property 'quotes' does not exist on type 'never'. (js)
+  let disposed = false;
+  const visibleQuotes = $derived((snapshot?.quotes ?? []).filter(quote => quote.symbol.includes(filter.trim().toUpperCase())));
+
+/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge/src/App.svelte:14:66
+Error: Parameter 'quote' implicitly has an 'any' type. (js)
+  let disposed = false;
+  const visibleQuotes = $derived((snapshot?.quotes ?? []).filter(quote => quote.symbol.includes(filter.trim().toUpperCase())));
+
+====================================
+svelte-check found 4 errors and 0 warnings in 2 files

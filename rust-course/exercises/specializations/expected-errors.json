@@ -1,0 +1,1 @@
+[{"id":"orphan","file":"orphan.rs","expected_codes":["E0117"],"lesson":"07-traits"},{"id":"dyn","file":"dyn.rs","expected_codes":["E0038"],"lesson":"07-traits"}]

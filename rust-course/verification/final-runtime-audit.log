@@ -1,0 +1,13 @@
+$ python3 verification/final-runtime-audit.py --binary /Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/p16-workbench
+PASS identity and definite input rejection before mutation
+PASS tick identity conflict and out-of-order rejection
+PASS orders duplicate retry conflict ledger and exact lookup
+PASS watchlist and bounded historical page/body contracts
+PASS sixteen incomplete bodies trigger overload429 without domain mutation
+PASS real five-second slow-body deadline
+PASS persistent replay identity and cancellation boundary
+PASS abrupt owned-process restart replays orders and resumes job cursor
+PASS legacy v1 journal reads append v2 position3 and restart
+PASS corrupt record position fails startup without silent repair
+PASS retained replay job budget rejects seventeenth job
+{"overall": "passed", "passed_checks": 11, "http_requests": 252, "output": "/Users/billyribeiro/Desktop/rust-course/rust-course/verification/final-runtime-audit.json"}

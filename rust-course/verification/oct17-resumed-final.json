@@ -1,0 +1,211 @@
+{
+  "date": "2026-10-17T11:54:38.209380+00:00",
+  "as_of": "2026-10-17",
+  "passed": true,
+  "scope": "All previously blocked fuzz and optional Svelte checks passed after the runtime update and approved network/loopback retries. This flag covers the listed checks, not every course verification gate.",
+  "checks": [
+    {
+      "name": "rust-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.08,
+      "log": "oct17-resumed-rust-version.log"
+    },
+    {
+      "name": "node-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.08,
+      "log": "oct17-resumed-node-version.log"
+    },
+    {
+      "name": "fuzz-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "fuzz",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.08,
+      "log": "oct17-resumed-fuzz-version.log"
+    },
+    {
+      "name": "nightly-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustup",
+        "run",
+        "nightly-2026-10-17",
+        "rustc",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.07,
+      "log": "oct17-resumed-nightly-version.log"
+    },
+    {
+      "name": "fuzz",
+      "command": [
+        "python3",
+        "scripts/fuzz-expression.py",
+        "--cache-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 5.07,
+      "log": "oct17-resumed-fuzz.log"
+    },
+    {
+      "name": "svelte-tests",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "npm",
+        "test"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.56,
+      "log": "oct17-resumed-svelte-tests.log"
+    },
+    {
+      "name": "svelte-check",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "npm",
+        "run",
+        "check"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.95,
+      "log": "oct17-resumed-svelte-check.log"
+    },
+    {
+      "name": "svelte-build",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "npm",
+        "run",
+        "build"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.51,
+      "log": "oct17-resumed-svelte-build.log"
+    },
+    {
+      "name": "svelte-audit",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "npm",
+        "audit",
+        "--json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "evidence": "oct17-resumed-svelte-audit-retry.json",
+      "note": "Passed after approved retry outside the sandbox; original blocked attempt is retained in oct17-resumed-checks.json."
+    },
+    {
+      "name": "svelte-http",
+      "command": [
+        "python3",
+        "verification/svelte-http-audit.py",
+        "--binary",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native/debug/p16-workbench"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "evidence": "oct17-resumed-svelte-http.json",
+      "note": "Passed after approved retry outside the sandbox; original blocked attempt is retained in oct17-resumed-checks.json."
+    },
+    {
+      "name": "svelte-autofixer",
+      "passed": true,
+      "evidence": "oct17-resumed-svelte-autofixer.json",
+      "tool": "Official Svelte MCP svelte_autofixer"
+    },
+    {
+      "name": "fuzz-bad-oracle",
+      "passed": true,
+      "evidence": "oct17-resumed-fuzz-bad-oracle.json",
+      "expected_failure": true
+    }
+  ],
+  "counts": {
+    "fuzz_inputs": 10000,
+    "Svelte_tests": 9,
+    "Svelte_compiler_errors": 0,
+    "Svelte_compiler_warnings": 0,
+    "npm_known_vulnerabilities": 0,
+    "HTTP_groups": 8,
+    "HTTP_requests": 52
+  },
+  "remaining": [
+    {
+      "scope": "Managed WASM CLI",
+      "status": "blocked",
+      "detail": "Rust 1.99.1 and Node 26.12.0 now resolve successfully. wasm-bindgen-cli is still absent from the mise inventory and mise exec -- wasm-bindgen --version fails before execution. Existing October 17 WASM compilation and Clippy evidence remains valid; a fresh managed binding-generation run cannot be reproduced yet.",
+      "owner_command": "mise-root use -g cargo:wasm-bindgen-cli@0.2.129",
+      "evidence": "oct17-resumed-environment.json"
+    },
+    {
+      "scope": "Progress file import and invalid-file rejection in Chrome",
+      "status": "blocked",
+      "detail": "Retried the synthetic export fixture on isolated origin http://127.0.0.1:8767. The extension still requires Allow access to file URLs; no permission was changed or bypassed.",
+      "evidence": "oct17-browser.json"
+    },
+    {
+      "scope": "Independent acceptance",
+      "status": "pending",
+      "detail": "Author review and executable checks do not establish independent acceptance or learner competence."
+    }
+  ],
+  "all_requested_verification_complete": false,
+  "source_fingerprints": {
+    "experiments/svelte-bridge/src/App.svelte": "9a53ea2797df1f39907426d910e9d59017aecd57c60c1139d142f1791015194d",
+    "experiments/svelte-bridge/package.json": "1f963e1da4dca01532fd90a892203db26d2a928feea9ea26c3a9ca28b064f8a6",
+    "experiments/svelte-bridge/package-lock.json": "a86c848acb078145121766f346ca14e74376f1dad6583f84e9bf6e210f9b635b",
+    "experiments/expression-fuzz/Cargo.lock": "4e646806f687df4982d0245e56c024c848717574cb507b5044f853a1ffe9c8d1",
+    "scripts/fuzz-expression.py": "d05d40e69116c1e862a4b14f11707d813d48f784d139f9acf9b87794ec1af8b2"
+  },
+  "environment": "No machine-wide tool installation, update or configuration change was performed during this continuation."
+}

@@ -1,0 +1,4083 @@
+{
+  "started_utc": "2026-10-09T18:06:15.063873+00:00",
+  "finished_utc": "2026-10-09T18:06:27.618647+00:00",
+  "command": [
+    "python3",
+    "/Users/billyribeiro/Desktop/rust-course/rust-course/verification/final-runtime-audit.py",
+    "--binary",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/debug/p16-workbench",
+    "--output",
+    "/Users/billyribeiro/Desktop/rust-course/rust-course/verification/final-runtime-audit.json"
+  ],
+  "binary_sha256": "f7550aabd485461b37cb383d6404879554d7eabda69a1761837563e34c5440e0",
+  "overall": "passed",
+  "checks": [
+    {
+      "check": "identity and definite input rejection before mutation",
+      "result": "passed"
+    },
+    {
+      "check": "tick identity conflict and out-of-order rejection",
+      "result": "passed"
+    },
+    {
+      "check": "orders duplicate retry conflict ledger and exact lookup",
+      "result": "passed",
+      "cash_cents": 999875,
+      "holdings": 1
+    },
+    {
+      "check": "watchlist and bounded historical page/body contracts",
+      "result": "passed"
+    },
+    {
+      "check": "sixteen incomplete bodies trigger overload429 without domain mutation",
+      "result": "passed"
+    },
+    {
+      "check": "real five-second slow-body deadline",
+      "result": "passed",
+      "elapsed_seconds": 5.001642749994062
+    },
+    {
+      "check": "persistent replay identity and cancellation boundary",
+      "result": "passed",
+      "committed_before_cancel": 1
+    },
+    {
+      "check": "abrupt owned-process restart replays orders and resumes job cursor",
+      "result": "passed",
+      "observed_before_restart": 2,
+      "completed_after_restart": 64
+    },
+    {
+      "check": "legacy v1 journal reads append v2 position3 and restart",
+      "result": "passed"
+    },
+    {
+      "check": "corrupt record position fails startup without silent repair",
+      "result": "passed",
+      "exit_code": 1
+    },
+    {
+      "check": "retained replay job budget rejects seventeenth job",
+      "result": "passed"
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 401,
+      "expected": 401,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 403,
+      "expected": 403,
+      "body": {
+        "order_id": "reader-denied",
+        "symbol": "RUST",
+        "side": "buy",
+        "quantity": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 422,
+      "expected": 422,
+      "body": {
+        "order_id": "missing-quote",
+        "symbol": "RUST",
+        "side": "buy",
+        "quantity": 1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "event_id": "tick-1",
+        "symbol": "RUST",
+        "price_cents": 125,
+        "sequence": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "event_id": "tick-1",
+        "symbol": "RUST",
+        "price_cents": 125,
+        "sequence": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 409,
+      "expected": 409,
+      "body": {
+        "event_id": "tick-1",
+        "symbol": "RUST",
+        "price_cents": 126,
+        "sequence": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/ticks",
+      "status": 422,
+      "expected": 422,
+      "body": {
+        "event_id": "older",
+        "symbol": "RUST",
+        "price_cents": 123,
+        "sequence": 0
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "order_id": "buy-1",
+        "symbol": "RUST",
+        "side": "buy",
+        "quantity": 3
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "order_id": "buy-1",
+        "symbol": "RUST",
+        "side": "buy",
+        "quantity": 3
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 409,
+      "expected": 409,
+      "body": {
+        "order_id": "buy-1",
+        "symbol": "RUST",
+        "side": "buy",
+        "quantity": 4
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 422,
+      "expected": 422,
+      "body": {
+        "order_id": "oversell",
+        "symbol": "RUST",
+        "side": "sell",
+        "quantity": 4
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "order_id": "sell-1",
+        "symbol": "RUST",
+        "side": "sell",
+        "quantity": 2
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders/buy-1",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders/absent",
+      "status": 404,
+      "expected": 404,
+      "body": null
+    },
+    {
+      "method": "PUT",
+      "path": "/api/watchlist",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "symbols": [
+          "RUST",
+          "LAB"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "PUT",
+      "path": "/api/watchlist",
+      "status": 422,
+      "expected": 422,
+      "body": {
+        "symbols": [
+          "RUST",
+          "RUST"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/history?after=0&limit=1",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/history?after=1&limit=1",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/history?limit=257",
+      "status": 400,
+      "expected": 400,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status": 413,
+      "expected": 413,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 429,
+      "expected": 429,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "cancel-job",
+        "ticks": [
+          {
+            "event_id": "cancel-job-1",
+            "symbol": "LAB",
+            "price_cents": 101,
+            "sequence": 1
+          },
+          {
+            "event_id": "cancel-job-2",
+            "symbol": "LAB",
+            "price_cents": 102,
+            "sequence": 2
+          },
+          {
+            "event_id": "cancel-job-3",
+            "symbol": "LAB",
+            "price_cents": 103,
+            "sequence": 3
+          },
+          {
+            "event_id": "cancel-job-4",
+            "symbol": "LAB",
+            "price_cents": 104,
+            "sequence": 4
+          },
+          {
+            "event_id": "cancel-job-5",
+            "symbol": "LAB",
+            "price_cents": 105,
+            "sequence": 5
+          },
+          {
+            "event_id": "cancel-job-6",
+            "symbol": "LAB",
+            "price_cents": 106,
+            "sequence": 6
+          },
+          {
+            "event_id": "cancel-job-7",
+            "symbol": "LAB",
+            "price_cents": 107,
+            "sequence": 7
+          },
+          {
+            "event_id": "cancel-job-8",
+            "symbol": "LAB",
+            "price_cents": 108,
+            "sequence": 8
+          },
+          {
+            "event_id": "cancel-job-9",
+            "symbol": "LAB",
+            "price_cents": 109,
+            "sequence": 9
+          },
+          {
+            "event_id": "cancel-job-10",
+            "symbol": "LAB",
+            "price_cents": 110,
+            "sequence": 10
+          },
+          {
+            "event_id": "cancel-job-11",
+            "symbol": "LAB",
+            "price_cents": 111,
+            "sequence": 11
+          },
+          {
+            "event_id": "cancel-job-12",
+            "symbol": "LAB",
+            "price_cents": 112,
+            "sequence": 12
+          },
+          {
+            "event_id": "cancel-job-13",
+            "symbol": "LAB",
+            "price_cents": 113,
+            "sequence": 13
+          },
+          {
+            "event_id": "cancel-job-14",
+            "symbol": "LAB",
+            "price_cents": 114,
+            "sequence": 14
+          },
+          {
+            "event_id": "cancel-job-15",
+            "symbol": "LAB",
+            "price_cents": 115,
+            "sequence": 15
+          },
+          {
+            "event_id": "cancel-job-16",
+            "symbol": "LAB",
+            "price_cents": 116,
+            "sequence": 16
+          },
+          {
+            "event_id": "cancel-job-17",
+            "symbol": "LAB",
+            "price_cents": 117,
+            "sequence": 17
+          },
+          {
+            "event_id": "cancel-job-18",
+            "symbol": "LAB",
+            "price_cents": 118,
+            "sequence": 18
+          },
+          {
+            "event_id": "cancel-job-19",
+            "symbol": "LAB",
+            "price_cents": 119,
+            "sequence": 19
+          },
+          {
+            "event_id": "cancel-job-20",
+            "symbol": "LAB",
+            "price_cents": 120,
+            "sequence": 20
+          },
+          {
+            "event_id": "cancel-job-21",
+            "symbol": "LAB",
+            "price_cents": 121,
+            "sequence": 21
+          },
+          {
+            "event_id": "cancel-job-22",
+            "symbol": "LAB",
+            "price_cents": 122,
+            "sequence": 22
+          },
+          {
+            "event_id": "cancel-job-23",
+            "symbol": "LAB",
+            "price_cents": 123,
+            "sequence": 23
+          },
+          {
+            "event_id": "cancel-job-24",
+            "symbol": "LAB",
+            "price_cents": 124,
+            "sequence": 24
+          },
+          {
+            "event_id": "cancel-job-25",
+            "symbol": "LAB",
+            "price_cents": 125,
+            "sequence": 25
+          },
+          {
+            "event_id": "cancel-job-26",
+            "symbol": "LAB",
+            "price_cents": 126,
+            "sequence": 26
+          },
+          {
+            "event_id": "cancel-job-27",
+            "symbol": "LAB",
+            "price_cents": 127,
+            "sequence": 27
+          },
+          {
+            "event_id": "cancel-job-28",
+            "symbol": "LAB",
+            "price_cents": 128,
+            "sequence": 28
+          },
+          {
+            "event_id": "cancel-job-29",
+            "symbol": "LAB",
+            "price_cents": 129,
+            "sequence": 29
+          },
+          {
+            "event_id": "cancel-job-30",
+            "symbol": "LAB",
+            "price_cents": 130,
+            "sequence": 30
+          },
+          {
+            "event_id": "cancel-job-31",
+            "symbol": "LAB",
+            "price_cents": 131,
+            "sequence": 31
+          },
+          {
+            "event_id": "cancel-job-32",
+            "symbol": "LAB",
+            "price_cents": 132,
+            "sequence": 32
+          },
+          {
+            "event_id": "cancel-job-33",
+            "symbol": "LAB",
+            "price_cents": 133,
+            "sequence": 33
+          },
+          {
+            "event_id": "cancel-job-34",
+            "symbol": "LAB",
+            "price_cents": 134,
+            "sequence": 34
+          },
+          {
+            "event_id": "cancel-job-35",
+            "symbol": "LAB",
+            "price_cents": 135,
+            "sequence": 35
+          },
+          {
+            "event_id": "cancel-job-36",
+            "symbol": "LAB",
+            "price_cents": 136,
+            "sequence": 36
+          },
+          {
+            "event_id": "cancel-job-37",
+            "symbol": "LAB",
+            "price_cents": 137,
+            "sequence": 37
+          },
+          {
+            "event_id": "cancel-job-38",
+            "symbol": "LAB",
+            "price_cents": 138,
+            "sequence": 38
+          },
+          {
+            "event_id": "cancel-job-39",
+            "symbol": "LAB",
+            "price_cents": 139,
+            "sequence": 39
+          },
+          {
+            "event_id": "cancel-job-40",
+            "symbol": "LAB",
+            "price_cents": 140,
+            "sequence": 40
+          },
+          {
+            "event_id": "cancel-job-41",
+            "symbol": "LAB",
+            "price_cents": 141,
+            "sequence": 41
+          },
+          {
+            "event_id": "cancel-job-42",
+            "symbol": "LAB",
+            "price_cents": 142,
+            "sequence": 42
+          },
+          {
+            "event_id": "cancel-job-43",
+            "symbol": "LAB",
+            "price_cents": 143,
+            "sequence": 43
+          },
+          {
+            "event_id": "cancel-job-44",
+            "symbol": "LAB",
+            "price_cents": 144,
+            "sequence": 44
+          },
+          {
+            "event_id": "cancel-job-45",
+            "symbol": "LAB",
+            "price_cents": 145,
+            "sequence": 45
+          },
+          {
+            "event_id": "cancel-job-46",
+            "symbol": "LAB",
+            "price_cents": 146,
+            "sequence": 46
+          },
+          {
+            "event_id": "cancel-job-47",
+            "symbol": "LAB",
+            "price_cents": 147,
+            "sequence": 47
+          },
+          {
+            "event_id": "cancel-job-48",
+            "symbol": "LAB",
+            "price_cents": 148,
+            "sequence": 48
+          },
+          {
+            "event_id": "cancel-job-49",
+            "symbol": "LAB",
+            "price_cents": 149,
+            "sequence": 49
+          },
+          {
+            "event_id": "cancel-job-50",
+            "symbol": "LAB",
+            "price_cents": 150,
+            "sequence": 50
+          },
+          {
+            "event_id": "cancel-job-51",
+            "symbol": "LAB",
+            "price_cents": 151,
+            "sequence": 51
+          },
+          {
+            "event_id": "cancel-job-52",
+            "symbol": "LAB",
+            "price_cents": 152,
+            "sequence": 52
+          },
+          {
+            "event_id": "cancel-job-53",
+            "symbol": "LAB",
+            "price_cents": 153,
+            "sequence": 53
+          },
+          {
+            "event_id": "cancel-job-54",
+            "symbol": "LAB",
+            "price_cents": 154,
+            "sequence": 54
+          },
+          {
+            "event_id": "cancel-job-55",
+            "symbol": "LAB",
+            "price_cents": 155,
+            "sequence": 55
+          },
+          {
+            "event_id": "cancel-job-56",
+            "symbol": "LAB",
+            "price_cents": 156,
+            "sequence": 56
+          },
+          {
+            "event_id": "cancel-job-57",
+            "symbol": "LAB",
+            "price_cents": 157,
+            "sequence": 57
+          },
+          {
+            "event_id": "cancel-job-58",
+            "symbol": "LAB",
+            "price_cents": 158,
+            "sequence": 58
+          },
+          {
+            "event_id": "cancel-job-59",
+            "symbol": "LAB",
+            "price_cents": 159,
+            "sequence": 59
+          },
+          {
+            "event_id": "cancel-job-60",
+            "symbol": "LAB",
+            "price_cents": 160,
+            "sequence": 60
+          },
+          {
+            "event_id": "cancel-job-61",
+            "symbol": "LAB",
+            "price_cents": 161,
+            "sequence": 61
+          },
+          {
+            "event_id": "cancel-job-62",
+            "symbol": "LAB",
+            "price_cents": 162,
+            "sequence": 62
+          },
+          {
+            "event_id": "cancel-job-63",
+            "symbol": "LAB",
+            "price_cents": 163,
+            "sequence": 63
+          },
+          {
+            "event_id": "cancel-job-64",
+            "symbol": "LAB",
+            "price_cents": 164,
+            "sequence": 64
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "cancel-job",
+        "ticks": [
+          {
+            "event_id": "cancel-job-1",
+            "symbol": "LAB",
+            "price_cents": 101,
+            "sequence": 1
+          },
+          {
+            "event_id": "cancel-job-2",
+            "symbol": "LAB",
+            "price_cents": 102,
+            "sequence": 2
+          },
+          {
+            "event_id": "cancel-job-3",
+            "symbol": "LAB",
+            "price_cents": 103,
+            "sequence": 3
+          },
+          {
+            "event_id": "cancel-job-4",
+            "symbol": "LAB",
+            "price_cents": 104,
+            "sequence": 4
+          },
+          {
+            "event_id": "cancel-job-5",
+            "symbol": "LAB",
+            "price_cents": 105,
+            "sequence": 5
+          },
+          {
+            "event_id": "cancel-job-6",
+            "symbol": "LAB",
+            "price_cents": 106,
+            "sequence": 6
+          },
+          {
+            "event_id": "cancel-job-7",
+            "symbol": "LAB",
+            "price_cents": 107,
+            "sequence": 7
+          },
+          {
+            "event_id": "cancel-job-8",
+            "symbol": "LAB",
+            "price_cents": 108,
+            "sequence": 8
+          },
+          {
+            "event_id": "cancel-job-9",
+            "symbol": "LAB",
+            "price_cents": 109,
+            "sequence": 9
+          },
+          {
+            "event_id": "cancel-job-10",
+            "symbol": "LAB",
+            "price_cents": 110,
+            "sequence": 10
+          },
+          {
+            "event_id": "cancel-job-11",
+            "symbol": "LAB",
+            "price_cents": 111,
+            "sequence": 11
+          },
+          {
+            "event_id": "cancel-job-12",
+            "symbol": "LAB",
+            "price_cents": 112,
+            "sequence": 12
+          },
+          {
+            "event_id": "cancel-job-13",
+            "symbol": "LAB",
+            "price_cents": 113,
+            "sequence": 13
+          },
+          {
+            "event_id": "cancel-job-14",
+            "symbol": "LAB",
+            "price_cents": 114,
+            "sequence": 14
+          },
+          {
+            "event_id": "cancel-job-15",
+            "symbol": "LAB",
+            "price_cents": 115,
+            "sequence": 15
+          },
+          {
+            "event_id": "cancel-job-16",
+            "symbol": "LAB",
+            "price_cents": 116,
+            "sequence": 16
+          },
+          {
+            "event_id": "cancel-job-17",
+            "symbol": "LAB",
+            "price_cents": 117,
+            "sequence": 17
+          },
+          {
+            "event_id": "cancel-job-18",
+            "symbol": "LAB",
+            "price_cents": 118,
+            "sequence": 18
+          },
+          {
+            "event_id": "cancel-job-19",
+            "symbol": "LAB",
+            "price_cents": 119,
+            "sequence": 19
+          },
+          {
+            "event_id": "cancel-job-20",
+            "symbol": "LAB",
+            "price_cents": 120,
+            "sequence": 20
+          },
+          {
+            "event_id": "cancel-job-21",
+            "symbol": "LAB",
+            "price_cents": 121,
+            "sequence": 21
+          },
+          {
+            "event_id": "cancel-job-22",
+            "symbol": "LAB",
+            "price_cents": 122,
+            "sequence": 22
+          },
+          {
+            "event_id": "cancel-job-23",
+            "symbol": "LAB",
+            "price_cents": 123,
+            "sequence": 23
+          },
+          {
+            "event_id": "cancel-job-24",
+            "symbol": "LAB",
+            "price_cents": 124,
+            "sequence": 24
+          },
+          {
+            "event_id": "cancel-job-25",
+            "symbol": "LAB",
+            "price_cents": 125,
+            "sequence": 25
+          },
+          {
+            "event_id": "cancel-job-26",
+            "symbol": "LAB",
+            "price_cents": 126,
+            "sequence": 26
+          },
+          {
+            "event_id": "cancel-job-27",
+            "symbol": "LAB",
+            "price_cents": 127,
+            "sequence": 27
+          },
+          {
+            "event_id": "cancel-job-28",
+            "symbol": "LAB",
+            "price_cents": 128,
+            "sequence": 28
+          },
+          {
+            "event_id": "cancel-job-29",
+            "symbol": "LAB",
+            "price_cents": 129,
+            "sequence": 29
+          },
+          {
+            "event_id": "cancel-job-30",
+            "symbol": "LAB",
+            "price_cents": 130,
+            "sequence": 30
+          },
+          {
+            "event_id": "cancel-job-31",
+            "symbol": "LAB",
+            "price_cents": 131,
+            "sequence": 31
+          },
+          {
+            "event_id": "cancel-job-32",
+            "symbol": "LAB",
+            "price_cents": 132,
+            "sequence": 32
+          },
+          {
+            "event_id": "cancel-job-33",
+            "symbol": "LAB",
+            "price_cents": 133,
+            "sequence": 33
+          },
+          {
+            "event_id": "cancel-job-34",
+            "symbol": "LAB",
+            "price_cents": 134,
+            "sequence": 34
+          },
+          {
+            "event_id": "cancel-job-35",
+            "symbol": "LAB",
+            "price_cents": 135,
+            "sequence": 35
+          },
+          {
+            "event_id": "cancel-job-36",
+            "symbol": "LAB",
+            "price_cents": 136,
+            "sequence": 36
+          },
+          {
+            "event_id": "cancel-job-37",
+            "symbol": "LAB",
+            "price_cents": 137,
+            "sequence": 37
+          },
+          {
+            "event_id": "cancel-job-38",
+            "symbol": "LAB",
+            "price_cents": 138,
+            "sequence": 38
+          },
+          {
+            "event_id": "cancel-job-39",
+            "symbol": "LAB",
+            "price_cents": 139,
+            "sequence": 39
+          },
+          {
+            "event_id": "cancel-job-40",
+            "symbol": "LAB",
+            "price_cents": 140,
+            "sequence": 40
+          },
+          {
+            "event_id": "cancel-job-41",
+            "symbol": "LAB",
+            "price_cents": 141,
+            "sequence": 41
+          },
+          {
+            "event_id": "cancel-job-42",
+            "symbol": "LAB",
+            "price_cents": 142,
+            "sequence": 42
+          },
+          {
+            "event_id": "cancel-job-43",
+            "symbol": "LAB",
+            "price_cents": 143,
+            "sequence": 43
+          },
+          {
+            "event_id": "cancel-job-44",
+            "symbol": "LAB",
+            "price_cents": 144,
+            "sequence": 44
+          },
+          {
+            "event_id": "cancel-job-45",
+            "symbol": "LAB",
+            "price_cents": 145,
+            "sequence": 45
+          },
+          {
+            "event_id": "cancel-job-46",
+            "symbol": "LAB",
+            "price_cents": 146,
+            "sequence": 46
+          },
+          {
+            "event_id": "cancel-job-47",
+            "symbol": "LAB",
+            "price_cents": 147,
+            "sequence": 47
+          },
+          {
+            "event_id": "cancel-job-48",
+            "symbol": "LAB",
+            "price_cents": 148,
+            "sequence": 48
+          },
+          {
+            "event_id": "cancel-job-49",
+            "symbol": "LAB",
+            "price_cents": 149,
+            "sequence": 49
+          },
+          {
+            "event_id": "cancel-job-50",
+            "symbol": "LAB",
+            "price_cents": 150,
+            "sequence": 50
+          },
+          {
+            "event_id": "cancel-job-51",
+            "symbol": "LAB",
+            "price_cents": 151,
+            "sequence": 51
+          },
+          {
+            "event_id": "cancel-job-52",
+            "symbol": "LAB",
+            "price_cents": 152,
+            "sequence": 52
+          },
+          {
+            "event_id": "cancel-job-53",
+            "symbol": "LAB",
+            "price_cents": 153,
+            "sequence": 53
+          },
+          {
+            "event_id": "cancel-job-54",
+            "symbol": "LAB",
+            "price_cents": 154,
+            "sequence": 54
+          },
+          {
+            "event_id": "cancel-job-55",
+            "symbol": "LAB",
+            "price_cents": 155,
+            "sequence": 55
+          },
+          {
+            "event_id": "cancel-job-56",
+            "symbol": "LAB",
+            "price_cents": 156,
+            "sequence": 56
+          },
+          {
+            "event_id": "cancel-job-57",
+            "symbol": "LAB",
+            "price_cents": 157,
+            "sequence": 57
+          },
+          {
+            "event_id": "cancel-job-58",
+            "symbol": "LAB",
+            "price_cents": 158,
+            "sequence": 58
+          },
+          {
+            "event_id": "cancel-job-59",
+            "symbol": "LAB",
+            "price_cents": 159,
+            "sequence": 59
+          },
+          {
+            "event_id": "cancel-job-60",
+            "symbol": "LAB",
+            "price_cents": 160,
+            "sequence": 60
+          },
+          {
+            "event_id": "cancel-job-61",
+            "symbol": "LAB",
+            "price_cents": 161,
+            "sequence": 61
+          },
+          {
+            "event_id": "cancel-job-62",
+            "symbol": "LAB",
+            "price_cents": 162,
+            "sequence": 62
+          },
+          {
+            "event_id": "cancel-job-63",
+            "symbol": "LAB",
+            "price_cents": 163,
+            "sequence": 63
+          },
+          {
+            "event_id": "cancel-job-64",
+            "symbol": "LAB",
+            "price_cents": 164,
+            "sequence": 64
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/cancel-job/cancel",
+      "status": 200,
+      "expected": 200,
+      "body": {}
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "recover-job",
+        "ticks": [
+          {
+            "event_id": "recover-job-1",
+            "symbol": "RECOVER",
+            "price_cents": 101,
+            "sequence": 1
+          },
+          {
+            "event_id": "recover-job-2",
+            "symbol": "RECOVER",
+            "price_cents": 102,
+            "sequence": 2
+          },
+          {
+            "event_id": "recover-job-3",
+            "symbol": "RECOVER",
+            "price_cents": 103,
+            "sequence": 3
+          },
+          {
+            "event_id": "recover-job-4",
+            "symbol": "RECOVER",
+            "price_cents": 104,
+            "sequence": 4
+          },
+          {
+            "event_id": "recover-job-5",
+            "symbol": "RECOVER",
+            "price_cents": 105,
+            "sequence": 5
+          },
+          {
+            "event_id": "recover-job-6",
+            "symbol": "RECOVER",
+            "price_cents": 106,
+            "sequence": 6
+          },
+          {
+            "event_id": "recover-job-7",
+            "symbol": "RECOVER",
+            "price_cents": 107,
+            "sequence": 7
+          },
+          {
+            "event_id": "recover-job-8",
+            "symbol": "RECOVER",
+            "price_cents": 108,
+            "sequence": 8
+          },
+          {
+            "event_id": "recover-job-9",
+            "symbol": "RECOVER",
+            "price_cents": 109,
+            "sequence": 9
+          },
+          {
+            "event_id": "recover-job-10",
+            "symbol": "RECOVER",
+            "price_cents": 110,
+            "sequence": 10
+          },
+          {
+            "event_id": "recover-job-11",
+            "symbol": "RECOVER",
+            "price_cents": 111,
+            "sequence": 11
+          },
+          {
+            "event_id": "recover-job-12",
+            "symbol": "RECOVER",
+            "price_cents": 112,
+            "sequence": 12
+          },
+          {
+            "event_id": "recover-job-13",
+            "symbol": "RECOVER",
+            "price_cents": 113,
+            "sequence": 13
+          },
+          {
+            "event_id": "recover-job-14",
+            "symbol": "RECOVER",
+            "price_cents": 114,
+            "sequence": 14
+          },
+          {
+            "event_id": "recover-job-15",
+            "symbol": "RECOVER",
+            "price_cents": 115,
+            "sequence": 15
+          },
+          {
+            "event_id": "recover-job-16",
+            "symbol": "RECOVER",
+            "price_cents": 116,
+            "sequence": 16
+          },
+          {
+            "event_id": "recover-job-17",
+            "symbol": "RECOVER",
+            "price_cents": 117,
+            "sequence": 17
+          },
+          {
+            "event_id": "recover-job-18",
+            "symbol": "RECOVER",
+            "price_cents": 118,
+            "sequence": 18
+          },
+          {
+            "event_id": "recover-job-19",
+            "symbol": "RECOVER",
+            "price_cents": 119,
+            "sequence": 19
+          },
+          {
+            "event_id": "recover-job-20",
+            "symbol": "RECOVER",
+            "price_cents": 120,
+            "sequence": 20
+          },
+          {
+            "event_id": "recover-job-21",
+            "symbol": "RECOVER",
+            "price_cents": 121,
+            "sequence": 21
+          },
+          {
+            "event_id": "recover-job-22",
+            "symbol": "RECOVER",
+            "price_cents": 122,
+            "sequence": 22
+          },
+          {
+            "event_id": "recover-job-23",
+            "symbol": "RECOVER",
+            "price_cents": 123,
+            "sequence": 23
+          },
+          {
+            "event_id": "recover-job-24",
+            "symbol": "RECOVER",
+            "price_cents": 124,
+            "sequence": 24
+          },
+          {
+            "event_id": "recover-job-25",
+            "symbol": "RECOVER",
+            "price_cents": 125,
+            "sequence": 25
+          },
+          {
+            "event_id": "recover-job-26",
+            "symbol": "RECOVER",
+            "price_cents": 126,
+            "sequence": 26
+          },
+          {
+            "event_id": "recover-job-27",
+            "symbol": "RECOVER",
+            "price_cents": 127,
+            "sequence": 27
+          },
+          {
+            "event_id": "recover-job-28",
+            "symbol": "RECOVER",
+            "price_cents": 128,
+            "sequence": 28
+          },
+          {
+            "event_id": "recover-job-29",
+            "symbol": "RECOVER",
+            "price_cents": 129,
+            "sequence": 29
+          },
+          {
+            "event_id": "recover-job-30",
+            "symbol": "RECOVER",
+            "price_cents": 130,
+            "sequence": 30
+          },
+          {
+            "event_id": "recover-job-31",
+            "symbol": "RECOVER",
+            "price_cents": 131,
+            "sequence": 31
+          },
+          {
+            "event_id": "recover-job-32",
+            "symbol": "RECOVER",
+            "price_cents": 132,
+            "sequence": 32
+          },
+          {
+            "event_id": "recover-job-33",
+            "symbol": "RECOVER",
+            "price_cents": 133,
+            "sequence": 33
+          },
+          {
+            "event_id": "recover-job-34",
+            "symbol": "RECOVER",
+            "price_cents": 134,
+            "sequence": 34
+          },
+          {
+            "event_id": "recover-job-35",
+            "symbol": "RECOVER",
+            "price_cents": 135,
+            "sequence": 35
+          },
+          {
+            "event_id": "recover-job-36",
+            "symbol": "RECOVER",
+            "price_cents": 136,
+            "sequence": 36
+          },
+          {
+            "event_id": "recover-job-37",
+            "symbol": "RECOVER",
+            "price_cents": 137,
+            "sequence": 37
+          },
+          {
+            "event_id": "recover-job-38",
+            "symbol": "RECOVER",
+            "price_cents": 138,
+            "sequence": 38
+          },
+          {
+            "event_id": "recover-job-39",
+            "symbol": "RECOVER",
+            "price_cents": 139,
+            "sequence": 39
+          },
+          {
+            "event_id": "recover-job-40",
+            "symbol": "RECOVER",
+            "price_cents": 140,
+            "sequence": 40
+          },
+          {
+            "event_id": "recover-job-41",
+            "symbol": "RECOVER",
+            "price_cents": 141,
+            "sequence": 41
+          },
+          {
+            "event_id": "recover-job-42",
+            "symbol": "RECOVER",
+            "price_cents": 142,
+            "sequence": 42
+          },
+          {
+            "event_id": "recover-job-43",
+            "symbol": "RECOVER",
+            "price_cents": 143,
+            "sequence": 43
+          },
+          {
+            "event_id": "recover-job-44",
+            "symbol": "RECOVER",
+            "price_cents": 144,
+            "sequence": 44
+          },
+          {
+            "event_id": "recover-job-45",
+            "symbol": "RECOVER",
+            "price_cents": 145,
+            "sequence": 45
+          },
+          {
+            "event_id": "recover-job-46",
+            "symbol": "RECOVER",
+            "price_cents": 146,
+            "sequence": 46
+          },
+          {
+            "event_id": "recover-job-47",
+            "symbol": "RECOVER",
+            "price_cents": 147,
+            "sequence": 47
+          },
+          {
+            "event_id": "recover-job-48",
+            "symbol": "RECOVER",
+            "price_cents": 148,
+            "sequence": 48
+          },
+          {
+            "event_id": "recover-job-49",
+            "symbol": "RECOVER",
+            "price_cents": 149,
+            "sequence": 49
+          },
+          {
+            "event_id": "recover-job-50",
+            "symbol": "RECOVER",
+            "price_cents": 150,
+            "sequence": 50
+          },
+          {
+            "event_id": "recover-job-51",
+            "symbol": "RECOVER",
+            "price_cents": 151,
+            "sequence": 51
+          },
+          {
+            "event_id": "recover-job-52",
+            "symbol": "RECOVER",
+            "price_cents": 152,
+            "sequence": 52
+          },
+          {
+            "event_id": "recover-job-53",
+            "symbol": "RECOVER",
+            "price_cents": 153,
+            "sequence": 53
+          },
+          {
+            "event_id": "recover-job-54",
+            "symbol": "RECOVER",
+            "price_cents": 154,
+            "sequence": 54
+          },
+          {
+            "event_id": "recover-job-55",
+            "symbol": "RECOVER",
+            "price_cents": 155,
+            "sequence": 55
+          },
+          {
+            "event_id": "recover-job-56",
+            "symbol": "RECOVER",
+            "price_cents": 156,
+            "sequence": 56
+          },
+          {
+            "event_id": "recover-job-57",
+            "symbol": "RECOVER",
+            "price_cents": 157,
+            "sequence": 57
+          },
+          {
+            "event_id": "recover-job-58",
+            "symbol": "RECOVER",
+            "price_cents": 158,
+            "sequence": 58
+          },
+          {
+            "event_id": "recover-job-59",
+            "symbol": "RECOVER",
+            "price_cents": 159,
+            "sequence": 59
+          },
+          {
+            "event_id": "recover-job-60",
+            "symbol": "RECOVER",
+            "price_cents": 160,
+            "sequence": 60
+          },
+          {
+            "event_id": "recover-job-61",
+            "symbol": "RECOVER",
+            "price_cents": 161,
+            "sequence": 61
+          },
+          {
+            "event_id": "recover-job-62",
+            "symbol": "RECOVER",
+            "price_cents": 162,
+            "sequence": 62
+          },
+          {
+            "event_id": "recover-job-63",
+            "symbol": "RECOVER",
+            "price_cents": 163,
+            "sequence": 63
+          },
+          {
+            "event_id": "recover-job-64",
+            "symbol": "RECOVER",
+            "price_cents": 164,
+            "sequence": 64
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "recover-job",
+        "ticks": [
+          {
+            "event_id": "recover-job-1",
+            "symbol": "RECOVER",
+            "price_cents": 101,
+            "sequence": 1
+          },
+          {
+            "event_id": "recover-job-2",
+            "symbol": "RECOVER",
+            "price_cents": 102,
+            "sequence": 2
+          },
+          {
+            "event_id": "recover-job-3",
+            "symbol": "RECOVER",
+            "price_cents": 103,
+            "sequence": 3
+          },
+          {
+            "event_id": "recover-job-4",
+            "symbol": "RECOVER",
+            "price_cents": 104,
+            "sequence": 4
+          },
+          {
+            "event_id": "recover-job-5",
+            "symbol": "RECOVER",
+            "price_cents": 105,
+            "sequence": 5
+          },
+          {
+            "event_id": "recover-job-6",
+            "symbol": "RECOVER",
+            "price_cents": 106,
+            "sequence": 6
+          },
+          {
+            "event_id": "recover-job-7",
+            "symbol": "RECOVER",
+            "price_cents": 107,
+            "sequence": 7
+          },
+          {
+            "event_id": "recover-job-8",
+            "symbol": "RECOVER",
+            "price_cents": 108,
+            "sequence": 8
+          },
+          {
+            "event_id": "recover-job-9",
+            "symbol": "RECOVER",
+            "price_cents": 109,
+            "sequence": 9
+          },
+          {
+            "event_id": "recover-job-10",
+            "symbol": "RECOVER",
+            "price_cents": 110,
+            "sequence": 10
+          },
+          {
+            "event_id": "recover-job-11",
+            "symbol": "RECOVER",
+            "price_cents": 111,
+            "sequence": 11
+          },
+          {
+            "event_id": "recover-job-12",
+            "symbol": "RECOVER",
+            "price_cents": 112,
+            "sequence": 12
+          },
+          {
+            "event_id": "recover-job-13",
+            "symbol": "RECOVER",
+            "price_cents": 113,
+            "sequence": 13
+          },
+          {
+            "event_id": "recover-job-14",
+            "symbol": "RECOVER",
+            "price_cents": 114,
+            "sequence": 14
+          },
+          {
+            "event_id": "recover-job-15",
+            "symbol": "RECOVER",
+            "price_cents": 115,
+            "sequence": 15
+          },
+          {
+            "event_id": "recover-job-16",
+            "symbol": "RECOVER",
+            "price_cents": 116,
+            "sequence": 16
+          },
+          {
+            "event_id": "recover-job-17",
+            "symbol": "RECOVER",
+            "price_cents": 117,
+            "sequence": 17
+          },
+          {
+            "event_id": "recover-job-18",
+            "symbol": "RECOVER",
+            "price_cents": 118,
+            "sequence": 18
+          },
+          {
+            "event_id": "recover-job-19",
+            "symbol": "RECOVER",
+            "price_cents": 119,
+            "sequence": 19
+          },
+          {
+            "event_id": "recover-job-20",
+            "symbol": "RECOVER",
+            "price_cents": 120,
+            "sequence": 20
+          },
+          {
+            "event_id": "recover-job-21",
+            "symbol": "RECOVER",
+            "price_cents": 121,
+            "sequence": 21
+          },
+          {
+            "event_id": "recover-job-22",
+            "symbol": "RECOVER",
+            "price_cents": 122,
+            "sequence": 22
+          },
+          {
+            "event_id": "recover-job-23",
+            "symbol": "RECOVER",
+            "price_cents": 123,
+            "sequence": 23
+          },
+          {
+            "event_id": "recover-job-24",
+            "symbol": "RECOVER",
+            "price_cents": 124,
+            "sequence": 24
+          },
+          {
+            "event_id": "recover-job-25",
+            "symbol": "RECOVER",
+            "price_cents": 125,
+            "sequence": 25
+          },
+          {
+            "event_id": "recover-job-26",
+            "symbol": "RECOVER",
+            "price_cents": 126,
+            "sequence": 26
+          },
+          {
+            "event_id": "recover-job-27",
+            "symbol": "RECOVER",
+            "price_cents": 127,
+            "sequence": 27
+          },
+          {
+            "event_id": "recover-job-28",
+            "symbol": "RECOVER",
+            "price_cents": 128,
+            "sequence": 28
+          },
+          {
+            "event_id": "recover-job-29",
+            "symbol": "RECOVER",
+            "price_cents": 129,
+            "sequence": 29
+          },
+          {
+            "event_id": "recover-job-30",
+            "symbol": "RECOVER",
+            "price_cents": 130,
+            "sequence": 30
+          },
+          {
+            "event_id": "recover-job-31",
+            "symbol": "RECOVER",
+            "price_cents": 131,
+            "sequence": 31
+          },
+          {
+            "event_id": "recover-job-32",
+            "symbol": "RECOVER",
+            "price_cents": 132,
+            "sequence": 32
+          },
+          {
+            "event_id": "recover-job-33",
+            "symbol": "RECOVER",
+            "price_cents": 133,
+            "sequence": 33
+          },
+          {
+            "event_id": "recover-job-34",
+            "symbol": "RECOVER",
+            "price_cents": 134,
+            "sequence": 34
+          },
+          {
+            "event_id": "recover-job-35",
+            "symbol": "RECOVER",
+            "price_cents": 135,
+            "sequence": 35
+          },
+          {
+            "event_id": "recover-job-36",
+            "symbol": "RECOVER",
+            "price_cents": 136,
+            "sequence": 36
+          },
+          {
+            "event_id": "recover-job-37",
+            "symbol": "RECOVER",
+            "price_cents": 137,
+            "sequence": 37
+          },
+          {
+            "event_id": "recover-job-38",
+            "symbol": "RECOVER",
+            "price_cents": 138,
+            "sequence": 38
+          },
+          {
+            "event_id": "recover-job-39",
+            "symbol": "RECOVER",
+            "price_cents": 139,
+            "sequence": 39
+          },
+          {
+            "event_id": "recover-job-40",
+            "symbol": "RECOVER",
+            "price_cents": 140,
+            "sequence": 40
+          },
+          {
+            "event_id": "recover-job-41",
+            "symbol": "RECOVER",
+            "price_cents": 141,
+            "sequence": 41
+          },
+          {
+            "event_id": "recover-job-42",
+            "symbol": "RECOVER",
+            "price_cents": 142,
+            "sequence": 42
+          },
+          {
+            "event_id": "recover-job-43",
+            "symbol": "RECOVER",
+            "price_cents": 143,
+            "sequence": 43
+          },
+          {
+            "event_id": "recover-job-44",
+            "symbol": "RECOVER",
+            "price_cents": 144,
+            "sequence": 44
+          },
+          {
+            "event_id": "recover-job-45",
+            "symbol": "RECOVER",
+            "price_cents": 145,
+            "sequence": 45
+          },
+          {
+            "event_id": "recover-job-46",
+            "symbol": "RECOVER",
+            "price_cents": 146,
+            "sequence": 46
+          },
+          {
+            "event_id": "recover-job-47",
+            "symbol": "RECOVER",
+            "price_cents": 147,
+            "sequence": 47
+          },
+          {
+            "event_id": "recover-job-48",
+            "symbol": "RECOVER",
+            "price_cents": 148,
+            "sequence": 48
+          },
+          {
+            "event_id": "recover-job-49",
+            "symbol": "RECOVER",
+            "price_cents": 149,
+            "sequence": 49
+          },
+          {
+            "event_id": "recover-job-50",
+            "symbol": "RECOVER",
+            "price_cents": 150,
+            "sequence": 50
+          },
+          {
+            "event_id": "recover-job-51",
+            "symbol": "RECOVER",
+            "price_cents": 151,
+            "sequence": 51
+          },
+          {
+            "event_id": "recover-job-52",
+            "symbol": "RECOVER",
+            "price_cents": 152,
+            "sequence": 52
+          },
+          {
+            "event_id": "recover-job-53",
+            "symbol": "RECOVER",
+            "price_cents": 153,
+            "sequence": 53
+          },
+          {
+            "event_id": "recover-job-54",
+            "symbol": "RECOVER",
+            "price_cents": 154,
+            "sequence": 54
+          },
+          {
+            "event_id": "recover-job-55",
+            "symbol": "RECOVER",
+            "price_cents": 155,
+            "sequence": 55
+          },
+          {
+            "event_id": "recover-job-56",
+            "symbol": "RECOVER",
+            "price_cents": 156,
+            "sequence": 56
+          },
+          {
+            "event_id": "recover-job-57",
+            "symbol": "RECOVER",
+            "price_cents": 157,
+            "sequence": 57
+          },
+          {
+            "event_id": "recover-job-58",
+            "symbol": "RECOVER",
+            "price_cents": 158,
+            "sequence": 58
+          },
+          {
+            "event_id": "recover-job-59",
+            "symbol": "RECOVER",
+            "price_cents": 159,
+            "sequence": 59
+          },
+          {
+            "event_id": "recover-job-60",
+            "symbol": "RECOVER",
+            "price_cents": 160,
+            "sequence": 60
+          },
+          {
+            "event_id": "recover-job-61",
+            "symbol": "RECOVER",
+            "price_cents": 161,
+            "sequence": 61
+          },
+          {
+            "event_id": "recover-job-62",
+            "symbol": "RECOVER",
+            "price_cents": 162,
+            "sequence": 62
+          },
+          {
+            "event_id": "recover-job-63",
+            "symbol": "RECOVER",
+            "price_cents": 163,
+            "sequence": 63
+          },
+          {
+            "event_id": "recover-job-64",
+            "symbol": "RECOVER",
+            "price_cents": 164,
+            "sequence": 64
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 409,
+      "expected": 409,
+      "body": {
+        "job_id": "recover-job",
+        "ticks": [
+          {
+            "event_id": "recover-job-1",
+            "symbol": "OTHER",
+            "price_cents": 101,
+            "sequence": 1
+          },
+          {
+            "event_id": "recover-job-2",
+            "symbol": "OTHER",
+            "price_cents": 102,
+            "sequence": 2
+          },
+          {
+            "event_id": "recover-job-3",
+            "symbol": "OTHER",
+            "price_cents": 103,
+            "sequence": 3
+          },
+          {
+            "event_id": "recover-job-4",
+            "symbol": "OTHER",
+            "price_cents": 104,
+            "sequence": 4
+          },
+          {
+            "event_id": "recover-job-5",
+            "symbol": "OTHER",
+            "price_cents": 105,
+            "sequence": 5
+          },
+          {
+            "event_id": "recover-job-6",
+            "symbol": "OTHER",
+            "price_cents": 106,
+            "sequence": 6
+          },
+          {
+            "event_id": "recover-job-7",
+            "symbol": "OTHER",
+            "price_cents": 107,
+            "sequence": 7
+          },
+          {
+            "event_id": "recover-job-8",
+            "symbol": "OTHER",
+            "price_cents": 108,
+            "sequence": 8
+          },
+          {
+            "event_id": "recover-job-9",
+            "symbol": "OTHER",
+            "price_cents": 109,
+            "sequence": 9
+          },
+          {
+            "event_id": "recover-job-10",
+            "symbol": "OTHER",
+            "price_cents": 110,
+            "sequence": 10
+          },
+          {
+            "event_id": "recover-job-11",
+            "symbol": "OTHER",
+            "price_cents": 111,
+            "sequence": 11
+          },
+          {
+            "event_id": "recover-job-12",
+            "symbol": "OTHER",
+            "price_cents": 112,
+            "sequence": 12
+          },
+          {
+            "event_id": "recover-job-13",
+            "symbol": "OTHER",
+            "price_cents": 113,
+            "sequence": 13
+          },
+          {
+            "event_id": "recover-job-14",
+            "symbol": "OTHER",
+            "price_cents": 114,
+            "sequence": 14
+          },
+          {
+            "event_id": "recover-job-15",
+            "symbol": "OTHER",
+            "price_cents": 115,
+            "sequence": 15
+          },
+          {
+            "event_id": "recover-job-16",
+            "symbol": "OTHER",
+            "price_cents": 116,
+            "sequence": 16
+          },
+          {
+            "event_id": "recover-job-17",
+            "symbol": "OTHER",
+            "price_cents": 117,
+            "sequence": 17
+          },
+          {
+            "event_id": "recover-job-18",
+            "symbol": "OTHER",
+            "price_cents": 118,
+            "sequence": 18
+          },
+          {
+            "event_id": "recover-job-19",
+            "symbol": "OTHER",
+            "price_cents": 119,
+            "sequence": 19
+          },
+          {
+            "event_id": "recover-job-20",
+            "symbol": "OTHER",
+            "price_cents": 120,
+            "sequence": 20
+          },
+          {
+            "event_id": "recover-job-21",
+            "symbol": "OTHER",
+            "price_cents": 121,
+            "sequence": 21
+          },
+          {
+            "event_id": "recover-job-22",
+            "symbol": "OTHER",
+            "price_cents": 122,
+            "sequence": 22
+          },
+          {
+            "event_id": "recover-job-23",
+            "symbol": "OTHER",
+            "price_cents": 123,
+            "sequence": 23
+          },
+          {
+            "event_id": "recover-job-24",
+            "symbol": "OTHER",
+            "price_cents": 124,
+            "sequence": 24
+          },
+          {
+            "event_id": "recover-job-25",
+            "symbol": "OTHER",
+            "price_cents": 125,
+            "sequence": 25
+          },
+          {
+            "event_id": "recover-job-26",
+            "symbol": "OTHER",
+            "price_cents": 126,
+            "sequence": 26
+          },
+          {
+            "event_id": "recover-job-27",
+            "symbol": "OTHER",
+            "price_cents": 127,
+            "sequence": 27
+          },
+          {
+            "event_id": "recover-job-28",
+            "symbol": "OTHER",
+            "price_cents": 128,
+            "sequence": 28
+          },
+          {
+            "event_id": "recover-job-29",
+            "symbol": "OTHER",
+            "price_cents": 129,
+            "sequence": 29
+          },
+          {
+            "event_id": "recover-job-30",
+            "symbol": "OTHER",
+            "price_cents": 130,
+            "sequence": 30
+          },
+          {
+            "event_id": "recover-job-31",
+            "symbol": "OTHER",
+            "price_cents": 131,
+            "sequence": 31
+          },
+          {
+            "event_id": "recover-job-32",
+            "symbol": "OTHER",
+            "price_cents": 132,
+            "sequence": 32
+          },
+          {
+            "event_id": "recover-job-33",
+            "symbol": "OTHER",
+            "price_cents": 133,
+            "sequence": 33
+          },
+          {
+            "event_id": "recover-job-34",
+            "symbol": "OTHER",
+            "price_cents": 134,
+            "sequence": 34
+          },
+          {
+            "event_id": "recover-job-35",
+            "symbol": "OTHER",
+            "price_cents": 135,
+            "sequence": 35
+          },
+          {
+            "event_id": "recover-job-36",
+            "symbol": "OTHER",
+            "price_cents": 136,
+            "sequence": 36
+          },
+          {
+            "event_id": "recover-job-37",
+            "symbol": "OTHER",
+            "price_cents": 137,
+            "sequence": 37
+          },
+          {
+            "event_id": "recover-job-38",
+            "symbol": "OTHER",
+            "price_cents": 138,
+            "sequence": 38
+          },
+          {
+            "event_id": "recover-job-39",
+            "symbol": "OTHER",
+            "price_cents": 139,
+            "sequence": 39
+          },
+          {
+            "event_id": "recover-job-40",
+            "symbol": "OTHER",
+            "price_cents": 140,
+            "sequence": 40
+          },
+          {
+            "event_id": "recover-job-41",
+            "symbol": "OTHER",
+            "price_cents": 141,
+            "sequence": 41
+          },
+          {
+            "event_id": "recover-job-42",
+            "symbol": "OTHER",
+            "price_cents": 142,
+            "sequence": 42
+          },
+          {
+            "event_id": "recover-job-43",
+            "symbol": "OTHER",
+            "price_cents": 143,
+            "sequence": 43
+          },
+          {
+            "event_id": "recover-job-44",
+            "symbol": "OTHER",
+            "price_cents": 144,
+            "sequence": 44
+          },
+          {
+            "event_id": "recover-job-45",
+            "symbol": "OTHER",
+            "price_cents": 145,
+            "sequence": 45
+          },
+          {
+            "event_id": "recover-job-46",
+            "symbol": "OTHER",
+            "price_cents": 146,
+            "sequence": 46
+          },
+          {
+            "event_id": "recover-job-47",
+            "symbol": "OTHER",
+            "price_cents": 147,
+            "sequence": 47
+          },
+          {
+            "event_id": "recover-job-48",
+            "symbol": "OTHER",
+            "price_cents": 148,
+            "sequence": 48
+          },
+          {
+            "event_id": "recover-job-49",
+            "symbol": "OTHER",
+            "price_cents": 149,
+            "sequence": 49
+          },
+          {
+            "event_id": "recover-job-50",
+            "symbol": "OTHER",
+            "price_cents": 150,
+            "sequence": 50
+          },
+          {
+            "event_id": "recover-job-51",
+            "symbol": "OTHER",
+            "price_cents": 151,
+            "sequence": 51
+          },
+          {
+            "event_id": "recover-job-52",
+            "symbol": "OTHER",
+            "price_cents": 152,
+            "sequence": 52
+          },
+          {
+            "event_id": "recover-job-53",
+            "symbol": "OTHER",
+            "price_cents": 153,
+            "sequence": 53
+          },
+          {
+            "event_id": "recover-job-54",
+            "symbol": "OTHER",
+            "price_cents": 154,
+            "sequence": 54
+          },
+          {
+            "event_id": "recover-job-55",
+            "symbol": "OTHER",
+            "price_cents": 155,
+            "sequence": 55
+          },
+          {
+            "event_id": "recover-job-56",
+            "symbol": "OTHER",
+            "price_cents": 156,
+            "sequence": 56
+          },
+          {
+            "event_id": "recover-job-57",
+            "symbol": "OTHER",
+            "price_cents": 157,
+            "sequence": 57
+          },
+          {
+            "event_id": "recover-job-58",
+            "symbol": "OTHER",
+            "price_cents": 158,
+            "sequence": 58
+          },
+          {
+            "event_id": "recover-job-59",
+            "symbol": "OTHER",
+            "price_cents": 159,
+            "sequence": 59
+          },
+          {
+            "event_id": "recover-job-60",
+            "symbol": "OTHER",
+            "price_cents": 160,
+            "sequence": 60
+          },
+          {
+            "event_id": "recover-job-61",
+            "symbol": "OTHER",
+            "price_cents": 161,
+            "sequence": 61
+          },
+          {
+            "event_id": "recover-job-62",
+            "symbol": "OTHER",
+            "price_cents": 162,
+            "sequence": 62
+          },
+          {
+            "event_id": "recover-job-63",
+            "symbol": "OTHER",
+            "price_cents": 163,
+            "sequence": 63
+          },
+          {
+            "event_id": "recover-job-64",
+            "symbol": "OTHER",
+            "price_cents": 164,
+            "sequence": 64
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/orders/buy-1",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "PUT",
+      "path": "/api/watchlist",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "symbols": [
+          "RUST",
+          "LAB"
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/snapshot",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-00",
+        "ticks": [
+          {
+            "event_id": "budget-tick-0",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-01",
+        "ticks": [
+          {
+            "event_id": "budget-tick-1",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 2
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-02",
+        "ticks": [
+          {
+            "event_id": "budget-tick-2",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 3
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-03",
+        "ticks": [
+          {
+            "event_id": "budget-tick-3",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 4
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-04",
+        "ticks": [
+          {
+            "event_id": "budget-tick-4",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 5
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-05",
+        "ticks": [
+          {
+            "event_id": "budget-tick-5",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 6
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-06",
+        "ticks": [
+          {
+            "event_id": "budget-tick-6",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 7
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-07",
+        "ticks": [
+          {
+            "event_id": "budget-tick-7",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 8
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-08",
+        "ticks": [
+          {
+            "event_id": "budget-tick-8",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 9
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-09",
+        "ticks": [
+          {
+            "event_id": "budget-tick-9",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 10
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-10",
+        "ticks": [
+          {
+            "event_id": "budget-tick-10",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 11
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-11",
+        "ticks": [
+          {
+            "event_id": "budget-tick-11",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 12
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-12",
+        "ticks": [
+          {
+            "event_id": "budget-tick-12",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 13
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-13",
+        "ticks": [
+          {
+            "event_id": "budget-tick-13",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 14
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-14",
+        "ticks": [
+          {
+            "event_id": "budget-tick-14",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 15
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 200,
+      "expected": 200,
+      "body": {
+        "job_id": "budget-15",
+        "ticks": [
+          {
+            "event_id": "budget-tick-15",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 16
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/jobs/replay",
+      "status": 422,
+      "expected": 422,
+      "body": {
+        "job_id": "budget-17",
+        "ticks": [
+          {
+            "event_id": "budget-tick-17",
+            "symbol": "BUDGET",
+            "price_cents": 100,
+            "sequence": 17
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/jobs",
+      "status": 200,
+      "expected": 200,
+      "body": null
+    }
+  ],
+  "process_events": [
+    {
+      "event": "started",
+      "pid": 42604,
+      "journal": "main.jsonl",
+      "address": "127.0.0.1:64462"
+    },
+    {
+      "event": "controlled SIGKILL at complete observed journal prefix",
+      "pid": 42604,
+      "observed_job_next": 2,
+      "bytes": 11061
+    },
+    {
+      "event": "started",
+      "pid": 42636,
+      "journal": "main.jsonl",
+      "address": "127.0.0.1:64583"
+    },
+    {
+      "event": "stopped",
+      "pid": 42636,
+      "exit": 0
+    },
+    {
+      "event": "started",
+      "pid": 42680,
+      "journal": "legacy.jsonl",
+      "address": "127.0.0.1:64854"
+    },
+    {
+      "event": "stopped",
+      "pid": 42680,
+      "exit": 0
+    },
+    {
+      "event": "started",
+      "pid": 42681,
+      "journal": "legacy.jsonl",
+      "address": "127.0.0.1:64857"
+    },
+    {
+      "event": "stopped",
+      "pid": 42681,
+      "exit": 0
+    },
+    {
+      "event": "started",
+      "pid": 42683,
+      "journal": "admission.jsonl",
+      "address": "127.0.0.1:64859"
+    },
+    {
+      "event": "stopped",
+      "pid": 42683,
+      "exit": 0
+    }
+  ],
+  "failure": null,
+  "review": {
+    "author_runtime_review": "performed",
+    "independent_review": "pending"
+  },
+  "limits": [
+    "Direct real HTTP backend audit; browser rendering and same-origin proxy handled separately by root.",
+    "Only temporary synthetic journals and owned child processes used; no user database accessed.",
+    "Controlled process crash used an inspected complete journal prefix; torn-write/power-loss recovery is not claimed.",
+    "Append I/O failure and poisoned-store503 are covered by existing Rust regression tests, not simulated disk damage here.",
+    "Public local fixture identities are not production authentication; this audit does not certify deployment security."
+  ]
+}

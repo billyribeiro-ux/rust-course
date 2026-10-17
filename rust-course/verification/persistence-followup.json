@@ -1,0 +1,103 @@
+{
+  "verified_at_utc": "2026-10-09 14:15:42 UTC",
+  "scope": "Focused author-team adversarial persistence follow-up for P06 and P16",
+  "independent_review": "pending",
+  "browser_used": false,
+  "working_directory": "/Users/billyribeiro/Desktop/rust-course",
+  "toolchain": {
+    "rustc": "1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "1.99.0 (5f94df478 2026-08-27)"
+  },
+  "commands": [
+    {
+      "command": "mise exec -- cargo test --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p06-kv --test persistence_edges",
+      "result": "Before fix: exit 101; 2 passed and 1 failed. Isolated cwd child reopened original file without the post-compaction write.",
+      "log": "persistence-followup-before.log",
+      "phase": "before"
+    },
+    {
+      "command": "mise exec -- cargo test --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p06-kv",
+      "result": "Exit 0; 10 unit tests and 3 integration entries passed. The cwd_child entry is a helper/no-op in the parent runner; the parent regression launches it in an isolated one-test process.",
+      "log": "persistence-followup-p06.log",
+      "phase": "after"
+    },
+    {
+      "command": "mise exec -- cargo test --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p16-workbench --test persistence_edges",
+      "result": "Exit 0; 3 focused integration tests passed. No P16 production source changed, so its unchanged full suite was not repeated.",
+      "log": "persistence-followup-p16.log",
+      "phase": "after"
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --locked --manifest-path rust-course/projects/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -p p06-kv -p p16-workbench --all-targets -- -D warnings",
+      "result": "Exit 0; no warnings.",
+      "log": "persistence-followup-clippy.log",
+      "phase": "after"
+    },
+    {
+      "command": "mise exec -- rustfmt --edition 2024 --check rust-course/projects/reference/p06-kv/src/lib.rs rust-course/projects/reference/p06-kv/tests/persistence_edges.rs rust-course/projects/reference/p16-workbench/tests/persistence_edges.rs",
+      "result": "Exit 0; no formatting diff.",
+      "log": "persistence-followup-fmt.log",
+      "phase": "after"
+    }
+  ],
+  "findings": [
+    {
+      "project": "p06-kv",
+      "classification": "reproduced defect fixed",
+      "description": "Retaining a relative data path let a later cwd change redirect compaction and subsequent appends to another file. Store::open now captures std::path::absolute(path)? before lock/data I/O.",
+      "evidence": "before-fix child failure; after-fix relative_store_keeps_its_file_when_process_cwd_changes pass",
+      "limits": "absolute does not resolve symlinks or prevent external rename/path replacement; cooperating writers must use stable paths. current_dir resolution errors remain io::Result errors."
+    },
+    {
+      "project": "p06-kv",
+      "classification": "documented format limitation with executable counterexample",
+      "description": "Changing an originally complete record value length from 3 to 4 yields a bounded declared payload that ends at EOF. Replay reports a torn suffix before CRC validation; open truncates it. Recovery assumes interrupted append with earlier valid bytes unchanged.",
+      "format_changed": false
+    },
+    {
+      "project": "p06-kv",
+      "classification": "existing design verified more precisely",
+      "description": "Existing create_new compaction refuses a pre-existing temporary file. Extended assertion confirms its exact original bytes remain unchanged; no cleanup deletes unowned files."
+    },
+    {
+      "project": "p16-workbench",
+      "classification": "missing boundary evidence added; no production defect found in this audit",
+      "description": "Exactly 16,384 bytes accepted; 16,385 bytes and missing newline rejected without changing bytes. Exactly 10,000 records replay; new command rejected before append; 10,001 records rejected without repair."
+    },
+    {
+      "project": "p16-workbench",
+      "classification": "documented integrity limit with executable counterexample",
+      "description": "Legal synthetic price alteration 125 to126 retains valid JSON, positions and domain semantics, so replay succeeds with changed cash. Position/schema validation is not corruption detection or authentication."
+    }
+  ],
+  "audit_topics": [
+    "CRC evaluation after declared payload read",
+    "relative pathname retention and stable lock path",
+    "temporary ownership and create_new behavior",
+    "poisoning and append/synchronization boundaries",
+    "record byte/count admission at exact limits",
+    "logical retry versus durable physical records",
+    "replay job event capacity reservation and cursor recovery"
+  ],
+  "limits": [
+    "Author-team review only; independent review pending.",
+    "Constructed bytes and injected errors do not emulate all filesystem, hardware or power-loss outcomes.",
+    "P06 live map size grows with data set; Unix compaction and cooperative advisory lock assumptions remain.",
+    "P16 supports one process writing the journal; creation-directory durability, checksum integrity and automatic tail repair are not promised.",
+    "No user databases, existing processes, browser state, or unrelated caches were changed.",
+    "Course rendering and portable archive refresh are performed by the parent agent after these canonical authoring/source edits."
+  ],
+  "files_sha256": {
+    "projects/reference/p06-kv/src/lib.rs": "aa70dac72ad8889ab9954de6f45e01d23c817297c8e89dd01dfb0a6dcce1d7e9",
+    "projects/reference/p06-kv/tests/persistence_edges.rs": "8a62f384c2308b5d1e6a8c5b4500445bc5ef24043562355eb6dd1d0ccd4a214f",
+    "projects/reference/p06-kv/decisions.html": "7d2a686674c9aad1cb88e0319deda4b701fb33ec8329a3ed77b066680f1dbcbc",
+    "projects/reference/p16-workbench/tests/persistence_edges.rs": "0accedd7216a8c03ea342152d0854c5ab38be095b0b0eaeac8c47554bb46977c",
+    "authoring/systems.json": "662243341e6420b04d8b89e3e62d47b768679f22df7749d8fd1a77af98d2875f",
+    "authoring/services.json": "a8a671665b6be81dba677f0190c7112b8f5353d5f69b2513bb77e671c220a882"
+  },
+  "primary_source": {
+    "url": "https://doc.rust-lang.org/std/path/fn.absolute.html",
+    "version_seen": "Rust 1.99.0",
+    "fact": "Uses current_dir for relative paths without filesystem canonicalization or symlink resolution; errors propagate."
+  }
+}

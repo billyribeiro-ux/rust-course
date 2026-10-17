@@ -1,0 +1,90 @@
+[
+  {
+    "id": "borrow-after-pop",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "rustc",
+      "--edition=2024",
+      "--error-format=json",
+      "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/systems/borrow_after_pop.rs",
+      "--out-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-compile-fail-a3joglky"
+    ],
+    "exit_code": 1,
+    "observed_codes": [
+      "E0502"
+    ],
+    "expected_codes": [
+      "E0502"
+    ],
+    "passed": true
+  },
+  {
+    "id": "rc-thread",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "rustc",
+      "--edition=2024",
+      "--error-format=json",
+      "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/systems/rc_thread.rs",
+      "--out-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-compile-fail-a3joglky"
+    ],
+    "exit_code": 1,
+    "observed_codes": [
+      "E0277"
+    ],
+    "expected_codes": [
+      "E0277"
+    ],
+    "passed": true
+  },
+  {
+    "id": "thread-borrow",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "rustc",
+      "--edition=2024",
+      "--error-format=json",
+      "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/systems/thread_borrow.rs",
+      "--out-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-compile-fail-a3joglky"
+    ],
+    "exit_code": 1,
+    "observed_codes": [
+      "E0373"
+    ],
+    "expected_codes": [
+      "E0373"
+    ],
+    "passed": true
+  },
+  {
+    "id": "uninit-read",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "rustc",
+      "--edition=2024",
+      "--error-format=json",
+      "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/systems/uninit_read.rs",
+      "--out-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-compile-fail-a3joglky"
+    ],
+    "exit_code": 1,
+    "observed_codes": [
+      "E0133"
+    ],
+    "expected_codes": [
+      "E0133"
+    ],
+    "passed": true
+  }
+]

@@ -1,0 +1,16 @@
+$ mise exec -- npm run build
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge
+npm notice run rust-course-svelte-bridge@0.1.0 build
+npm notice run vite build
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 121 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                  0.48 kB │ gzip:  0.32 kB
+dist/assets/index-CGToUG2b.css   1.31 kB │ gzip:  0.59 kB
+dist/assets/index-C2ZkMYEi.js   49.56 kB │ gzip: 19.24 kB
+
+✓ built in 87ms
+
+exit=0

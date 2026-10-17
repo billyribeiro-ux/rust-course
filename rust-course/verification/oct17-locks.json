@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-17T11:20:54.818274+00:00",
+  "toolchain": "1.99.1",
+  "mode": "extras",
+  "refreshed_locks": true,
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/experiments/p07-rayon/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/no-std/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p11-console/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.1",
+        "update",
+        "--manifest-path",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "expected_text": null,
+      "passed": true
+    }
+  ],
+  "log": "oct17-locks.log",
+  "passed": true,
+  "limits": "Scaffolds are learner assignments: compilation is checked, TODO acceptance tests are intentionally unsolved. Database and browser execution are separate."
+}

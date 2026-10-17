@@ -1,0 +1,11 @@
+[package]
+name = "course-kind-derive"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+[lib]
+proc-macro = true
+[dependencies]
+syn = { version = "=3.0.9", features = ["derive"] }
+quote = "=1.0.47"

@@ -1,0 +1,22 @@
+{
+  "project": "p15-replication",
+  "mechanism": "Each listed source checkpoint reconstructs with scripts/start-checkpoint.py into a fresh standalone Cargo project. No learner directory is overwritten.",
+  "manifest": "projects/checkpoints/p15-replication/checkpoint.json",
+  "steps": [
+    {
+      "checkpoint": "00-scaffold",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p15 00-scaffold"
+    },
+    {
+      "checkpoint": "01-append-transport",
+      "contract": "A fixed leader proposes up to8 values and produces at most16 pending packets for two followers. A caller can take, delay, drop, or deliver packets. Duplicate delivery is idempotent; gaps, conflicts, and invalid follower indices fail. No acknowledgments, committed prefix, elections, process persistence, or consensus guarantee exists here.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p15 01-append-transport"
+    },
+    {
+      "checkpoint": "final",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "reconstruct": "python3 scripts/start-checkpoint.py p15 final"
+    }
+  ]
+}

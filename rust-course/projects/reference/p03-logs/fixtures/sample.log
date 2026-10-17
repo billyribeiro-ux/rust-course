@@ -1,0 +1,5 @@
+100 INFO api ready
+101 WARN db slow query
+not a record
+102 ERROR api upstream unavailable
+103 INFO worker finished

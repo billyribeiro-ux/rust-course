@@ -1,0 +1,223 @@
+$ mise exec -- rustc --version
+working directory: /Users/billyribeiro/Desktop/rust-course
+rustc 1.99.0 (b940084d7 2026-09-28)
+
+exit: 0
+
+$ mise exec -- rustfmt --check --edition 2024 rust-course/projects/reference/p01-calculator/examples/hello.rs rust-course/projects/reference/p01-calculator/examples/workshop_basics.rs
+working directory: /Users/billyribeiro/Desktop/rust-course
+
+exit: 0
+
+$ mise exec -- cargo run --manifest-path rust-course/projects/Cargo.toml -p workshop-calculator --target-dir .course-cache/native --locked --example hello
+working directory: /Users/billyribeiro/Desktop/rust-course
+   Compiling workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.26s
+     Running `.course-cache/native/debug/examples/hello`
+Hello, Rust workshop!
+
+exit: 0
+
+$ mise exec -- cargo run --manifest-path rust-course/projects/Cargo.toml -p workshop-calculator --target-dir .course-cache/native --locked --example workshop_basics
+working directory: /Users/billyribeiro/Desktop/rust-course
+   Compiling workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.13s
+     Running `.course-cache/native/debug/examples/workshop_basics`
+quantity: 3 (binary 11)
+subtotal cents: 375
+delivery cents: 250
+pack item 1
+pack item 2
+pack item 3
+checks remaining: 2
+checks remaining: 1
+ready
+
+exit: 0
+
+$ mise exec -- cargo test --manifest-path rust-course/projects/Cargo.toml -p workshop-calculator --target-dir .course-cache/native --locked --example workshop_basics
+working directory: /Users/billyribeiro/Desktop/rust-course
+   Compiling workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running unittests examples/workshop_basics.rs (.course-cache/native/debug/examples/workshop_basics-dcaa2c18b8e7b236)
+
+running 3 tests
+test tests::subtotal_uses_whole_cents_and_handles_zero_quantity ... ok
+test tests::delivery_is_charged_only_for_nonempty_orders ... ok
+test tests::subtotal_rejects_overflow_without_wrapping ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit: 0
+
+$ mise exec -- cargo clippy --manifest-path rust-course/projects/Cargo.toml -p workshop-calculator --target-dir .course-cache/native --locked --example hello --example workshop_basics -- -D warnings
+working directory: /Users/billyribeiro/Desktop/rust-course
+    Checking workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.11s
+
+exit: 0
+
+$ mise exec -- rustc --edition 2024 --emit metadata --error-format=json /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/prerequisites-diagnostic-uijq0dk5/semicolon_return.rs -o /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/prerequisites-diagnostic-uijq0dk5/semicolon_return.rmeta
+working directory: /Users/billyribeiro/Desktop/rust-course
+{"$message_type":"diagnostic","message":"mismatched types","code":{"code":"E0308","explanation":"Expected type did not match the received type.\n\nErroneous code examples:\n\n```compile_fail,E0308\nfn plus_one(x: i32) -> i32 {\n    x + 1\n}\n\nplus_one(\"Not a number\");\n//       ^^^^^^^^^^^^^^ expected `i32`, found `&str`\n\nif \"Not a bool\" {\n// ^^^^^^^^^^^^ expected `bool`, found `&str`\n}\n\nlet x: f32 = \"Not a float\";\n//     ---   ^^^^^^^^^^^^^ expected `f32`, found `&str`\n//     |\n//     expected due to this\n```\n\nThis error occurs when an expression was used in a place where the compiler\nexpected an expression of a different type. It can occur in several cases, the\nmost common being when calling a function and passing an argument which has a\ndifferent type than the matching type in the function declaration.\n"},"level":"error","spans":[{"file_name":"/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/prerequisites-diagnostic-uijq0dk5/semicolon_return.rs","byte_start":169,"byte_end":180,"line_start":4,"line_end":4,"column_start":60,"column_end":71,"is_primary":true,"text":[{"text":"fn subtotal_cents(unit_price_cents: u32, quantity: u32) -> Option<u32> {","highlight_start":60,"highlight_end":71}],"label":"expected `Option<u32>`, found `()`","suggested_replacement":null,"suggestion_applicability":null,"expansion":null},{"file_name":"/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/prerequisites-diagnostic-uijq0dk5/semicolon_return.rs","byte_start":113,"byte_end":127,"line_start":4,"line_end":4,"column_start":4,"column_end":18,"is_primary":false,"text":[{"text":"fn subtotal_cents(unit_price_cents: u32, quantity: u32) -> Option<u32> {","highlight_start":4,"highlight_end":18}],"label":"implicitly returns `()` as its body has no tail or `return` expression","suggested_replacement":null,"suggestion_applicability":null,"expansion":null}],"children":[{"message":"  expected enum `Option<u32>`\nfound unit type `()`","code":null,"level":"note","spans":[],"children":[],"rendered":null},{"message":"remove this semicolon to return this value","code":null,"level":"help","spans":[{"file_name":"/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/prerequisites-diagnostic-uijq0dk5/semicolon_return.rs","byte_start":225,"byte_end":226,"line_start":5,"line_end":5,"column_start":43,"column_end":44,"is_primary":true,"text":[{"text":"    unit_price_cents.checked_mul(quantity);","highlight_start":43,"highlight_end":44}],"label":null,"suggested_replacement":"","suggestion_applicability":"MachineApplicable","expansion":null}],"children":[],"rendered":null}],"rendered":"error[E0308]: mismatched types\n --> /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/prerequisites-diagnostic-uijq0dk5/semicolon_return.rs:4:60\n  |\n4 | fn subtotal_cents(unit_price_cents: u32, quantity: u32) -> Option<u32> {\n  |    --------------                                          ^^^^^^^^^^^ expected `Option<u32>`, found `()`\n  |    |\n  |    implicitly returns `()` as its body has no tail or `return` expression\n5 |     unit_price_cents.checked_mul(quantity);\n  |                                           - help: remove this semicolon to return this value\n  |\n  = note:   expected enum `Option<u32>`\n          found unit type `()`\n\n"}
+{"$message_type":"diagnostic","message":"aborting due to 1 previous error","code":null,"level":"error","spans":[],"children":[],"rendered":"error: aborting due to 1 previous error\n\n"}
+{"$message_type":"diagnostic","message":"For more information about this error, try `rustc --explain E0308`.","code":null,"level":"failure-note","spans":[],"children":[],"rendered":"For more information about this error, try `rustc --explain E0308`.\n"}
+
+exit: 1
+
+Confirmed deliberate learner semicolon mutation reports E0308.
+
+$ mise exec -- cargo new --vcs none /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course
+    Creating binary (application) `foundations-lab` package
+note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+exit: 0
+
+$ mise exec -- cargo run
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+   Compiling foundations-lab v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running `/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target/debug/foundations-lab`
+Hello, world!
+
+exit: 0
+
+$ mise exec -- cargo check --locked
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+    Checking foundations-lab v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+
+exit: 0
+
+$ mise exec -- cargo fmt --check
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+
+exit: 0
+
+$ mise exec -- cargo clippy --all-targets --locked -- -D warnings
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+    Checking foundations-lab v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.07s
+
+exit: 0
+
+$ mise exec -- cargo test --locked
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+   Compiling foundations-lab v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.14s
+     Running unittests src/main.rs (/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target/debug/deps/foundations_lab-b89372d9da62c66e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+exit: 0
+
+$ git init -b main
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+Initialized empty Git repository in /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab/.git/
+
+exit: 0
+
+$ git config --local user.name 'Course Workflow Check'
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+
+exit: 0
+
+$ git config --local user.email course-workflow-check@example.invalid
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+
+exit: 0
+
+$ git add .gitignore Cargo.toml Cargo.lock src/main.rs
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+
+exit: 0
+
+$ git diff --cached
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..b83d222
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1 @@
++/target/
+diff --git a/Cargo.lock b/Cargo.lock
+new file mode 100644
+index 0000000..49c5764
+--- /dev/null
++++ b/Cargo.lock
+@@ -0,0 +1,7 @@
++# This file is automatically @generated by Cargo.
++# It is not intended for manual editing.
++version = 4
++
++[[package]]
++name = "foundations-lab"
++version = "0.1.0"
+diff --git a/Cargo.toml b/Cargo.toml
+new file mode 100644
+index 0000000..bb9424a
+--- /dev/null
++++ b/Cargo.toml
+@@ -0,0 +1,6 @@
++[package]
++name = "foundations-lab"
++version = "0.1.0"
++edition = "2024"
++
++[dependencies]
+diff --git a/src/main.rs b/src/main.rs
+new file mode 100644
+index 0000000..e7a11a9
+--- /dev/null
++++ b/src/main.rs
+@@ -0,0 +1,3 @@
++fn main() {
++    println!("Hello, world!");
++}
+
+exit: 0
+
+$ git commit -m 'Create runnable foundations practice package'
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+[main (root-commit) 074365d] Create runnable foundations practice package
+ 4 files changed, 17 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 Cargo.lock
+ create mode 100644 Cargo.toml
+ create mode 100644 src/main.rs
+
+exit: 0
+
+$ git log -1 --oneline
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+074365d Create runnable foundations practice package
+
+exit: 0
+
+$ git status --short
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+
+exit: 0
+
+$ mise exec -- cargo new --vcs none /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course
+    Creating binary (application) `foundations-lab` package
+error: destination `/Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab` already exists
+
+Use `cargo init` to initialize the directory
+
+exit: 101
+
+$ ls missing-workshop-folder
+working directory: /Users/billyribeiro/Desktop/rust-course/rust-course/.local/prerequisites-workflow-8wzdoxxe/foundations-lab
+ls: missing-workshop-folder: No such file or directory
+
+exit: 1
+
+Confirmed fresh package workflow, local commit with clean status, Cargo refusing existing destination, and deliberate missing-path failure. Temporary learner repository removed by TemporaryDirectory after checks. No user Git configuration changed.

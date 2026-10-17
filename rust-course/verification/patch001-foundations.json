@@ -1,0 +1,121 @@
+{
+  "patch": "patch001",
+  "scope": "foundations p01-p05 and 13 lessons",
+  "author_self_review": "complete",
+  "independent_review": "pending",
+  "native_baseline": {
+    "command": "mise exec -- cargo test --workspace --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native",
+    "log": "verification/native-tests.log",
+    "exit_code": 0,
+    "source": "parent executed; author inspected successful foundation test sections"
+  },
+  "rerun": {
+    "command": "mise exec -- cargo test --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p workshop-calculator -p task-journal -p log-detective -p typed-config -p expression-language",
+    "log": "verification/patch001-foundations-tests.log",
+    "status": "passed",
+    "exit_code": 0,
+    "passed_tests": 29,
+    "failed_tests": 0
+  },
+  "findings": [
+    {
+      "location": "authoring/foundations.json review paragraphs",
+      "finding": "Contrasting beginner habits with stronger later habits could imply tolerated weak recommended checkpoints.",
+      "fix": "Rewrote review paragraphs around the current recommended design, sound alternatives, and requirement thresholds; deficient techniques remain explicitly intentional mistakes."
+    },
+    {
+      "location": "projects/reference/p01-calculator/src/lib.rs, p02-journal/src/lib.rs, p03-logs/src/lib.rs, p04-config/src/lib.rs, p05-expressions/src/lib.rs doctests",
+      "finding": "Fixed-success documentation examples used unwrap even though copied application code should preserve ordinary failures.",
+      "fix": "All five introductory doctests now propagate Result with ?; test assertions continue to unwrap known expected successes."
+    },
+    {
+      "location": "projects/reference/p05-expressions/src/lib.rs lexer unexpected-character branch",
+      "finding": "An internal invariant unwrap did not explain why the character exists.",
+      "fix": "Replaced with expect documenting nonempty remaining UTF-8 boundary; user syntax failures still return Error."
+    },
+    {
+      "location": "projects/scaffolds/p02-journal/src/lib.rs and p04-config/src/lib.rs",
+      "finding": "Scaffold error strings encouraged discarding structured domain failure categories.",
+      "fix": "Introduced typed scaffold Error/ConfigError so first learner contracts already preserve categories and redact values."
+    },
+    {
+      "location": "projects/reference/p01-calculator through p05-expressions",
+      "finding": "Audit of normal argument, parse, domain, and IO failure paths.",
+      "fix": "Already Result-based throughout; no routine failure unwrap found. Internal String formatting expectation is documented as infallible destination, and assertion-only test unwraps are separate."
+    },
+    {
+      "location": "authoring/foundations.json and all five reference decisions.html",
+      "finding": "Design rationale and verification were distributed rather than collected per project.",
+      "fix": "Added HTML Engineering decisions and evidence sections with requirements, invariants, choices, concrete habits, alternatives, actual baseline checks, limits, evolution thresholds, and pending independent review."
+    },
+    {
+      "location": "all five projects/reference/p01-p05/src/main.rs",
+      "finding": "std::env::args implicitly panics on non-Unicode operating-system arguments.",
+      "fix": "All entry points use args_os; textual inputs get explicit fallible conversion, native file paths are preserved. Unix calculator integration regression verifies exit2 and no panic for non-Unicode input."
+    },
+    {
+      "location": "all five reference and scaffold README files",
+      "finding": "Requested instructional prose must be HTML.",
+      "fix": "Converted project instructions to README.html; README.md is only an HTML pointer. Engineering decisions remain in lesson HTML and decisions.html."
+    },
+    {
+      "location": "projects/reference/p01-calculator and authoring/conversion.json",
+      "finding": "Final scope audit found that P01 originally supplied checked unit arithmetic but no actual fractional CLI unit converter. This was a construction gap, not an already-existing capability.",
+      "fix": "Added separate private validated Length/four-unit model, bounded f64 parsing, finite/range checks, ratio-first conversion, explicit convert CLI branch, approximate output, roundoff example, 1810-word standalone lesson, and library/CLI regressions. Existing arithmetic semantics remain tested. Updated HTML project guide and engineering decisions.",
+      "evidence": "verification/conversion-verification.json"
+    }
+  ],
+  "projects": [
+    {
+      "id": "p01",
+      "folder": "p01-calculator",
+      "lesson": "00-calculator",
+      "status": "audited; revised prose, doctrings or typed scaffolds as detailed"
+    },
+    {
+      "id": "p02",
+      "folder": "p02-journal",
+      "lesson": "01-io",
+      "status": "audited; revised prose, doctrings or typed scaffolds as detailed"
+    },
+    {
+      "id": "p03",
+      "folder": "p03-logs",
+      "lesson": "01-logs",
+      "status": "audited; revised prose, doctrings or typed scaffolds as detailed"
+    },
+    {
+      "id": "p04",
+      "folder": "p04-config",
+      "lesson": "02-config",
+      "status": "audited; revised prose, doctrings or typed scaffolds as detailed"
+    },
+    {
+      "id": "p05",
+      "folder": "p05-expressions",
+      "lesson": "02-evaluator",
+      "status": "audited; revised prose, doctrings or typed scaffolds as detailed"
+    }
+  ],
+  "expected_compiler_errors": {
+    "status": "verified",
+    "count": 5,
+    "report": "verification/foundations-diagnostics.json"
+  },
+  "content_validation": {
+    "status": "author_self_review",
+    "report": "verification/foundations-content.json"
+  },
+  "scaffolds": {
+    "status": "all five test targets typechecked",
+    "runtime_tests": "intentionally incomplete, not claimed passing",
+    "report": "verification/foundations-scaffolds.json"
+  },
+  "conversion_completion": {
+    "status": "implemented and code verified",
+    "report": "verification/conversion-verification.json",
+    "lesson": "authoring/conversion.json",
+    "passed_tests": 15,
+    "independent_review": "pending"
+  }
+}

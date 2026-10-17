@@ -1,0 +1,16 @@
+[
+  {
+    "path": "exercises/concurrency/pinned_get_mut.rs",
+    "kind": "compile-failure",
+    "expected_code": "E0277",
+    "lesson": "04-pinning",
+    "solution": "Use the pinned API of a type that requires address stability; ordinary values that do not need pinning should use ordinary mutable references."
+  },
+  {
+    "path": "exercises/concurrency/racy_reservation.rs",
+    "kind": "intentional-logic-failure",
+    "expected_output": "accepted=2 remaining=0",
+    "lesson": "04-atomics",
+    "solution": "The recommended Budget API performs the reservation as a single compare-exchange update; stronger ordering cannot turn separate load and store operations into that update."
+  }
+]

@@ -1,0 +1,157 @@
+$ mise exec -- cargo check --workspace --all-targets --locked --manifest-path projects/Cargo.toml --target-dir ../.course-cache/oct17-native
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native
+    Checking pin-project-lite v0.2.17
+    Checking bytes v1.12.1
+    Checking itoa v1.0.18
+    Checking futures-core v0.3.34
+   Compiling typenum v1.20.1
+   Compiling stable_deref_trait v1.2.1
+    Checking memchr v2.8.3
+    Checking once_cell v1.21.4
+    Checking percent-encoding v2.3.2
+    Checking futures-sink v0.3.34
+    Checking log v0.4.34
+   Compiling cfg-if v1.0.5
+    Checking slab v0.4.12
+    Checking futures-task v0.3.34
+    Checking libc v0.2.191
+    Checking serde_core v1.0.229
+    Checking zmij v1.0.23
+    Checking futures-io v0.3.34
+   Compiling writeable v0.6.4
+   Compiling litemap v0.8.3
+   Compiling zerofrom v0.1.8
+   Compiling serde v1.0.229
+   Compiling utf8_iter v1.0.4
+    Checking tower-service v0.3.3
+    Checking httparse v1.10.1
+    Checking tower-layer v0.3.3
+    Checking httpdate v1.0.3
+    Checking sync_wrapper v1.0.2
+    Checking form_urlencoded v1.2.2
+    Checking atomic-waker v1.1.2
+   Compiling cmov v0.5.4
+    Checking yoke v0.8.3
+   Compiling icu_properties_data v2.3.0
+    Checking tracing-core v0.1.36
+   Compiling icu_normalizer_data v2.3.0
+    Checking ryu v1.0.23
+    Checking mime v0.3.17
+    Checking matchit v0.8.4
+   Compiling equivalent v1.0.3
+   Compiling scopeguard v1.2.0
+   Compiling rand_core v0.10.1
+    Checking futures-util v0.3.34
+    Checking http v1.5.0
+    Checking zerovec v0.11.8
+    Checking zerotrie v0.2.5
+   Compiling ctutils v0.4.3
+   Compiling lock_api v0.4.14
+   Compiling foldhash v0.2.0
+   Compiling allocator-api2 v0.2.21
+   Compiling crossbeam-utils v0.8.23
+   Compiling smallvec v1.16.3
+    Checking tracing v0.1.44
+   Compiling tinyvec v1.13.3
+    Checking errno v0.3.14
+    Checking socket2 v0.6.5
+    Checking mio v1.2.4
+   Compiling hybrid-array v0.4.15
+   Compiling generic-array v0.14.9
+   Compiling parking_lot_core v0.9.12
+   Compiling cpufeatures v0.2.17
+    Checking signal-hook-registry v1.4.8
+   Compiling hashbrown v0.16.1
+   Compiling hashbrown v0.17.1
+   Compiling crc-catalog v2.5.0
+   Compiling parking v2.2.1
+    Checking tinystr v0.8.4
+    Checking potential_utf v0.1.6
+   Compiling crossbeam-queue v0.3.14
+   Compiling unicode-normalization v0.1.26
+    Checking http-body v1.1.0
+   Compiling cpufeatures v0.3.1
+   Compiling crc v3.4.0
+   Compiling getrandom v0.4.3
+   Compiling event-listener v5.4.2
+    Checking tokio v1.53.3
+    Checking icu_collections v2.3.0
+   Compiling parking_lot v0.12.5
+   Compiling serde_json v1.0.154
+    Checking icu_locale_core v2.3.0
+    Checking http-body-util v0.1.5
+   Compiling chacha20 v0.10.2
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.6
+   Compiling either v1.19.0
+   Compiling thiserror v2.0.21
+   Compiling num-traits v0.2.19
+   Compiling crypto-common v0.2.2
+   Compiling block-buffer v0.12.1
+   Compiling futures-intrusive v0.5.0
+   Compiling digest v0.10.7
+   Compiling indexmap v2.14.2
+    Checking axum-core v0.5.6
+   Compiling hashlink v0.11.1
+   Compiling unicode-properties v0.1.4
+   Compiling unicode-bidi v0.3.18
+   Compiling base64 v0.22.1
+   Compiling rand v0.10.3
+    Checking serde_path_to_error v0.1.20
+   Compiling futures-channel v0.3.34
+   Compiling sha2 v0.10.9
+   Compiling whoami v2.1.3
+   Compiling byteorder v1.5.0
+   Compiling hex v0.4.3
+   Compiling dotenvy v0.15.7
+   Compiling bitflags v2.13.2
+    Checking icu_provider v2.3.1
+   Compiling stringprep v0.1.5
+   Compiling atoi v2.0.0
+    Checking serde_urlencoded v0.7.1
+   Compiling digest v0.11.3
+    Checking icu_properties v2.3.0
+    Checking hmac v0.13.0
+    Checking icu_normalizer v2.3.0
+   Compiling sha2 v0.11.1
+   Compiling md-5 v0.11.0
+    Checking hkdf v0.13.0
+    Checking p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay)
+    Checking workshop-calculator v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator)
+    Checking p07-indexer v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer)
+    Checking unicode-ident v1.0.27
+    Checking log-detective v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs)
+    Checking core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs)
+    Checking expression-language v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions)
+    Checking typed-config v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config)
+    Checking p06-kv v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv)
+    Checking task-journal v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal)
+    Checking p13-unsafe v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe)
+    Checking p15-replication v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication)
+    Checking rust-specializations v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations)
+    Checking course-ui-model v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model)
+    Checking proc-macro2 v1.0.107
+    Checking idna_adapter v1.2.2
+    Checking quote v1.0.47
+    Checking idna v1.1.0
+    Checking syn v3.0.9
+    Checking url v2.5.8
+    Checking hyper v1.12.0
+    Checking tower v0.5.3
+    Checking tokio-stream v0.1.19
+    Checking p09-chat v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat)
+    Checking p08-monitor v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor)
+    Checking concurrency-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs)
+    Checking sqlx-core v0.9.0
+    Checking hyper-util v0.1.21
+    Checking axum v0.8.9
+    Checking course-kind-derive v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive)
+    Checking sqlx-postgres v0.9.0
+    Checking p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+   Compiling sqlx-macros-core v0.9.0
+   Compiling sqlx-macros v0.9.0
+    Checking sqlx v0.9.0
+    Checking p10-issues v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues)
+    Checking p14-scheduler v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.89s

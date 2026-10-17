@@ -1,0 +1,53 @@
+{
+  "overall": "passed",
+  "checks": [
+    {
+      "check": "p17-specializations path dependency / inherited fields and merged features resolve",
+      "result": "passed"
+    },
+    {
+      "check": "p19-concurrency-labs path dependency / inherited fields and merged features resolve",
+      "result": "passed"
+    },
+    {
+      "check": "p09 reconstructed early milestone strict Clippy",
+      "result": "passed"
+    },
+    {
+      "check": "p10 reconstructed early milestone strict Clippy",
+      "result": "passed"
+    },
+    {
+      "check": "p14 reconstructed early milestone strict Clippy",
+      "result": "passed"
+    },
+    {
+      "check": "p15 reconstructed early milestone strict Clippy",
+      "result": "passed"
+    },
+    {
+      "check": "p16 reconstructed early milestone strict Clippy",
+      "result": "passed"
+    },
+    {
+      "check": "existing destination refused without changes",
+      "result": "passed"
+    },
+    {
+      "check": "destination nested in source rejected before creating it",
+      "result": "passed"
+    },
+    {
+      "check": "source outside course rejected",
+      "result": "passed"
+    }
+  ],
+  "helper_sha256": "b5cd0b573ea24558dfa10d6fd18dae2f629a6d2a51612b411c08e4ae9d1648f2",
+  "author_review": "complete",
+  "independent_review": "pending",
+  "limits": [
+    "p11 actual WASM build is verified separately by root.",
+    "Path dependency tests resolve existing course shapes, not arbitrary Cargo workspace layouts.",
+    "No browser interaction is part of these checks."
+  ]
+}

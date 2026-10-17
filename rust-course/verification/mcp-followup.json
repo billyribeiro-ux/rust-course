@@ -1,0 +1,581 @@
+{
+  "date": "2026-10-09",
+  "kind": "Rust MCP direct JSON-RPC follow-up",
+  "server_binary": "/Users/billyribeiro/.cargo/bin/rust-mcp-server",
+  "manifest": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+  "direct_stdio_runs": [
+    {
+      "label": "configured stdio command and PATH; explicit tool manifest",
+      "command": [
+        "/Users/billyribeiro/.cargo/bin/rust-mcp-server"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course",
+      "requests": [
+        {
+          "method": "initialize",
+          "params": {
+            "protocolVersion": "2025-03-26",
+            "capabilities": {
+              "roots": {
+                "listChanged": true
+              }
+            },
+            "clientInfo": {
+              "name": "course-mcp-diagnostic",
+              "version": "1.0"
+            }
+          },
+          "response": {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "result": {
+              "protocolVersion": "2025-03-26",
+              "capabilities": {
+                "tools": {}
+              },
+              "serverInfo": {
+                "name": "Rust MCP Server",
+                "title": "Rust MCP Server",
+                "version": "0.4.1.",
+                "description": "Provides access to cargo, rustc, rustup, and other Rust-related tools via the MCP protocol",
+                "websiteUrl": "https://github.com/Vaiz/rust-mcp-server"
+              },
+              "instructions": "# Model Context Protocol (MCP) Rust Server Instructions\n\nThis server implements the Model Context Protocol (MCP) for Rust projects, providing a set of tools and resources to help LLMs and clients interact with Rust codebases. The server communicates using JSON-RPC over stdio and supports asynchronous operations via the Tokio runtime.\n\n## Example Scenarios\n\n### 1. Verifying Rust Code Without Making Changes\nSteps:\n1. Run `cargo-build` to ensure the project builds.\n2. Run `cargo-clippy` (without the `fix` flag) to check for code issues.\n3. Run `cargo-fmt` with the `check` flag to verify formatting.\n4. Run `cargo-machete` to check for unused dependencies.\n5. Run `cargo-deny` to check for security and license issues.\n\n### 2. Fixing Various Code Issues (Commit Your Code First)\nSteps:\n1. Run `cargo-check` to ensure code compiles.\n2. Run `cargo-fmt` to fix formatting issues.\n3. Run `cargo-clippy` with the `fix` flag to automatically fix code issues.\n4. Run `cargo-machete` with the `fix` flag to remove unused dependencies.\n\n### 3. Verifying Rust Code After Changes\nSteps:\n1. Run `cargo-fmt` to fix formatting issues.\n2. Run `cargo-check` and `cargo-build` to ensure code compiles.\n3. Run `cargo-clippy` (without the `fix` flag) to check for code issues.\n4. Run `cargo-machete` to check for unused dependencies.\n5. Run `cargo-deny` to check for license and security issues.\n\n### 4. Adding a New Dependency Using `cargo-add`\nSteps:\n1. Use `cargo-add <crate-name>` to add a new dependency to your `Cargo.toml`.\n2. Run `cargo-build` to ensure the project builds with the new dependency.\n\n### 5. Loading Crate Metadata Using `cargo-metadata`\nSteps:\n1. Run `cargo-metadata` to retrieve detailed information about the project's dependency graph, workspace members, and crate metadata.\n2. Use the output to analyze dependencies, resolve workspace structure, or integrate with other tools that require project metadata.\n"
+            }
+          },
+          "elapsed_seconds": 0.002
+        },
+        {
+          "method": "tools/list",
+          "params": {},
+          "response": {
+            "id": 2,
+            "tool_count": 33
+          },
+          "elapsed_seconds": 0.001
+        },
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "workspace-info",
+            "arguments": {
+              "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+              "toolchain": "1.99.0",
+              "include_dependencies": false
+            }
+          },
+          "response": {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Executed command: `cargo +1.99.0 metadata --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml`",
+                  "_meta": {
+                    "description": "command line executed by MCP server"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user"
+                    ],
+                    "priority": 0.5
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "\u2705 workspace-info: Success",
+                  "_meta": {
+                    "description": "command exit status",
+                    "exit_code": 0
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "{\"packages\":[{\"name\":\"workshop-calculator\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\",\"test\"]},{\"name\":\"task-journal\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"log-detective\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"typed-config\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"expression-language\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"p06-kv\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p07-indexer\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p08-monitor\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p09-chat\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\"]},{\"name\":\"p10-issues\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\",\"test\"],\"features\":{\"verified-query\":[]}},{\"name\":\"course-ui-model\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model/Cargo.toml\",\"target_types\":[\"lib\"]},{\"name\":\"p12-replay\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\"]},{\"name\":\"p13-unsafe\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p14-scheduler\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"p15-replication\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p16-workbench\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\"]},{\"name\":\"course-kind-derive\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive/Cargo.toml\",\"target_types\":[\"proc-macro\"]},{\"name\":\"rust-specializations\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations/Cargo.toml\",\"target_types\":[\"example\",\"lib\"]},{\"name\":\"core-rust-labs\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/Cargo.toml\",\"target_types\":[\"example\",\"lib\"]},{\"name\":\"concurrency-labs\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/Cargo.toml\",\"target_types\":[\"example\",\"lib\"]}]}",
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                }
+              ],
+              "isError": false
+            }
+          },
+          "elapsed_seconds": 0.074
+        },
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "cargo-metadata",
+            "arguments": {
+              "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+              "toolchain": "1.99.0",
+              "no_deps": true,
+              "locking_mode": "frozen"
+            }
+          },
+          "response": {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Executed command: `cargo +1.99.0 metadata --format-version 1 --no-deps --quiet --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml --frozen`",
+                  "_meta": {
+                    "description": "command line executed by MCP server"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user"
+                    ],
+                    "priority": 0.5
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "{\"packages\":[{\"name\":\"workshop-calculator\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator#workshop-calculator@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"workshop_calculator\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"workshop-calculator\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"hello\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/examples/hello.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"roundoff\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/examples/roundoff.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"workshop_basics\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/examples/workshop_basics.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"cli\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/tests/cli.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"task-journal\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal#task-journal@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"task_journal\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"task-journal\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"storage\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/tests/storage.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"log-detective\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs#log-detective@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"log_detective\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"log-detective\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"fixtures\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/tests/fixtures.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"typed-config\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config#typed-config@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"typed_config\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"typed-config\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"cli\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/tests/cli.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"expression-language\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions#expression-language@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"expression_language\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"expression-language\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"corpus\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/tests/corpus.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p06-kv\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p06_kv\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p06-kv\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p07-indexer\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p07_indexer\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"indexer-benchmark\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/src/bin/indexer-benchmark.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p07-indexer\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":\"p07-indexer\",\"rust_version\":\"1.99\"},{\"name\":\"p08-monitor\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p08_monitor\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p08-monitor\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p09-chat\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p09_chat\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p09-chat\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"frame\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/examples/frame.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p10-issues\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"axum\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.8.9\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"serde\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.229\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null},{\"name\":\"serde_json\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.151\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"sqlx\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.9.0\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":false,\"features\":[\"runtime-tokio\",\"postgres\",\"migrate\",\"macros\"],\"target\":null,\"registry\":null},{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null},{\"name\":\"tower\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.5.3\",\"kind\":\"dev\",\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"util\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p10_issues\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p10-issues\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"validation\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/examples/validation.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"postgres\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/tests/postgres.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"web_boundaries\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/tests/web_boundaries.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{\"verified-query\":[]},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"course-ui-model\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model#course-ui-model@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"serde\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.229\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null},{\"name\":\"serde_json\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.151\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"course_ui_model\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p12-replay\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p12_replay\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"benchmark\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/src/bin/benchmark.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p12-replay\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"dispatch_allocation\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/examples/dispatch_allocation.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"layout_profile\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/examples/layout_profile.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":\"p12-replay\",\"rust_version\":\"1.99\"},{\"name\":\"p13-unsafe\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p13_unsafe\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p13-unsafe\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p14-scheduler\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"axum\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.8.9\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"serde\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.229\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null},{\"name\":\"serde_json\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.151\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"sqlx\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.9.0\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":false,\"features\":[\"runtime-tokio\",\"postgres\",\"migrate\",\"macros\"],\"target\":null,\"registry\":null},{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p14_scheduler\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p14-scheduler\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"postgres\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/tests/postgres.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p15-replication\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p15_replication\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p15-replication\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p16-workbench\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"axum\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.8.9\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"serde\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.229\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null},{\"name\":\"serde_json\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.151\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null},{\"name\":\"tower\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.5.3\",\"kind\":\"dev\",\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"util\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p16_workbench\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p16-workbench\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"domain\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/examples/domain.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"course-kind-derive\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive#course-kind-derive@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"quote\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.47\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"syn\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=2.0.119\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"proc-macro\"],\"crate_types\":[\"proc-macro\"],\"name\":\"course_kind_derive\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"rust-specializations\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations#rust-specializations@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"course-kind-derive\",\"source\":null,\"req\":\"*\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null,\"path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive\"}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"rust_specializations\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"dispatch\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations/examples/dispatch.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"core-rust-labs\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs#core-rust-labs@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"core_rust_labs\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"collections\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/collections.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"conversions\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/conversions.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"interior\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/interior.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"concurrency-labs\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs#concurrency-labs@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null},{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":\"dev\",\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\",\"test-util\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"concurrency_labs\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"deadline\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/examples/deadline.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"publication\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/examples/publication.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"}],\"workspace_members\":[\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator#workshop-calculator@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal#task-journal@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs#log-detective@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config#typed-config@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions#expression-language@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model#course-ui-model@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive#course-kind-derive@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations#rust-specializations@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs#core-rust-labs@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs#concurrency-labs@0.1.0\"],\"workspace_default_members\":[\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator#workshop-calculator@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal#task-journal@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs#log-detective@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config#typed-config@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions#expression-language@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model#course-ui-model@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive#course-kind-derive@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations#rust-specializations@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs#core-rust-labs@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs#concurrency-labs@0.1.0\"],\"resolve\":null,\"target_directory\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/target\",\"build_directory\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/target\",\"version\":1,\"workspace_root\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects\",\"metadata\":null}",
+                  "_meta": {
+                    "description": "stdout"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 0.2
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "\u2705 cargo-metadata: Success",
+                  "_meta": {
+                    "description": "command exit status",
+                    "exit_code": 0
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "RECOMMENDATION: Use #workspace-info if you don't need full metadata",
+                  "_meta": {
+                    "description": "recommendation for next action by the agent"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                }
+              ],
+              "isError": false
+            }
+          },
+          "elapsed_seconds": 0.019
+        }
+      ],
+      "stderr": [
+        "Rust MCP Server started on stdio"
+      ],
+      "tool_names": [
+        "cargo-new",
+        "cargo-test",
+        "cargo-build",
+        "cargo-deny-install",
+        "cargo-tree",
+        "rustup-update",
+        "cargo-machete",
+        "cargo-deny-init",
+        "cargo-fmt",
+        "rustup-toolchain-add",
+        "cargo-expand",
+        "cargo-hack-install",
+        "cargo-insta-update-snapshots",
+        "cargo-info",
+        "cargo-search",
+        "cargo-generate_lockfile",
+        "cargo-add",
+        "workspace-info",
+        "cargo-clippy",
+        "cargo-remove",
+        "cargo-deny-check",
+        "cargo-clean",
+        "cargo-machete-install",
+        "cargo-list",
+        "rustup-show",
+        "cargo-hack",
+        "rustc-explain",
+        "cargo-update",
+        "cargo-deny-list",
+        "cargo-package",
+        "cargo-doc",
+        "cargo-check",
+        "cargo-metadata"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "explicit workspace; pinned toolchain; targeted check",
+      "command": [
+        "/Users/billyribeiro/.cargo/bin/rust-mcp-server",
+        "--workspace",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/projects"
+      ],
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects",
+      "requests": [
+        {
+          "method": "initialize",
+          "params": {
+            "protocolVersion": "2025-03-26",
+            "capabilities": {
+              "roots": {
+                "listChanged": true
+              }
+            },
+            "clientInfo": {
+              "name": "course-mcp-diagnostic",
+              "version": "1.0"
+            }
+          },
+          "response": {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "result": {
+              "protocolVersion": "2025-03-26",
+              "capabilities": {
+                "tools": {}
+              },
+              "serverInfo": {
+                "name": "Rust MCP Server",
+                "title": "Rust MCP Server",
+                "version": "0.4.1.",
+                "description": "Provides access to cargo, rustc, rustup, and other Rust-related tools via the MCP protocol",
+                "websiteUrl": "https://github.com/Vaiz/rust-mcp-server"
+              },
+              "instructions": "# Model Context Protocol (MCP) Rust Server Instructions\n\nThis server implements the Model Context Protocol (MCP) for Rust projects, providing a set of tools and resources to help LLMs and clients interact with Rust codebases. The server communicates using JSON-RPC over stdio and supports asynchronous operations via the Tokio runtime.\n\n## Example Scenarios\n\n### 1. Verifying Rust Code Without Making Changes\nSteps:\n1. Run `cargo-build` to ensure the project builds.\n2. Run `cargo-clippy` (without the `fix` flag) to check for code issues.\n3. Run `cargo-fmt` with the `check` flag to verify formatting.\n4. Run `cargo-machete` to check for unused dependencies.\n5. Run `cargo-deny` to check for security and license issues.\n\n### 2. Fixing Various Code Issues (Commit Your Code First)\nSteps:\n1. Run `cargo-check` to ensure code compiles.\n2. Run `cargo-fmt` to fix formatting issues.\n3. Run `cargo-clippy` with the `fix` flag to automatically fix code issues.\n4. Run `cargo-machete` with the `fix` flag to remove unused dependencies.\n\n### 3. Verifying Rust Code After Changes\nSteps:\n1. Run `cargo-fmt` to fix formatting issues.\n2. Run `cargo-check` and `cargo-build` to ensure code compiles.\n3. Run `cargo-clippy` (without the `fix` flag) to check for code issues.\n4. Run `cargo-machete` to check for unused dependencies.\n5. Run `cargo-deny` to check for license and security issues.\n\n### 4. Adding a New Dependency Using `cargo-add`\nSteps:\n1. Use `cargo-add <crate-name>` to add a new dependency to your `Cargo.toml`.\n2. Run `cargo-build` to ensure the project builds with the new dependency.\n\n### 5. Loading Crate Metadata Using `cargo-metadata`\nSteps:\n1. Run `cargo-metadata` to retrieve detailed information about the project's dependency graph, workspace members, and crate metadata.\n2. Use the output to analyze dependencies, resolve workspace structure, or integrate with other tools that require project metadata.\n"
+            }
+          },
+          "elapsed_seconds": 0.002
+        },
+        {
+          "method": "tools/list",
+          "params": {},
+          "response": {
+            "id": 2,
+            "tool_count": 33
+          },
+          "elapsed_seconds": 0.001
+        },
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "workspace-info",
+            "arguments": {
+              "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+              "toolchain": "1.99.0",
+              "include_dependencies": false
+            }
+          },
+          "response": {
+            "jsonrpc": "2.0",
+            "id": 3,
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Executed command: `cargo +1.99.0 metadata --format-version 1 --no-deps --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml`",
+                  "_meta": {
+                    "description": "command line executed by MCP server"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user"
+                    ],
+                    "priority": 0.5
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "\u2705 workspace-info: Success",
+                  "_meta": {
+                    "description": "command exit status",
+                    "exit_code": 0
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "{\"packages\":[{\"name\":\"workshop-calculator\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\",\"test\"]},{\"name\":\"task-journal\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"log-detective\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"typed-config\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"expression-language\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"p06-kv\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p07-indexer\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p08-monitor\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p09-chat\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\"]},{\"name\":\"p10-issues\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\",\"test\"],\"features\":{\"verified-query\":[]}},{\"name\":\"course-ui-model\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model/Cargo.toml\",\"target_types\":[\"lib\"]},{\"name\":\"p12-replay\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\"]},{\"name\":\"p13-unsafe\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p14-scheduler\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/Cargo.toml\",\"target_types\":[\"bin\",\"lib\",\"test\"]},{\"name\":\"p15-replication\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication/Cargo.toml\",\"target_types\":[\"bin\",\"lib\"]},{\"name\":\"p16-workbench\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/Cargo.toml\",\"target_types\":[\"bin\",\"example\",\"lib\"]},{\"name\":\"course-kind-derive\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive/Cargo.toml\",\"target_types\":[\"proc-macro\"]},{\"name\":\"rust-specializations\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations/Cargo.toml\",\"target_types\":[\"example\",\"lib\"]},{\"name\":\"core-rust-labs\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/Cargo.toml\",\"target_types\":[\"example\",\"lib\"]},{\"name\":\"concurrency-labs\",\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/Cargo.toml\",\"target_types\":[\"example\",\"lib\"]}]}",
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                }
+              ],
+              "isError": false
+            }
+          },
+          "elapsed_seconds": 0.018
+        },
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "cargo-metadata",
+            "arguments": {
+              "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+              "toolchain": "1.99.0",
+              "no_deps": true,
+              "locking_mode": "frozen"
+            }
+          },
+          "response": {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Executed command: `cargo +1.99.0 metadata --format-version 1 --no-deps --quiet --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml --frozen`",
+                  "_meta": {
+                    "description": "command line executed by MCP server"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user"
+                    ],
+                    "priority": 0.5
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "{\"packages\":[{\"name\":\"workshop-calculator\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator#workshop-calculator@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"workshop_calculator\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"workshop-calculator\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"hello\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/examples/hello.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"roundoff\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/examples/roundoff.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"workshop_basics\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/examples/workshop_basics.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"cli\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/tests/cli.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"task-journal\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal#task-journal@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"task_journal\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"task-journal\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"storage\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/tests/storage.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"log-detective\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs#log-detective@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"log_detective\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"log-detective\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"fixtures\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/tests/fixtures.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"typed-config\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config#typed-config@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"typed_config\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"typed-config\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"cli\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/tests/cli.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"expression-language\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions#expression-language@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"expression_language\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"expression-language\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"corpus\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/tests/corpus.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":\"README.md\",\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p06-kv\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p06_kv\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p06-kv\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p07-indexer\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p07_indexer\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"indexer-benchmark\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/src/bin/indexer-benchmark.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p07-indexer\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":\"p07-indexer\",\"rust_version\":\"1.99\"},{\"name\":\"p08-monitor\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p08_monitor\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p08-monitor\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p09-chat\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p09_chat\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p09-chat\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"frame\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/examples/frame.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p10-issues\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"axum\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.8.9\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"serde\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.229\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null},{\"name\":\"serde_json\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.151\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"sqlx\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.9.0\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":false,\"features\":[\"runtime-tokio\",\"postgres\",\"migrate\",\"macros\"],\"target\":null,\"registry\":null},{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null},{\"name\":\"tower\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.5.3\",\"kind\":\"dev\",\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"util\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p10_issues\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p10-issues\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"validation\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/examples/validation.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"postgres\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/tests/postgres.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"web_boundaries\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/tests/web_boundaries.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{\"verified-query\":[]},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"course-ui-model\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model#course-ui-model@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"serde\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.229\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null},{\"name\":\"serde_json\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.151\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"course_ui_model\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p12-replay\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p12_replay\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"benchmark\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/src/bin/benchmark.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p12-replay\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"dispatch_allocation\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/examples/dispatch_allocation.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"layout_profile\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/examples/layout_profile.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":\"p12-replay\",\"rust_version\":\"1.99\"},{\"name\":\"p13-unsafe\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p13_unsafe\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p13-unsafe\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p14-scheduler\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"axum\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.8.9\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"serde\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.229\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null},{\"name\":\"serde_json\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.151\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"sqlx\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.9.0\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":false,\"features\":[\"runtime-tokio\",\"postgres\",\"migrate\",\"macros\"],\"target\":null,\"registry\":null},{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p14_scheduler\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p14-scheduler\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"test\"],\"crate_types\":[\"bin\"],\"name\":\"postgres\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/tests/postgres.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p15-replication\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p15_replication\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p15-replication\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"p16-workbench\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench#0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"axum\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.8.9\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"serde\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.229\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null},{\"name\":\"serde_json\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.151\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null},{\"name\":\"tower\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=0.5.3\",\"kind\":\"dev\",\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"util\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"p16_workbench\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"bin\"],\"crate_types\":[\"bin\"],\"name\":\"p16-workbench\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/src/main.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":false,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"domain\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/examples/domain.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"course-kind-derive\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive#course-kind-derive@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"quote\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.0.47\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null},{\"name\":\"syn\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=2.0.119\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"derive\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"proc-macro\"],\"crate_types\":[\"proc-macro\"],\"name\":\"course_kind_derive\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"rust-specializations\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations#rust-specializations@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"course-kind-derive\",\"source\":null,\"req\":\"*\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[],\"target\":null,\"registry\":null,\"path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive\"}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"rust_specializations\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"dispatch\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations/examples/dispatch.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"core-rust-labs\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs#core-rust-labs@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"core_rust_labs\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"collections\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/collections.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"conversions\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/conversions.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"interior\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/interior.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"},{\"name\":\"concurrency-labs\",\"version\":\"0.1.0\",\"id\":\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs#concurrency-labs@0.1.0\",\"license\":null,\"license_file\":null,\"description\":null,\"source\":null,\"dependencies\":[{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":null,\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\"],\"target\":null,\"registry\":null},{\"name\":\"tokio\",\"source\":\"registry+https://github.com/rust-lang/crates.io-index\",\"req\":\"=1.53.2\",\"kind\":\"dev\",\"rename\":null,\"optional\":false,\"uses_default_features\":true,\"features\":[\"macros\",\"rt-multi-thread\",\"net\",\"sync\",\"time\",\"io-util\",\"signal\",\"test-util\"],\"target\":null,\"registry\":null}],\"targets\":[{\"kind\":[\"lib\"],\"crate_types\":[\"lib\"],\"name\":\"concurrency_labs\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/src/lib.rs\",\"edition\":\"2024\",\"doc\":true,\"doctest\":true,\"test\":true},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"deadline\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/examples/deadline.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false},{\"kind\":[\"example\"],\"crate_types\":[\"bin\"],\"name\":\"publication\",\"src_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/examples/publication.rs\",\"edition\":\"2024\",\"doc\":false,\"doctest\":false,\"test\":false}],\"features\":{},\"manifest_path\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs/Cargo.toml\",\"metadata\":null,\"publish\":[],\"authors\":[],\"categories\":[],\"keywords\":[],\"readme\":null,\"repository\":null,\"homepage\":null,\"documentation\":null,\"edition\":\"2024\",\"links\":null,\"default_run\":null,\"rust_version\":\"1.99\"}],\"workspace_members\":[\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator#workshop-calculator@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal#task-journal@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs#log-detective@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config#typed-config@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions#expression-language@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model#course-ui-model@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive#course-kind-derive@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations#rust-specializations@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs#core-rust-labs@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs#concurrency-labs@0.1.0\"],\"workspace_default_members\":[\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p01-calculator#workshop-calculator@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p02-journal#task-journal@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p03-logs#log-detective@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p04-config#typed-config@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p05-expressions#expression-language@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p06-kv#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p07-indexer#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p08-monitor#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p09-chat#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p10-issues#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p11-ui-model#course-ui-model@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p13-unsafe#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p14-scheduler#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p15-replication#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench#0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-derive#course-kind-derive@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p17-specializations#rust-specializations@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs#core-rust-labs@0.1.0\",\"path+file:///Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p19-concurrency-labs#concurrency-labs@0.1.0\"],\"resolve\":null,\"target_directory\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/target\",\"build_directory\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects/target\",\"version\":1,\"workspace_root\":\"/Users/billyribeiro/Desktop/rust-course/rust-course/projects\",\"metadata\":null}",
+                  "_meta": {
+                    "description": "stdout"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 0.2
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "\u2705 cargo-metadata: Success",
+                  "_meta": {
+                    "description": "command exit status",
+                    "exit_code": 0
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "RECOMMENDATION: Use #workspace-info if you don't need full metadata",
+                  "_meta": {
+                    "description": "recommendation for next action by the agent"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                }
+              ],
+              "isError": false
+            }
+          },
+          "elapsed_seconds": 0.018
+        },
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "cargo-check",
+            "arguments": {
+              "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+              "toolchain": "1.99.0",
+              "package": [
+                "core-rust-labs"
+              ],
+              "lib": true,
+              "locking_mode": "frozen",
+              "target_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+            }
+          },
+          "response": {
+            "jsonrpc": "2.0",
+            "id": 5,
+            "result": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "Executed command: `cargo +1.99.0 check --package core-rust-labs --lib --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml --frozen --quiet`",
+                  "_meta": {
+                    "description": "command line executed by MCP server"
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user"
+                    ],
+                    "priority": 0.5
+                  }
+                },
+                {
+                  "type": "text",
+                  "text": "\u2705 cargo-check: Success",
+                  "_meta": {
+                    "description": "command exit status",
+                    "exit_code": 0
+                  },
+                  "annotations": {
+                    "audience": [
+                      "user",
+                      "assistant"
+                    ],
+                    "priority": 1.0
+                  }
+                }
+              ],
+              "isError": false
+            }
+          },
+          "elapsed_seconds": 0.1
+        }
+      ],
+      "stderr": [
+        "Rust MCP Server started on stdio"
+      ],
+      "tool_names": [
+        "rustup-update",
+        "cargo-doc",
+        "cargo-update",
+        "cargo-deny-check",
+        "rustc-explain",
+        "cargo-hack",
+        "cargo-metadata",
+        "cargo-info",
+        "cargo-new",
+        "cargo-tree",
+        "cargo-clean",
+        "cargo-clippy",
+        "workspace-info",
+        "cargo-machete-install",
+        "cargo-check",
+        "cargo-test",
+        "cargo-deny-install",
+        "cargo-build",
+        "rustup-toolchain-add",
+        "cargo-deny-init",
+        "cargo-package",
+        "cargo-hack-install",
+        "cargo-list",
+        "rustup-show",
+        "cargo-remove",
+        "cargo-insta-update-snapshots",
+        "cargo-generate_lockfile",
+        "cargo-add",
+        "cargo-expand",
+        "cargo-fmt",
+        "cargo-machete",
+        "cargo-search",
+        "cargo-deny-list"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "session_wrapper": {
+    "workspace_info": "Unexpected response type",
+    "cargo_metadata": "Unexpected response type",
+    "workspace_access_established": false,
+    "calls": [
+      {
+        "tool": "mcp__rust__workspace_info",
+        "arguments": {
+          "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+          "toolchain": "1.99.0",
+          "include_dependencies": false
+        },
+        "result": "tool call error: tool call failed for `rust/workspace-info`\n\nCaused by:\n    Unexpected response type"
+      },
+      {
+        "tool": "mcp__rust__cargo_metadata",
+        "arguments": {
+          "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+          "toolchain": "1.99.0",
+          "no_deps": true,
+          "locking_mode": "frozen"
+        },
+        "result": "tool call error: tool call failed for `rust/cargo-metadata`\n\nCaused by:\n    Unexpected response type"
+      }
+    ]
+  },
+  "configuration_changed": false,
+  "permissions_changed": false,
+  "official_configuration_source": "https://learn.chatgpt.com/docs/extend/mcp?surface=cli",
+  "configured_transport": {
+    "command": "/Users/billyribeiro/.cargo/bin/rust-mcp-server",
+    "args": [],
+    "env": {
+      "PATH": "/Users/billyribeiro/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    },
+    "cwd": null,
+    "enabled": true
+  },
+  "skill_used": "/Users/billyribeiro/.codex/skills/.system/openai-docs/SKILL.md",
+  "conclusion": {
+    "installed_server": "Direct stdio MCP initialization, workspace discovery and frozen metadata passed with the configured executable and PATH.",
+    "targeted_check": "A fresh explicit-workspace MCP process passed cargo-check for core-rust-labs with Rust 1.99.0 and the existing shared target. Workspace discovery and metadata succeeded before the check.",
+    "live_session": "Actual exposed tools still return Unexpected response type. No successful session-wrapper result is claimed.",
+    "inference": "The tested failure lies at the live session/client integration boundary, not inability of the installed server to access this manifest. The exact client-side cause is not exposed by the available tools.",
+    "next_step": "Use Settings > MCP servers > rust > Restart in the host client, then retry workspace_info with the explicit course manifest. The official documentation specifies restarting a saved MCP server. No supported in-session restart API was available; the host application was not restarted."
+  },
+  "unnecessary_changes_avoided": [
+    "No reinstall: the configured executable successfully served actual MCP requests.",
+    "No global Rust default or broad filesystem/network permission changes.",
+    "No settings for other MCP servers changed.",
+    "No speculative config edit: explicit manifest calls already work through the configured launch command."
+  ],
+  "diagnostic_script_sha256": "7221a8a6bc0e9f085c86ad65162e72884f4bce234078d2f89f731d1cd2ef0c0c",
+  "session_retry_1750_utc": {
+    "date": "2026-10-09",
+    "tool": "rust/workspace-info",
+    "manifest_path": "/Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml",
+    "toolchain": "1.99.0",
+    "isError": true,
+    "error": "Unexpected response type"
+  }
+}

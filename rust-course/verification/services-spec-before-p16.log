@@ -1,0 +1,74 @@
+   Compiling itoa v1.0.18
+   Compiling bytes v1.12.1
+   Compiling pin-project-lite v0.2.17
+   Compiling futures-core v0.3.34
+   Compiling serde_core v1.0.229
+   Compiling httparse v1.10.1
+   Compiling once_cell v1.21.4
+   Compiling log v0.4.34
+   Compiling tower-service v0.3.3
+   Compiling httpdate v1.0.3
+   Compiling atomic-waker v1.1.2
+   Compiling slab v0.4.12
+   Compiling futures-task v0.3.34
+   Compiling percent-encoding v2.3.2
+   Compiling tower-layer v0.3.3
+   Compiling sync_wrapper v1.0.2
+   Compiling serde_json v1.0.151
+   Compiling smallvec v1.16.2
+   Compiling ryu v1.0.23
+   Compiling memchr v2.8.3
+   Compiling mime v0.3.17
+   Compiling matchit v0.8.4
+   Compiling libc v0.2.190
+   Compiling serde v1.0.229
+   Compiling zmij v1.0.23
+   Compiling syn v3.0.6
+   Compiling form_urlencoded v1.2.2
+   Compiling futures-util v0.3.34
+   Compiling tracing-core v0.1.36
+   Compiling http v1.5.0
+   Compiling tracing v0.1.44
+   Compiling errno v0.3.14
+   Compiling socket2 v0.6.5
+   Compiling mio v1.2.4
+   Compiling signal-hook-registry v1.4.8
+   Compiling http-body v1.1.0
+   Compiling http-body-util v0.1.5
+   Compiling axum-core v0.5.6
+   Compiling tokio-macros v2.7.2
+   Compiling serde_derive v1.0.229
+   Compiling tokio v1.53.2
+   Compiling serde_path_to_error v0.1.20
+   Compiling serde_urlencoded v0.7.1
+   Compiling hyper v1.12.0
+   Compiling tower v0.5.3
+   Compiling hyper-util v0.1.21
+   Compiling axum v0.8.9
+   Compiling p16-workbench v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p16-workbench)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.35s
+     Running tests/api_contract.rs (/Users/billyribeiro/.cargo/build-shared/debug/deps/api_contract-b23dae6927387222)
+
+running 1 test
+test poisoned_state_is_unavailable_on_every_read_route ... FAILED
+
+failures:
+
+---- poisoned_state_is_unavailable_on_every_read_route stdout ----
+
+thread '<unnamed>' (3106818) panicked at reference/p16-workbench/tests/api_contract.rs:19:9:
+injected state-owner panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'poisoned_state_is_unavailable_on_every_read_route' (3106817) panicked at reference/p16-workbench/tests/api_contract.rs:26:9:
+assertion `left == right` failed: /api/jobs
+  left: 400
+ right: 503
+
+
+failures:
+    poisoned_state_is_unavailable_on_every_read_route
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p p16-workbench --test api_contract`

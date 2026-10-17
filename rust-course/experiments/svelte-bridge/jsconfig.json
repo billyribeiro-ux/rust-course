@@ -1,0 +1,1 @@
+{"compilerOptions":{"allowJs":true,"checkJs":true,"strict":true,"target":"ES2022","module":"ESNext","moduleResolution":"bundler","resolveJsonModule":true,"skipLibCheck":true},"include":["src/**/*.js","src/**/*.svelte"]}

@@ -1,0 +1,19 @@
+RUST WORKSHOP — DESIGN RECORD
+User problem and thin end-to-end slice:
+Requirements / exclusions:
+Resource budgets (memory, tasks, queues, input size, retries):
+Domain invariants:
+Unknowns ranked by consequence:
+Riskiest assumption and prototype:
+Ownership and responsibility boundaries:
+Data model and API contract:
+Failure cases and cancellation/shutdown owners:
+Durability and recovery assumptions:
+Alternative A / benefits / costs:
+Alternative B / benefits / costs:
+Chosen approach and revisit condition:
+Acceptance tests and independent review plan:
+Observability and operational procedure:
+Rollback / migration plan:
+Measurements (command, environment, input, result, limitations):
+Remaining uncertainty:

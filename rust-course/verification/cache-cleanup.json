@@ -1,0 +1,13 @@
+{
+  "path": "/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target",
+  "reason": "duplicate task-generated native build cache",
+  "logical_bytes_removed": 1654864466,
+  "open_file_check": "lsof +D returned exit1 and no open files",
+  "preserved": "outer shared verification caches, all source, learner work, PostgreSQL data, original outer target and all unrelated caches",
+  "later_residual_cleanup": {
+    "logical_bytes_removed": 2339279,
+    "cause": "disposable foundations-lab workflow verification recreated a small shared target",
+    "open_file_check": "lsof +D returned exit1, no open files",
+    "path": "/Users/billyribeiro/Desktop/rust-course/rust-course/.local/native-target"
+  }
+}

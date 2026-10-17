@@ -1,0 +1,269 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>A small unsafe boundary with explicit invariants · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="07-unsafe" data-lesson="07-unsafe"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / A small unsafe boundary with explicit invariants</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 07 / Performance and unsafe Rust</div><h1>A small unsafe boundary with explicit invariants</h1><p class="lead">Build and audit fixed-capacity storage while keeping a safe implementation as the behavioral baseline.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-7/07-replay.html">Deterministic replay with exact domain values</a></li></ul><ul><li>Describe initialized storage separately from allocated storage</li><li>Justify each unsafe operation locally</li><li>Preserve ownership, bounds, alignment and aliasing through a safe API</li><li>Test drop behavior, zero-sized values and panic paths without claiming proof</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#borrow">borrow</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#drop">drop</a> · <a href="../../glossary.html#edition">edition</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#heap">heap</a> · <a href="../../glossary.html#invariant">invariant</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p13">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-understand-the-responsibility-unsafe-introduces">Purpose: understand the responsibility unsafe introduces</h2>
+<p>Unsafe Rust permits operations whose safety preconditions the compiler cannot fully verify at that location. It does not turn off ownership checking everywhere, and it is not an optimization badge. P13 implements a tiny fixed-capacity stack to make those preconditions visible. The public API is safe: callers can push, pop, borrow live elements and clear the stack. Internally, an array of MaybeUninit holds storage that may or may not contain initialized T values. A heap-backed SafeSlots implementation provides the same basic capacity behavior without unsafe code. Start with that safe baseline before evaluating whether the low-level representation is worth its audit cost.</p>
+<h2 id="model-allocation-and-initialization-are-different-facts">Model: allocation and initialization are different facts</h2>
+<p>FixedSlots owns N storage slots and a length. The central invariant is that len is at most N and exactly the half-open prefix <code>0..len</code> contains live initialized values; the index <code>len</code> is excluded. The remaining storage is not exposed as T. Storage availability does not establish initialization: reading an uninitialized integer, reference or other value can violate Rust's validity rules. MaybeUninit provides a way to hold such storage without pretending it already contains a T. The fields stay private so safe callers cannot increase len or overwrite the representation behind the API's reasoning.</p>
+<h2 id="predict-ownership-at-full-and-empty-boundaries">Predict ownership at full and empty boundaries</h2>
+<p>Push two owned Strings into a capacity-two stack, then push a third. Predict who owns the rejected String. The API returns Err(value), preserving ownership rather than dropping it unexpectedly or writing beyond capacity. Pop transfers ownership of the final live value and shrinks the initialized prefix. An empty pop returns None. For capacity zero, every push returns its value. For a zero-sized type, several logical elements may occupy no distinct bytes, but their count and destructors still matter. Treat these as primary cases, not exotic afterthoughts.</p>
+<pre><code>cd rust-course/projects
+mise exec -- cargo run -p p13-unsafe
+mise exec -- cargo test -p p13-unsafe
+mise exec -- rustc --edition=2024 ../exercises/systems/uninit_read.rs
+mise exec -- cargo test --manifest-path scaffolds/p13-unsafe/Cargo.toml</code></pre>
+<p>The rustc command intentionally fails with E0133 because assume_init_read requires an explicit unsafe block even though this particular slot was initialized. The compiler requires the caller to take responsibility for that operation's preconditions. Adding the block without checking those preconditions would silence a diagnostic without establishing safety.</p>
+<h2 id="read-each-transition-as-an-invariant-proof-obligation">Read each transition as an invariant proof obligation</h2>
+<div class="code-wrap" data-source="projects/reference/p13-unsafe/src/lib.rs" data-sha256="20ed4f3c55d798d7da29edce0174ca55c0187ca02a4a992ed043addd6196b502"><div class="code-label"><a href="../../projects/reference/p13-unsafe/src/lib.rs">projects/reference/p13-unsafe/src/lib.rs</a></div><pre><code>//! Tiny fixed-capacity stack for auditing unsafe boundaries, not a faster-Vec claim.
+#![deny(unsafe_op_in_unsafe_fn)]
+use std::mem::MaybeUninit;
+
+/// Invariant: len &lt;= N; exactly slots[0..len] contain live T values.
+/// Safe callers cannot alter slots or len directly. No references survive a mutation
+/// because all mutation requires &amp;mut self. Uninitialized storage is never exposed as T.
+pub struct FixedSlots&lt;T, const N: usize&gt; {
+    slots: [MaybeUninit&lt;T&gt;; N],
+    len: usize,
+}
+impl&lt;T, const N: usize&gt; Default for FixedSlots&lt;T, N&gt; {
+    fn default() -&gt; Self {
+        Self::new()
+    }
+}
+impl&lt;T, const N: usize&gt; FixedSlots&lt;T, N&gt; {
+    pub fn new() -&gt; Self {
+        Self {
+            slots: [const { MaybeUninit::uninit() }; N],
+            len: 0,
+        }
+    }
+    pub fn len(&amp;self) -&gt; usize {
+        self.len
+    }
+    pub fn is_empty(&amp;self) -&gt; bool {
+        self.len == 0
+    }
+    pub fn push(&amp;mut self, value: T) -&gt; Result&lt;(), T&gt; {
+        if self.len == N {
+            return Err(value);
+        }
+        self.slots[self.len].write(value); // Initialize before publishing the new length.
+        self.len += 1;
+        Ok(())
+    }
+    pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+        if self.len == 0 {
+            return None;
+        }
+        self.len -= 1; // Remove from live prefix before transferring ownership.
+        // SAFETY: old len was positive, so this slot was initialized. Shrinking len
+        // ensures this value is moved out exactly once and never dropped by self.
+        Some(unsafe { self.slots[self.len].assume_init_read() })
+    }
+    pub fn as_slice(&amp;self) -&gt; &amp;[T] {
+        // SAFETY: MaybeUninit&lt;T&gt; has T&#x27;s size/alignment. The prefix is initialized,
+        // within this one array allocation, and borrowed for exactly self&#x27;s lifetime.
+        // Array pointers are non-null/aligned even for N=0 or a zero-sized T.
+        unsafe { std::slice::from_raw_parts(self.slots.as_ptr().cast::&lt;T&gt;(), self.len) }
+    }
+    pub fn as_mut_slice(&amp;mut self) -&gt; &amp;mut [T] {
+        // SAFETY: same layout/initialization/range reasoning as as_slice; &amp;mut self
+        // gives exclusive access for the returned slice&#x27;s lifetime, including ZSTs.
+        unsafe { std::slice::from_raw_parts_mut(self.slots.as_mut_ptr().cast::&lt;T&gt;(), self.len) }
+    }
+    pub fn get(&amp;self, index: usize) -&gt; Option&lt;&amp;T&gt; {
+        self.as_slice().get(index)
+    }
+    pub fn clear(&amp;mut self) {
+        let len = std::mem::take(&amp;mut self.len); // Publish empty state before user Drop code.
+        // SAFETY: old prefix contained len initialized owned Ts. The mutable borrow
+        // excludes references. Slice drop glue drops each element, including cleanup
+        // during a single destructor panic; len=0 prevents a later double drop.
+        unsafe {
+            std::ptr::drop_in_place(std::ptr::slice_from_raw_parts_mut(
+                self.slots.as_mut_ptr().cast::&lt;T&gt;(),
+                len,
+            ));
+        }
+    }
+}
+impl&lt;T, const N: usize&gt; Drop for FixedSlots&lt;T, N&gt; {
+    fn drop(&amp;mut self) {
+        self.clear();
+    }
+}
+
+/// Safe comparison implementation: same capacity policy, heap-backed storage.
+pub struct SafeSlots&lt;T, const N: usize&gt;(Vec&lt;T&gt;);
+impl&lt;T, const N: usize&gt; Default for SafeSlots&lt;T, N&gt; {
+    fn default() -&gt; Self {
+        Self(Vec::with_capacity(N))
+    }
+}
+impl&lt;T, const N: usize&gt; SafeSlots&lt;T, N&gt; {
+    pub fn push(&amp;mut self, value: T) -&gt; Result&lt;(), T&gt; {
+        if self.0.len() == N {
+            Err(value)
+        } else {
+            self.0.push(value);
+            Ok(())
+        }
+    }
+    pub fn pop(&amp;mut self) -&gt; Option&lt;T&gt; {
+        self.0.pop()
+    }
+    pub fn as_slice(&amp;self) -&gt; &amp;[T] {
+        &amp;self.0
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::{
+        cell::Cell,
+        panic::{AssertUnwindSafe, catch_unwind},
+        rc::Rc,
+    };
+    #[test]
+    fn empty_zero_capacity_and_bounds() {
+        let mut zero = FixedSlots::&lt;String, 0&gt;::new();
+        assert_eq!(zero.push(&quot;owned&quot;.into()), Err(&quot;owned&quot;.into()));
+        assert_eq!(zero.pop(), None);
+        assert_eq!(zero.get(0), None);
+        assert!(zero.as_mut_slice().is_empty());
+        let mut one = FixedSlots::&lt;u32, 1&gt;::new();
+        one.push(7).unwrap();
+        assert_eq!(one.get(1), None);
+        assert_eq!(one.push(8), Err(8));
+        assert_eq!(one.pop(), Some(7));
+        assert_eq!(one.pop(), None);
+    }
+    #[test]
+    fn agrees_with_safe_baseline_under_many_operations() {
+        let mut actual = FixedSlots::&lt;u64, 7&gt;::new();
+        let mut expected = SafeSlots::&lt;u64, 7&gt;::default();
+        let mut seed = 19u64;
+        for _ in 0..10_000 {
+            seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1);
+            if seed &amp; 3 == 0 {
+                assert_eq!(actual.pop(), expected.pop());
+            } else {
+                assert_eq!(actual.push(seed), expected.push(seed));
+            }
+            assert_eq!(actual.as_slice(), expected.as_slice());
+        }
+    }
+    #[test]
+    fn values_are_dropped_exactly_once_and_rejected_value_is_returned() {
+        struct Count(Rc&lt;Cell&lt;usize&gt;&gt;);
+        impl Drop for Count {
+            fn drop(&amp;mut self) {
+                self.0.set(self.0.get() + 1);
+            }
+        }
+        let count = Rc::new(Cell::new(0));
+        {
+            let mut slots = FixedSlots::&lt;Count, 2&gt;::new();
+            assert!(slots.push(Count(count.clone())).is_ok());
+            assert!(slots.push(Count(count.clone())).is_ok());
+            let rejected = slots.push(Count(count.clone())).err().unwrap();
+            assert_eq!(count.get(), 0);
+            drop(rejected);
+            drop(slots.pop());
+            assert_eq!(count.get(), 2);
+        }
+        assert_eq!(count.get(), 3);
+    }
+    #[test]
+    fn zero_sized_values_are_logical_elements() {
+        let mut slots = FixedSlots::&lt;(), 3&gt;::new();
+        for _ in 0..3 {
+            slots.push(()).unwrap();
+        }
+        assert_eq!(slots.as_slice().len(), 3);
+        assert_eq!(slots.push(()), Err(()));
+        assert_eq!(slots.pop(), Some(()));
+        slots.clear();
+        assert!(slots.is_empty());
+    }
+    #[test]
+    fn zero_sized_destructors_run_for_every_element() {
+        thread_local! { static DROPS: Cell&lt;usize&gt; = const { Cell::new(0) }; }
+        struct Z;
+        impl Drop for Z {
+            fn drop(&amp;mut self) {
+                DROPS.with(|n| n.set(n.get() + 1));
+            }
+        }
+        DROPS.with(|n| n.set(0));
+        {
+            let mut slots = FixedSlots::&lt;Z, 3&gt;::new();
+            for _ in 0..3 {
+                assert!(slots.push(Z).is_ok());
+            }
+        }
+        DROPS.with(|n| assert_eq!(n.get(), 3));
+    }
+    #[test]
+    fn alignment_is_preserved() {
+        #[repr(align(64))]
+        struct Aligned(u8);
+        let mut slots = FixedSlots::&lt;Aligned, 2&gt;::new();
+        assert!(slots.push(Aligned(4)).is_ok());
+        assert_eq!(slots.as_slice().as_ptr() as usize % 64, 0);
+        slots.as_mut_slice()[0].0 = 9;
+        assert_eq!(slots.get(0).unwrap().0, 9);
+    }
+    #[test]
+    fn a_single_destructor_panic_leaves_empty_reusable_storage() {
+        struct Bomb {
+            drops: Rc&lt;Cell&lt;usize&gt;&gt;,
+            explode: bool,
+        }
+        impl Drop for Bomb {
+            fn drop(&amp;mut self) {
+                self.drops.set(self.drops.get() + 1);
+                assert!(!self.explode, &quot;injected destructor panic&quot;);
+            }
+        }
+        let drops = Rc::new(Cell::new(0));
+        let mut slots = FixedSlots::&lt;Bomb, 3&gt;::new();
+        for explode in [false, true, false] {
+            assert!(
+                slots
+                    .push(Bomb {
+                        drops: drops.clone(),
+                        explode
+                    })
+                    .is_ok()
+            );
+        }
+        assert!(catch_unwind(AssertUnwindSafe(|| slots.clear())).is_err());
+        assert_eq!(drops.get(), 3);
+        assert!(slots.is_empty());
+        assert!(
+            slots
+                .push(Bomb {
+                    drops: drops.clone(),
+                    explode: false
+                })
+                .is_ok()
+        );
+        drop(slots);
+        assert_eq!(drops.get(), 4);
+    }
+}
+</code></pre></div>
+<p>push checks capacity, writes the new value, then increments len. Publishing length before initialization would let another path treat unwritten storage as live. pop decrements len before assume_init_read transfers the value out, preventing later cleanup from dropping it again. as_slice constructs a slice only over the initialized prefix. Its justification includes layout compatibility, alignment, one-array bounds, valid values and a lifetime tied to the borrow of self. as_mut_slice additionally relies on exclusive access through &amp;mut self. The unsafe comments explain these facts at the operation that needs them.</p>
+<h2 id="aliasing-and-lifetimes-remain-part-of-the-safe-interface">Aliasing and lifetimes remain part of the safe interface</h2>
+<p>A shared slice returned by as_slice keeps the stack borrowed. Safe code cannot mutate the stack while that slice remains in use. The mutable slice likewise gives exclusive access for its borrow lifetime. The implementation must not manufacture a longer lifetime, expose uninitialized suffix storage, or allow mutation through a shared reference. No manual Send or Sync implementation is needed here; the compiler derives those properties from the fields when appropriate. Introducing raw-pointer caches or interior mutability later would require revisiting that reasoning rather than assuming the existing audit still applies.</p>
+<h2 id="playbook-investigation-tests-pass-but-is-the-wrapper-safe">Playbook investigation: tests pass, but is the wrapper safe?</h2>
+<p>You are shown a patch that changes as_slice to use N instead of len and a test screenshot showing successful push/pop of two u32 values in capacity two. The evidence omits partially filled storage. Hypothesis A says all allocated slots are valid values. Hypothesis B says the test only covered the fully initialized case. Hypothesis C says zero bytes happen to resemble valid u32 values on that run. Construct a test that borrows after one push into capacity two, but do not rely on ordinary execution to diagnose undefined behavior. The required reasoning already disproves A: allocation alone does not initialize T.</p>
+<p>Restore the initialized-prefix length and review every path that changes it. Then compare the wrapper against the safe baseline across many deterministic push/pop operations, including non-Copy values. Tests support the audit by exploring behavior; they do not replace the invariant argument. Optional Miri checking uses a separately selected nightly toolchain through the course's mise workflow. It may catch invalid memory behavior on executed paths, but a pass is not a proof for every T, capacity and future code change.</p>
+<h2 id="guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</h2>
+<p>Complete the scaffold while it forbids unsafe code. Preserve it as your oracle. Then annotate the reference with a table: operation, required invariant, temporary state and restored invariant. Independently add a safe get_mut method that reuses the established mutable-slice boundary rather than adding another raw-pointer operation. Explain why an index equal to len returns None. Extend tests to capacity zero, a type with alignment 64, and a zero-sized type whose Drop increments a counter. Leave performance claims out unless you conduct a separate controlled measurement.</p>
+<details><summary>Tiered hints and solution reasoning</summary><details><summary>Hint 1: choose the next observation</summary><p>a smaller unsafe surface is easier to audit than repeated pointer arithmetic.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>existing slice methods already implement checked indexing.</p></details><details><summary>Worked solution</summary><p>Solution direction: get_mut can call as_mut_slice().get_mut(index). This adds safe composition without new unsafe obligations. For the initialized-prefix table, distinguish moving a value out with assume_init_read from borrowing it; the former must remove it from the set of values the container later drops.</p></details></details>
+<aside class="stuck"><h3>When you get stuck</h3><p>Stop at the first unsafe block whose preconditions you cannot state. Read MaybeUninit's initialization invariant and from_raw_parts_mut's safety section. Run only the corresponding boundary test. Ask for review with the invariant table, the exact unsafe expression, supported T assumptions and a minimal counterexample candidate. Do not ask a reviewer to certify soundness from a green test summary alone.</p></aside>
+<h2 id="review-evidence-and-mastery">Review, evidence and mastery</h2>
+<p>Submit the safe baseline, invariant table, edge tests and an explicit statement of unverified assumptions. Mastery means recognizing when safe code is sufficient and, when unsafe code remains, explaining why every safe caller must still receive memory-safe behavior. This educational implementation is material for an audit, not an unsupported universal soundness claim.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Current scope and invariants.</strong> len never exceeds capacity; precisely the prefix below len contains owned initialized values. Borrowed slices expose only that prefix with self-tied lifetimes and appropriate exclusivity. A moved-out value is excluded from later cleanup.</p><p><strong>Why this is the current recommended shape.</strong> A safe Vec-based model comes first. The compact unsafe representation uses private MaybeUninit storage, capacity checks before writes, initialization before length publication, and length removal before move-out. clear publishes empty state before user Drop code. Every unsafe expression has a local justification.</p><p><strong>Reasonable alternative and tradeoff.</strong> A Vec or an established fixed-capacity collection is the preferred general application choice when its contract meets requirements. This custom wrapper is appropriate only for studying a small auditable boundary; no speed advantage or universal soundness proof is claimed. Adding more operations increases the audit surface and should be justified by an actual requirement.</p><p><strong>Evidence and limits.</strong> Native reference tests were run through mise in the coordinated course verification; inspect the current verification record for exact results. Zero capacity; bounds and ownership on full push; deterministic comparison with safe baseline; exactly-once non-Copy destruction; ZST counts and destructors; over-alignment; one caught destructor panic with reuse. Passing native tests or Miri is evidence for executed cases, not a universal soundness proof. A second panic while unwinding can abort. Independent review remains pending; author self-review cannot grant acceptance.</p><p><strong>Requirement that would justify evolution.</strong> Use an established collection for production needs unless stack storage or another measured requirement justifies ownership of an unsafe implementation. Any new removal, iteration, interior-mutability or raw-pointer feature requires a renewed invariant review.</p><p>In your review, explain this choice in your own words, preserve the behavioral contract during changes, and name the evidence that would make you choose the alternative. Deliberately broken variants above are diagnostic exercises, never recommended implementation stages.</p></section><p class="evidence"><strong>Executed dynamic evidence:</strong> the course author ran the seven P13 tests under Miri using nightly-2026-10-08 through mise; all seven passed. See the course verification record for the exact command and log. This is author verification of executed paths, not independent acceptance or a universal soundness proof.</p>
+<section class="evidence-note"><h2 id="safety-contract-byte-extent-and-what-tests-establish">Safety contract: byte extent and what tests establish</h2><p>The Rust 1.99.1 slice-construction contract also requires the total byte extent to fit within <code>isize::MAX</code> and its address calculation not to wrap. The pointer here comes from one live array object, and the private length stays within that array. A prefix therefore stays within that object's valid allocation extent; zero-sized elements have zero byte extent but still require an aligned, non-null pointer. State this argument alongside initialization, aliasing, and lifetime obligations. Adding a debug assertion alone would not establish the safe interface's contract.</p><p>Boundary tests demonstrate their chosen executions. The invariant argument must account for every permitted safe caller, and independent review remains separate. The earlier follow-up audit checked the installed Rust 1.99.0 primary documentation locally, reviewed all four unsafe sites, and reused the existing native, optimized, and Miri evidence; it does not claim a new universal soundness proof. See <a href="../../verification/advanced-boundary-audit.html">the narrow boundary audit</a>.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/std/mem/union.MaybeUninit.html">MaybeUninit invariants</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/slice/fn.from_raw_parts_mut.html">Mutable slices from raw parts</a></li><li><a href="https://github.com/rust-lang/miri">Miri limitations and usage</a></li><li><a href="https://doc.rust-lang.org/1.99.1/reference/behavior-considered-undefined.html#undefined.dangling.alloc-limit">Rust 1.99.1 allocation size limits</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-7/07-replay.html">Previous: Deterministic replay with exact domain values</a><a href="../../lessons/stage-7/07-auditing.html">Next: Audit cleanup, panics and evidence limits</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-understand-the-responsibility-unsafe-introduces">Purpose: understand the responsibility unsafe introduces</a><a href="#model-allocation-and-initialization-are-different-facts">Model: allocation and initialization are different facts</a><a href="#predict-ownership-at-full-and-empty-boundaries">Predict ownership at full and empty boundaries</a><a href="#read-each-transition-as-an-invariant-proof-obligation">Read each transition as an invariant proof obligation</a><a href="#aliasing-and-lifetimes-remain-part-of-the-safe-interface">Aliasing and lifetimes remain part of the safe interface</a><a href="#playbook-investigation-tests-pass-but-is-the-wrapper-safe">Playbook investigation: tests pass, but is the wrapper safe?</a><a href="#guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</a><a href="#review-evidence-and-mastery">Review, evidence and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#safety-contract-byte-extent-and-what-tests-establish">Safety contract: byte extent and what tests establish</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,19 @@
+COMMAND: ['python3', 'rust-course/scripts/build-ui.py', '--project', '/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-learner-dr4eg9ud/p11-console', '--wasm-bindgen', '/Users/billyribeiro/Desktop/rust-course/.course-cache/tools/wasm-bindgen-0.2.129-aarch64-apple-darwin/wasm-bindgen', '--target-dir', '/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm']
+error: failed to link or copy `/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm/debug/build/proc-macro2-a01c9564bccc2e67/build_script_build-a01c9564bccc2e67` to `/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm/debug/build/proc-macro2-a01c9564bccc2e67/build-script-build`
+
+Caused by:
+  Operation not permitted (os error 1)
+Traceback (most recent call last):
+  File "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/build-ui.py", line 35, in <module>
+    subprocess.run([
+    ~~~~~~~~~~~~~~^^
+        'mise', 'exec', '--', 'cargo', 'build', '--locked', '--manifest-path', str(manifest),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        '--target', 'wasm32-unknown-unknown', '--target-dir', str(target_dir)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ], check=True, cwd=root)
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/billyribeiro/.local/share/mise/installs/python/3.14.8/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['mise', 'exec', '--', 'cargo', 'build', '--locked', '--manifest-path', '/Users/billyribeiro/Desktop/rust-course/.course-cache/ui-learner-dr4eg9ud/p11-console/Cargo.toml', '--target', 'wasm32-unknown-unknown', '--target-dir', '/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm']' returned non-zero exit status 101.

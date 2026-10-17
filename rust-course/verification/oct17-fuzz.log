@@ -1,0 +1,13 @@
+$ python3 scripts/fuzz-expression.py --cache-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+Command: mise exec cargo:cargo-fuzz@0.13.2 -- rustup run nightly-2026-10-17 cargo fuzz run --fuzz-dir /Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/target expression /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/corpus/expression -- -runs=10000 -max_len=4097 -timeout=2 -rss_limit_mb=512 -seed=20261009 -artifact_prefix=/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17/artifacts/
+mise WARN  Failed to resolve tool version list for rust: [~/Desktop/rust-course/rust-course/mise.toml] rust@1.99.1: rust@1.99.1 is not in the lockfile
+hint: Run `mise install` without --locked to update the lockfile
+mise WARN  Failed to resolve tool version list for rust: [~/Desktop/rust-course/rust-course/mise.toml] rust@1.99.1: rust@1.99.1 is not in the lockfile
+hint: Run `mise install` without --locked to update the lockfile
+mise ERROR No version is set for shim: rustup
+Set a global default version with one of the following:
+mise use -g rust@1.99.0
+mise use -g rust@1.99.1
+mise ERROR Version: 2026.10.12 macos-arm64 (2026-10-16)
+mise ERROR Run with --verbose or MISE_VERBOSE=1 for more information

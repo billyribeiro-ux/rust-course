@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-09T19:05:04.017221+00:00",
+  "build_dir": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+  "commands": [
+    {
+      "argv": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--locked",
+        "--offline",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "p09-chat"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "projects/Cargo.toml",
+        "--locked",
+        "--offline",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+        "-p",
+        "p09-chat",
+        "-p",
+        "p10-issues",
+        "-p",
+        "p14-scheduler",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "passed": true
+}

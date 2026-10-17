@@ -1,0 +1,36 @@
+{
+  "measured_at_utc": "2026-10-09T18:09:26.264689+00:00",
+  "measurement": "Snapshot of logical portable content and separately allocated caches before final metadata packaging. Toolchains and other global caches are excluded; the newly observed shared intermediate directory is explicitly measured separately, not attributed wholly to this course.",
+  "portable_file_count": 718,
+  "portable_logical_bytes": 5902435,
+  "categories": {
+    "root_pages_and_manifests": 454415,
+    "assessments": 75157,
+    "projects": 863147,
+    "verification": 1655722,
+    "authoring": 948191,
+    "exercises": 24604,
+    "scripts": 88045,
+    "assets": 61938,
+    "lessons": 1667236,
+    "experiments": 63980
+  },
+  "retained_postgres_databases": {
+    "rust_course_test_issues_bytes": 8117271,
+    "rust_course_test_scheduler_bytes": 9591831
+  },
+  "cleanup_record": "cache-cleanup.json",
+  "archive_policy": "No targets, verification caches, generated UI pkg/dist, node_modules, databases, learner work or .env secrets.",
+  "allocated_kib": {
+    "course_live_folder": 89320,
+    "shared_verification_cache": 7784932,
+    "native_cache": 6057060,
+    "wasm_cache": 1405656,
+    "generated_leptos_pkg": 5040,
+    "optional_svelte_node_modules": 76524,
+    "optional_svelte_dist": 60,
+    "preserved_outer_starter_target_not_course": 218580,
+    "global_mixed_intermediate_cache_not_course_only": 1855332
+  },
+  "cache_note": "7.42 GiB course verification cache retained; no per-checkpoint targets. A newly configured global intermediate directory is mixed with other projects and preserved. Verification helpers now constrain their own intermediates command-locally. No relocation or cleanup is counted as reclaimed space."
+}

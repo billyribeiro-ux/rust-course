@@ -1,0 +1,522 @@
+{
+  "checked_at_utc": "2026-10-09T05:25:25.811577+00:00",
+  "cwd": "/Users/billyribeiro/Desktop/rust-course",
+  "author_side_verification": true,
+  "independent_review": "pending",
+  "rustc": {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "rustc",
+      "-Vv"
+    ],
+    "exit_code": 0,
+    "stdout": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: aarch64-apple-darwin\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+    "stderr": ""
+  },
+  "cargo_audit": {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "audit",
+      "--version"
+    ],
+    "exit_code": 0,
+    "stdout": "cargo-audit-audit 0.22.2\n"
+  },
+  "checks": [
+    {
+      "name": "specialization expected compiler errors",
+      "status": "passed_expected_failures",
+      "cases": [
+        {
+          "case": {
+            "id": "orphan",
+            "file": "orphan.rs",
+            "expected_codes": [
+              "E0117"
+            ],
+            "lesson": "07-traits"
+          },
+          "command": [
+            "mise",
+            "exec",
+            "--",
+            "rustc",
+            "--edition=2024",
+            "--emit=metadata",
+            "--out-dir",
+            "/Users/billyribeiro/Desktop/rust-course/.course-cache/auxiliary-diagnostics",
+            "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/orphan.rs"
+          ],
+          "exit_code": 1,
+          "expected_codes_found": true,
+          "stdout": "",
+          "stderr": "error[E0117]: only traits defined in the current crate can be implemented for types defined outside of the crate\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/orphan.rs:2:1\n  |\n2 | impl std::fmt::Display for Vec<u8> {\n  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^-------\n  |                            |\n  |                            `Vec` is not defined in the current crate\n  |\n  = note: impl doesn't have any local type before any uncovered type parameters\n  = note: for more information see https://doc.rust-lang.org/reference/items/implementations.html#orphan-rules\n  = note: define and implement a trait or new type instead\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0117`.\n"
+        },
+        {
+          "case": {
+            "id": "dyn",
+            "file": "dyn.rs",
+            "expected_codes": [
+              "E0038"
+            ],
+            "lesson": "07-traits"
+          },
+          "command": [
+            "mise",
+            "exec",
+            "--",
+            "rustc",
+            "--edition=2024",
+            "--emit=metadata",
+            "--out-dir",
+            "/Users/billyribeiro/Desktop/rust-course/.course-cache/auxiliary-diagnostics",
+            "/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/dyn.rs"
+          ],
+          "exit_code": 1,
+          "expected_codes_found": true,
+          "stdout": "",
+          "stderr": "error[E0038]: the trait `Encode` is not dyn compatible\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/dyn.rs:3:20\n  |\n3 | fn use_encoder(_: &dyn Encode){}\n  |                    ^^^^^^^^^^ `Encode` is not dyn compatible\n  |\nnote: for a trait to be dyn compatible it needs to allow building a vtable\n      for more information, visit <https://doc.rust-lang.org/reference/items/traits.html#dyn-compatibility>\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/dyn.rs:2:17\n  |\n2 | trait Encode{fn encode<T>(&self,value:T);}\n  |       ------    ^^^^^^ ...because method `encode` has generic type parameters\n  |       |\n  |       this trait is not dyn compatible...\n  = help: consider moving `encode` to another trait\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0038`.\n"
+        }
+      ],
+      "scope": "E0117 and E0038 confirmed under the pinned toolchain; nonzero exits are required here"
+    },
+    {
+      "name": "no_std host tests",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "rust-course/exercises/specializations/no-std/Cargo.toml",
+        "--target-dir",
+        ".course-cache/auxiliary"
+      ],
+      "exit_code": 0,
+      "status": "passed",
+      "output": "   Compiling course-no-std v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/exercises/specializations/no-std)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s\n     Running unittests src/lib.rs (.course-cache/auxiliary/debug/deps/course_no_std-5124c474768d1659)\n\nrunning 1 test\ntest tests::limits ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Doc-tests course_no_std\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n",
+      "scope": "one host unit test and zero doctests; no embedded hardware, custom target, linker, or panic-handler executable tested"
+    },
+    {
+      "name": "UI learner scaffold WASM test-target check",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "check",
+        "--tests",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--manifest-path",
+        "rust-course/projects/scaffolds/p11-console/Cargo.toml",
+        "--target-dir",
+        ".course-cache/wasm"
+      ],
+      "exit_code": 0,
+      "status": "typechecked",
+      "output": "    Updating crates.io index\n     Locking 179 packages to highest Rust 1.99 compatible versions\n      Adding generic-array v0.14.7 (available: v0.14.9)\n    Checking console-learner v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p11-console)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.65s\n",
+      "scope": "accessible local-filter checkpoint only; no browser runtime or completed network client claimed"
+    }
+  ],
+  "scaffolds": [
+    {
+      "project": "p01-calculator",
+      "evidence": "verification/foundations-scaffolds.json",
+      "status": "typechecked; learner TODO implementations remain incomplete",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p01-calculator/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "reused": true
+    },
+    {
+      "project": "p02-journal",
+      "evidence": "verification/foundations-scaffolds.json",
+      "status": "typechecked; learner TODO implementations remain incomplete",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p02-journal/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "reused": true
+    },
+    {
+      "project": "p03-logs",
+      "evidence": "verification/foundations-scaffolds.json",
+      "status": "typechecked; learner TODO implementations remain incomplete",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p03-logs/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "reused": true
+    },
+    {
+      "project": "p04-config",
+      "evidence": "verification/foundations-scaffolds.json",
+      "status": "typechecked; learner TODO implementations remain incomplete",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p04-config/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "reused": true
+    },
+    {
+      "project": "p05-expressions",
+      "evidence": "verification/foundations-scaffolds.json",
+      "status": "typechecked; learner TODO implementations remain incomplete",
+      "command": "mise exec -- cargo check --tests --manifest-path rust-course/projects/scaffolds/p05-expressions/Cargo.toml --target-dir .course-cache/foundations-scaffolds",
+      "exit_code": 0,
+      "reused": true
+    },
+    {
+      "project": "p06-kv",
+      "evidence": "verification/systems-scaffolds.json",
+      "status": "compiled; acceptance tests deliberately fail at learner TODO",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "scaffolds/p06-kv/Cargo.toml",
+        "--target-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+      ],
+      "exit_code": 101,
+      "expected_failure": true,
+      "reused": true
+    },
+    {
+      "project": "p07-indexer",
+      "evidence": "verification/systems-scaffolds.json",
+      "status": "compiled; acceptance tests deliberately fail at learner TODO",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "scaffolds/p07-indexer/Cargo.toml",
+        "--target-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+      ],
+      "exit_code": 101,
+      "expected_failure": true,
+      "reused": true
+    },
+    {
+      "project": "p08-monitor",
+      "evidence": "verification/systems-scaffolds.json",
+      "status": "compiled; acceptance tests deliberately fail at learner TODO",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "scaffolds/p08-monitor/Cargo.toml",
+        "--target-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+      ],
+      "exit_code": 101,
+      "expected_failure": true,
+      "reused": true
+    },
+    {
+      "project": "p09-chat",
+      "evidence": "verification/services-exercises.json",
+      "status": "small checkpoint tests pass; full project features remain learner work",
+      "compile_command": [
+        "rustc",
+        "--edition",
+        "2024",
+        "--test",
+        "rust-course/projects/scaffolds/p09-chat/src/main.rs",
+        "-o",
+        ".course-cache/services-exercises/p09-chat"
+      ],
+      "compile_exit_code": 0,
+      "test_exit_code": 0,
+      "reused": true,
+      "limitation": "Existing raw-rustc verification is retained as reported; it is not relabeled as a Cargo manifest or WASM check."
+    },
+    {
+      "project": "p10-issues",
+      "evidence": "verification/services-exercises.json",
+      "status": "small checkpoint tests pass; full project features remain learner work",
+      "compile_command": [
+        "rustc",
+        "--edition",
+        "2024",
+        "--test",
+        "rust-course/projects/scaffolds/p10-issues/src/main.rs",
+        "-o",
+        ".course-cache/services-exercises/p10-issues"
+      ],
+      "compile_exit_code": 0,
+      "test_exit_code": 0,
+      "reused": true,
+      "limitation": "Existing raw-rustc verification is retained as reported; it is not relabeled as a Cargo manifest or WASM check."
+    },
+    {
+      "project": "p11-console",
+      "evidence": "verification/auxiliary-ui-scaffold.log",
+      "status": "WASM test targets typecheck; local filter checkpoint, later service integration not implemented in scaffold",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "check",
+        "--tests",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--manifest-path",
+        "rust-course/projects/scaffolds/p11-console/Cargo.toml",
+        "--target-dir",
+        ".course-cache/wasm"
+      ],
+      "exit_code": 0,
+      "reused": false
+    },
+    {
+      "project": "p12-replay",
+      "evidence": "verification/systems-scaffolds.json",
+      "status": "compiled; acceptance tests deliberately fail at learner TODO",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "scaffolds/p12-replay/Cargo.toml",
+        "--target-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+      ],
+      "exit_code": 101,
+      "expected_failure": true,
+      "reused": true
+    },
+    {
+      "project": "p13-unsafe",
+      "evidence": "verification/systems-scaffolds.json",
+      "status": "compiled; acceptance tests deliberately fail at learner TODO",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--manifest-path",
+        "scaffolds/p13-unsafe/Cargo.toml",
+        "--target-dir",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+      ],
+      "exit_code": 101,
+      "expected_failure": true,
+      "reused": true
+    },
+    {
+      "project": "p14-scheduler",
+      "evidence": "verification/services-exercises.json",
+      "status": "small checkpoint tests pass; full project features remain learner work",
+      "compile_command": [
+        "rustc",
+        "--edition",
+        "2024",
+        "--test",
+        "rust-course/projects/scaffolds/p14-scheduler/src/main.rs",
+        "-o",
+        ".course-cache/services-exercises/p14-scheduler"
+      ],
+      "compile_exit_code": 0,
+      "test_exit_code": 0,
+      "reused": true,
+      "limitation": "Existing raw-rustc verification is retained as reported; it is not relabeled as a Cargo manifest or WASM check."
+    },
+    {
+      "project": "p15-replication",
+      "evidence": "verification/services-exercises.json",
+      "status": "small checkpoint tests pass; full project features remain learner work",
+      "compile_command": [
+        "rustc",
+        "--edition",
+        "2024",
+        "--test",
+        "rust-course/projects/scaffolds/p15-replication/src/main.rs",
+        "-o",
+        ".course-cache/services-exercises/p15-replication"
+      ],
+      "compile_exit_code": 0,
+      "test_exit_code": 0,
+      "reused": true,
+      "limitation": "Existing raw-rustc verification is retained as reported; it is not relabeled as a Cargo manifest or WASM check."
+    },
+    {
+      "project": "p16-workbench",
+      "evidence": "verification/services-exercises.json",
+      "status": "small checkpoint tests pass; full project features remain learner work",
+      "compile_command": [
+        "rustc",
+        "--edition",
+        "2024",
+        "--test",
+        "rust-course/projects/scaffolds/p16-workbench/src/main.rs",
+        "-o",
+        ".course-cache/services-exercises/p16-workbench"
+      ],
+      "compile_exit_code": 0,
+      "test_exit_code": 0,
+      "reused": true,
+      "limitation": "Existing raw-rustc verification is retained as reported; it is not relabeled as a Cargo manifest or WASM check."
+    }
+  ],
+  "dependency_audits": [
+    {
+      "name": "native",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "audit",
+        "--db",
+        ".course-cache/advisory-db",
+        "--file",
+        "rust-course/projects/Cargo.lock",
+        "--no-fetch",
+        "--json"
+      ],
+      "exit_code": 0,
+      "lockfile": "rust-course/projects/Cargo.lock",
+      "lockfile_sha256": "4db25b564c3f7e81bca6fe2bcf3116473448ddc78c1dc7f168cea40d429e6eb1",
+      "raw_report": "verification/auxiliary-native-audit.json",
+      "stderr": "",
+      "dependency_count": 179,
+      "vulnerabilities": {
+        "found": false,
+        "count": 0,
+        "list": []
+      },
+      "warnings": {},
+      "database": {
+        "advisory-count": 1295,
+        "last-commit": null,
+        "last-updated": null
+      },
+      "advisory_fetch": "A prior approved native audit fetched RustSec into the same .course-cache/advisory-db; both final snapshots use --no-fetch for that exact database."
+    },
+    {
+      "name": "ui",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "audit",
+        "--db",
+        ".course-cache/advisory-db",
+        "--file",
+        "rust-course/projects/ui-console/Cargo.lock",
+        "--no-fetch",
+        "--json"
+      ],
+      "exit_code": 0,
+      "lockfile": "rust-course/projects/ui-console/Cargo.lock",
+      "lockfile_sha256": "db251aa9540c3a30936e4c68e0d4687ef1a2728864c0f585c5bb3c03cb2c645e",
+      "raw_report": "verification/auxiliary-ui-audit.json",
+      "stderr": "",
+      "dependency_count": 184,
+      "vulnerabilities": {
+        "found": false,
+        "count": 0,
+        "list": []
+      },
+      "warnings": {
+        "unmaintained": [
+          {
+            "kind": "unmaintained",
+            "package": {
+              "name": "paste",
+              "version": "1.0.15",
+              "source": "registry+https://github.com/rust-lang/crates.io-index",
+              "checksum": "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a",
+              "replace": null
+            },
+            "advisory": {
+              "id": "RUSTSEC-2024-0436",
+              "package": "paste",
+              "title": "paste - no longer maintained",
+              "description": "The creator of the crate `paste` has stated in the [`README.md`](https://github.com/dtolnay/paste/blob/master/README.md) \nthat this project is not longer maintained as well as archived the repository\n\n## Possible Alternative(s)\n\n- [`pastey`]: a fork of paste and is aimed to be a drop-in replacement with additional features for paste crate\n- [`with_builtin_macros`]: crate providing a [superset of `paste`'s functionality including general `macro_rules!` eager expansions](https://docs.rs/with_builtin_macros/0.1.0/with_builtin_macros/macro.with_eager_expansions.html)  and `concat!`/`concat_idents!` macros\n\n[`pastey`]: https://crates.io/crates/pastey\n[`with_builtin_macros`]: https://crates.io/crates/with_builtin_macros",
+              "date": "2024-10-07",
+              "aliases": [],
+              "related": [],
+              "collection": "crates",
+              "categories": [],
+              "keywords": [],
+              "cvss": null,
+              "informational": "unmaintained",
+              "references": [],
+              "source": null,
+              "url": "https://github.com/dtolnay/paste",
+              "withdrawn": null,
+              "license": "CC0-1.0",
+              "expect-deleted": false
+            },
+            "affected": null,
+            "versions": {
+              "patched": [],
+              "unaffected": []
+            }
+          }
+        ]
+      },
+      "database": {
+        "advisory-count": 1295,
+        "last-commit": null,
+        "last-updated": null
+      },
+      "advisory_fetch": "A prior approved native audit fetched RustSec into the same .course-cache/advisory-db; both final snapshots use --no-fetch for that exact database."
+    }
+  ],
+  "dependency_path": {
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "tree",
+      "--locked",
+      "--offline",
+      "--manifest-path",
+      "rust-course/projects/ui-console/Cargo.toml",
+      "--invert",
+      "paste"
+    ],
+    "exit_code": 0,
+    "output": "paste v1.0.15 (proc-macro)\n\u251c\u2500\u2500 either_of v0.1.9\n\u2502   \u251c\u2500\u2500 leptos v0.8.22\n\u2502   \u2502   \u2514\u2500\u2500 operations-console v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/ui-console)\n\u2502   \u2514\u2500\u2500 tachys v0.2.19\n\u2502       \u251c\u2500\u2500 leptos v0.8.22 (*)\n\u2502       \u251c\u2500\u2500 leptos_dom v0.8.8\n\u2502       \u2502   \u2514\u2500\u2500 leptos v0.8.22 (*)\n\u2502       \u2514\u2500\u2500 leptos_server v0.8.8\n\u2502           \u2514\u2500\u2500 leptos v0.8.22 (*)\n\u251c\u2500\u2500 leptos v0.8.22 (*)\n\u251c\u2500\u2500 reactive_graph v0.2.15\n\u2502   \u251c\u2500\u2500 leptos v0.8.22 (*)\n\u2502   \u251c\u2500\u2500 leptos_dom v0.8.8 (*)\n\u2502   \u251c\u2500\u2500 leptos_server v0.8.8 (*)\n\u2502   \u251c\u2500\u2500 reactive_stores v0.4.4\n\u2502   \u2502   \u2514\u2500\u2500 tachys v0.2.19 (*)\n\u2502   \u2514\u2500\u2500 tachys v0.2.19 (*)\n\u251c\u2500\u2500 reactive_stores v0.4.4 (*)\n\u2514\u2500\u2500 tachys v0.2.19 (*)\n"
+  },
+  "findings": [
+    {
+      "severity": "informational-unmaintained",
+      "id": "RUSTSEC-2024-0436",
+      "package": "paste",
+      "version": "1.0.15",
+      "affected_lock": "projects/ui-console/Cargo.lock",
+      "known_vulnerability_reported": false,
+      "suggested_action": "Track a tested upstream Leptos-stack release or upstream replacement of paste. The advisory names pastey and with_builtin_macros as alternatives, but no patched paste release is listed. Do not blindly override a transitive dependency; preserve macro behavior and rerun native/WASM/UI checks for an intentional upgrade."
+    }
+  ],
+  "limitations": [
+    "No browser, alternative UI surface, or visual QA was used because browser access was explicitly denied.",
+    "Scaffold compilation or checkpoint tests do not mean the full learner projects are complete. Existing foundation, systems, and service evidence is reused without claiming new execution.",
+    "cargo audit compares lockfiles with the fetched RustSec database; it is not a source-code audit, vulnerability-free guarantee, license audit, or independent review.",
+    "Final audits use unfiltered targets and no ignored advisories. Warnings do not fail default cargo-audit exit status; the unmaintained warning is reported explicitly.",
+    "Build/test commands use explicit outer-cache target directories. cargo audit and cargo tree have no target-dir build option and do not compile artifacts.",
+    "No dependency manifests or existing native/UI dependency versions were edited. Cargo generated the UI scaffold initial lockfile while resolving its declared versions.",
+    "Sandboxed advisory fetch and UI scaffold registry access initially failed; approved retries completed. Final outputs are in their named logs.",
+    "The no_std library was tested on the host; no claim is made about board support, interrupts, MMIO, or an embedded executable."
+  ]
+}

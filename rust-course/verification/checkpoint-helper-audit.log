@@ -1,0 +1,99 @@
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p17-specializations/Cargo.toml
+metadata summary {"package_count": 6, "workspace_members": ["path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p17-specializations#rust-specializations@0.1.0", "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p17-specializations/_deps/course-kind-derive#0.1.0"], "stdout_sha256": "b8ec529baf5a05ceb6730673eed9d85be00ccafe072ae8d8682df5d09344eaf9"}
+
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p17-specializations/Cargo.toml
+metadata summary {"package_count": 6, "workspace_members": ["path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p17-specializations#rust-specializations@0.1.0", "path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p17-specializations/_deps/course-kind-derive#0.1.0"], "stdout_sha256": "b8ec529baf5a05ceb6730673eed9d85be00ccafe072ae8d8682df5d09344eaf9"}
+
+exit=0
+$ mise exec -- cargo metadata --offline --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p19-concurrency-labs/Cargo.toml
+metadata summary {"package_count": 17, "workspace_members": ["path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p19-concurrency-labs#concurrency-labs@0.1.0"], "stdout_sha256": "bc1ce59ffb8e8d1e1334ef372674f8ab04cf80bd214ab2f83f01cb61ec948ec1"}
+
+exit=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p19-concurrency-labs/Cargo.toml
+metadata summary {"package_count": 17, "workspace_members": ["path+file:///var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p19-concurrency-labs#concurrency-labs@0.1.0"], "stdout_sha256": "bc1ce59ffb8e8d1e1334ef372674f8ab04cf80bd214ab2f83f01cb61ec948ec1"}
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09 01-framing --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p09
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p09
+A synchronous byte-stream codec accepts UTF-8 frames of1..1024 bytes without control characters; distinguishes clean EOF from truncated input; bounds allocation before reading payload. No TCP listener, Tokio task, broadcast, or shutdown behavior exists in this milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p09/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ mise exec -- cargo clippy --offline --locked --all-targets --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p09/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -- -D warnings
+    Checking checkpoint-p09-chat-01-framing v0.1.0 (/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p09)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p10 01-http-validation --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p10
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p10
+An in-process Axum service exposes POST /issues/validate; the writer fixture receives a normalized title, a reader receives403, unknown identity401, invalid title422, invalid JSON400, and oversized body413. Four admitted requests, a one-second deadline, and4096-byte bodies are bounded. Nothing is persisted and this endpoint never creates an issue.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p10/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ mise exec -- cargo clippy --offline --locked --all-targets --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p10/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -- -D warnings
+    Checking serde_core v1.0.229
+    Checking tokio v1.53.2
+    Checking serde v1.0.229
+    Checking serde_path_to_error v0.1.20
+    Checking serde_json v1.0.151
+    Checking hyper v1.12.0
+    Checking tower v0.5.3
+    Checking serde_urlencoded v0.7.1
+    Checking hyper-util v0.1.21
+    Checking axum v0.8.9
+    Checking checkpoint-p10-issues-01-http-validation v0.1.0 (/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p10)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.55s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p14 01-lease-model --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p14
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p14
+An in-memory queue retains at most16 jobs,256-byte payloads, three claims per job, and ten logical ticks per lease. Exact enqueue retries have no new effect; conflicting payloads fail. Expiry permits redelivery and a newer token fences old completion. Cancellation revokes completion. No database, OS clock, background worker, or external effect is implemented.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p14/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ mise exec -- cargo clippy --offline --locked --all-targets --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p14/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -- -D warnings
+    Checking checkpoint-p14-scheduler-01-lease-model v0.1.0 (/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p14)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p15 01-append-transport --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p15
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p15
+A fixed leader proposes up to8 values and produces at most16 pending packets for two followers. A caller can take, delay, drop, or deliver packets. Duplicate delivery is idempotent; gaps, conflicts, and invalid follower indices fail. No acknowledgments, committed prefix, elections, process persistence, or consensus guarantee exists here.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p15/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ mise exec -- cargo clippy --offline --locked --all-targets --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p15/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -- -D warnings
+    Checking checkpoint-p15-replication-01-append-transport v0.1.0 (/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p15)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.11s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p16 01-order-domain --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p16
+Created /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p16
+A single synthetic symbol uses integer cents and whole shares. Quotes require increasing sequence numbers; orders retain stable logical IDs and an original accepted price. Purchases and sales use checked arithmetic, prohibit negative cash/shares, retain at most64 orders, and reject without partial state changes. No files, HTTP, watchlists, replay jobs, chart, or actual trading exists.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p16/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+
+exit=0
+$ mise exec -- cargo clippy --offline --locked --all-targets --manifest-path /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p16/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native -- -D warnings
+    Checking checkpoint-p16-workbench-01-order-domain v0.1.0 (/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/p16)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.09s
+
+exit=0
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09 01-framing --destination /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/existing
+Refusing to overwrite /var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/course-helper-audit-kqso9mz5/existing; choose a new --destination
+
+exit=1
+$ python3 /Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py p09 01-framing --destination /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p09-chat/01-framing/.audit-destination
+Destination must not be inside its immutable source directory
+
+exit=1

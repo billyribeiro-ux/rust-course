@@ -1,0 +1,82 @@
+{
+  "started_utc": "2026-10-09T19:16:31.175149+00:00",
+  "kind": "author-team real child-process verification",
+  "independent_review": "pending",
+  "checks": [
+    {
+      "name": "p09-chat: closed required stdout",
+      "result": "passed",
+      "exit_code": 1,
+      "stderr": "Error: Os { code: 32, kind: BrokenPipe, message: \"Broken pipe\" }\n"
+    },
+    {
+      "name": "p13-unsafe: closed required stdout",
+      "result": "passed",
+      "exit_code": 1,
+      "stderr": "Error: Os { code: 32, kind: BrokenPipe, message: \"Broken pipe\" }\n"
+    },
+    {
+      "name": "p15-replication: closed required stdout",
+      "result": "passed",
+      "exit_code": 1,
+      "stderr": "Error: Os { code: 32, kind: BrokenPipe, message: \"Broken pipe\" }\n"
+    },
+    {
+      "name": "p16-workbench: closed required stdout",
+      "result": "passed",
+      "exit_code": 1,
+      "stderr": "Error: Os { code: 32, kind: BrokenPipe, message: \"Broken pipe\" }\n"
+    },
+    {
+      "name": "p10-issues: missing URL",
+      "result": "passed",
+      "exit_code": 1,
+      "stderr": "Error: \"DATABASE_URL must contain a valid UTF-8 test/application URL\"\n"
+    },
+    {
+      "name": "p10-issues: non_unicode URL",
+      "result": "passed",
+      "exit_code": 1,
+      "stderr": "Error: \"DATABASE_URL must contain a valid UTF-8 test/application URL\"\n"
+    },
+    {
+      "name": "p14-scheduler: missing URL",
+      "result": "passed",
+      "exit_code": 1,
+      "stderr": "Error: \"SCHEDULER_DATABASE_URL must contain a valid UTF-8 test/application URL\"\n"
+    },
+    {
+      "name": "p14-scheduler: non_unicode URL",
+      "result": "passed",
+      "exit_code": 1,
+      "stderr": "Error: \"SCHEDULER_DATABASE_URL must contain a valid UTF-8 test/application URL\"\n"
+    },
+    {
+      "name": "p09-chat: real frame then owned SIGINT",
+      "result": "passed",
+      "exit_code": 0
+    },
+    {
+      "name": "p16-workbench: real health then owned SIGINT",
+      "result": "passed",
+      "exit_code": 0
+    }
+  ],
+  "binary_sha256": {
+    "p09-chat": "3e9ef4672fb89a64a890fa9d491dc725c013a76bdc410480c0ba18d89d2ec171",
+    "p13-unsafe": "b2962443e6d2da30ad1bd33ff286cd07b69f83680ec808bb6f0ff806c130c3d8",
+    "p15-replication": "e70be5ac6b92169ba7e3aa460e693349908aa9f7b426b69b08821ee5da58beab",
+    "p16-workbench": "0229fe338b03d102debd4dfe009548c6734876b2046b85e53069699efc18da44",
+    "p10-issues": "ffdbad1f31d65491995f2e1f3a7f83ed83ea77a6c15c38e60891994ab2c6cd8a",
+    "p14-scheduler": "183571beafb62a2ff20af4c0808c3e83942f017f9d198e4530e0f9dea094f1db"
+  },
+  "passed": true,
+  "finished_utc": "2026-10-09T19:16:32.618099+00:00",
+  "limits": [
+    "No browser execution or independent acceptance.",
+    "Database-backed services were not connected; URL failure checks exit before connection.",
+    "SIGINT checks cover the executed graceful paths, not forced OS crashes or every accept error.",
+    "The process bounds are test timeouts, not operational service guarantees.",
+    "P13 unsafe library source is unchanged; this check does not replace the recorded Miri evidence."
+  ]
+}

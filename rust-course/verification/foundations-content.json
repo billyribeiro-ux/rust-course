@@ -1,0 +1,110 @@
+{
+  "lessons": [
+    {
+      "id": "00-terminal",
+      "word_count": 1137,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "00-values",
+      "word_count": 1125,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "00-calculator",
+      "word_count": 1421,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "01-ownership",
+      "word_count": 1107,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "01-modeling",
+      "word_count": 1123,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "01-journal",
+      "word_count": 1156,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "01-io",
+      "word_count": 1441,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "01-logs",
+      "word_count": 1360,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "02-traits",
+      "word_count": 1102,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "02-config",
+      "word_count": 1356,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "02-lifetimes",
+      "word_count": 1210,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "02-parser",
+      "word_count": 1175,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    },
+    {
+      "id": "02-evaluator",
+      "word_count": 1475,
+      "source_embeds_exist": true,
+      "has_when_stuck": true,
+      "has_hypotheses": true,
+      "has_limits": true
+    }
+  ],
+  "status": "author_self_review",
+  "independent_review": "pending"
+}

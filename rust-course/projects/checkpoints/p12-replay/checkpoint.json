@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "project": "p12-replay",
+  "checkpoints": [
+    {
+      "id": "01-price",
+      "title": "Represent exact prices before introducing events",
+      "source": "projects/checkpoints/p12-replay/01-price",
+      "contract": "Positive decimals use integer units of 1/10,000; signs, exponents, excess precision, zero and overflow are rejected. Private fields preserve the validated range.",
+      "commands": [
+        "cargo test --locked",
+        "cargo run --locked"
+      ],
+      "lockfile": "projects/checkpoints/p12-replay/locks/01-price.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete verified reference",
+      "source": "projects/reference/p12-replay",
+      "contract": "Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.",
+      "commands": [
+        "cargo test --locked --all-targets",
+        "cargo run --locked --bin tick_replay -- fixtures/ticks.csv 2"
+      ],
+      "lockfile": "projects/checkpoints/p12-replay/locks/final.Cargo.lock"
+    }
+  ]
+}

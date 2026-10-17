@@ -1,0 +1,163 @@
+{
+  "date": "2026-10-17T11:48:41.194999+00:00",
+  "checks": [
+    {
+      "name": "rust-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustc",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.08,
+      "log": "oct17-resumed-rust-version.log"
+    },
+    {
+      "name": "node-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "node",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.08,
+      "log": "oct17-resumed-node-version.log"
+    },
+    {
+      "name": "fuzz-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "fuzz",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.08,
+      "log": "oct17-resumed-fuzz-version.log"
+    },
+    {
+      "name": "nightly-version",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "rustup",
+        "run",
+        "nightly-2026-10-17",
+        "rustc",
+        "--version"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.07,
+      "log": "oct17-resumed-nightly-version.log"
+    },
+    {
+      "name": "fuzz",
+      "command": [
+        "python3",
+        "scripts/fuzz-expression.py",
+        "--cache-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz-oct17"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 5.07,
+      "log": "oct17-resumed-fuzz.log"
+    },
+    {
+      "name": "svelte-tests",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "npm",
+        "test"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.56,
+      "log": "oct17-resumed-svelte-tests.log"
+    },
+    {
+      "name": "svelte-check",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "npm",
+        "run",
+        "check"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.95,
+      "log": "oct17-resumed-svelte-check.log"
+    },
+    {
+      "name": "svelte-build",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "npm",
+        "run",
+        "build"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.51,
+      "log": "oct17-resumed-svelte-build.log"
+    },
+    {
+      "name": "svelte-audit",
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "npm",
+        "audit",
+        "--json"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/svelte-bridge",
+      "exit_code": 1,
+      "passed": false,
+      "seconds": 0.29,
+      "log": "oct17-resumed-svelte-audit.log"
+    },
+    {
+      "name": "svelte-http",
+      "command": [
+        "python3",
+        "verification/svelte-http-audit.py",
+        "--binary",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native/debug/p16-workbench"
+      ],
+      "working_directory": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit_code": 1,
+      "passed": false,
+      "seconds": 0.08,
+      "log": "oct17-resumed-svelte-http.log"
+    }
+  ],
+  "completed": true,
+  "passed": false,
+  "scope": "Managed runtime versions, 10,000-input parser campaign, optional Svelte unit/compiler/build/advisory/real HTTP checks. No browser rendering or tool installation."
+}

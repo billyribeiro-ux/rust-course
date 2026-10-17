@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "project": "p15-replication",
+  "checkpoints": [
+    {
+      "id": "00-scaffold",
+      "title": "First domain or encoding checkpoint",
+      "source": "projects/scaffolds/p15-replication",
+      "contract": "The small immutable first checkpoint described in its source; no later service features are claimed.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p15-replication/locks/00-scaffold.Cargo.lock"
+    },
+    {
+      "id": "01-append-transport",
+      "title": "Bounded append transport simulator",
+      "source": "projects/checkpoints/p15-replication/01-append-transport",
+      "contract": "A fixed leader proposes up to8 values and produces at most16 pending packets for two followers. A caller can take, delay, drop, or deliver packets. Duplicate delivery is idempotent; gaps, conflicts, and invalid follower indices fail. No acknowledgments, committed prefix, elections, process persistence, or consensus guarantee exists here.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p15-replication/locks/01-append-transport.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete reference implementation",
+      "source": "projects/reference/p15-replication",
+      "contract": "The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.",
+      "commands": [
+        "cargo test"
+      ],
+      "lockfile": "projects/checkpoints/p15-replication/locks/final.Cargo.lock"
+    }
+  ]
+}

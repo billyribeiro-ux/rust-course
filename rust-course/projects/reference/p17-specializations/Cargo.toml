@@ -1,0 +1,8 @@
+[package]
+name = "rust-specializations"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+[dependencies]
+course-kind-derive = { path = "../p17-derive" }

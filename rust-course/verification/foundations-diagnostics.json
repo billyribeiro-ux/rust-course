@@ -1,0 +1,41 @@
+{
+  "status": "code_verified_expected_failures",
+  "independent_review": "pending",
+  "results": [
+    {
+      "file": "01-use-after-move.rs",
+      "expected_error": "E0382",
+      "exit_code": 1,
+      "expected_error_present": true,
+      "stderr": "error[E0382]: borrow of moved value: `title`\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/01-use-after-move.rs:1:78\n  |\n1 | fn main() { let title = String::from(\"learn\"); let moved = title; println!(\"{title} {moved}\"); }\n  |                 -----                                      -----             ^^^^^ value borrowed here after move\n  |                 |                                          |\n  |                 |                                          value moved here\n  |                 move occurs because `title` has type `String`, which does not implement the `Copy` trait\n  |\nhelp: consider cloning the value if the performance cost is acceptable\n  |\n1 | fn main() { let title = String::from(\"learn\"); let moved = title.clone(); println!(\"{title} {moved}\"); }\n  |                                                                 ++++++++\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0382`.\n"
+    },
+    {
+      "file": "02-aliasing.rs",
+      "expected_error": "E0499",
+      "exit_code": 1,
+      "expected_error_present": true,
+      "stderr": "error[E0499]: cannot borrow `tasks` as mutable more than once at a time\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/02-aliasing.rs:1:66\n  |\n1 | fn main() { let mut tasks = vec![1]; let a = &mut tasks; let b = &mut tasks; a.push(2); b.push(3); }\n  |                                              ----------          ^^^^^^^^^^  - first borrow later used here\n  |                                              |                   |\n  |                                              |                   second mutable borrow occurs here\n  |                                              first mutable borrow occurs here\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0499`.\n"
+    },
+    {
+      "file": "03-local-reference.rs",
+      "expected_error": "E0515",
+      "exit_code": 1,
+      "expected_error_present": true,
+      "stderr": "error[E0515]: cannot return reference to local variable `text`\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/03-local-reference.rs:1:68\n  |\n1 | fn title() -> &'static str { let text = String::from(\"temporary\"); &text }\n  |                                                                    ^^^^^ returns a reference to data owned by the current function\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0515`.\n"
+    },
+    {
+      "file": "04-nonexhaustive.rs",
+      "expected_error": "E0004",
+      "exit_code": 1,
+      "expected_error_present": true,
+      "stderr": "error[E0004]: non-exhaustive patterns: `Status::Done` not covered\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/04-nonexhaustive.rs:2:45\n  |\n2 | fn label(s: Status) -> &'static str { match s { Status::Open => \"open\" } }\n  |                                             ^ pattern `Status::Done` not covered\n  |\nnote: `Status` defined here\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/04-nonexhaustive.rs:1:6\n  |\n1 | enum Status { Open, Done }\n  |      ^^^^^^         ---- not covered\n  = note: the matched value is of type `Status`\nhelp: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown\n  |\n2 | fn label(s: Status) -> &'static str { match s { Status::Open => \"open\", Status::Done => todo!() } }\n  |                                                                       +++++++++++++++++++++++++\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0004`.\n"
+    },
+    {
+      "file": "05-missing-trait.rs",
+      "expected_error": "E0277",
+      "exit_code": 1,
+      "expected_error_present": true,
+      "stderr": "error[E0277]: `T` doesn't implement `std::fmt::Display`\n --> /Users/billyribeiro/Desktop/rust-course/rust-course/exercises/foundations/05-missing-trait.rs:1:35\n  |\n1 | fn render<T>(value:T) { println!(\"{value}\"); }\n  |                                   ^^^^^^^ `T` cannot be formatted with the default formatter\n  |\n  = note: in format strings you may be able to use `{:?}` (or `{:#?}` for pretty-print) instead\nhelp: consider restricting type parameter `T` with trait `Display`\n  |\n1 | fn render<T: std::fmt::Display>(value:T) { println!(\"{value}\"); }\n  |            +++++++++++++++++++\n\nerror: aborting due to 1 previous error\n\nFor more information about this error, try `rustc --explain E0277`.\n"
+    }
+  ]
+}

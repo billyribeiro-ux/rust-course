@@ -1,0 +1,36 @@
+{
+  "version": "0.1.0",
+  "name": "rust-course-svelte-bridge",
+  "dependencies": {
+    "@sveltejs/vite-plugin-svelte": {
+      "version": "7.3.1",
+      "resolved": "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-7.3.1.tgz",
+      "overridden": false
+    },
+    "lossless-json": {
+      "version": "4.3.1",
+      "resolved": "https://registry.npmjs.org/lossless-json/-/lossless-json-4.3.1.tgz",
+      "overridden": false
+    },
+    "svelte-check": {
+      "version": "4.7.6",
+      "resolved": "https://registry.npmjs.org/svelte-check/-/svelte-check-4.7.6.tgz",
+      "overridden": false
+    },
+    "svelte": {
+      "version": "5.57.2",
+      "resolved": "https://registry.npmjs.org/svelte/-/svelte-5.57.2.tgz",
+      "overridden": false
+    },
+    "typescript": {
+      "version": "6.0.3",
+      "resolved": "https://registry.npmjs.org/typescript/-/typescript-6.0.3.tgz",
+      "overridden": false
+    },
+    "vite": {
+      "version": "8.3.4",
+      "resolved": "https://registry.npmjs.org/vite/-/vite-8.3.4.tgz",
+      "overridden": false
+    }
+  }
+}

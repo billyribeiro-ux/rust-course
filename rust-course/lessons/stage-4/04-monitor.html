@@ -1,0 +1,467 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>A bounded local health monitor · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="04-monitor" data-lesson="04-monitor"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / A bounded local health monitor</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 04 / Concurrency and async</div><h1>A bounded local health monitor</h1><p class="lead">Combine capped concurrency, layered deadlines, bounded retries and shutdown into one tested service client.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-4/04-futures.html">Futures, waiting and cancellation</a></li></ul><ul><li>Bound spawned tasks as well as active socket operations</li><li>Test retries and deadlines with controlled loopback listeners</li><li>Preserve input order while tasks finish out of order</li><li>Terminate spawned work explicitly on shutdown</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#async">async</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#ffi">FFI</a> · <a href="../../glossary.html#framing">framing</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#mise">mise</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p08">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-make-a-complete-asynchronous-tool">Purpose: make a complete asynchronous tool</h2>
+<p>The finished P08 monitor performs one round over a finite list of literal loopback socket addresses. Each endpoint receives a bounded number of attempts, a timeout for each attempt and a timeout for the entire endpoint including backoff. The monitor caps how many endpoint tasks exist at once and returns rows in input order. Shutdown cancels outstanding work and waits for task cleanup. This is a teaching HTTP client: it reads a bounded status line, does not implement TLS or redirects, and does not parse general response bodies. Use an established HTTP client when those features become requirements.</p>
+<h2 id="model-three-budgets-and-one-owner">Model: three budgets and one owner</h2>
+<p>The input budget allows at most 128 endpoints. The concurrency budget allows one through 32 endpoint tasks. The time budget limits each attempt and the total retry operation, while the attempt count is bounded independently. These limits protect different resources. A semaphore around the socket call would limit active connections but could still allow an unbounded number of waiting tasks if every endpoint were spawned upfront. P08 instead fills a JoinSet only to capacity, consumes a completion, then admits another endpoint. The monitor function remains the owner responsible for every spawned task.</p>
+<h2 id="predict-completion-order-and-display-order">Predict completion order and display order</h2>
+<p>Suppose endpoint A pauses before replying, B immediately returns 503 then 200, and C is healthy on its first attempt. With concurrency two, B may finish before A and permit C to start. The report still uses the original input order. Predict which facts should be stable across runs: addresses, final status under a controlled fixture, and bounded attempt counts. Exact durations and scheduling order need not be stable. A peak_in_flight value is instrumentation about admitted tasks, not proof of simultaneous CPU execution or a benchmark of networking performance.</p>
+<pre><code>cd rust-course/projects
+mise exec -- cargo test -p p08-monitor
+mise exec -- cargo run -p p08-monitor
+mise exec -- cargo test --manifest-path scaffolds/p08-monitor/Cargo.toml</code></pre>
+<h2 id="read-admission-collection-and-shutdown">Read admission, collection and shutdown</h2>
+<div class="code-wrap" data-source="projects/reference/p08-monitor/src/lib.rs" data-sha256="b724f2ec8da010b64b106befabeef510a7180f5a32c0f00b9859dcc6bd4da1d5"><div class="code-label"><a href="../../projects/reference/p08-monitor/src/lib.rs">projects/reference/p08-monitor/src/lib.rs</a></div><pre><code>//! A bounded one-round HTTP health monitor for literal loopback socket addresses.
+use std::{io, net::SocketAddr, time::Duration};
+use tokio::{
+    io::{AsyncReadExt, AsyncWriteExt},
+    net::TcpStream,
+    sync::watch,
+    task::JoinSet,
+    time::{sleep, timeout},
+};
+
+#[derive(Clone, Copy, Debug)]
+pub struct Config {
+    pub concurrency: usize,
+    pub attempts: usize,
+    pub attempt_timeout: Duration,
+    pub endpoint_timeout: Duration,
+    pub backoff: Duration,
+}
+impl Default for Config {
+    fn default() -&gt; Self {
+        Self {
+            concurrency: 4,
+            attempts: 2,
+            attempt_timeout: Duration::from_millis(300),
+            endpoint_timeout: Duration::from_secs(1),
+            backoff: Duration::from_millis(25),
+        }
+    }
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum Status {
+    Healthy(u16),
+    Unhealthy(u16),
+    TimedOut,
+    Failed(io::ErrorKind),
+    InvalidResponse,
+    Cancelled,
+}
+#[derive(Clone, Debug)]
+pub struct ResultRow {
+    pub address: SocketAddr,
+    pub status: Status,
+    pub attempts: usize,
+}
+#[derive(Debug)]
+pub struct Report {
+    pub rows: Vec&lt;ResultRow&gt;,
+    pub peak_in_flight: usize,
+}
+
+async fn cancelled(mut shutdown: watch::Receiver&lt;bool&gt;) {
+    loop {
+        if *shutdown.borrow() {
+            return;
+        }
+        if shutdown.changed().await.is_err() {
+            return;
+        }
+    }
+}
+
+async fn request(address: SocketAddr) -&gt; io::Result&lt;Status&gt; {
+    let mut stream = TcpStream::connect(address).await?;
+    let request = format!(&quot;GET /health HTTP/1.1\r\nHost: {address}\r\nConnection: close\r\n\r\n&quot;);
+    stream.write_all(request.as_bytes()).await?;
+    let mut line = [0u8; 256];
+    let mut used = 0;
+    while used &lt; line.len() {
+        let n = stream.read(&amp;mut line[used..used + 1]).await?;
+        if n == 0 {
+            return Ok(Status::InvalidResponse);
+        }
+        used += 1;
+        if used &gt;= 2 &amp;&amp; &amp;line[used - 2..used] == b&quot;\r\n&quot; {
+            let Ok(text) = std::str::from_utf8(&amp;line[..used - 2]) else {
+                return Ok(Status::InvalidResponse);
+            };
+            let mut parts = text.split_ascii_whitespace();
+            if !matches!(parts.next(), Some(&quot;HTTP/1.1&quot; | &quot;HTTP/1.0&quot;)) {
+                return Ok(Status::InvalidResponse);
+            }
+            let Some(code) = parts
+                .next()
+                .filter(|s| s.len() == 3)
+                .and_then(|s| s.parse::&lt;u16&gt;().ok())
+            else {
+                return Ok(Status::InvalidResponse);
+            };
+            return Ok(if (200..300).contains(&amp;code) {
+                Status::Healthy(code)
+            } else if (100..600).contains(&amp;code) {
+                Status::Unhealthy(code)
+            } else {
+                Status::InvalidResponse
+            });
+        }
+    }
+    Ok(Status::InvalidResponse)
+}
+
+async fn probe(address: SocketAddr, config: Config, shutdown: watch::Receiver&lt;bool&gt;) -&gt; ResultRow {
+    let mut attempts = 0;
+    let work = async {
+        let mut status = Status::TimedOut;
+        for attempt in 0..config.attempts {
+            if attempt &gt; 0 {
+                sleep(config.backoff).await;
+            }
+            attempts += 1;
+            status = match timeout(config.attempt_timeout, request(address)).await {
+                Ok(Ok(status)) =&gt; status,
+                Ok(Err(error)) =&gt; Status::Failed(error.kind()),
+                Err(_) =&gt; Status::TimedOut,
+            };
+            if matches!(status, Status::Healthy(_)) {
+                break;
+            }
+        }
+        status
+    };
+    let status = tokio::select! {
+        biased;
+        () = cancelled(shutdown) =&gt; Status::Cancelled,
+        result = timeout(config.endpoint_timeout, work) =&gt; result.unwrap_or(Status::TimedOut),
+    };
+    ResultRow {
+        address,
+        status,
+        attempts,
+    }
+}
+
+pub async fn monitor(
+    addresses: Vec&lt;SocketAddr&gt;,
+    config: Config,
+    shutdown: watch::Receiver&lt;bool&gt;,
+) -&gt; io::Result&lt;Report&gt; {
+    if addresses.len() &gt; 128
+        || addresses.iter().any(|a| !a.ip().is_loopback())
+        || !(1..=32).contains(&amp;config.concurrency)
+        || !(1..=4).contains(&amp;config.attempts)
+        || config.attempt_timeout.is_zero()
+        || config.attempt_timeout &gt; Duration::from_secs(10)
+        || config.endpoint_timeout.is_zero()
+        || config.endpoint_timeout &gt; Duration::from_secs(30)
+        || config.backoff &gt; Duration::from_secs(1)
+    {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;literal loopback endpoints and bounded nonzero limits required&quot;,
+        ));
+    }
+    let mut tasks = JoinSet::new();
+    let mut next = 0;
+    let mut peak = 0;
+    let mut rows = vec![None; addresses.len()];
+    loop {
+        if *shutdown.borrow() || shutdown.has_changed().is_err() {
+            tasks.abort_all();
+            break;
+        }
+        while next &lt; addresses.len() &amp;&amp; tasks.len() &lt; config.concurrency {
+            let index = next;
+            let address = addresses[index];
+            let shutdown = shutdown.clone();
+            tasks.spawn(async move { (index, probe(address, config, shutdown).await) });
+            next += 1;
+        }
+        peak = peak.max(tasks.len());
+        if tasks.is_empty() {
+            break;
+        }
+        tokio::select! {
+            biased;
+            () = cancelled(shutdown.clone()) =&gt; { tasks.abort_all(); break; }
+            result = tasks.join_next() =&gt; match result {
+                Some(Ok((index, row))) =&gt; rows[index] = Some(row),
+                Some(Err(error)) =&gt; { tasks.abort_all(); while tasks.join_next().await.is_some() {} return Err(io::Error::other(error)); },
+                None =&gt; break,
+            }
+        }
+    }
+    // Await aborted tasks: no detached work remains after this function returns.
+    while tasks.join_next().await.is_some() {}
+    let rows = addresses
+        .into_iter()
+        .enumerate()
+        .map(|(index, address)| {
+            rows[index].take().unwrap_or(ResultRow {
+                address,
+                status: Status::Cancelled,
+                attempts: 0,
+            })
+        })
+        .collect();
+    Ok(Report {
+        rows,
+        peak_in_flight: peak,
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tokio::net::TcpListener;
+    async fn server(responses: Vec&lt;&amp;&#x27;static [u8]&gt;) -&gt; (SocketAddr, tokio::task::JoinHandle&lt;()&gt;) {
+        let listener = TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let task = tokio::spawn(async move {
+            for response in responses {
+                let (mut stream, _) = listener.accept().await.unwrap();
+                let mut request = [0; 512];
+                let _ = stream.read(&amp;mut request).await;
+                stream.write_all(response).await.unwrap();
+            }
+        });
+        (address, task)
+    }
+    #[tokio::test]
+    async fn retries_then_recovers() {
+        let (address, task) = server(vec![
+            b&quot;HTTP/1.1 503 Unavailable\r\n\r\n&quot;,
+            b&quot;HTTP/1.1 200 OK\r\n\r\n&quot;,
+        ])
+        .await;
+        let (_tx, rx) = watch::channel(false);
+        let report = monitor(vec![address], Config::default(), rx).await.unwrap();
+        assert_eq!(report.rows[0].status, Status::Healthy(200));
+        assert_eq!(report.rows[0].attempts, 2);
+        task.await.unwrap();
+    }
+    #[tokio::test]
+    async fn malformed_response_is_bounded() {
+        let (address, task) = server(vec![b&quot;not-http\r\n&quot;]).await;
+        let (_tx, rx) = watch::channel(false);
+        let report = monitor(
+            vec![address],
+            Config {
+                attempts: 1,
+                ..Config::default()
+            },
+            rx,
+        )
+        .await
+        .unwrap();
+        assert_eq!(report.rows[0].status, Status::InvalidResponse);
+        task.await.unwrap();
+    }
+    #[tokio::test]
+    async fn hung_endpoint_has_a_deadline() {
+        let listener = TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let task = tokio::spawn(async move {
+            let (_stream, _) = listener.accept().await.unwrap();
+            std::future::pending::&lt;()&gt;().await;
+        });
+        let (_tx, rx) = watch::channel(false);
+        let config = Config {
+            attempts: 1,
+            attempt_timeout: Duration::from_millis(30),
+            ..Config::default()
+        };
+        let report = timeout(Duration::from_secs(3), monitor(vec![address], config, rx))
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(report.rows[0].status, Status::TimedOut);
+        task.abort();
+        let _ = task.await;
+    }
+    #[tokio::test]
+    async fn concurrency_cap_and_input_order_hold() {
+        let (a, one) = server(vec![b&quot;HTTP/1.1 200 OK\r\n\r\n&quot;]).await;
+        let (b, two) = server(vec![b&quot;HTTP/1.1 204 No Content\r\n\r\n&quot;]).await;
+        let (_tx, rx) = watch::channel(false);
+        let report = monitor(
+            vec![b, a],
+            Config {
+                concurrency: 1,
+                ..Config::default()
+            },
+            rx,
+        )
+        .await
+        .unwrap();
+        assert_eq!(report.peak_in_flight, 1);
+        assert_eq!(report.rows[0].address, b);
+        assert_eq!(report.rows[1].address, a);
+        one.await.unwrap();
+        two.await.unwrap();
+    }
+    #[tokio::test]
+    async fn shutdown_aborts_in_flight_and_unstarted_work() {
+        let listener = TcpListener::bind(&quot;127.0.0.1:0&quot;).await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let (accepted_tx, accepted_rx) = tokio::sync::oneshot::channel();
+        let server = tokio::spawn(async move {
+            let (_stream, _) = listener.accept().await.unwrap();
+            let _ = accepted_tx.send(());
+            std::future::pending::&lt;()&gt;().await;
+        });
+        let (tx, rx) = watch::channel(false);
+        let work = tokio::spawn(monitor(
+            vec![address; 3],
+            Config {
+                concurrency: 1,
+                ..Config::default()
+            },
+            rx,
+        ));
+        accepted_rx.await.unwrap();
+        tx.send(true).unwrap();
+        let report = timeout(Duration::from_secs(3), work)
+            .await
+            .unwrap()
+            .unwrap()
+            .unwrap();
+        assert!(
+            report
+                .rows
+                .iter()
+                .all(|row| row.status == Status::Cancelled)
+        );
+        server.abort();
+        let _ = server.await;
+    }
+    #[tokio::test]
+    async fn rejects_remote_addresses() {
+        let (_tx, rx) = watch::channel(false);
+        assert!(
+            monitor(vec![&quot;192.0.2.1:80&quot;.parse().unwrap()], Config::default(), rx)
+                .await
+                .is_err()
+        );
+    }
+}
+</code></pre></div>
+<p>monitor validates all addresses before starting, so a non-loopback entry rejects the batch without initiating network work. It allocates bounded result slots, tracks the next input index and fills the task set up to concurrency. Each task returns its index with its row. Completion stores the result in that indexed slot; this decouples display order from scheduling. When shutdown arrives, abort_all requests cancellation, and the subsequent join loop waits for tasks to leave the set. Missing rows become Cancelled. Their attempts field is zero because aborted task-local progress was not returned; do not reinterpret that as proof that no request reached the endpoint.</p>
+<h2 id="retries-change-load-as-well-as-reliability">Retries change load as well as reliability</h2>
+<p>Retrying a transient failure can recover a healthy result, but it also creates additional work. The reference retries nonhealthy outcomes up to a small limit, sleeping a fixed backoff between attempts. All retry delays count against the total endpoint deadline. A production policy might distinguish retryable statuses, use jitter or coordinate rate limits, but adding those features before specifying the current semantics would obscure the lesson. First test a listener that returns 503 once and then 200. Assert two attempts and a healthy final status. Also test a permanently malformed response with attempts set to one so the expected transport conversation is exact.</p>
+<h2 id="failure-injection-comes-from-controlled-peers">Failure injection comes from controlled peers</h2>
+<p>The tests bind 127.0.0.1:0, letting the operating system choose a free port. One fixture sends a valid status line, another sends malformed bytes, and a hanging fixture accepts a connection without replying. The shutdown test uses a oneshot notification to prove the server accepted the connection before cancellation is issued. That synchronization is stronger evidence than sleeping for an arbitrary interval and hoping the request has started. The outer test timeout prevents an accidental infinite wait from consuming the entire suite; it is not the timeout being tested. Keep those two purposes separate in the test name and explanation.</p>
+<h2 id="playbook-investigation-shutdown-returned-but-traffic-continued">Playbook investigation: shutdown returned but traffic continued</h2>
+<p>Observation: a local fixture records another connection after a learner's monitor reported shutdown. Hypothesis A says the fixture's log was buffered. Hypothesis B says spawned tasks were detached when handles were dropped. Hypothesis C says an already-sent request arrived late. These hypotheses require different experiments. Add task-start and task-finish counters owned by the test fixture, trigger shutdown after a known acceptance signal, and await the monitor's return. A nonzero live-task count after return disproves the claim that all work was joined. A zero count with a previously sent request points toward observation timing rather than an active task leak.</p>
+<p>The fix must match the evidence: retain task ownership, abort outstanding tasks and drain joins if B is supported. Do not assert that this retracts requests already delivered to the peer. Preserve the counter trace and the acceptance signal in the regression test. For an independent investigation, decide whether your API needs accurate per-endpoint attempts after forced cancellation; if so, design explicit progress reporting rather than inventing a count when the task is aborted.</p>
+<h2 id="guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</h2>
+<p>Extend the local fixture to send a status line longer than 256 bytes without a valid terminating line. Assert bounded rejection. Then choose a policy for duplicate endpoints: preserve each input row, deduplicate work while retaining rows, or reject duplicates. The reference preserves them. Write acceptance examples before modifying admission logic. Independently add a local fixture that delays its second response so total endpoint time expires during a retry. Your evidence should show that the total deadline includes backoff and that no detached task survives the returned report.</p>
+<details><summary>Tiered hints and solution reasoning</summary><details><summary>Hint 1: choose the next observation</summary><p>count spawned tasks, not only permits held.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>a JoinHandle being dropped is different from a task being joined.</p></details><details><summary>Worked solution</summary><p>Solution direction: keep all task ownership in one bounded set, request abortion on shutdown, then await removal. For long status lines, the fixed buffer must terminate parsing with InvalidResponse when full; allocating until a newline would violate the response-memory bound.</p></details></details>
+<aside class="stuck"><h3>When you get stuck</h3><p>Run shutdown_aborts_in_flight_and_unstarted_work alone and inspect the test's acceptance notification. Read JoinSet::abort_all and join_next together. Use only your own loopback fixtures. Ask for review with the lifecycle diagram, counters at shutdown return, response bytes and deadline configuration. Separate an unsupported HTTP feature from a bug in the feature you actually promised.</p></aside>
+<h2 id="review-evidence-and-mastery">Review, evidence and mastery</h2>
+<p>Submit a resource-budget table, retry trace, shutdown trace and unsupported-feature list. The mastery standard is explaining why every task has an owner and every wait has a policy, then demonstrating those claims with controlled failures. A happy-path screenshot alone does not show bounded retries, correct cancellation or the absence of detached work.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Current scope and invariants.</strong> Only literal loopback endpoints are admitted. Input count, task count, attempts, status-line storage and deadlines are bounded. Every spawned task stays owned until joined or aborted and drained.</p><p><strong>Why this is the current recommended shape.</strong> Tokio socket I/O yields while waiting; JoinSet bounds task creation directly. Per-attempt and total deadlines cover different scopes, and a watch channel carries shutdown state. Results retain input indices so scheduling does not change report order. Controlled local listeners make failure tests reproducible.</p><p><strong>Reasonable alternative and tradeoff.</strong> A maintained HTTP client is the appropriate choice when TLS, redirects, connection pooling, complete framing or real HTTP interoperability is required. The tiny status-line parser is a deliberately scoped transport exercise. A semaphore is useful for shared permits but would not by itself bound the number of spawned waiting tasks.</p><p><strong>Evidence and limits.</strong> Native reference tests were run through mise in the coordinated course verification; inspect the current verification record for exact results. 503 then healthy retry; malformed response; stalled read deadline; concurrency-one cap and input order; shutdown after a known acceptance signal; remote-address rejection. Cancellation stops local future work, not requests already sent. Aborted rows do not retain task-local attempt counts. Deadlines are cooperative rather than real-time guarantees. No TLS, redirects or response-body parser is implemented.</p><p><strong>Requirement that would justify evolution.</strong> Replace the transport parser as soon as requirements exceed one bounded local status line. Add jitter, rate policy and observability only when operating requirements specify them. Accurate attempt counts for forcibly aborted tasks require explicit progress reporting.</p><p>In your review, explain this choice in your own words, preserve the behavioral contract during changes, and name the evidence that would make you choose the alternative. Deliberately broken variants above are diagnostic exercises, never recommended implementation stages.</p></section><section><h2 id="validate-the-complete-request-before-starting-work">Validate the complete request before starting work</h2><p>The command accepts no arguments for its owned local demonstration, or one through 128 literal loopback socket addresses. Every supplied argument must satisfy that contract; an extra malformed endpoint is never ignored. Read the CLI's <code>arguments</code> function before the async <code>run</code> function. It uses <code>args_os</code>, checks UTF-8 explicitly, parses <code>SocketAddr</code>, and checks the loopback and count limits before opening a listener or spawning a signal task.</p><div class="code-wrap" data-source="projects/reference/p08-monitor/src/main.rs" data-sha256="4b9e23b783082582c86d33e48e4486875d847d3641065ee91a21d8ce14abd99f"><div class="code-label"><a href="../../projects/reference/p08-monitor/src/main.rs">projects/reference/p08-monitor/src/main.rs</a></div><pre><code>use std::{
+    io::{self, Write},
+    net::SocketAddr,
+    process::ExitCode,
+};
+use tokio::{
+    io::{AsyncReadExt, AsyncWriteExt},
+    net::TcpListener,
+    sync::watch,
+};
+fn arguments() -&gt; io::Result&lt;Vec&lt;SocketAddr&gt;&gt; {
+    let mut addresses = Vec::new();
+    for argument in std::env::args_os().skip(1) {
+        if addresses.len() == 128 {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                &quot;at most 128 endpoints are supported&quot;,
+            ));
+        }
+        let text = argument.to_str().ok_or_else(|| {
+            io::Error::new(io::ErrorKind::InvalidInput, &quot;endpoint must be valid UTF-8&quot;)
+        })?;
+        let address = text.parse::&lt;SocketAddr&gt;().map_err(|error| {
+            io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!(&quot;expected IP:PORT endpoint: {error}&quot;),
+            )
+        })?;
+        if !address.ip().is_loopback() {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                &quot;only literal loopback endpoints are supported&quot;,
+            ));
+        }
+        addresses.push(address);
+    }
+    Ok(addresses)
+}
+
+async fn run() -&gt; io::Result&lt;()&gt; {
+    // Parse every endpoint before creating a listener, signal task or network request.
+    let mut addresses = arguments()?;
+    let mut demo = None;
+    if addresses.is_empty() {
+        let listener = TcpListener::bind(&quot;127.0.0.1:0&quot;).await?;
+        let address = listener.local_addr()?;
+        demo = Some(tokio::spawn(async move {
+            loop {
+                let Ok((mut stream, _)) = listener.accept().await else {
+                    break;
+                };
+                let mut buf = [0; 512];
+                let _ = stream.read(&amp;mut buf).await;
+                let _ = stream
+                    .write_all(
+                        b&quot;HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nOK&quot;,
+                    )
+                    .await;
+            }
+        }));
+        addresses.push(address);
+    }
+    let (tx, rx) = watch::channel(false);
+    let signal = tokio::spawn(async move {
+        let _ = tokio::signal::ctrl_c().await;
+        let _ = tx.send(true);
+    });
+    let result = p08_monitor::monitor(addresses, p08_monitor::Config::default(), rx).await;
+    signal.abort();
+    let _ = signal.await;
+    if let Some(demo) = demo {
+        demo.abort();
+        let _ = demo.await;
+    }
+    let report = result?;
+    // All async work is drained before taking the synchronous stdout lock.
+    let mut output = io::stdout().lock();
+    for row in report.rows {
+        writeln!(
+            output,
+            &quot;{} {:?} attempts={}&quot;,
+            row.address, row.status, row.attempts
+        )?;
+    }
+    writeln!(output, &quot;peak_in_flight={}&quot;, report.peak_in_flight)?;
+    output.flush()?;
+    Ok(())
+}
+
+#[tokio::main]
+async fn main() -&gt; ExitCode {
+    match run().await {
+        Ok(()) =&gt; ExitCode::SUCCESS,
+        Err(error) =&gt; {
+            let _ = writeln!(io::stderr().lock(), &quot;monitor: {error}&quot;);
+            if error.kind() == io::ErrorKind::InvalidInput {
+                ExitCode::from(2)
+            } else {
+                ExitCode::FAILURE
+            }
+        }
+    }
+}
+</code></pre></div><p>Investigation: a valid first address followed by an invalid address could reveal a parse-while-spawning bug. Predict whether the first server should observe a connection. The process-level test owns a listening socket, runs this two-argument request, checks input-error status, and then observes no queued connection. Together with the control-flow review, this supports validation before external work for that boundary. Non-UTF-8 text is also rejected normally; <code>std::env::args</code> previously panicked during iteration. Run <code>mise exec -- cargo test --manifest-path projects/Cargo.toml -p p08-monitor --test cli</code> from the course root.</p><p>The OS still controls scheduling, and this finite test does not prove every future CLI revision preserves the ordering. For independent practice, add a named option while keeping the entire parse separate from runtime work; specify how unknown options behave. Review its ownership and task creation points, not only the final status code. <a href="../../verification/cli-boundary-followup.html">Exact evidence</a>; <a href="https://doc.rust-lang.org/1.99.1/std/ffi/struct.OsStr.html#method.to_str">checked native-text conversion</a>.</p></section><p><strong>Output is an I/O boundary too.</strong> The CLI writes through a locked <code>io::Write</code> handle and propagates ordinary stdout failures, including a pipe whose consumer has closed. Final stderr diagnostics are best effort: a second write failure must not replace the original failure with a panic. The process tests create an anonymous pipe and close its reading end before launching the child, so this experiment does not depend on a race with a shell command.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://docs.rs/tokio/1.53.3/tokio/task/struct.JoinSet.html">JoinSet lifecycle</a></li><li><a href="https://docs.rs/tokio/1.53.3/tokio/macro.select.html">Tokio select</a></li><li><a href="https://docs.rs/tokio/1.53.3/tokio/net/struct.TcpListener.html">TcpListener binding</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/env/fn.args_os.html">Rust 1.99 native process arguments</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-4/04-pinning.html">Previous: Pinning and preserving progress across await</a><a href="../../lessons/stage-5/05-protocols.html">Next: From TCP bytes to complete messages</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-make-a-complete-asynchronous-tool">Purpose: make a complete asynchronous tool</a><a href="#model-three-budgets-and-one-owner">Model: three budgets and one owner</a><a href="#predict-completion-order-and-display-order">Predict completion order and display order</a><a href="#read-admission-collection-and-shutdown">Read admission, collection and shutdown</a><a href="#retries-change-load-as-well-as-reliability">Retries change load as well as reliability</a><a href="#failure-injection-comes-from-controlled-peers">Failure injection comes from controlled peers</a><a href="#playbook-investigation-shutdown-returned-but-traffic-continued">Playbook investigation: shutdown returned but traffic continued</a><a href="#guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</a><a href="#review-evidence-and-mastery">Review, evidence and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#validate-the-complete-request-before-starting-work">Validate the complete request before starting work</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

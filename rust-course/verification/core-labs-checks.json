@@ -1,0 +1,122 @@
+{
+  "kind": "author verification",
+  "date": "2026-10-09",
+  "independent_review": "pending",
+  "commands": [
+    {
+      "command": "mise exec -- rustfmt --edition 2024 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/collections.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/conversions.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/interior.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/collections.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/conversions.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/examples/interior.rs",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo clippy --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml -p core-rust-labs --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked --all-targets -- -D warnings",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml -p core-rust-labs --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked --example collections",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py collections --name author-check-collections-0c3068a8",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-collections-0c3068a8",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --example collections --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-collections-0c3068a8",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py collections --name author-check-collections-0c3068a8",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": "mise exec -- cargo run --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml -p core-rust-labs --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked --example conversions",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py conversions --name author-check-conversions-aad5549a",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --example conversions --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py conversions --name author-check-conversions-aad5549a",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": "mise exec -- cargo test conversions_preserve_the_declared_range --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-conversions-aad5549a",
+      "exit": 101,
+      "expected": 101
+    },
+    {
+      "command": "mise exec -- cargo run --manifest-path /Users/billyribeiro/Desktop/rust-course/rust-course/projects/Cargo.toml -p core-rust-labs --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked --example interior",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py interior --name author-check-interior-d78ff526",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --example interior --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --locked",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs/reconstruct.py interior --name author-check-interior-d78ff526",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": "mise exec -- cargo test reentrant_write_is_an_error_then_guard_release_allows_progress --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course/learner-work/author-check-interior-d78ff526",
+      "exit": 101,
+      "expected": 101
+    }
+  ],
+  "cleanup": "Only uniquely named author-check learner directories created by this script were removed. No existing learner work or reference source was changed by mutation checks."
+}

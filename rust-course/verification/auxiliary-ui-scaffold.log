@@ -1,0 +1,5 @@
+    Updating crates.io index
+     Locking 179 packages to highest Rust 1.99 compatible versions
+      Adding generic-array v0.14.7 (available: v0.14.9)
+    Checking console-learner v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/scaffolds/p11-console)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.65s

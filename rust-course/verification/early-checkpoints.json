@@ -1,0 +1,223 @@
+{
+  "date": "2026-10-09",
+  "kind": "author checkpoint verification",
+  "independent_review": "pending",
+  "commands": [
+    {
+      "command": "mise exec -- rustfmt --edition 2024 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p01-calculator/01-checked-add/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p01-calculator/01-checked-add/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p02-journal/01-domain/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p02-journal/01-domain/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p03-logs/01-bounded-lines/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p03-logs/01-bounded-lines/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p04-config/01-effective-port/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p04-config/01-effective-port/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p05-expressions/01-token-spans/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p05-expressions/01-token-spans/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p06-kv/01-prefix-replay/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p06-kv/01-prefix-replay/src/main.rs",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p01 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p01 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p01-calculator",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p02 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p02 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p02-journal",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p03 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p03 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p03-logs",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p04 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-wfyct49o/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 101,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- rustfmt --edition 2024 /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p01-calculator/01-checked-add/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p01-calculator/01-checked-add/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p02-journal/01-domain/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p02-journal/01-domain/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p03-logs/01-bounded-lines/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p03-logs/01-bounded-lines/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p04-config/01-effective-port/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p04-config/01-effective-port/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p05-expressions/01-token-spans/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p05-expressions/01-token-spans/src/main.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p06-kv/01-prefix-replay/src/lib.rs /Users/billyribeiro/Desktop/rust-course/rust-course/projects/checkpoints/p06-kv/01-prefix-replay/src/main.rs",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p04 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p04-config",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p04-config/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p04 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p04-config",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p05 01-token-spans --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p05-expressions",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p05-expressions/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p05-expressions/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p05-expressions/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p05 01-token-spans --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p05-expressions",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p06 01-prefix-replay --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p06-kv",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo test --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p06-kv/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo run --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p06-kv/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "mise exec -- cargo clippy --offline --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p06-kv/Cargo.toml --target-dir /Users/billyribeiro/Desktop/rust-course/.course-cache/native --all-targets -- -D warnings",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": "python3 scripts/start-checkpoint.py p06 01-prefix-replay --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/early-checkpoints-tr3yqodg/p06-kv",
+      "cwd": "/Users/billyribeiro/Desktop/rust-course/rust-course",
+      "exit": 1,
+      "expected": 1
+    }
+  ]
+}

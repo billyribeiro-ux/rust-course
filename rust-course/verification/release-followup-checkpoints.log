@@ -1,0 +1,411 @@
+archive_sha256=6365e960ae7077affceadc8881b2ecd3b24643a11f859e8bc2a18c8f574631df
+work_directory=/Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p01-calculator 01-checked-add --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/01-checked-add
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/01-checked-add
+Parse two bounded signed decimal i64 strings and return their checked sum. Invalid numbers and arithmetic overflow are different errors. This stage deliberately has no units, operator selection, or general CLI parser.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/01-checked-add/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/01-checked-add/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p01-calculator-01-checked-add-metadata.json; sha256=ee3c7aff8a8c1b042b2d2ca73092000addece8dd20b31535aba86cfd1275dd0b
+exit_code=0
+PASS p01-calculator/01-checked-add: packages=1; local=['checkpoint-p01-calculator']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p01-calculator final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p01-calculator/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p01-calculator-final-metadata.json; sha256=c2eb6f47241366b9910f55908c119e275e526cd3eeefa9bc29ebaff6a0d62cc4
+exit_code=0
+PASS p01-calculator/final: packages=1; local=['workshop-calculator']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p02-journal 01-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/01-domain
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/01-domain
+Keep at most 32 tasks with private fields, nonempty titles of at most 200 UTF-8 bytes and no control characters. Add validates before mutation; complete is idempotent and reports missing IDs. This stage has no file format or I/O.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/01-domain/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/01-domain/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p02-journal-01-domain-metadata.json; sha256=030d8ccb01d5a9f771ed323c98e2b18e4500f050f1721cbb666ed11f64d1e258
+exit_code=0
+PASS p02-journal/01-domain: packages=1; local=['checkpoint-p02-journal']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p02-journal final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p02-journal/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p02-journal-final-metadata.json; sha256=f72c24bf463beac715f018a19da571648b5efddc4bf53c37d90fe3239ac3e2d7
+exit_code=0
+PASS p02-journal/final: packages=1; local=['task-journal']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p03-logs 01-bounded-lines --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/01-bounded-lines
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/01-bounded-lines
+Read one LF-delimited byte line while retaining at most max bytes (1..=4096). Drain an oversized line before the next call; treat a nonempty final unterminated line as a line; propagate I/O errors. CR remains payload at this stage, and UTF-8/record grammar are not yet interpreted.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/01-bounded-lines/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/01-bounded-lines/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p03-logs-01-bounded-lines-metadata.json; sha256=e57ca7cb4661839f0897161fa53d3ca856f22c298a826486a7a9a85c96322741
+exit_code=0
+PASS p03-logs/01-bounded-lines: packages=1; local=['checkpoint-p03-logs']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p03-logs final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p03-logs/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p03-logs-final-metadata.json; sha256=df5145ec42bd0a829567231caef89e67982b7b174576bd4baa68c962ad75b160
+exit_code=0
+PASS p03-logs/final: packages=1; local=['log-detective']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p04-config 01-effective-port --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/01-effective-port
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/01-effective-port
+Resolve at most eight optional textual port layers, with later present values winning and default 8080. Validate only the effective value as a nonzero u16. The result stores a private validated port; this milestone does not read process environment/files or manage secrets.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/01-effective-port/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/01-effective-port/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p04-config-01-effective-port-metadata.json; sha256=88909664ca5502d0c7763398d39e26cff6d955e285617c70929c2345f4fcda69
+exit_code=0
+PASS p04-config/01-effective-port: packages=1; local=['checkpoint-p04-config']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p04-config final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p04-config/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p04-config-final-metadata.json; sha256=0f2bdcbc1a7249e05bcbb0203fcf1ee4d38957c14b9f8ae554e3f8691037d3b0
+exit_code=0
+PASS p04-config/final: packages=1; local=['typed-config']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p05-expressions 01-token-spans --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/01-token-spans
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/01-token-spans
+Tokenize at most 1024 UTF-8 source bytes into at most 64 tokens: nonnegative decimal i64 literals, plus, star and ASCII whitespace. Keep byte spans; reject unknown symbols and out-of-range literals. This stage does not parse precedence, unary signs or parentheses, or evaluate expressions.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/01-token-spans/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/01-token-spans/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p05-expressions-01-token-spans-metadata.json; sha256=dbab3ed8e6dec0d94a71da65099a4a88c87c5220ca21a2366c62981ccb57e630
+exit_code=0
+PASS p05-expressions/01-token-spans: packages=1; local=['checkpoint-p05-expressions']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p05-expressions final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p05-expressions/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p05-expressions-final-metadata.json; sha256=c946d63f675f0bb6baced077665cb4131bf63b8951d350aa08761add370e2aef
+exit_code=0
+PASS p05-expressions/final: packages=1; local=['expression-language']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p06-kv 01-prefix-replay --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/01-prefix-replay
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/01-prefix-replay
+Replay at most 65536 bytes of a miniature format: one length byte, payload, one wrapping-byte-sum checksum. Return complete payloads, valid byte boundary and torn-tail flag. Ignore only incomplete final records; reject complete checksum damage. This is not KV01, CRC32, or a durable file store.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/01-prefix-replay/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/01-prefix-replay/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p06-kv-01-prefix-replay-metadata.json; sha256=b6be687c94d320e543886e2429640b3abf4445d7fe18b18ce1244d289c71a865
+exit_code=0
+PASS p06-kv/01-prefix-replay: packages=1; local=['checkpoint-p06-kv']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p06-kv final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/final
+The complete documented reference contract, including later project features. This is explicitly the final checkpoint, not an earlier milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p06-kv/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p06-kv-final-metadata.json; sha256=ac65dff4e914415d8d8159b8e98edf3d1e0316cb3d4735b9ea23a7e5c15b6a26
+exit_code=0
+PASS p06-kv/final: packages=1; local=['p06-kv']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p07-indexer 01-streaming --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/01-streaming
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/01-streaming
+Fixed-size reads preserve word state and unterminated final lines; at most budget plus one bytes are consumed; ordinary IO failures propagate.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/01-streaming/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/01-streaming/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p07-indexer-01-streaming-metadata.json; sha256=9c7dd07ae6923ad88bae63b8391b8862e293d2b5fe3b9d2e4438dd18d52b1fb4
+exit_code=0
+PASS p07-indexer/01-streaming: packages=1; local=['checkpoint-p07-streaming']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p07-indexer final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/final
+Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p07-indexer/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p07-indexer-final-metadata.json; sha256=4a10b6718a32aeb2c9dfaf0b7e0b61173098583f44653dfbdcd906de3c6438c5
+exit_code=0
+PASS p07-indexer/final: packages=1; local=['p07-indexer']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p08-monitor 01-budget --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/01-budget
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/01-budget
+A retry requires an available attempt, nonzero per-attempt cap, and positive time after elapsed time and backoff; arithmetic cannot wrap.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/01-budget/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/01-budget/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p08-monitor-01-budget-metadata.json; sha256=e7623b77679d0f21e7b769f168b670f5284005d63341122346e651bb6a65e000
+exit_code=0
+PASS p08-monitor/01-budget: packages=1; local=['checkpoint-p08-budget']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p08-monitor final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/final
+Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p08-monitor/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p08-monitor-final-metadata.json; sha256=438c8b34b6e2e6200979da466442b07f526fb0ef6d9bb61437bbd2b13acaa8df
+exit_code=0
+PASS p08-monitor/final: packages=17; local=['p08-monitor']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p09-chat 00-scaffold --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/00-scaffold
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/00-scaffold/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p09-chat-00-scaffold-metadata.json; sha256=3f576c7f7ecf8d82ba9ffa3814f7959e5e0cf64dc0031f77d41f5188b6d4843d
+exit_code=0
+PASS p09-chat/00-scaffold: packages=1; local=['learner-p09-chat']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p09-chat 01-framing --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/01-framing
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/01-framing
+A synchronous byte-stream codec accepts UTF-8 frames of1..1024 bytes without control characters; distinguishes clean EOF from truncated input; bounds allocation before reading payload. No TCP listener, Tokio task, broadcast, or shutdown behavior exists in this milestone.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/01-framing/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/01-framing/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p09-chat-01-framing-metadata.json; sha256=4cf9525a3970dfc82dd1866a7cd0edd9d87821dc2ec124b4966f7d46eac7af23
+exit_code=0
+PASS p09-chat/01-framing: packages=1; local=['checkpoint-p09-chat-01-framing']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p09-chat final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p09-chat/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p09-chat-final-metadata.json; sha256=02dccb172761bde9eda00f511616bf844fa1961c598e8d6166da5884611a3af8
+exit_code=0
+PASS p09-chat/final: packages=17; local=['p09-chat']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p10-issues 00-scaffold --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/00-scaffold
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/00-scaffold/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p10-issues-00-scaffold-metadata.json; sha256=e5019e483330e9bcc6531f91cd31e099748feeaa845d0ad75f4e6ab476e2cf93
+exit_code=0
+PASS p10-issues/00-scaffold: packages=1; local=['learner-p10-issues']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p10-issues 01-http-validation --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/01-http-validation
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/01-http-validation
+An in-process Axum service exposes POST /issues/validate; the writer fixture receives a normalized title, a reader receives403, unknown identity401, invalid title422, invalid JSON400, and oversized body413. Four admitted requests, a one-second deadline, and4096-byte bodies are bounded. Nothing is persisted and this endpoint never creates an issue.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/01-http-validation/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/01-http-validation/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p10-issues-01-http-validation-metadata.json; sha256=680ec145bc832769f0a80cc4ec65c397fef813f7ad9c4f96cee4f55dae3b8fe5
+exit_code=0
+PASS p10-issues/01-http-validation: packages=52; local=['checkpoint-p10-issues-01-http-validation']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p10-issues final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p10-issues/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p10-issues-final-metadata.json; sha256=ba0b2f0167a168beabd53b8df69b4a1e6de1aeeeaec05428858cfa6f7c5d56e5
+exit_code=0
+PASS p10-issues/final: packages=162; local=['p10-issues']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p11-console 01-local-state --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/01-local-state
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/01-local-state
+A local Leptos component owns one String filter and presents a labeled keyboard-accessible input and live text. It performs no network I/O and needs no backend. The complete HTML loader and locked WASM build are included; browser interaction remains a separate verification gate.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- python3 scripts/build-ui.py --project /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/01-local-state
+python3 scripts/console-server.py --project /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/01-local-state
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/01-local-state/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p11-console-01-local-state-metadata.json; sha256=edd8e755d7abde2ec0cda4366237cefe7edeaaa7b674b124d9300b612db758b7
+exit_code=0
+PASS p11-console/01-local-state: packages=180; local=['console-learner']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p11-console final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/final
+The complete reference Leptos client connects to the loopback simulated workbench. It models loading, error and empty states, filters, polling, watchlists, order reconciliation, history charts and jobs. Client state lost on reload is documented. Public fixture credentials are not a production identity system.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- python3 scripts/build-ui.py --project /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/final
+python3 scripts/console-server.py --project /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/final
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p11-console/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p11-console-final-metadata.json; sha256=e070dba8c7fe00d4355e73da0285d0dc72fab7b636e397f0ae9a2be63db3a96f
+exit_code=0
+PASS p11-console/final: packages=184; local=['course-ui-model', 'operations-console']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p12-replay 01-price --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/01-price
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/01-price
+Positive decimals use integer units of 1/10,000; signs, exponents, excess precision, zero and overflow are rejected. Private fields preserve the validated range.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/01-price/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/01-price/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p12-replay-01-price-metadata.json; sha256=30ade454d2bf07eee9439adadf39d664516516acf7dcd659a4ecb7d2801db7ae
+exit_code=0
+PASS p12-replay/01-price: packages=1; local=['checkpoint-p12-price']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p12-replay final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/final
+Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p12-replay/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p12-replay-final-metadata.json; sha256=37a75deaaa4ce2589b800858ec6f103243c9fb8f24e38401c3026bb20faec930
+exit_code=0
+PASS p12-replay/final: packages=1; local=['p12-replay']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p13-unsafe 01-safe-slots --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/01-safe-slots
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/01-safe-slots
+A fixed logical capacity bounds length; rejection returns the unchanged owned value; pop transfers ownership once; ordinary Vec drop releases remaining values.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/01-safe-slots/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/01-safe-slots/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p13-unsafe-01-safe-slots-metadata.json; sha256=bb0de5a62cf4ac9728ce0876e6080aebf39ebb56d0c7c9f287913545b39e5384
+exit_code=0
+PASS p13-unsafe/01-safe-slots: packages=1; local=['checkpoint-p13-safe-slots']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p13-unsafe final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/final
+Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p13-unsafe/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p13-unsafe-final-metadata.json; sha256=404c0dd3169174c289fa7974e5a49ed4ea6f82bb61ed82f1aab3b1361b02df97
+exit_code=0
+PASS p13-unsafe/final: packages=1; local=['p13-unsafe']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p14-scheduler 00-scaffold --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/00-scaffold
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/00-scaffold/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p14-scheduler-00-scaffold-metadata.json; sha256=b54adb4aadfda5c9427f2c80f115588d5797aa9678c4c816cb18fa99e5f73a98
+exit_code=0
+PASS p14-scheduler/00-scaffold: packages=1; local=['learner-p14-scheduler']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p14-scheduler 01-lease-model --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/01-lease-model
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/01-lease-model
+An in-memory queue retains at most16 jobs,256-byte payloads, three claims per job, and ten logical ticks per lease. Exact enqueue retries have no new effect; conflicting payloads fail. Expiry permits redelivery and a newer token fences old completion. Cancellation revokes completion. No database, OS clock, background worker, or external effect is implemented.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/01-lease-model/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/01-lease-model/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p14-scheduler-01-lease-model-metadata.json; sha256=d14a33e48f54308f3873a04d27999bda963d081d47b6a1a62710cdcb04d73f9d
+exit_code=0
+PASS p14-scheduler/01-lease-model: packages=1; local=['checkpoint-p14-scheduler-01-lease-model']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p14-scheduler final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p14-scheduler/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p14-scheduler-final-metadata.json; sha256=71bdb32a225df4a0139ccc23e025b5124f3e7ba850790c724e5ddb050cc2085b
+exit_code=0
+PASS p14-scheduler/final: packages=162; local=['p14-scheduler']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p15-replication 00-scaffold --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/00-scaffold
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/00-scaffold/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p15-replication-00-scaffold-metadata.json; sha256=5525d5384ab3af22a240b1d00f4934fcab8baf48f8ae263f3d333aae36c77f43
+exit_code=0
+PASS p15-replication/00-scaffold: packages=1; local=['learner-p15-replication']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p15-replication 01-append-transport --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/01-append-transport
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/01-append-transport
+A fixed leader proposes up to8 values and produces at most16 pending packets for two followers. A caller can take, delay, drop, or deliver packets. Duplicate delivery is idempotent; gaps, conflicts, and invalid follower indices fail. No acknowledgments, committed prefix, elections, process persistence, or consensus guarantee exists here.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/01-append-transport/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/01-append-transport/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p15-replication-01-append-transport-metadata.json; sha256=6396ad2db367eb33487fd79fd6d3038e4f6f71e743c5493d25d97f3db1e5eab0
+exit_code=0
+PASS p15-replication/01-append-transport: packages=1; local=['checkpoint-p15-replication-01-append-transport']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p15-replication final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p15-replication/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p15-replication-final-metadata.json; sha256=55621b1708dd36cd75bee49447143ee149049459c60103464ea31c28e67b5c5f
+exit_code=0
+PASS p15-replication/final: packages=1; local=['p15-replication']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p16-workbench 00-scaffold --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/00-scaffold
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/00-scaffold
+The small immutable first checkpoint described in its source; no later service features are claimed.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/00-scaffold/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/00-scaffold/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p16-workbench-00-scaffold-metadata.json; sha256=f7862af9f413a7a8233543c1b203ebd715bdd9c6b733ae61370c692017b0289a
+exit_code=0
+PASS p16-workbench/00-scaffold: packages=1; local=['learner-p16-workbench']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p16-workbench 01-order-domain --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/01-order-domain
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/01-order-domain
+A single synthetic symbol uses integer cents and whole shares. Quotes require increasing sequence numbers; orders retain stable logical IDs and an original accepted price. Purchases and sales use checked arithmetic, prohibit negative cash/shares, retain at most64 orders, and reject without partial state changes. No files, HTTP, watchlists, replay jobs, chart, or actual trading exists.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/01-order-domain/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/01-order-domain/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p16-workbench-01-order-domain-metadata.json; sha256=5b25b48f2adf6364517bc759b819163b15e541a79c786f8aadabc71f4bae500f
+exit_code=0
+PASS p16-workbench/01-order-domain: packages=1; local=['checkpoint-p16-workbench-01-order-domain']
+$ python3 /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/extracted/rust-course/scripts/start-checkpoint.py p16-workbench final --destination /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/final
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/final
+The current complete reference source with its documented limits, fixtures, tests and operational requirements. Database tests remain explicit opt-in checks where applicable.
+Working directory: course root; test with the current pinned mise toolchain:
+mise exec -- cargo test --locked --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/final/Cargo.toml
+Use an explicit --target-dir to reuse your chosen verification cache. No build output was copied.
+exit_code=0
+$ mise exec -- cargo metadata --offline --locked --format-version 1 --manifest-path /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/reconstructed/p16-workbench/final/Cargo.toml
+stdout saved to /Users/billyribeiro/Desktop/rust-course/.course-cache/release-followup-portability-emz1nqbh/p16-workbench-final-metadata.json; sha256=3ae8cc65013a95dd22366ef9146f60094256e0c9ef72ab91a5fa3c687c9f5ca1
+exit_code=0
+PASS p16-workbench/final: packages=54; local=['p16-workbench']

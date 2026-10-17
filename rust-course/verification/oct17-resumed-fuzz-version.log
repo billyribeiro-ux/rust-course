@@ -1,0 +1,5 @@
+$ mise exec -- cargo fuzz --version
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+cargo-fuzz 0.13.2
+
+exit=0

@@ -1,0 +1,645 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Bound memory and make concurrent results reproducible · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="04-indexer" data-lesson="04-indexer"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Bound memory and make concurrent results reproducible</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 04 / Concurrency and async</div><h1>Bound memory and make concurrent results reproducible</h1><p class="lead">Complete a streaming file indexer with explicit resource limits, cooperative cancellation, live progress and stable final output.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-4/04-threads.html">Ownership crosses thread boundaries</a></li></ul><ul><li>Derive memory bounds across input, queues, workers and output</li><li>Keep streaming parser state across arbitrary read boundaries</li><li>Define cancellation as a cooperative protocol</li><li>Produce deterministic results despite nondeterministic scheduling</li><li>Report bounded live progress without treating failed or abandoned jobs as successful files</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#atomic">atomic</a> · <a href="../../glossary.html#authentication">authentication</a> · <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#closure">closure</a> · <a href="../../glossary.html#deadline">deadline</a> · <a href="../../glossary.html#generic">generic</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p07">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-put-a-resource-budget-in-the-design">Purpose: put a resource budget in the design</h2>
+<p>A worker count alone does not bound a program's memory. A producer might retain millions of paths, an unbounded queue might hold millions of jobs, a worker might read an entire huge file, and a collector might accumulate every result forever. P07 addresses each category. It accepts a finite batch capped at 4096 paths, caps each encoded path length, uses bounded channels, permits at most 32 workers, reads through an 8192-byte buffer, limits bytes read per file and collects at most one result per submitted path. This is a bounded-batch design, not a claim of constant total memory independent of input count.</p>
+<h2 id="model-streaming-state-is-smaller-than-streaming-input">Model: streaming state is smaller than streaming input</h2>
+<p>The counter tracks total bytes, newline count, word count, whether the previous byte was inside a word, the last byte seen, and a rolling fingerprint. Words use ASCII whitespace boundaries, which is an explicit definition rather than a Unicode linguistic tokenizer. A long word may span several reads; in_word carries its state across those reads. Lines count newline bytes plus one final unterminated nonempty line. An empty file has zero lines. The fingerprint helps compare results, but it is not cryptographic authentication and does not prove two files are identical.</p>
+<h2 id="predict-before-running">Predict before running</h2>
+<p>Predict the line and word counts for an empty file, a single newline, “a b” without a trailing newline, and a nine-thousand-byte word followed by another word. Decide whether a read boundary creates a new word. It must not. Now predict the oversize result if the maximum is four bytes and the source yields five. File metadata is only a preliminary observation; the reader itself must enforce the budget because files can change and some readers have no reliable metadata. The implementation reads at most the remaining budget plus one byte so it can detect an excess.</p>
+<pre><code>cd rust-course/projects
+mise exec -- cargo run -p p07-indexer -- reference/p07-indexer/src/lib.rs reference/p07-indexer/src/main.rs
+mise exec -- cargo test -p p07-indexer streaming_counts
+mise exec -- cargo test -p p07-indexer oversize
+mise exec -- cargo test --manifest-path scaffolds/p07-indexer/Cargo.toml</code></pre>
+<h2 id="read-the-bounded-path">Read the bounded path</h2>
+<div class="code-wrap" data-source="projects/reference/p07-indexer/src/lib.rs" data-sha256="a86a23003bcc00cda19e1f1a1fb90c253b3d3ad16d436609f4000d26e3cf3808"><div class="code-label"><a href="../../projects/reference/p07-indexer/src/lib.rs">projects/reference/p07-indexer/src/lib.rs</a></div><pre><code>//! Bounded batch file indexer. Files are streamed; results and path metadata are capped.
+use std::{
+    fs::File,
+    io::{self, Read},
+    path::PathBuf,
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, AtomicUsize, Ordering},
+        mpsc,
+    },
+    thread,
+};
+
+#[derive(Clone, Copy, Debug)]
+pub struct Config {
+    pub workers: usize,
+    pub queue: usize,
+    pub max_files: usize,
+    pub max_bytes: u64,
+}
+impl Default for Config {
+    fn default() -&gt; Self {
+        Self {
+            workers: 4,
+            queue: 8,
+            max_files: 4096,
+            max_bytes: 16 * 1024 * 1024,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Status {
+    Indexed,
+    TooLarge,
+    Cancelled,
+    Failed(io::ErrorKind),
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Entry {
+    pub path: PathBuf,
+    pub input_index: usize,
+    pub bytes: u64,
+    pub lines: u64,
+    pub words: u64,
+    pub fingerprint: u64,
+    pub status: Status,
+}
+#[derive(Debug)]
+pub struct Report {
+    pub entries: Vec&lt;Entry&gt;,
+    pub submitted: usize,
+    pub cancelled: bool,
+    pub peak_workers: usize,
+}
+
+/// A coordinator-owned observation, not an estimate of bytes or time remaining.
+/// `received` includes failed/partial results; only `indexed` counts whole files.
+/// Counts are monotonic within a run. Completion order is not deterministic.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Progress {
+    pub total: usize,
+    pub received: usize,
+    pub indexed: usize,
+    pub too_large: usize,
+    pub failed: usize,
+    pub cancelled: usize,
+    /// Known only after the producer has joined; queued work may have no result.
+    pub submitted: Option&lt;usize&gt;,
+    pub cancellation_requested: bool,
+    /// All scoped work has joined and results have been sorted.
+    pub finished: bool,
+}
+impl Progress {
+    fn observe(&amp;mut self, status: &amp;Status) {
+        // Input is capped at 4096 and each input has at most one returned entry.
+        self.received += 1;
+        match status {
+            Status::Indexed =&gt; self.indexed += 1,
+            Status::TooLarge =&gt; self.too_large += 1,
+            Status::Failed(_) =&gt; self.failed += 1,
+            Status::Cancelled =&gt; self.cancelled += 1,
+        }
+    }
+}
+
+fn count(path: PathBuf, input_index: usize, max_bytes: u64, cancel: &amp;AtomicBool) -&gt; Entry {
+    let mut result = Entry {
+        path,
+        input_index,
+        bytes: 0,
+        lines: 0,
+        words: 0,
+        fingerprint: 0xcbf2_9ce4_8422_2325,
+        status: Status::Indexed,
+    };
+    let run = |result: &amp;mut Entry| -&gt; io::Result&lt;()&gt; {
+        let mut file = File::open(&amp;result.path)?;
+        let mut buf = [0u8; 8192];
+        let mut in_word = false;
+        let mut last = None;
+        loop {
+            if cancel.load(Ordering::Relaxed) {
+                result.status = Status::Cancelled;
+                return Ok(());
+            }
+            // Read at most the remaining budget plus one byte to detect an oversize file.
+            let allowance = (max_bytes - result.bytes + 1).min(buf.len() as u64) as usize;
+            let n = match file.read(&amp;mut buf[..allowance]) {
+                Err(e) if e.kind() == io::ErrorKind::Interrupted =&gt; continue,
+                other =&gt; other?,
+            };
+            if n == 0 {
+                break;
+            }
+            if result.bytes + n as u64 &gt; max_bytes {
+                result.status = Status::TooLarge;
+                return Ok(());
+            }
+            result.bytes += n as u64;
+            for &amp;byte in &amp;buf[..n] {
+                result.lines += u64::from(byte == b&#x27;\n&#x27;);
+                let word = !byte.is_ascii_whitespace();
+                result.words += u64::from(word &amp;&amp; !in_word);
+                in_word = word;
+                result.fingerprint =
+                    (result.fingerprint ^ u64::from(byte)).wrapping_mul(0x100_0000_01b3);
+                last = Some(byte);
+            }
+        }
+        result.lines += u64::from(last.is_some_and(|byte| byte != b&#x27;\n&#x27;));
+        Ok(())
+    };
+    if let Err(error) = run(&amp;mut result) {
+        result.status = Status::Failed(error.kind());
+    }
+    result
+}
+
+pub fn index(paths: Vec&lt;PathBuf&gt;, config: Config, cancel: Arc&lt;AtomicBool&gt;) -&gt; io::Result&lt;Report&gt; {
+    index_with_progress(paths, config, cancel, |_| {})
+}
+
+/// Index with an initial snapshot, one snapshot per received entry, and a final snapshot.
+/// Invalid configuration returns before callbacks or threads start. The callback runs
+/// synchronously on the calling coordinator, with no lock held and no extra queue.
+/// A slow callback applies backpressure through the bounded result queue; it should
+/// not wait for this same run to finish. Panics are programmer failures, not IO errors.
+/// A caller can request cancellation through its retained `Arc&lt;AtomicBool&gt;`; pending
+/// regular-file reads remain cooperative. On final progress, `submitted - received`
+/// counts accepted jobs without a returned entry, and `total - submitted` counts jobs
+/// never submitted. Neither category is silently counted as a successful file.
+pub fn index_with_progress(
+    paths: Vec&lt;PathBuf&gt;,
+    config: Config,
+    cancel: Arc&lt;AtomicBool&gt;,
+    mut on_progress: impl FnMut(Progress),
+) -&gt; io::Result&lt;Report&gt; {
+    if !(1..=32).contains(&amp;config.workers)
+        || !(1..=1024).contains(&amp;config.queue)
+        || config.max_files &gt; 4096
+        || paths.len() &gt; config.max_files
+        || config.max_bytes &gt; 64 * 1024 * 1024
+        || paths
+            .iter()
+            .any(|p| p.as_os_str().as_encoded_bytes().len() &gt; 4096)
+    {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;configuration or input exceeds documented bounds&quot;,
+        ));
+    }
+    let mut progress = Progress {
+        total: paths.len(),
+        cancellation_requested: cancel.load(Ordering::Relaxed),
+        ..Progress::default()
+    };
+    on_progress(progress);
+    let (job_tx, job_rx) = mpsc::sync_channel::&lt;(usize, PathBuf)&gt;(config.queue);
+    let (result_tx, result_rx) = mpsc::sync_channel(config.queue);
+    let job_rx = Arc::new(Mutex::new(job_rx));
+    let active = AtomicUsize::new(0);
+    let peak = AtomicUsize::new(0);
+    let (mut entries, submitted) = thread::scope(|scope| {
+        let producer_cancel = cancel.clone();
+        let producer = scope.spawn(move || {
+            let mut submitted = 0;
+            for (index, path) in paths.into_iter().enumerate() {
+                if producer_cancel.load(Ordering::Relaxed) || job_tx.send((index, path)).is_err() {
+                    break;
+                }
+                submitted += 1;
+            }
+            submitted
+        });
+        for _ in 0..config.workers {
+            let jobs = job_rx.clone();
+            let results = result_tx.clone();
+            let cancel = cancel.clone();
+            let active = &amp;active;
+            let peak = &amp;peak;
+            scope.spawn(move || {
+                loop {
+                    if cancel.load(Ordering::Relaxed) {
+                        break;
+                    }
+                    // The receiver lock protects dequeue only; file I/O is outside the lock.
+                    let next = jobs.lock().expect(&quot;receiver lock poisoned&quot;).recv();
+                    let Ok((index, path)) = next else { break };
+                    let now = active.fetch_add(1, Ordering::Relaxed) + 1;
+                    peak.fetch_max(now, Ordering::Relaxed);
+                    let entry = count(path, index, config.max_bytes, &amp;cancel);
+                    active.fetch_sub(1, Ordering::Relaxed);
+                    if results.send(entry).is_err() {
+                        break;
+                    }
+                }
+            });
+        }
+        drop(job_rx);
+        drop(result_tx);
+        let mut entries = Vec::new();
+        for entry in result_rx {
+            progress.observe(&amp;entry.status);
+            progress.cancellation_requested = cancel.load(Ordering::Relaxed);
+            entries.push(entry);
+            on_progress(progress);
+        }
+        (entries, producer.join().expect(&quot;producer panicked&quot;))
+    });
+    entries.sort_by(|a, b| a.path.cmp(&amp;b.path).then(a.input_index.cmp(&amp;b.input_index)));
+    progress.submitted = Some(submitted);
+    progress.cancellation_requested = cancel.load(Ordering::Relaxed);
+    progress.finished = true;
+    on_progress(progress);
+    Ok(Report {
+        entries,
+        submitted,
+        cancelled: progress.cancellation_requested,
+        peak_workers: peak.load(Ordering::Relaxed),
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
+    struct Scratch(PathBuf);
+    impl Scratch {
+        fn new() -&gt; Self {
+            let p = std::env::temp_dir().join(format!(
+                &quot;rust-course-index-{}-{}&quot;,
+                std::process::id(),
+                NEXT.fetch_add(1, Ordering::Relaxed)
+            ));
+            fs::create_dir(&amp;p).unwrap();
+            Self(p)
+        }
+    }
+    impl Drop for Scratch {
+        fn drop(&amp;mut self) {
+            let _ = fs::remove_dir_all(&amp;self.0);
+        }
+    }
+    fn cancel() -&gt; Arc&lt;AtomicBool&gt; {
+        Arc::new(AtomicBool::new(false))
+    }
+    #[test]
+    fn streaming_counts_across_buffer_boundaries_and_sorts() {
+        let dir = Scratch::new();
+        let a = dir.0.join(&quot;a&quot;);
+        let z = dir.0.join(&quot;z&quot;);
+        fs::write(&amp;z, &quot;x&quot;.repeat(9000) + &quot; y\nlast&quot;).unwrap();
+        fs::write(&amp;a, b&quot;&quot;).unwrap();
+        let r = index(vec![z.clone(), a.clone()], Config::default(), cancel()).unwrap();
+        assert_eq!(r.entries[0].path, a);
+        assert_eq!(r.entries[0].lines, 0);
+        assert_eq!(r.entries[1].path, z);
+        assert_eq!((r.entries[1].lines, r.entries[1].words), (2, 3));
+        assert!(r.peak_workers &lt;= 4);
+    }
+    #[test]
+    fn oversize_and_missing_files_are_per_file_results() {
+        let dir = Scratch::new();
+        let p = dir.0.join(&quot;big&quot;);
+        fs::write(&amp;p, b&quot;12345&quot;).unwrap();
+        let r = index(
+            vec![p, dir.0.join(&quot;missing&quot;)],
+            Config {
+                max_bytes: 4,
+                ..Config::default()
+            },
+            cancel(),
+        )
+        .unwrap();
+        assert_eq!(r.entries[0].status, Status::TooLarge);
+        assert_eq!(r.entries[1].status, Status::Failed(io::ErrorKind::NotFound));
+    }
+    #[test]
+    fn cancellation_before_start_submits_nothing() {
+        let r = index(
+            vec![&quot;unused&quot;.into()],
+            Config::default(),
+            Arc::new(AtomicBool::new(true)),
+        )
+        .unwrap();
+        assert!(r.cancelled);
+        assert!(r.entries.is_empty());
+        assert_eq!(r.submitted, 0);
+    }
+    #[test]
+    fn queue_one_does_not_deadlock_and_output_is_repeatable() {
+        let dir = Scratch::new();
+        let p = dir.0.join(&quot;file&quot;);
+        fs::write(&amp;p, b&quot;a b\nc&quot;).unwrap();
+        let c = Config {
+            workers: 2,
+            queue: 1,
+            ..Config::default()
+        };
+        let one = index(vec![p.clone(); 40], c, cancel()).unwrap();
+        let two = index(vec![p; 40], c, cancel()).unwrap();
+        assert_eq!(one.entries, two.entries);
+        assert_eq!(one.entries.len(), 40);
+    }
+    #[test]
+    fn invalid_limits_are_rejected() {
+        assert!(
+            index(
+                vec![],
+                Config {
+                    workers: 0,
+                    ..Config::default()
+                },
+                cancel()
+            )
+            .is_err()
+        );
+    }
+
+    #[test]
+    fn progress_is_monotonic_and_reports_failures_without_calling_them_successes() {
+        let dir = Scratch::new();
+        let good = dir.0.join(&quot;good&quot;);
+        let empty = dir.0.join(&quot;empty&quot;);
+        let large = dir.0.join(&quot;large&quot;);
+        fs::write(&amp;good, b&quot;a b&quot;).unwrap();
+        fs::write(&amp;empty, b&quot;&quot;).unwrap();
+        fs::write(&amp;large, b&quot;12345&quot;).unwrap();
+        let mut observations = Vec::new();
+        let coordinator = thread::current().id();
+        let report = index_with_progress(
+            vec![good, empty, large, dir.0.join(&quot;missing&quot;), dir.0.clone()],
+            Config {
+                max_bytes: 4,
+                queue: 1,
+                ..Config::default()
+            },
+            cancel(),
+            |progress| {
+                assert_eq!(thread::current().id(), coordinator);
+                observations.push(progress);
+            },
+        )
+        .unwrap();
+        assert_eq!(observations.len(), 7); // Initial, five results, final.
+        assert_eq!(
+            observations[0],
+            Progress {
+                total: 5,
+                ..Progress::default()
+            }
+        );
+        for pair in observations.windows(2) {
+            assert!(pair[0].received &lt;= pair[1].received);
+            assert!(pair[0].indexed &lt;= pair[1].indexed);
+            assert!(pair[0].too_large &lt;= pair[1].too_large);
+            assert!(pair[0].failed &lt;= pair[1].failed);
+            assert_eq!(
+                pair[1].received,
+                pair[1].indexed + pair[1].too_large + pair[1].failed + pair[1].cancelled
+            );
+        }
+        assert!(
+            observations[..6]
+                .iter()
+                .all(|p| !p.finished &amp;&amp; p.submitted.is_none())
+        );
+        let final_progress = observations[6];
+        assert_eq!(
+            (
+                final_progress.received,
+                final_progress.indexed,
+                final_progress.too_large,
+                final_progress.failed
+            ),
+            (5, 2, 1, 2)
+        );
+        assert!(final_progress.finished);
+        assert_eq!(final_progress.submitted, Some(report.submitted));
+        assert_eq!(report.entries.len(), final_progress.received);
+    }
+
+    #[test]
+    fn initial_progress_can_cancel_before_any_file_is_opened() {
+        let stopping = cancel();
+        let mut observations = Vec::new();
+        let report = index_with_progress(
+            vec![&quot;not-opened&quot;.into()],
+            Config::default(),
+            Arc::clone(&amp;stopping),
+            |progress| {
+                observations.push(progress);
+                stopping.store(true, Ordering::Relaxed);
+            },
+        )
+        .unwrap();
+        assert_eq!(observations.len(), 2);
+        assert_eq!(report.submitted, 0);
+        assert!(report.entries.is_empty());
+        assert!(observations[1].finished &amp;&amp; observations[1].cancellation_requested);
+        assert_eq!(observations[1].submitted, Some(0));
+        assert_eq!(observations[1].cancelled, 0); // Unsubmitted is not a cancelled result.
+    }
+
+    #[test]
+    fn progress_cancellation_drains_results_and_accounts_for_unreturned_jobs() {
+        let dir = Scratch::new();
+        let file = dir.0.join(&quot;file&quot;);
+        fs::write(&amp;file, b&quot;a b\n&quot;).unwrap();
+        let stopping = cancel();
+        let mut final_progress = None;
+        let report = index_with_progress(
+            vec![file; 32],
+            Config {
+                workers: 1,
+                queue: 1,
+                ..Config::default()
+            },
+            Arc::clone(&amp;stopping),
+            |progress| {
+                if progress.received == 1 {
+                    stopping.store(true, Ordering::Relaxed);
+                }
+                if progress.finished {
+                    final_progress = Some(progress);
+                }
+            },
+        )
+        .unwrap();
+        let p = final_progress.unwrap();
+        assert!(p.cancellation_requested &amp;&amp; report.cancelled);
+        assert!(p.received &gt;= 1 &amp;&amp; p.received &lt;= report.submitted);
+        assert!(report.submitted &lt; p.total);
+        assert_eq!(
+            p.indexed,
+            report
+                .entries
+                .iter()
+                .filter(|e| e.status == Status::Indexed)
+                .count()
+        );
+        assert_eq!(
+            p.cancelled,
+            report
+                .entries
+                .iter()
+                .filter(|e| e.status == Status::Cancelled)
+                .count()
+        );
+        assert_eq!(p.received, p.indexed + p.cancelled);
+        assert_eq!(
+            p.received + (report.submitted - p.received) + (p.total - report.submitted),
+            p.total
+        );
+        // Callback cancellation occurs while collection is in progress. Exact counts
+        // depend on scheduling; the conservation equation does not.
+    }
+
+    #[test]
+    fn empty_work_has_initial_and_final_progress() {
+        let mut observations = Vec::new();
+        let report = index_with_progress(vec![], Config::default(), cancel(), |p| {
+            observations.push(p)
+        })
+        .unwrap();
+        assert_eq!(observations.len(), 2);
+        assert_eq!(observations[0], Progress::default());
+        assert!(observations[1].finished);
+        assert_eq!(observations[1].submitted, Some(0));
+        assert!(report.entries.is_empty());
+    }
+
+    #[test]
+    fn invalid_configuration_emits_no_misleading_started_event() {
+        let mut calls = 0;
+        let result = index_with_progress(
+            vec![],
+            Config {
+                workers: 0,
+                ..Config::default()
+            },
+            cancel(),
+            |_| calls += 1,
+        );
+        assert_eq!(result.unwrap_err().kind(), io::ErrorKind::InvalidInput);
+        assert_eq!(calls, 0);
+    }
+}
+</code></pre></div>
+<p>Config validation occurs before spawning. count owns the path and produces one Entry, including an explicit Status. Opening a missing file becomes a per-file failure rather than aborting all valid files. TooLarge means counters and fingerprint are partial; callers should not display them as completed-file measurements. The read loop preserves word state and checks cancellation between reads. The result collector sorts by path and then original input index. That second key makes repeated paths deterministic too. Thread completion order may change between runs, but the sorted entries for unchanged files should remain equal.</p>
+<h2 id="live-progress-observations-belong-to-the-collector">Live progress: observations belong to the collector</h2>
+<p>A final report cannot tell someone whether a longer run is still making progress. The collector already receives one result for each returned file job, so it is the natural owner of progress counts. The new index_with_progress function takes an FnMut callback: a function-like value that can update its captured state each time it is called. The callback runs on the calling thread before workers start, after each received Entry, and once after all scoped work has joined and output has been sorted. It receives a small copied Progress value; no progress thread, shared counter lock, timer, or additional queue is needed. The existing index function calls the same implementation with a callback that does nothing, preserving the earlier API and benchmark's output-free measurement boundary.</p>
+<p>Predict this snapshot: total=3, received=2, indexed=1, failed=1, finished=false. Have two files been indexed successfully? No. Two results arrived, but one is an error. Does the remaining file necessarily run now? No: it might still be queued. The equation received = indexed + too_large + failed + cancelled holds at every observation. Only the final snapshot supplies submitted, after joining the producer. Then submitted - received counts accepted jobs without a returned result, and total - submitted counts jobs never submitted. These are distinct from returned Status::Cancelled entries. Cancellation need not make received equal total, and the interface must not turn that gap into false success.</p>
+<p>The callback receives at most total + 2 snapshots, with total capped at 4096. The indexer retains one progress value. A caller choosing to keep snapshots owns that additional bounded storage; the CLI prints each observation instead. Result-arrival order depends on scheduling, while each category count increases monotonically and the final entries remain sorted. A slow callback deliberately slows collection: the existing bounded result queue eventually blocks workers. Do not wait inside the callback for this same indexing run to finish; that would prevent the collector from doing the work required for completion. The callback has no hard deadline, and a blocked filesystem read can still postpone cancellation.</p>
+<h3>Guided checkpoint: keep status separate from data</h3>
+<p>Read the complete CLI below, then run it from the course projects directory. Compared with the previous thin entry point, it passes a retained cancellation flag and a small closure to index_with_progress. Progress goes to standard error; sorted entries and the final report go to standard output. The status writer uses Write and returns an ordinary I/O error. If progress output fails, the closure records that first error and requests cancellation. The indexer still drains returned results and joins scoped work, then the CLI returns the error without printing a successful report. A callback panic remains a programmer failure, not a normal output-error policy.</p>
+<div class="code-wrap" data-source="projects/reference/p07-indexer/src/main.rs" data-sha256="09444a3d901a36a7f99d2abd4b7a0fb4b9a0a16494ddbdb337a7c79326926561"><div class="code-label"><a href="../../projects/reference/p07-indexer/src/main.rs">projects/reference/p07-indexer/src/main.rs</a></div><pre><code>use std::{
+    io::{self, Write},
+    sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    },
+};
+
+fn write_progress(output: &amp;mut impl Write, progress: p07_indexer::Progress) -&gt; io::Result&lt;()&gt; {
+    let phase = if progress.finished {
+        &quot;finished&quot;
+    } else if progress.received == 0 {
+        &quot;started&quot;
+    } else {
+        &quot;running&quot;
+    };
+    writeln!(
+        output,
+        &quot;progress {phase} received={}/{} indexed={} too_large={} failed={} cancelled={} cancellation_requested={}&quot;,
+        progress.received,
+        progress.total,
+        progress.indexed,
+        progress.too_large,
+        progress.failed,
+        progress.cancelled,
+        progress.cancellation_requested
+    )?;
+    if let Some(submitted) = progress.submitted {
+        writeln!(
+            output,
+            &quot;progress submitted={submitted} without_result={} unsubmitted={}&quot;,
+            submitted - progress.received,
+            progress.total - submitted
+        )?;
+    }
+    output.flush()
+}
+
+fn main() -&gt; std::io::Result&lt;()&gt; {
+    let paths = std::env::args_os()
+        .skip(1)
+        .map(Into::into)
+        .collect::&lt;Vec&lt;_&gt;&gt;();
+    if paths.is_empty() {
+        let _ = writeln!(io::stderr().lock(), &quot;usage: p07-indexer FILE ...&quot;);
+        std::process::exit(2);
+    }
+    let cancel = Arc::new(AtomicBool::new(false));
+    let mut progress_error = None;
+    let mut progress_output = io::stderr().lock();
+    let report = p07_indexer::index_with_progress(
+        paths,
+        p07_indexer::Config::default(),
+        Arc::clone(&amp;cancel),
+        |progress| {
+            if progress_error.is_none()
+                &amp;&amp; let Err(error) = write_progress(&amp;mut progress_output, progress)
+            {
+                // Stop further work but still let index_with_progress drain and join.
+                progress_error = Some(error);
+                cancel.store(true, Ordering::Relaxed);
+            }
+        },
+    )?;
+    if let Some(error) = progress_error {
+        return Err(error);
+    }
+    let mut output = io::stdout().lock();
+    for e in report.entries {
+        writeln!(
+            output,
+            &quot;{} bytes={} lines={} words={} {:016x} {:?}&quot;,
+            e.path.display(),
+            e.bytes,
+            e.lines,
+            e.words,
+            e.fingerprint,
+            e.status
+        )?;
+    }
+    writeln!(
+        output,
+        &quot;submitted={} peak_workers={} cancelled={}&quot;,
+        report.submitted, report.peak_workers, report.cancelled
+    )?;
+    output.flush()
+}
+</code></pre></div>
+<pre><code>mise exec -- cargo run -p p07-indexer -- reference/p07-indexer/src/lib.rs reference/p07-indexer/src/main.rs
+mise exec -- cargo test -p p07-indexer progress_
+mise exec -- cargo test -p p07-indexer initial_progress
+mise exec -- cargo test -p p07-indexer --test cli</code></pre>
+<p>The first command prints a started observation at received=0/2, one running observation for each returned file, and a finished observation at received=2/2 when both files exist and fit their budgets. It also prints the sorted file results. The relative interleaving of the two terminal streams is not part of the contract. Progress is per returned file, not a byte-level timer: a single slow file may produce no intermediate line. The CLI does not install a Ctrl-C handler; library callers can set the retained cancellation flag, and the CLI does so if its progress sink fails.</p>
+<h3>Playbook: a cancelled run shows only one completed result</h3>
+<p>Observation: total=32, but received is much smaller after cancellation. Hypothesis A says the collector lost results. Hypothesis B says queued or not-yet-submitted jobs were stopped. A controlled experiment uses one worker, queue capacity one, and requests cancellation in the callback after the first received result. Run progress_cancellation_drains_results_and_accounts_for_unreturned_jobs. Its final snapshot agrees with every returned Entry, separates unreturned submitted jobs from unsubmitted jobs, and checks the conservation equation. This disproves the claim that received must always equal the original batch size. Exact intermediate counts are intentionally not hardcoded: scheduling can change which job crosses the boundary before the flag is seen.</p>
+<p>Deliberate mistake to diagnose: display received/total as “files successfully indexed,” or add a shared mutable progress counter to every worker. The former mixes completion and success; the latter adds synchronization although the collector already owns the evidence. Correct the label and count Status::Indexed at collection. Independently add a quiet-progress CLI option without changing stdout or index results. Before coding, decide whether disabling progress changes how output failures are handled.</p>
+<details><summary>Progress hint 1</summary><p>Trace one missing file. It contributes to received and failed, but not indexed. Trace one never-submitted job separately.</p></details>
+<details><summary>Progress hint 2</summary><p>A callback capturing a Vec can record a test trace without being Send because the coordinator invokes it synchronously. Bound the test fixture and compare final categories with Report.entries.</p></details>
+<details><summary>Worked progress review</summary><p>Keep index as a wrapper around index_with_progress. For a quiet option, select a no-output callback after validating arguments; preserve the same index and sort path. Test identical stdout with and without progress, and require that quiet mode does not claim to test a stderr write that never occurs. A background progress channel is justified only if an independently scheduled interface needs it, and that interface must choose a bounded queue or coalesced latest snapshot.</p></details>
+<p><strong>Evidence:</strong> the focused <a href="../../verification/indexer-progress-followup.html">progress verification report</a> records initial, monotonic, final, empty-input, invalid-configuration, cancellation, read-failure, and CLI output-failure checks. These tests support the callback contract and executed schedules. They do not measure throughput or establish every filesystem's shutdown timing. Mastery requires explaining why a finished cancelled run can have fewer results than inputs, demonstrating a distinguishing experiment, and defending the chosen observer boundary without reading this explanation.</p>
+
+<h2 id="cancellation-needs-an-honest-boundary">Cancellation needs an honest boundary</h2>
+<p>The cancellation flag uses relaxed atomic operations because it is only a stop hint; it is not publishing some other protected data structure. A worker checks it before waiting for another job and between reads. Cancellation cannot forcibly interrupt a blocking regular-file read through this API. A special file or problematic filesystem may block longer than expected, so use ordinary local files in the course exercises. The producer may already have submitted a job when cancellation arrives. Therefore submitted, completed entries and canceled state can differ. Do not interpret submitted as a guaranteed number of completed indexes.</p>
+<p>The producer and workers still have to close channels correctly. A canceled worker drops its receiver clone and result sender. Once all job receivers disappear, a blocked producer send returns an error. The collector drains finished results until all senders disappear, and the scope waits for thread completion. This protocol bounds outstanding work but does not promise a hard wall-clock shutdown deadline for synchronous file I/O. That limitation motivates the different I/O model in the next project.</p>
+<h2 id="playbook-investigation-word-counts-change-with-buffer-size">Playbook investigation: word counts change with buffer size</h2>
+<p>Observation: a learner's indexer counts the same bytes differently with one-byte reads and eight-kilobyte reads. Hypothesis A says the operating system changes the file contents. Hypothesis B says the tokenizer resets in_word at every read. Hypothesis C says the final unterminated line is counted as a word. Choose a reader adapter that returns one byte per call while holding the underlying byte slice fixed. If the result still changes, that disproves the operating-system-content hypothesis without involving threads at all. Then use a single long word to separate boundary-state mistakes from line-ending logic.</p>
+<p>The likely repair is to move parser state outside the read loop, but make that conclusion only after the minimal experiment. Evidence includes identical counts for several chunk sizes, empty input and trailing-newline cases. Its limits include the chosen ASCII word definition and concurrent external file edits. In the middle stage of the course, you choose which assertions distinguish your remaining hypotheses; the lesson no longer supplies every expected byte count.</p>
+<h2 id="guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</h2>
+<p>Complete the scaffold's generic Read-based counter before adding concurrency. Its Tiny reader deliberately splits every token boundary. Then estimate memory as bounded input paths, queued paths, per-worker buffers, queued results and collected results. Include allocation overhead qualitatively; do not advertise the sum as an exact resident-set measurement. Independently add aggregate statistics for completed files only. Decide how duplicates and errors affect totals, write that policy, and test it before changing the CLI. Preserve deterministic entry order while allowing runtime peak-worker statistics to vary.</p>
+<details><summary>Tiered hints and solution reasoning</summary><details><summary>Hint 1: choose the next observation</summary><p>read boundaries are transport events, not text delimiters.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>count a word only on a whitespace-to-nonwhitespace transition, with an initially false in_word.</p></details><details><summary>Worked solution</summary><p>Solution outline: preserve state across successful reads, retry Interrupted, return other errors, and account for the last line after genuine EOF. For totals, filter Status::Indexed explicitly; a partial TooLarge entry must not contribute as though the whole file had been read.</p></details></details>
+<aside class="stuck"><h3>When you get stuck</h3><p>Run the scaffold counter against Tiny before inspecting channels. Use mise exec -- cargo test -p p07-indexer queue_one only after pure counting is correct. Read the Read contract and the sync_channel blocking behavior. Ask for review with the bytes, chunk sizes, cancellation timing and your resource-budget equation. Keep “bounded memory” separate from “fast” and “hard-deadline cancellation.”</p></aside>
+<h2 id="review-evidence-and-mastery">Review, evidence and mastery</h2>
+<p>Submit streaming boundary tests, the memory budget, cancellation semantics and two identical sorted-output captures from unchanged inputs. You have mastered the project when you can identify every quantity that can grow, explain why a file failure remains visible without stopping unrelated work, and state which observations are deterministic and which depend on scheduling.</p>
+<section class="engineering-decisions"><h2 id="engineering-decisions-and-evidence">Engineering decisions and evidence</h2><p><strong>Current scope and invariants.</strong> At most the configured fixed number of workers count files, both channels are bounded, each file uses a fixed-size read buffer, and input paths plus collected results have explicit batch limits. Live progress uses one coordinator-owned value and no new channel; received results are partitioned into indexed, oversized, failed, and cancelled categories.</p><p><strong>Why this is the current recommended shape.</strong> Owned jobs move through channels; Arc is used only for shared cancellation and receiver ownership. Mutex scope covers dequeue, not file I/O. A pure streaming counter preserves state across reads, per-file status preserves partial failures, and final sorting makes entries deterministic.</p><p><strong>Reasonable alternative and tradeoff.</strong> A work-stealing library is a reasonable alternative for CPU-heavy independent jobs and may simplify scheduling. The explicit fixed worker pool is a good fit here because its bounded queues and shutdown dependencies are the subject and are small enough to inspect. Unbounded thread-per-file spawning is a deliberate rejected design, not an early recommended step.</p><p><strong>Evidence and limits.</strong> Native reference tests were run through mise in the coordinated course verification; inspect the current verification record for exact results. Chunk-boundary counts; empty files; oversize and missing paths; cancellation before submission; queue-one termination; repeatable entries; invalid configuration. The total bound includes capped path/result metadata, not just the 8192-byte buffers. Ordinary file reads can block cancellation. Files may change during a run. Partial counts from failed or oversized files are not complete-file statistics.</p><p><strong>Requirement that would justify evolution.</strong> For recursive or effectively unbounded discovery, stream results to a sink and use bounded or external sorting instead of collecting an unlimited list. For hard shutdown deadlines, revisit the synchronous I/O boundary and supported file types. For time-based or per-byte progress, define sampling and synchronization costs first; the present observer is per returned file and has no timing promise.</p><p>In your review, explain this choice in your own words, preserve the behavioral contract during changes, and name the evidence that would make you choose the alternative. Deliberately broken variants above are diagnostic exercises, never recommended implementation stages.</p></section><h2 id="explore-the-model">Explore the model</h2><section class="widget" data-widget="queue" aria-label="A queue with capacity three"><h3>A queue with capacity three</h3><p>Conceptual teaching model: this trace does not show physical memory placement, prove a scheduler property, or implement consensus. Read the state explanation after each action.</p><div class="widget-visual" aria-hidden="true"></div><p data-output aria-live="polite"></p><button data-action="produce">Produce one</button><button data-action="consume">Consume one</button><button data-action="reset">Reset</button><noscript>JavaScript is disabled. The lesson above contains the equivalent explanation; this optional state trace needs JavaScript.</noscript></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/std/io/trait.Read.html">Read contract</a></li><li><a href="https://doc.rust-lang.org/std/sync/atomic/enum.Ordering.html">Atomic ordering</a></li><li><a href="https://doc.rust-lang.org/std/sync/mpsc/fn.sync_channel.html">sync_channel</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/ops/trait.FnMut.html">Rust 1.99.1 FnMut callback contract</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/thread/fn.scope.html">Rust 1.99.1 scoped thread joining</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/sync/mpsc/fn.sync_channel.html">Rust 1.99.1 bounded sync_channel</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-4/04-atomics.html">Previous: Atomic operations, application races, and publication</a><a href="../../lessons/stage-4/04-parallel-tools.html">Next: Compare serial, scoped threads and bounded Rayon work</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-put-a-resource-budget-in-the-design">Purpose: put a resource budget in the design</a><a href="#model-streaming-state-is-smaller-than-streaming-input">Model: streaming state is smaller than streaming input</a><a href="#predict-before-running">Predict before running</a><a href="#read-the-bounded-path">Read the bounded path</a><a href="#live-progress-observations-belong-to-the-collector">Live progress: observations belong to the collector</a><a href="#cancellation-needs-an-honest-boundary">Cancellation needs an honest boundary</a><a href="#playbook-investigation-word-counts-change-with-buffer-size">Playbook investigation: word counts change with buffer size</a><a href="#guided-checkpoint-and-independent-practice">Guided checkpoint and independent practice</a><a href="#review-evidence-and-mastery">Review, evidence and mastery</a><a href="#engineering-decisions-and-evidence">Engineering decisions and evidence</a><a href="#explore-the-model">Explore the model</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

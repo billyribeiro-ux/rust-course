@@ -1,0 +1,407 @@
+{
+  "date": "2026-10-09T06:38:55.449856+00:00",
+  "checks": [
+    {
+      "project": "p09-chat",
+      "checkpoint": "00-scaffold",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/00-scaffold"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/00-scaffold/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p09-chat",
+      "checkpoint": "01-framing",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "01-framing",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/01-framing"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/01-framing/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p09-chat",
+      "checkpoint": "final",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p09-chat",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/final"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p09-chat/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "00-scaffold",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/00-scaffold"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/00-scaffold/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "01-http-validation",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "01-http-validation",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/01-http-validation"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/01-http-validation/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p10-issues",
+      "checkpoint": "final",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p10-issues",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/final"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p10-issues/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "00-scaffold",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/00-scaffold"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/00-scaffold/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "01-lease-model",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "01-lease-model",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/01-lease-model"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/01-lease-model/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p14-scheduler",
+      "checkpoint": "final",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p14-scheduler",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/final"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p14-scheduler/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "00-scaffold",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/00-scaffold"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/00-scaffold/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "01-append-transport",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "01-append-transport",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/01-append-transport"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/01-append-transport/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p15-replication",
+      "checkpoint": "final",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p15-replication",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/final"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p15-replication/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "00-scaffold",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "00-scaffold",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/00-scaffold"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/00-scaffold/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "01-order-domain",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "01-order-domain",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/01-order-domain"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/01-order-domain/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "project": "p16-workbench",
+      "checkpoint": "final",
+      "result": "passed",
+      "reconstruct": [
+        "python3",
+        "/Users/billyribeiro/Desktop/rust-course/rust-course/scripts/start-checkpoint.py",
+        "p16-workbench",
+        "final",
+        "--destination",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/final"
+      ],
+      "test": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "test",
+        "--offline",
+        "--locked",
+        "--manifest-path",
+        "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-checkpoints-zvpdlfkp/p16-workbench/final/Cargo.toml",
+        "--target-dir",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native"
+      ]
+    },
+    {
+      "check": "existing destination refused and preserved",
+      "result": "passed"
+    }
+  ],
+  "overall": "passed",
+  "author_review": "complete",
+  "independent_review": "pending",
+  "limits": [
+    "Final PostgreSQL integration tests are explicitly ignored by ordinary cargo test; previously recorded isolated database evidence remains separate.",
+    "Only complete source is copied; all builds use the caller-selected shared target directory.",
+    "Temporary reconstructed source copies are removed only after their cargo processes finish; immutable course sources and learner directories remain unchanged."
+  ]
+}

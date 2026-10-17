@@ -1,0 +1,2343 @@
+{
+  "as_of": "2026-10-17",
+  "retrieved_at": "2026-10-17T11:24:06.347544+00:00",
+  "scope": "HTTP retrieval and raw-response hashes for lesson references. Semantic review and executed checks are separately recorded.",
+  "sources": [
+    {
+      "url": "https://blog.rust-lang.org/2025/06/26/Rust-1.88.0/",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://blog.rust-lang.org/2025/06/26/Rust-1.88.0/",
+      "last_modified": "Thu, 15 Oct 2026 17:44:37 GMT",
+      "sha256": "72c796ea62a02721d6dbee36c82b9e88e3bce60665bb68fc991b6abe5bf50c2a",
+      "bytes": 23447,
+      "snapshot": "sources/2026-10-17/7d232b353bcc12244075.gz"
+    },
+    {
+      "url": "https://blog.rust-lang.org/2026/10/01/Rust-1.99.0/",
+      "lessons": [
+        "07-ffi",
+        "07-auditing"
+      ],
+      "status": 200,
+      "final_url": "https://blog.rust-lang.org/2026/10/01/Rust-1.99.0/",
+      "last_modified": "Thu, 15 Oct 2026 17:44:37 GMT",
+      "sha256": "e387327076365201b417c0462c627080edd915d5baf4effc9fe485e5eb40d89a",
+      "bytes": 18659,
+      "snapshot": "sources/2026-10-17/10d972e9f6db1153ae8a.gz"
+    },
+    {
+      "url": "https://blog.rust-lang.org/2026/10/15/Rust-1.99.1/",
+      "lessons": [
+        "07-ffi",
+        "00-terminal"
+      ],
+      "status": 200,
+      "final_url": "https://blog.rust-lang.org/2026/10/15/Rust-1.99.1/",
+      "last_modified": "Thu, 15 Oct 2026 17:44:37 GMT",
+      "sha256": "1b4bcf8f6c0cc680ca6bafda173750d059db641f1d69d23f556b858a14461db1",
+      "bytes": 10920,
+      "snapshot": "sources/2026-10-17/6c0c7019e0da1bd47339.gz"
+    },
+    {
+      "url": "https://book.leptos.dev/",
+      "lessons": [
+        "09-workbench",
+        "09-review"
+      ],
+      "status": 200,
+      "final_url": "https://book.leptos.dev/",
+      "last_modified": "Fri, 16 Oct 2026 21:07:49 GMT",
+      "sha256": "5d4bbf4bd1b3d4fb999226384bc58f9cf36791923b77473570054e03a01b7904",
+      "bytes": 20468,
+      "snapshot": "sources/2026-10-17/994264adde0a05a07b33.gz"
+    },
+    {
+      "url": "https://book.leptos.dev/async/index.html",
+      "lessons": [
+        "06-console"
+      ],
+      "status": 200,
+      "final_url": "https://book.leptos.dev/async/index.html",
+      "last_modified": "Fri, 16 Oct 2026 21:07:49 GMT",
+      "sha256": "596ea8776330cc1a3c051d689caad6700336afee29c3b718f1bfaf07deb080c7",
+      "bytes": 21314,
+      "snapshot": "sources/2026-10-17/13455c2480c65149a144.gz"
+    },
+    {
+      "url": "https://book.leptos.dev/getting_started/index.html",
+      "lessons": [
+        "06-state"
+      ],
+      "status": 200,
+      "final_url": "https://book.leptos.dev/getting_started/index.html",
+      "last_modified": "Fri, 16 Oct 2026 21:07:49 GMT",
+      "sha256": "a33550fa5dafd675439b679c3e236daa0c767c1911f82cc6c7557aea9fe1bcca",
+      "bytes": 27411,
+      "snapshot": "sources/2026-10-17/4badb9a5fdcc02c644f2.gz"
+    },
+    {
+      "url": "https://book.leptos.dev/reactivity/14_create_effect.html",
+      "lessons": [
+        "06-state"
+      ],
+      "status": 200,
+      "final_url": "https://book.leptos.dev/reactivity/14_create_effect.html",
+      "last_modified": "Fri, 16 Oct 2026 21:07:49 GMT",
+      "sha256": "d0989a3d2b4d4f29a2d4f60357ca966fa3f29d6e74c7eedfe73cdf6027823cdb",
+      "bytes": 35335,
+      "snapshot": "sources/2026-10-17/fe0ebb98a96360f00baa.gz"
+    },
+    {
+      "url": "https://book.leptos.dev/ssr/22_life_cycle.html",
+      "lessons": [
+        "06-boundaries"
+      ],
+      "status": 200,
+      "final_url": "https://book.leptos.dev/ssr/22_life_cycle.html",
+      "last_modified": "Fri, 16 Oct 2026 21:07:49 GMT",
+      "sha256": "78d9d78608bd4745eb9f56cc3cf391bd51f29cd7f6f3473fbf06a7b15d7aacc7",
+      "bytes": 26570,
+      "snapshot": "sources/2026-10-17/1da1cdf1b0f34fcab708.gz"
+    },
+    {
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html",
+      "lessons": [
+        "05-web-boundaries"
+      ],
+      "status": 200,
+      "final_url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html",
+      "last_modified": "Fri, 16 Oct 2026 08:35:01 GMT",
+      "sha256": "ed0f6af65d7c9d9ce0092a6d4185a056826513fb074e861f8d874324c3610915",
+      "bytes": 172624,
+      "snapshot": "sources/2026-10-17/8edfb658f22c7a5f256a.gz"
+    },
+    {
+      "url": "https://datatracker.ietf.org/doc/html/rfc8446",
+      "lessons": [
+        "05-web-boundaries"
+      ],
+      "status": 200,
+      "final_url": "https://datatracker.ietf.org/doc/html/rfc8446",
+      "last_modified": null,
+      "sha256": "66860fb0166ff9ce4ee747d17113d32ded30b8599b97627e00551bcc1bf0bb11",
+      "bytes": 497032,
+      "snapshot": "sources/2026-10-17/1afb0bb1229f358ca9aa.gz"
+    },
+    {
+      "url": "https://developer.apple.com/documentation/kernel/rusage/1577554-ru_maxrss",
+      "lessons": [
+        "07-layout"
+      ],
+      "status": 200,
+      "final_url": "https://developer.apple.com/documentation/kernel/rusage/1577554-ru_maxrss",
+      "last_modified": "Fri, 16 Oct 2026 09:15:40 GMT",
+      "sha256": "04d15b8a310ed913ab46291d53d3805465ae680e6c6b26cba65cf56b20780d24",
+      "bytes": 18512,
+      "snapshot": "sources/2026-10-17/5e12e16d4410a5e2d2fd.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch01-02-hello-world.html",
+      "lessons": [
+        "00-programs"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch01-02-hello-world.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "98d3e31d5c41a6572a3536ee16c51a1058b3974e6f22e15ba5fb2a5e964ceb4e",
+      "bytes": 31980,
+      "snapshot": "sources/2026-10-17/d6b74cbc96a82118ea0a.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch01-03-hello-cargo.html",
+      "lessons": [
+        "00-workspace"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch01-03-hello-cargo.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "142f0b3f53f9efa1119b486e465206adc1eec67799dbc6680942dcaca38540c6",
+      "bytes": 35379,
+      "snapshot": "sources/2026-10-17/6cc0ffa8c425d9b294d5.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch03-01-variables-and-mutability.html",
+      "lessons": [
+        "00-programs"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch03-01-variables-and-mutability.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "f06a10a850287ef35db88d0f0080d269eea9f736f0e295e22d803ab7b635b7ce",
+      "bytes": 34512,
+      "snapshot": "sources/2026-10-17/eb48d6cabe2d636a82df.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch03-02-data-types.html",
+      "lessons": [
+        "01-collections",
+        "00-programs",
+        "00-values"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch03-02-data-types.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "980bd6c7abd48a9af5dbd6f1362fa9adeadc4b5c5164587e07ec57d32b71a9e6",
+      "bytes": 44699,
+      "snapshot": "sources/2026-10-17/71caeecdccc2fa2600a6.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch03-03-how-functions-work.html",
+      "lessons": [
+        "00-programs",
+        "00-values"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch03-03-how-functions-work.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "5f7f0270f7e3bba44d74c4269deba9b8bee708985b447224dd6bb52a1af3d9b3",
+      "bytes": 37078,
+      "snapshot": "sources/2026-10-17/698439781bfd67c0c441.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch03-05-control-flow.html",
+      "lessons": [
+        "00-programs"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch03-05-control-flow.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "f2707d70256ac18dc9eff9e9544bb455fea27a9e9bcd28863acbc10df94bd175",
+      "bytes": 46494,
+      "snapshot": "sources/2026-10-17/6619094bb320a23d906b.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch04-01-what-is-ownership.html",
+      "lessons": [
+        "01-ownership"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch04-01-what-is-ownership.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "e3fc7f4e1db60f35be5bf71f915af51863b2ad0ccc5dd0e78debf4ce57e966a5",
+      "bytes": 55998,
+      "snapshot": "sources/2026-10-17/5e8f9f8c0387d1b446f7.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch04-02-references-and-borrowing.html",
+      "lessons": [
+        "01-ownership"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch04-02-references-and-borrowing.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "379c38691d0eec3fed415151166f37705084acbac8ed98b67adf55990ab43552",
+      "bytes": 39786,
+      "snapshot": "sources/2026-10-17/b93ded07766316f52c85.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch04-03-slices.html",
+      "lessons": [
+        "01-ownership"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch04-03-slices.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "20faee1339c2cc9453c79e8002a9266d472124fc3b3f266f8bddb0254621aff0",
+      "bytes": 46434,
+      "snapshot": "sources/2026-10-17/3d93c165503089c9ca8e.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch05-01-defining-structs.html",
+      "lessons": [
+        "01-modeling"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch05-01-defining-structs.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "7145fa8f3264e995894debc5af4df6d54d706a4b86c8faa67cb27ac69366730f",
+      "bytes": 43269,
+      "snapshot": "sources/2026-10-17/96ab241276140b2e28d9.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch06-00-enums.html",
+      "lessons": [
+        "00-calculator"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch06-00-enums.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "41c21bade58ba8a5707eaf3db65a80225c843e97af0435dc6b97229a1cc38632",
+      "bytes": 23274,
+      "snapshot": "sources/2026-10-17/8ba78ece20302fac74ed.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch06-01-defining-an-enum.html",
+      "lessons": [
+        "01-modeling"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch06-01-defining-an-enum.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "dc6f3399ef446aca1ca2fa23a761fb5de024577a0b9b76324573737760ced1ba",
+      "bytes": 45728,
+      "snapshot": "sources/2026-10-17/5593aa7f2be571c12fef.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch06-02-match.html",
+      "lessons": [
+        "01-modeling"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch06-02-match.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "2cae7e82ab7ab81c6c94a216735785a644882bbf2297106c3e00bcf3ce3d3835",
+      "bytes": 42791,
+      "snapshot": "sources/2026-10-17/b959a4706f57e5036e46.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch07-02-defining-modules-to-control-scope-and-privacy.html",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch07-02-defining-modules-to-control-scope-and-privacy.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "0866f4c6eb8d9bb1e9a59b7e3458d934101ef9b112c76368a10022ecbf513612",
+      "bytes": 32159,
+      "snapshot": "sources/2026-10-17/ef4b8518b58f2693a805.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch09-02-recoverable-errors-with-result.html",
+      "lessons": [
+        "01-journal",
+        "02-evaluator"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch09-02-recoverable-errors-with-result.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "3ee5ea6a5f947cf8c8da81c54a9945db85cc0f37f6fd97f274b0fcbbbfb946e2",
+      "bytes": 59721,
+      "snapshot": "sources/2026-10-17/375e644eec0ccc1ca711.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch10-02-traits.html",
+      "lessons": [
+        "02-traits"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch10-02-traits.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "998c5a1c20235f25176d0c419c36f45b8250965914b5f50f89143abf245fb0d9",
+      "bytes": 55368,
+      "snapshot": "sources/2026-10-17/04a734ee48c277a47b67.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch10-03-lifetime-syntax.html",
+      "lessons": [
+        "02-lifetimes"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch10-03-lifetime-syntax.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "ea4a843bd3a74229960b490a7af4ecee1d86740ecec5643dcf36ee4fa6a5d40a",
+      "bytes": 68460,
+      "snapshot": "sources/2026-10-17/a8e0e96ceb5c95c41f0d.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch11-01-writing-tests.html",
+      "lessons": [
+        "02-evaluator"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch11-01-writing-tests.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "178f129aa533b27923021c1ce53b761d1db5f25d42f1bc487d1199381f6e1549",
+      "bytes": 69487,
+      "snapshot": "sources/2026-10-17/e379cc70521af6763b85.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch13-01-closures.html",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch13-01-closures.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "f78a720eb769ceed81ebaad8016153a22987427d0e8fed7d354c3d9beb3a3928",
+      "bytes": 54932,
+      "snapshot": "sources/2026-10-17/7fb9b12a222b250222e0.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch13-02-iterators.html",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch13-02-iterators.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "00e72b55c645632bde07ce93bc3099e4fd948140b289797027dfb5ea96b411b2",
+      "bytes": 38040,
+      "snapshot": "sources/2026-10-17/4cbb4643aed5b40769ac.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch15-01-box.html",
+      "lessons": [
+        "02-parser"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch15-01-box.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "8cb41d54d92d56e0e6eccfea917f52d3f2f46735eb4edf98fae25715e997c742",
+      "bytes": 39579,
+      "snapshot": "sources/2026-10-17/40699d00d9fab40e21c7.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/book/ch18-02-trait-objects.html",
+      "lessons": [
+        "02-traits"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/book/ch18-02-trait-objects.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:46 GMT",
+      "sha256": "c2ba88086dc9548fd3c014b5829ded33fd8929131708faf0ff1ca5430e5983ff",
+      "bytes": 42312,
+      "snapshot": "sources/2026-10-17/e812191f8fa0bed27ff7.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/cargo/commands/cargo-check.html",
+      "lessons": [
+        "00-workspace"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/cargo/commands/cargo-check.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:48 GMT",
+      "sha256": "225c75631686e768ae5a21c653b7b4289dd0defe6f255709c6c0851b93b20516",
+      "bytes": 48282,
+      "snapshot": "sources/2026-10-17/8696fd3d66fd94ac7d20.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/cargo/guide/cargo-toml-vs-cargo-lock.html",
+      "lessons": [
+        "00-workspace"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/cargo/guide/cargo-toml-vs-cargo-lock.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:48 GMT",
+      "sha256": "9a57da3090c315e325275d315958b9af1eed3f480ac48f4c0a91e1b74f040fe9",
+      "bytes": 27793,
+      "snapshot": "sources/2026-10-17/be47bd60f02028012d79.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/cargo/reference/resolver.html",
+      "lessons": [],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/cargo/reference/resolver.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:48 GMT",
+      "sha256": "dd1d061ca25ca5570df0ee0f4840e6b7ee12d7e0d9c633396520e9d3402e2d50",
+      "bytes": 60647,
+      "snapshot": "sources/2026-10-17/2b378bab1622c125cd3d.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/cargo/reference/semver.html",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/cargo/reference/semver.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:48 GMT",
+      "sha256": "6e891f9b69ef1aec715e60578f3365415bf72a5c161df1afdcfbb0375c9d41c1",
+      "bytes": 112215,
+      "snapshot": "sources/2026-10-17/01d1e92859d1e7c151cd.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/clippy/usage.html",
+      "lessons": [
+        "00-workspace"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/clippy/usage.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:48 GMT",
+      "sha256": "2c8b8ad1e886565c9d4d5dd12ec946bd84c4f21adaca99fe805ceb268370a5a6",
+      "bytes": 31506,
+      "snapshot": "sources/2026-10-17/ca728fa620223478e0ec.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html",
+      "lessons": [],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html",
+      "last_modified": "Thu, 15 Oct 2026 17:36:21 GMT",
+      "sha256": "562f3661c96442172d37f28fc3fc385ccbcc60fa7b01ec5be7185d9135cbd295",
+      "bytes": 26561,
+      "snapshot": "sources/2026-10-17/e96df355431cdcbf984a.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/reference/behavior-considered-undefined.html",
+      "lessons": [
+        "07-unsafe",
+        "07-auditing"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/reference/behavior-considered-undefined.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:54 GMT",
+      "sha256": "2a999a9465128b0c2aa1bddc241def35ffdde13cb5f3f6ff396d6e6891142506",
+      "bytes": 50248,
+      "snapshot": "sources/2026-10-17/707e59202f9418b68296.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/reference/items/external-blocks.html",
+      "lessons": [
+        "07-ffi"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/reference/items/external-blocks.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:54 GMT",
+      "sha256": "f70fa5e5c243e657d79c955be9c15f989106c62de0ad86b5217cc083400a4e9d",
+      "bytes": 89994,
+      "snapshot": "sources/2026-10-17/7607edaac2156ecbf649.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/reference/items/implementations.html",
+      "lessons": [
+        "07-traits"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/reference/items/implementations.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:54 GMT",
+      "sha256": "e6dc46254384c02af1d05d0bbd59eef0c283b3642a4a34a16d11ea6703a4dbe8",
+      "bytes": 57456,
+      "snapshot": "sources/2026-10-17/c477b4944f18946deedd.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/reference/items/traits.html",
+      "lessons": [
+        "07-traits"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/reference/items/traits.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:54 GMT",
+      "sha256": "288f10e8f5d022f8828f908b141cba2f1e64f54973997a4c4643c2d00f33b823",
+      "bytes": 57237,
+      "snapshot": "sources/2026-10-17/7555f040c7dd0ac34f05.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/reference/macros-by-example.html",
+      "lessons": [
+        "07-macros"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/reference/macros-by-example.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:54 GMT",
+      "sha256": "ecb9e423ecbeeb934ae26f21058dd434c3132463e9fdea568a59ac972621b694",
+      "bytes": 122751,
+      "snapshot": "sources/2026-10-17/2db8fc10df1387644a23.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/reference/patterns.html",
+      "lessons": [
+        "07-traits"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/reference/patterns.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:54 GMT",
+      "sha256": "1778134fda571751299fbe131d02f720a73cc24c6dfbd95158a31cc6aa200892",
+      "bytes": 175483,
+      "snapshot": "sources/2026-10-17/62be026cc028fca6257a.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/reference/procedural-macros.html",
+      "lessons": [
+        "07-macros"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/reference/procedural-macros.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:54 GMT",
+      "sha256": "32a7475170ac224ad1a9639973f06e586b8839c0ea422cb93edde72b178e2603",
+      "bytes": 66973,
+      "snapshot": "sources/2026-10-17/21e34bae9a11ca69c14e.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/reference/trait-bounds.html",
+      "lessons": [
+        "07-traits"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/reference/trait-bounds.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:55 GMT",
+      "sha256": "3d9474d20502592473716b440703e222bbaeb94d4cce72583e5acdb83acc1d4c",
+      "bytes": 61942,
+      "snapshot": "sources/2026-10-17/1890b701c9a19556192c.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/rustdoc/write-documentation/documentation-tests.html",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/rustdoc/write-documentation/documentation-tests.html",
+      "last_modified": "Thu, 15 Oct 2026 17:38:59 GMT",
+      "sha256": "95572c7300af0f27eab4c7ed47125a509a9c5854fc80dc2d7fd162d894de3cb7",
+      "bytes": 51137,
+      "snapshot": "sources/2026-10-17/4969127906f69ffece76.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/boxed/struct.Box.html",
+      "lessons": [
+        "02-evaluator"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/boxed/struct.Box.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "69372b0ece7fa0c9c82f5e675031d66e5b34a1c3e1d9673ef013a3834e9630c4",
+      "bytes": 707571,
+      "snapshot": "sources/2026-10-17/ccc87704f8b715ba780e.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/cell/index.html",
+      "lessons": [
+        "03-interior"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/cell/index.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "6c3e388dfaf2a2ba18fd9ab0be272e2fe9e2474004c8cb29e9849270bf8b8ed6",
+      "bytes": 28115,
+      "snapshot": "sources/2026-10-17/22466ead19ca343c0c61.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/cell/struct.Cell.html",
+      "lessons": [
+        "03-interior"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/cell/struct.Cell.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "61ee11e6a516a8538f2766d78686b1a257617369faa755dd5c84a7cc28e4743c",
+      "bytes": 80471,
+      "snapshot": "sources/2026-10-17/cfe60ed3b46cffb03dc4.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/cell/struct.RefCell.html",
+      "lessons": [
+        "03-interior"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/cell/struct.RefCell.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "b19e0a8cf64dda1339a6bc2b75f0507d391aa9deac9386e774bdf3d6816f79a7",
+      "bytes": 76342,
+      "snapshot": "sources/2026-10-17/7f930c4a125184099404.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/collections/hash_map/enum.Entry.html",
+      "lessons": [
+        "01-collections"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/collections/hash_map/enum.Entry.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "970e9b247861bd0bee6e4ec39e346668ad3816e9a52e6f8af66f7174665bda5f",
+      "bytes": 45097,
+      "snapshot": "sources/2026-10-17/882144fa59acf3cfe465.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/collections/struct.BTreeMap.html",
+      "lessons": [
+        "02-config"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/collections/struct.BTreeMap.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "2b8858ae640cd312f8ca6b505e5443a6e2c9958f2e53519a82ff659b5a1c8b07",
+      "bytes": 218686,
+      "snapshot": "sources/2026-10-17/8bda8a22f631711bbb33.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/collections/struct.HashMap.html",
+      "lessons": [
+        "01-collections"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/collections/struct.HashMap.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "19a0bd54cc0b76fb2f854f5953b54853fd6dc03a6ebb26f850b64f693a294096",
+      "bytes": 196024,
+      "snapshot": "sources/2026-10-17/3fa7dc814c24545cebd9.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/collections/struct.HashSet.html",
+      "lessons": [
+        "01-journal"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/collections/struct.HashSet.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "7f216f31b75a454b97f04ebb5d7971d610911692f2496385c44452e0f6350f67",
+      "bytes": 180507,
+      "snapshot": "sources/2026-10-17/c4c881ea17e5d960333a.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/convert/trait.AsRef.html",
+      "lessons": [
+        "02-traits"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/convert/trait.AsRef.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "17c2f489478997784e8317c618a565bb15f1db5443ed8ac14ea507bfd80fe7ee",
+      "bytes": 54420,
+      "snapshot": "sources/2026-10-17/44fa0251ac59b1459471.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/convert/trait.From.html",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/convert/trait.From.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "f1dda0dd76ad36334466a0d0e5f9e6fe113b1ae940432650c778de89f86c8fc4",
+      "bytes": 409523,
+      "snapshot": "sources/2026-10-17/6375cbe9ca3de1cd37e6.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/convert/trait.TryFrom.html",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/convert/trait.TryFrom.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "300ab9b0348161c606aaba35d964acbb3ac4ff07a7944f6af2bb6db649f19677",
+      "bytes": 354199,
+      "snapshot": "sources/2026-10-17/5bac48ecd1a8c7f35c1e.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/convert/trait.TryInto.html",
+      "lessons": [
+        "02-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/convert/trait.TryInto.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:08 GMT",
+      "sha256": "697a2f78ee48a892ede4e643cac01c4600ebcd6806d13aea16a55bed1b4b9afa",
+      "bytes": 9853,
+      "snapshot": "sources/2026-10-17/48c63534e7086382a04c.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/env/fn.args_os.html",
+      "lessons": [
+        "03-recovery",
+        "04-monitor",
+        "07-replay"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/env/fn.args_os.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:09 GMT",
+      "sha256": "8d70e21f59f08d2ebffa5e31424fb381f27fa41eaff70ed0fc90fdda6eedb6d7",
+      "bytes": 6358,
+      "snapshot": "sources/2026-10-17/2c7213a0b4d4121f170e.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/fmt/trait.Debug.html",
+      "lessons": [
+        "02-config"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/fmt/trait.Debug.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:09 GMT",
+      "sha256": "fc79270dd4b776e65ec7c7e747c5f6a85f574392c24846840fb1a8242f6582ea",
+      "bytes": 416388,
+      "snapshot": "sources/2026-10-17/091d09dd83669d50c347.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/fs/fn.rename.html",
+      "lessons": [
+        "01-io"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/fs/fn.rename.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:09 GMT",
+      "sha256": "0ef677ba4fb87b2d8b38bbb9f4439429634a5c105de7f349a135a69282fe921f",
+      "bytes": 6802,
+      "snapshot": "sources/2026-10-17/3528f85e41eab6fc3bf5.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/fs/struct.File.html",
+      "lessons": [
+        "09-workbench",
+        "01-io"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/fs/struct.File.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:09 GMT",
+      "sha256": "ec3407b9cde958b77fd3bc70fd95124e1b82bdce89117d1c4b45c9d65420817d",
+      "bytes": 196174,
+      "snapshot": "sources/2026-10-17/f469324eb8d37caab99e.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/fs/struct.OpenOptions.html",
+      "lessons": [
+        "01-io"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/fs/struct.OpenOptions.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:09 GMT",
+      "sha256": "64f9e479f608d70b40361127844bfc8646de480d31567b94a08867d859467c89",
+      "bytes": 61006,
+      "snapshot": "sources/2026-10-17/fdee50663552e758aa20.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/io/struct.BufReader.html",
+      "lessons": [
+        "01-logs"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/io/struct.BufReader.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:11 GMT",
+      "sha256": "7bae7ebe467d97b3233cadb400c755cf845d56b026f8a3f602d58ab24c99864e",
+      "bytes": 85869,
+      "snapshot": "sources/2026-10-17/c56dd614b2d1eb7b434b.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/io/trait.BufRead.html",
+      "lessons": [
+        "01-logs",
+        "07-replay"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/io/trait.BufRead.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:11 GMT",
+      "sha256": "b90cbb8673e47baeeb5bd66d85c3e585c1ea6fee5257dfbd4a2db36b6dda4145",
+      "bytes": 51299,
+      "snapshot": "sources/2026-10-17/050def05a125197ab835.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/io/trait.Read.html",
+      "lessons": [
+        "01-io",
+        "07-replay"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/io/trait.Read.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:11 GMT",
+      "sha256": "1ffbb4becafc57a9f7162365d8f8c22677a4a93ddc1dde8568246a76e411a08f",
+      "bytes": 86263,
+      "snapshot": "sources/2026-10-17/04d665ac61a9d96a96ce.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/io/trait.Write.html",
+      "lessons": [
+        "00-programs",
+        "01-logs",
+        "02-traits"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/io/trait.Write.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:11 GMT",
+      "sha256": "971ad0a38a650792066f106be1a87d255215730158c3c81ce0354100cfbd40f7",
+      "bytes": 55718,
+      "snapshot": "sources/2026-10-17/d992c0e394b2cbb34477.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/iter/trait.Iterator.html",
+      "lessons": [
+        "02-conversions",
+        "02-parser"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/iter/trait.Iterator.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:11 GMT",
+      "sha256": "9a660f8ff1ae4d88955cd8ea4e7f2683e8850929565e58e0e1554054db300bfb",
+      "bytes": 718685,
+      "snapshot": "sources/2026-10-17/40fa383422f33d481337.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/mem/fn.take.html",
+      "lessons": [
+        "03-interior"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/mem/fn.take.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:12 GMT",
+      "sha256": "f83b5ca6e3a2a25f90a5cf666f4d71b93b6e0bb381476ba80b603094aa46b2c6",
+      "bytes": 8701,
+      "snapshot": "sources/2026-10-17/2b1eb300f3a489b3411f.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/mem/union.MaybeUninit.html",
+      "lessons": [
+        "07-unsafe",
+        "07-auditing"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/mem/union.MaybeUninit.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:12 GMT",
+      "sha256": "89f7cc8c3c9c2e8336b165f8b4a958f5eaa476b1de30ec959160e17414682518",
+      "bytes": 133007,
+      "snapshot": "sources/2026-10-17/102c26a1bde70207a3c2.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/num/type.NonZeroU16.html",
+      "lessons": [
+        "02-config"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/num/type.NonZeroU16.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:12 GMT",
+      "sha256": "54aa4ee9921789aea8da277c93833b28665aebfcd94944ca430815dcfe2131fb",
+      "bytes": 7461,
+      "snapshot": "sources/2026-10-17/0eec6fd2187afe35f354.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/ops/trait.FnMut.html",
+      "lessons": [
+        "04-indexer"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/ops/trait.FnMut.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:12 GMT",
+      "sha256": "48dcbad1adc8075e0c15a6d17a2342976cb3e3785ce0f3d6919ec3f1a99b9fbb",
+      "bytes": 14218,
+      "snapshot": "sources/2026-10-17/a707acab9b6b5b512331.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/ops/trait.FnOnce.html",
+      "lessons": [
+        "03-interior"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/ops/trait.FnOnce.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:12 GMT",
+      "sha256": "775fa3546d15cf7b27714d5aaaf5ee742d41b3e3cf2ecd379076b2377be0b8bb",
+      "bytes": 18553,
+      "snapshot": "sources/2026-10-17/3be4eebe9b84158fc786.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/option/enum.Option.html",
+      "lessons": [
+        "00-programs",
+        "01-modeling"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/option/enum.Option.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:12 GMT",
+      "sha256": "f1e4cc42fa3d7f33c46c41bd23fa3557aef529a98dcdabed48295da72d2c75c1",
+      "bytes": 248137,
+      "snapshot": "sources/2026-10-17/122561c09c920079b7c1.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/panic/fn.catch_unwind.html",
+      "lessons": [
+        "07-auditing"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/panic/fn.catch_unwind.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "535eb1e0371946ca50fd476944eaf0411ba5ff393a53702c3d46587804a3b873",
+      "bytes": 8259,
+      "snapshot": "sources/2026-10-17/c8ee901a2349b7e2ac3d.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/pin/index.html",
+      "lessons": [
+        "04-pinning"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/pin/index.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "28d9dd229ab27e99b609d8e17afe13a728514c5fb3ad833edb82dcdbd403ecff",
+      "bytes": 96335,
+      "snapshot": "sources/2026-10-17/ef61201c4b76afc098e0.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/primitive.char.html",
+      "lessons": [
+        "01-collections"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/primitive.char.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "3554987e55da0a99e66b80fe83d3888ce8327b35e61b86a41b141f652881d16e",
+      "bytes": 315603,
+      "snapshot": "sources/2026-10-17/f4198693426b5805dc1e.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/primitive.f64.html",
+      "lessons": [
+        "00-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/primitive.f64.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "f73b4a2c4886e4cc615db6b3b0166e56f5e5ff00bb362523f5d0c03b9a68f41b",
+      "bytes": 338196,
+      "snapshot": "sources/2026-10-17/1d3af5f7b3cd7311469f.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/primitive.i64.html",
+      "lessons": [
+        "09-domain",
+        "00-values",
+        "02-evaluator"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/primitive.i64.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "3849b3ba5958fe9c18571fced9c3c5b7256652d3152335f69c956758fb354d3e",
+      "bytes": 1396608,
+      "snapshot": "sources/2026-10-17/f35478ad3baa91803237.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/primitive.slice.html",
+      "lessons": [
+        "01-collections"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/primitive.slice.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "efa304f793a717344544a81f996580f483ebfbb38aeb9b694f9bf7e3945773db",
+      "bytes": 1136171,
+      "snapshot": "sources/2026-10-17/18bbb6f55813eb9836b1.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/primitive.str.html",
+      "lessons": [
+        "01-journal",
+        "01-logs",
+        "02-lifetimes",
+        "02-parser"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/primitive.str.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "d25d9c735590dc9b2b810ce3ae9d214b52b136dffb903c1d5c1baf7f72a3b7a3",
+      "bytes": 685222,
+      "snapshot": "sources/2026-10-17/3803dc3e856cdf7438be.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/primitive.u32.html",
+      "lessons": [
+        "00-programs"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/primitive.u32.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "954dcd1206fba96c93b2b8f86b0d2b3865c276171ef7aa46152b869e519d98cd",
+      "bytes": 1434995,
+      "snapshot": "sources/2026-10-17/a589b378501fdf0ed457.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/process/struct.Command.html",
+      "lessons": [
+        "00-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/process/struct.Command.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "19516ea77975d307e26e721662f6c68c1855825e1f7656624add9e18b953425e",
+      "bytes": 115137,
+      "snapshot": "sources/2026-10-17/75c8f394622b0ffc648b.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/process/struct.ExitCode.html",
+      "lessons": [
+        "00-programs"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/process/struct.ExitCode.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "6c9cf0a408ba39755998bb6b4f20f23d89c146663b1500b21fb2d624d12f00e1",
+      "bytes": 44967,
+      "snapshot": "sources/2026-10-17/f36f8f96ec4b8f1d4408.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/ptr/fn.drop_in_place.html",
+      "lessons": [
+        "07-auditing"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/ptr/fn.drop_in_place.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:13 GMT",
+      "sha256": "b3551fad4d0f929ee1ad12d0f82c844e156e5d1134224d6ce56177b8efb78526",
+      "bytes": 9446,
+      "snapshot": "sources/2026-10-17/007b9ec850f73b3c20ab.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/rc/struct.Rc.html",
+      "lessons": [
+        "03-interior"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/rc/struct.Rc.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "7ce60e1004dd4ead01c90f9627613d0329e2cd7c22f0e4670274e22b339cefe1",
+      "bytes": 303440,
+      "snapshot": "sources/2026-10-17/331f2badfa6a5cf37730.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/rc/struct.Weak.html",
+      "lessons": [
+        "03-interior"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/rc/struct.Weak.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "7cab8b1a30f5849a8882a52a02b5f701f68e3c5acf7f597db02992ca9b0ffec0",
+      "bytes": 72254,
+      "snapshot": "sources/2026-10-17/da1336593e7481b4f828.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/result/enum.Result.html",
+      "lessons": [
+        "02-conversions",
+        "00-calculator",
+        "00-conversions"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/result/enum.Result.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "4b505212ed1f8aacfd807240113b4527093e8362d295d7c3990361527bded8a2",
+      "bytes": 208505,
+      "snapshot": "sources/2026-10-17/c387f8c2228f67c45246.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/slice/fn.from_raw_parts_mut.html",
+      "lessons": [
+        "07-unsafe"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/slice/fn.from_raw_parts_mut.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "917dd110680379a5b53e34651fde0db191179ff1e8ca29318c1b53a60e426c99",
+      "bytes": 5983,
+      "snapshot": "sources/2026-10-17/30451bb93fb9531e4d20.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/str/fn.from_utf8.html",
+      "lessons": [
+        "01-logs"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/str/fn.from_utf8.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "3116e80e86651fad57742108715347037ffc7fb44966d5facda433ab911f3ebd",
+      "bytes": 9582,
+      "snapshot": "sources/2026-10-17/7611eed4c4d5e57cb3fd.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/str/trait.FromStr.html",
+      "lessons": [
+        "02-conversions",
+        "00-calculator"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/str/trait.FromStr.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "d39baa75bdc6c6a89357bba4863a75f4c9e4ecf3e5b14912d9c5210a0be40362",
+      "bytes": 58147,
+      "snapshot": "sources/2026-10-17/86cd43eb60db1e5bfae1.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/string/struct.String.html",
+      "lessons": [
+        "02-lifetimes"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/string/struct.String.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "9ba31c392791f44e18cb689e3945878f93b7b41a2f6c9b783b1d63bf2d23513e",
+      "bytes": 667290,
+      "snapshot": "sources/2026-10-17/68d339b4f79d2e9b7d6a.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/sync/atomic/enum.Ordering.html",
+      "lessons": [
+        "04-atomics"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/sync/atomic/enum.Ordering.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "5995ba6620a6e68bc97b0177d0efb8f275577d01d2a532c517e29546624fd960",
+      "bytes": 39688,
+      "snapshot": "sources/2026-10-17/41fec917da1ded6666fc.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/sync/atomic/type.AtomicU32.html",
+      "lessons": [
+        "04-atomics"
+      ],
+      "superseded_url": "https://doc.rust-lang.org/1.99.1/std/sync/atomic/struct.AtomicU32.html",
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/sync/atomic/type.AtomicU32.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "snapshot": "sources/2026-10-17/fb2df6d41622b1c937a8.gz",
+      "sha256": "ef7229d5c906fb065a506e423e9255524498fdcc402365e4e7d1e036dae7c637",
+      "bytes": 5004
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/sync/mpsc/fn.sync_channel.html",
+      "lessons": [
+        "04-indexer"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/sync/mpsc/fn.sync_channel.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:14 GMT",
+      "sha256": "71503586ef8d5674234e72b531aaf1565eb0f9b62dabdd0dd5a5cb13db4b6fb6",
+      "bytes": 8338,
+      "snapshot": "sources/2026-10-17/bcef784e9b0ac5386ea4.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/sync/struct.Mutex.html",
+      "lessons": [
+        "04-atomics"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/sync/struct.Mutex.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:15 GMT",
+      "sha256": "899f1c6fd579214bc35eb418221085178c7ce43b501ca1dec110b5a168b613ee",
+      "bytes": 71825,
+      "snapshot": "sources/2026-10-17/a6d3e4bde08d85fb32ef.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/thread/fn.scope.html",
+      "lessons": [
+        "04-indexer"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/thread/fn.scope.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:15 GMT",
+      "sha256": "a58d63412b95e5b635f9f71b6abd9c9cb29a2469479e8684b0ccfe5a12a1f3db",
+      "bytes": 8747,
+      "snapshot": "sources/2026-10-17/fdb1c590a25a144ec4af.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/time/struct.Duration.html",
+      "lessons": [
+        "02-config"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/time/struct.Duration.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:15 GMT",
+      "sha256": "abee9e97ee812a0a68b24e9e99846a3ae95a4466710dc1911850ec1e7e000f42",
+      "bytes": 197250,
+      "snapshot": "sources/2026-10-17/d850ae348bf6c29334af.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/1.99.1/std/vec/struct.Vec.html",
+      "lessons": [
+        "01-collections"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/1.99.1/std/vec/struct.Vec.html",
+      "last_modified": "Thu, 15 Oct 2026 17:39:15 GMT",
+      "sha256": "3043fc4fa845810446c3c98c4009a890169a8d1f32d35cff23e602a40eb24cbe",
+      "bytes": 955558,
+      "snapshot": "sources/2026-10-17/df2f2fca23a2a7da6a3d.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html",
+      "lessons": [
+        "09-domain"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html",
+      "last_modified": "Thu, 15 Oct 2026 17:27:31 GMT",
+      "sha256": "dc6f3399ef446aca1ca2fa23a761fb5de024577a0b9b76324573737760ced1ba",
+      "bytes": 45728,
+      "snapshot": "sources/2026-10-17/bc241f609d0b6b259a05.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/book/ch10-01-syntax.html",
+      "lessons": [
+        "07-allocation-dispatch"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/book/ch10-01-syntax.html",
+      "last_modified": "Thu, 15 Oct 2026 17:27:31 GMT",
+      "sha256": "0a89df27da7b50bdfafaf4cf54aa1b01687eabf40288ef86d4b1104cf34b65ba",
+      "bytes": 45249,
+      "snapshot": "sources/2026-10-17/ce8286c2ef19bcafcf92.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/book/ch11-01-writing-tests.html",
+      "lessons": [
+        "03-tests"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/book/ch11-01-writing-tests.html",
+      "last_modified": "Thu, 15 Oct 2026 17:27:31 GMT",
+      "sha256": "178f129aa533b27923021c1ce53b761d1db5f25d42f1bc487d1199381f6e1549",
+      "bytes": 69487,
+      "snapshot": "sources/2026-10-17/9033d86b9e3ffabf5291.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/book/ch20-03-advanced-types.html",
+      "lessons": [
+        "07-replay"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/book/ch20-03-advanced-types.html",
+      "last_modified": "Thu, 15 Oct 2026 17:27:32 GMT",
+      "sha256": "2a4a66368a0edfbafb6e3d63f09964364990af0a9af63b0cd1ae124351bc351b",
+      "bytes": 44293,
+      "snapshot": "sources/2026-10-17/2d107092eecb343c4838.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/cargo/commands/cargo-run.html",
+      "lessons": [
+        "00-terminal"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/cargo/commands/cargo-run.html",
+      "last_modified": "Thu, 15 Oct 2026 17:27:33 GMT",
+      "sha256": "6438bb8a08e2842a3cf4fff366159b5285749959507e3027ed0e71056d37d1bf",
+      "bytes": 42211,
+      "snapshot": "sources/2026-10-17/fc9b10780eb2699918d2.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/cargo/reference/profiles.html",
+      "lessons": [
+        "07-performance"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/cargo/reference/profiles.html",
+      "last_modified": "Thu, 15 Oct 2026 17:27:33 GMT",
+      "sha256": "2178bd9b63c5be9e3546b765d1ed6aad92efefee50923e4f54dc292b50954773",
+      "bytes": 46727,
+      "snapshot": "sources/2026-10-17/4eab368bdd1c05c8436c.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/nomicon/ffi.html",
+      "lessons": [
+        "07-ffi"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/nomicon/ffi.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:15 GMT",
+      "sha256": "31e6a4e9aaf2b00eb802f64887f1e2319537b8e890f6bd89901eaa093dafc554",
+      "bytes": 62470,
+      "snapshot": "sources/2026-10-17/d7a88880adcead93d7e5.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/reference/type-layout.html",
+      "lessons": [
+        "07-layout"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/reference/type-layout.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:15 GMT",
+      "sha256": "d407581c2d5516e63df34253f7029c2c90f7bb6c238ecccf89a5c17ba5b1b564",
+      "bytes": 76934,
+      "snapshot": "sources/2026-10-17/612a84de308645fedf3f.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/reference/types/trait-object.html",
+      "lessons": [
+        "07-allocation-dispatch"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/reference/types/trait-object.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:16 GMT",
+      "sha256": "750915b51305d59a1a0d42d891c8364b8350573e6b86483e1c7bdf916e66d6ca",
+      "bytes": 36227,
+      "snapshot": "sources/2026-10-17/22fabee24fbf245e8356.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/collections/struct.BTreeMap.html",
+      "lessons": [
+        "07-replay"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/collections/struct.BTreeMap.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:31 GMT",
+      "sha256": "2b8858ae640cd312f8ca6b505e5443a6e2c9958f2e53519a82ff659b5a1c8b07",
+      "bytes": 218686,
+      "snapshot": "sources/2026-10-17/89bdb5aae69e9cceafcb.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/fs/fn.rename.html",
+      "lessons": [
+        "03-recovery"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/fs/fn.rename.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:32 GMT",
+      "sha256": "0ef677ba4fb87b2d8b38bbb9f4439429634a5c105de7f349a135a69282fe921f",
+      "bytes": 6802,
+      "snapshot": "sources/2026-10-17/8c2cad1c45c5e872b78a.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/fs/struct.File.html",
+      "lessons": [
+        "03-raii",
+        "03-log-store",
+        "03-recovery"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/fs/struct.File.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:32 GMT",
+      "sha256": "ec3407b9cde958b77fd3bc70fd95124e1b82bdce89117d1c4b45c9d65420817d",
+      "bytes": 196174,
+      "snapshot": "sources/2026-10-17/e1b95c6f48db816638ae.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/fs/struct.OpenOptions.html",
+      "lessons": [
+        "03-recovery"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/fs/struct.OpenOptions.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:32 GMT",
+      "sha256": "64f9e479f608d70b40361127844bfc8646de480d31567b94a08867d859467c89",
+      "bytes": 61006,
+      "snapshot": "sources/2026-10-17/c760aae3d0b04b5badc0.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/future/trait.Future.html",
+      "lessons": [
+        "04-futures"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/future/trait.Future.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:32 GMT",
+      "sha256": "5c623888192b21805435e31151ecbf442f35db51e75848f3e8377b32cc53018d",
+      "bytes": 23396,
+      "snapshot": "sources/2026-10-17/c406394d6cf7d0db5636.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/hint/fn.black_box.html",
+      "lessons": [
+        "07-layout",
+        "07-performance"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/hint/fn.black_box.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:32 GMT",
+      "sha256": "4343593cafcaf72edc25626a0c256afe2c334d3fcebe7f56db13bd6013dc86f9",
+      "bytes": 17992,
+      "snapshot": "sources/2026-10-17/00761b81600067ca0cdb.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/io/trait.Read.html",
+      "lessons": [
+        "03-tests",
+        "04-indexer"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/io/trait.Read.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:34 GMT",
+      "sha256": "1ffbb4becafc57a9f7162365d8f8c22677a4a93ddc1dde8568246a76e411a08f",
+      "bytes": 86263,
+      "snapshot": "sources/2026-10-17/4ac16ee8f06e37aa550d.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/io/trait.Write.html",
+      "lessons": [
+        "03-log-store"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/io/trait.Write.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:34 GMT",
+      "sha256": "971ad0a38a650792066f106be1a87d255215730158c3c81ce0354100cfbd40f7",
+      "bytes": 55718,
+      "snapshot": "sources/2026-10-17/b281aecf56b13f7eb1bc.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/marker/trait.Send.html",
+      "lessons": [
+        "04-threads"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/marker/trait.Send.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:34 GMT",
+      "sha256": "fbdab26f26146121d00ca9f783eb65729569bd7f8e119dc697d64ec5b6f9cfec",
+      "bytes": 332005,
+      "snapshot": "sources/2026-10-17/0beaa447191a692e7011.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/ops/trait.Drop.html",
+      "lessons": [
+        "03-raii"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/ops/trait.Drop.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:35 GMT",
+      "sha256": "f3fb99490d2216e1e0e8bfdf5e109f9a68b26d02f2903e5990f4001988b03510",
+      "bytes": 58773,
+      "snapshot": "sources/2026-10-17/06d5cd0bbe3f6c04392f.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/path/fn.absolute.html",
+      "lessons": [
+        "03-recovery"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/path/fn.absolute.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:36 GMT",
+      "sha256": "19e0fb5d706ae1755bbed985009b5c55e03bbd169c975dd288735e07910b6d96",
+      "bytes": 9869,
+      "snapshot": "sources/2026-10-17/4bc934b0857729dc828d.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/primitive.u32.html",
+      "lessons": [
+        "03-log-store"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/primitive.u32.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:36 GMT",
+      "sha256": "954dcd1206fba96c93b2b8f86b0d2b3865c276171ef7aa46152b869e519d98cd",
+      "bytes": 1434995,
+      "snapshot": "sources/2026-10-17/51719b1b7a755d1b2be9.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/primitive.u64.html",
+      "lessons": [
+        "07-replay"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/primitive.u64.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:36 GMT",
+      "sha256": "4634fcaed96e4f984f016216dc43aa07a07c17d52db6d0a134504a5bce31fab6",
+      "bytes": 1424780,
+      "snapshot": "sources/2026-10-17/e3ce59e2408c27e8b376.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/string/struct.String.html",
+      "lessons": [
+        "07-allocation-dispatch"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/string/struct.String.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:38 GMT",
+      "sha256": "9ba31c392791f44e18cb689e3945878f93b7b41a2f6c9b783b1d63bf2d23513e",
+      "bytes": 667290,
+      "snapshot": "sources/2026-10-17/2995708243ed94648706.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/sync/atomic/enum.Ordering.html",
+      "lessons": [
+        "04-indexer"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/sync/atomic/enum.Ordering.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:37 GMT",
+      "sha256": "5995ba6620a6e68bc97b0177d0efb8f275577d01d2a532c517e29546624fd960",
+      "bytes": 39688,
+      "snapshot": "sources/2026-10-17/8a6ee7a0e4efe2a4be49.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/sync/mpsc/fn.sync_channel.html",
+      "lessons": [
+        "04-threads",
+        "04-indexer"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/sync/mpsc/fn.sync_channel.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:38 GMT",
+      "sha256": "71503586ef8d5674234e72b531aaf1565eb0f9b62dabdd0dd5a5cb13db4b6fb6",
+      "bytes": 8338,
+      "snapshot": "sources/2026-10-17/d62e0190020061a634f1.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/thread/fn.scope.html",
+      "lessons": [
+        "04-threads"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/thread/fn.scope.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:38 GMT",
+      "sha256": "a58d63412b95e5b635f9f71b6abd9c9cb29a2469479e8684b0ccfe5a12a1f3db",
+      "bytes": 8747,
+      "snapshot": "sources/2026-10-17/b991f58baaf864e8f8b5.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/time/struct.Instant.html",
+      "lessons": [
+        "07-performance"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/time/struct.Instant.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:38 GMT",
+      "sha256": "3552af50af2b12739b5058e7a1d64a6fc80726971cff42544d33f03cba396f15",
+      "bytes": 71907,
+      "snapshot": "sources/2026-10-17/69e059c57b7bb3c6f944.gz"
+    },
+    {
+      "url": "https://doc.rust-lang.org/std/vec/struct.Vec.html",
+      "lessons": [
+        "07-layout",
+        "07-allocation-dispatch"
+      ],
+      "status": 200,
+      "final_url": "https://doc.rust-lang.org/std/vec/struct.Vec.html",
+      "last_modified": "Thu, 15 Oct 2026 17:33:38 GMT",
+      "sha256": "3043fc4fa845810446c3c98c4009a890169a8d1f32d35cff23e602a40eb24cbe",
+      "bytes": 955558,
+      "snapshot": "sources/2026-10-17/dd75d989f2481a58541d.gz"
+    },
+    {
+      "url": "https://docs.rs/axum/0.8.9/axum/",
+      "lessons": [
+        "05-http"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/axum/0.8.9/axum/",
+      "last_modified": null,
+      "sha256": "244e8b94e6cc321670caf5fea70baac005fe6325d89ea8846df851c730ff5a40",
+      "bytes": 118377,
+      "snapshot": "sources/2026-10-17/70ef2d2f6e85bed1cddc.gz"
+    },
+    {
+      "url": "https://docs.rs/axum/0.8.9/axum/extract/struct.State.html",
+      "lessons": [
+        "09-workbench"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/axum/0.8.9/axum/extract/struct.State.html",
+      "last_modified": null,
+      "sha256": "1dc24886cb6c29ac1d75f05c8213da8b1b0940fe7138ba8c35a43aa92ea4e56f",
+      "bytes": 180182,
+      "snapshot": "sources/2026-10-17/f89a53f53149fb38ae35.gz"
+    },
+    {
+      "url": "https://docs.rs/axum/0.8.9/axum/middleware/",
+      "lessons": [
+        "05-web-boundaries"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/axum/0.8.9/axum/middleware/",
+      "last_modified": null,
+      "sha256": "2a2f409f840727306f6204091b1af1c9f3d2f5128604774fec62c61d0ed22092",
+      "bytes": 70493,
+      "snapshot": "sources/2026-10-17/ca884a7fe9af455c3eaf.gz"
+    },
+    {
+      "url": "https://docs.rs/axum/0.8.9/axum/struct.Router.html",
+      "lessons": [
+        "05-tracker"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/axum/0.8.9/axum/struct.Router.html",
+      "last_modified": null,
+      "sha256": "84756d2fb9f014b9857d615cdf244221ee30eaa36322d105f08b1815f396469a",
+      "bytes": 273406,
+      "snapshot": "sources/2026-10-17/399d07becb98b274d38a.gz"
+    },
+    {
+      "url": "https://docs.rs/crate/rayon/1.12.0",
+      "lessons": [
+        "04-parallel-tools"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/crate/rayon/1.12.0",
+      "last_modified": null,
+      "sha256": "92edc9e4658773693bf225445570d4c7529a518a82ae938c1cff0846cb546ba0",
+      "bytes": 41586,
+      "snapshot": "sources/2026-10-17/4cd8a7dd5fd52f128dce.gz"
+    },
+    {
+      "url": "https://docs.rs/gloo-net/0.7.0/gloo_net/http/index.html",
+      "lessons": [
+        "06-console"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/gloo-net/0.7.0/gloo_net/http/index.html",
+      "last_modified": null,
+      "sha256": "4ba19dfeb21c35ed66006e3e78c44633b0850d5d8bda76dc1224252911c4bd04",
+      "bytes": 24385,
+      "snapshot": "sources/2026-10-17/e4ac7f5d484dfc608dc5.gz"
+    },
+    {
+      "url": "https://docs.rs/leptos/0.8.22/leptos/",
+      "lessons": [
+        "06-state"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/leptos/0.8.22/leptos/",
+      "last_modified": null,
+      "sha256": "1c9dc2e3a788da927a0ac27c9de24079fb2443ef4c420f863dea566ab459eb5c",
+      "bytes": 179709,
+      "snapshot": "sources/2026-10-17/3d461c7d660e5b87e336.gz"
+    },
+    {
+      "url": "https://docs.rs/libfuzzer-sys/0.4.13/libfuzzer_sys/",
+      "lessons": [
+        "03-fuzz"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/libfuzzer-sys/0.4.13/libfuzzer_sys/",
+      "last_modified": null,
+      "sha256": "b2ce74fe489357ca0d4cdda92648850a844b0c13aa5b36ba26152acc0342e8e8",
+      "bytes": 21073,
+      "snapshot": "sources/2026-10-17/f3a9b9de822dbe31915e.gz"
+    },
+    {
+      "url": "https://docs.rs/quote/1.0.47/quote/",
+      "lessons": [
+        "07-macros"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/quote/1.0.47/quote/",
+      "last_modified": null,
+      "sha256": "d70b24726cb75d1347f5e4eb6ca17a9284b1375c8295508460fcc0f239d73f90",
+      "bytes": 22575,
+      "snapshot": "sources/2026-10-17/5ada3964b6c2d4332898.gz"
+    },
+    {
+      "url": "https://docs.rs/rayon/1.12.0/rayon/iter/trait.IndexedParallelIterator.html",
+      "lessons": [
+        "04-parallel-tools"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/rayon/1.12.0/rayon/iter/trait.IndexedParallelIterator.html",
+      "last_modified": null,
+      "sha256": "9fd96118e9d25e79d9845fae27339d8eab720210aad672b3d018bc50df5925bb",
+      "bytes": 183293,
+      "snapshot": "sources/2026-10-17/186a34f45fbe4e721cf3.gz"
+    },
+    {
+      "url": "https://docs.rs/rayon/1.12.0/rayon/struct.ThreadPoolBuilder.html",
+      "lessons": [
+        "04-parallel-tools"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/rayon/1.12.0/rayon/struct.ThreadPoolBuilder.html",
+      "last_modified": null,
+      "sha256": "4ee7cac2074130a3ecfe8fa7ad4086c3838f464debf9edce629196e532f3bac7",
+      "bytes": 82646,
+      "snapshot": "sources/2026-10-17/ec7dc9086abe915f4da9.gz"
+    },
+    {
+      "url": "https://docs.rs/sqlx/0.9.0/sqlx/fn.query.html",
+      "lessons": [
+        "05-sql"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/sqlx/0.9.0/sqlx/fn.query.html",
+      "last_modified": null,
+      "sha256": "e398b4d3541fd513875061d00a527b1db19ba9d10c1c2b71a46a1405ac16f785",
+      "bytes": 32711,
+      "snapshot": "sources/2026-10-17/7efee2f47bc371a23bf1.gz"
+    },
+    {
+      "url": "https://docs.rs/sqlx/0.9.0/sqlx/macro.query.html",
+      "lessons": [
+        "05-sql"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/sqlx/0.9.0/sqlx/macro.query.html",
+      "last_modified": null,
+      "sha256": "85eeef78e44e848db765aa46f26601602e1771540f25ab829126d4f51d6a19d5",
+      "bytes": 45505,
+      "snapshot": "sources/2026-10-17/47f638703c92d1b2fadd.gz"
+    },
+    {
+      "url": "https://docs.rs/sqlx/0.9.0/sqlx/struct.Pool.html",
+      "lessons": [
+        "05-tracker"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/sqlx/0.9.0/sqlx/struct.Pool.html",
+      "last_modified": null,
+      "sha256": "f486a5c186b0e7f54bfb74f614191433e2af69e01013a51f0d50033587bb9c98",
+      "bytes": 146289,
+      "snapshot": "sources/2026-10-17/eb30371c036aee6f4f4e.gz"
+    },
+    {
+      "url": "https://docs.rs/syn/3.0.9/syn/",
+      "lessons": [
+        "07-macros"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/syn/3.0.9/syn/",
+      "last_modified": null,
+      "sha256": "80d18793ac5c8d913931ac7d8694200f3ded190aa36799353f8380acc81b4f97",
+      "bytes": 108957,
+      "snapshot": "sources/2026-10-17/29673756879c6f8e5dda.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/io/trait.AsyncReadExt.html",
+      "lessons": [
+        "05-protocols"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/io/trait.AsyncReadExt.html",
+      "last_modified": null,
+      "sha256": "e048ebf665cb6d0406906fb83ab0795c7625ce65bcbed62428a8e2f0e5f48caf",
+      "bytes": 125464,
+      "snapshot": "sources/2026-10-17/2a500d275784369be731.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/macro.select.html",
+      "lessons": [
+        "04-monitor",
+        "04-pinning"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/macro.select.html",
+      "last_modified": null,
+      "sha256": "bb1f108ec585d109deef41561fe871081f4cf41ae7505492eb9b98d51283502e",
+      "bytes": 59019,
+      "snapshot": "sources/2026-10-17/b7cbfeb6ed39f299a15f.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/net/struct.TcpListener.html",
+      "lessons": [
+        "04-monitor"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/net/struct.TcpListener.html",
+      "last_modified": null,
+      "sha256": "21dda5158fedebfb8bd8f4023ffdd5fdbb6f9f8470848a8945d38c48a8243c4f",
+      "bytes": 85461,
+      "snapshot": "sources/2026-10-17/177654f64db50de209cd.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/sync/broadcast/index.html",
+      "lessons": [
+        "05-chat"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/sync/broadcast/index.html",
+      "last_modified": null,
+      "sha256": "965e25e8b1f6725687619bb9a7fbc37655df5a764683a66d49a09336ce61d746",
+      "bytes": 38019,
+      "snapshot": "sources/2026-10-17/113aac22b7c788dff732.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/task/fn.spawn_blocking.html",
+      "lessons": [
+        "09-workbench"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/task/fn.spawn_blocking.html",
+      "last_modified": null,
+      "sha256": "684bb6cec72b4a7b08ee0fffd24d4022dbf10f3863f209f99e68dfba87ed7291",
+      "bytes": 37680,
+      "snapshot": "sources/2026-10-17/465d8f1ad0fe1e7cbcc2.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/task/struct.JoinHandle.html",
+      "lessons": [
+        "08-scheduler"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/task/struct.JoinHandle.html",
+      "last_modified": null,
+      "sha256": "8520a2319eb2206f9992c7b10753f2501c83cc2f58b651bcff9250c5b823de6d",
+      "bytes": 81434,
+      "snapshot": "sources/2026-10-17/d67976426625af84a771.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/task/struct.JoinSet.html",
+      "lessons": [
+        "04-futures",
+        "04-monitor"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/task/struct.JoinSet.html",
+      "last_modified": null,
+      "sha256": "d56e155da5d2f79d6debacfe0642a61c71a6eef601e932fad9bb46f121442bee",
+      "bytes": 105009,
+      "snapshot": "sources/2026-10-17/6512e6775b12670de0f4.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/time/fn.pause.html",
+      "lessons": [
+        "04-pinning"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/time/fn.pause.html",
+      "last_modified": null,
+      "sha256": "c4fe18ca32557175eef64c31541aa3ee8884130bc74862c50b40aafbd2ef5cd5",
+      "bytes": 31328,
+      "snapshot": "sources/2026-10-17/b247da4e159638324ebc.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/time/fn.timeout.html",
+      "lessons": [
+        "04-futures"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/time/fn.timeout.html",
+      "last_modified": null,
+      "sha256": "16b795eedb921654571a1d2dac574894d2d0e67243be67c640300be208246267",
+      "bytes": 33431,
+      "snapshot": "sources/2026-10-17/7b528fab792955219eee.gz"
+    },
+    {
+      "url": "https://docs.rs/tokio/1.53.3/tokio/time/struct.Sleep.html",
+      "lessons": [
+        "04-pinning"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rs/tokio/1.53.3/tokio/time/struct.Sleep.html",
+      "last_modified": null,
+      "sha256": "3bdcf9ff81dfb0abc52a17a5fff204d30f44443a6cb8062fbc685a25d79fa3cf",
+      "bytes": 69299,
+      "snapshot": "sources/2026-10-17/7f6b9bbae1e7730557a7.gz"
+    },
+    {
+      "url": "https://docs.rust-embedded.org/book/intro/no-std.html",
+      "lessons": [
+        "07-ffi"
+      ],
+      "status": 200,
+      "final_url": "https://docs.rust-embedded.org/book/intro/no-std.html",
+      "last_modified": "Sat, 11 Apr 2026 08:47:51 GMT",
+      "sha256": "7fbb4435b1b02381a1da5498fb5719c3b95770227378f18b40e1ce0bfb0eb086",
+      "bytes": 27219,
+      "snapshot": "sources/2026-10-17/1ba5f2e81d0aa1893a46.gz"
+    },
+    {
+      "url": "https://fetch.spec.whatwg.org/",
+      "lessons": [
+        "05-web-boundaries",
+        "06-boundaries"
+      ],
+      "status": 200,
+      "final_url": "https://fetch.spec.whatwg.org/",
+      "last_modified": "Tue, 06 Oct 2026 06:36:02 GMT",
+      "sha256": "81b021244f1b9a2c3e4b8dfd55721bb79f1ac54f5529119db166ff9f8dfa8be9",
+      "bytes": 1931474,
+      "snapshot": "sources/2026-10-17/4232cb73fabc29cd2559.gz"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-add/2.51.0",
+      "lessons": [
+        "00-workspace"
+      ],
+      "status": 200,
+      "final_url": "https://git-scm.com/docs/git-add/2.51.0",
+      "last_modified": "Fri, 16 Oct 2026 05:06:08 GMT",
+      "sha256": "27fcd39971e2906dadc6ed5338100a6e711034244b8af416b5c90abed37a6ef9",
+      "bytes": 78098,
+      "snapshot": "sources/2026-10-17/80181517927f9e14ebaf.gz"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-diff/2.51.0",
+      "lessons": [
+        "00-workspace"
+      ],
+      "status": 200,
+      "final_url": "https://git-scm.com/docs/git-diff/2.51.0",
+      "last_modified": "Fri, 16 Oct 2026 05:06:06 GMT",
+      "sha256": "eaa1b344eda0c044a7ec290915f62045b91b57d0188e7f746f974eef8850c447",
+      "bytes": 225674,
+      "snapshot": "sources/2026-10-17/b437913b24db0265a1f9.gz"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-status/2.51.0",
+      "lessons": [
+        "00-workspace"
+      ],
+      "status": 200,
+      "final_url": "https://git-scm.com/docs/git-status/2.51.0/",
+      "last_modified": "Fri, 16 Oct 2026 05:05:53 GMT",
+      "sha256": "06bbb6282a04521f2f9c6ba74e40a70ed0b178443ab51eaec86f5d4e1de755fb",
+      "bytes": 602,
+      "snapshot": "sources/2026-10-17/d79c1964a3472952a527.gz"
+    },
+    {
+      "url": "https://github.com/rayon-rs/rayon/blob/v1.12.0/RELEASES.md",
+      "lessons": [
+        "04-parallel-tools"
+      ],
+      "status": 200,
+      "final_url": "https://github.com/rayon-rs/rayon/blob/v1.12.0/RELEASES.md",
+      "last_modified": null,
+      "sha256": "4a71cfca2dd2311d91251a1817196e5bda92c09be51f73943f156de8e7a9a3f3",
+      "bytes": 581463,
+      "snapshot": "sources/2026-10-17/fb41444a64f957c3e537.gz"
+    },
+    {
+      "url": "https://github.com/rust-lang/miri",
+      "lessons": [
+        "07-unsafe",
+        "07-auditing"
+      ],
+      "status": 200,
+      "final_url": "https://github.com/rust-lang/miri",
+      "last_modified": null,
+      "sha256": "ece1918750edfa35d328a7823b715c85871cb4983ef7ae53252207f14acdb0a8",
+      "bytes": 496952,
+      "snapshot": "sources/2026-10-17/41ef1b0cbeb237f235c2.gz"
+    },
+    {
+      "url": "https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf",
+      "lessons": [
+        "08-replication"
+      ],
+      "status": 200,
+      "final_url": "https://groups.csail.mit.edu/tds/papers/Lynch/jacm85.pdf",
+      "last_modified": "Wed, 24 Jul 2002 20:49:44 GMT",
+      "sha256": "80e1c33be45362d6ce0eeaba0259939df16eaff592cd612d42d783e4686c82b7",
+      "bytes": 725701,
+      "snapshot": "sources/2026-10-17/de93b5e8e711fe31133f.gz"
+    },
+    {
+      "url": "https://html.spec.whatwg.org/multipage/forms.html",
+      "lessons": [
+        "06-browser"
+      ],
+      "status": 200,
+      "final_url": "https://html.spec.whatwg.org/multipage/forms.html",
+      "last_modified": "Fri, 16 Oct 2026 14:27:04 GMT",
+      "sha256": "9b3b25fdf9c8b6a961890b007e91bf1c597cc9c1dcbc74b7a95c8b1f3c5bc40f",
+      "bytes": 192874,
+      "snapshot": "sources/2026-10-17/7b925d6c046644434bec.gz"
+    },
+    {
+      "url": "https://httpwg.org/specs/rfc6265.html",
+      "lessons": [
+        "05-web-boundaries"
+      ],
+      "status": 200,
+      "final_url": "https://httpwg.org/specs/rfc6265.html",
+      "last_modified": "Fri, 04 Sep 2026 10:08:11 GMT",
+      "sha256": "f7107ab8c09615509f57dfe1d68ee0f047082f6f35e6556ad8a422724af62405",
+      "bytes": 119501,
+      "snapshot": "sources/2026-10-17/5ab3e709b133bb8b34d3.gz"
+    },
+    {
+      "url": "https://llvm.org/docs/LibFuzzer.html",
+      "lessons": [
+        "03-fuzz"
+      ],
+      "status": 200,
+      "final_url": "https://llvm.org/docs/LibFuzzer.html",
+      "last_modified": "Sat, 17 Oct 2026 07:20:27 GMT",
+      "sha256": "88142fcaaa58b6ebd51e7c76c2b49a882e13a93f11509654ac022ec53b9ea99b",
+      "bytes": 134387,
+      "snapshot": "sources/2026-10-17/cab2eb027846158fb2bb.gz"
+    },
+    {
+      "url": "https://mise.jdx.dev/cli/exec",
+      "lessons": [
+        "00-workspace"
+      ],
+      "status": 200,
+      "final_url": "https://mise.jdx.dev/cli/exec",
+      "last_modified": "Fri, 16 Oct 2026 18:22:14 GMT",
+      "sha256": "f382db4ae3838e2f044fcb2b6a8efa68e3974f6be42cbd0718f999a0fa87285f",
+      "bytes": 238200,
+      "snapshot": "sources/2026-10-17/35fb713b1eef0f686838.gz"
+    },
+    {
+      "url": "https://mise.jdx.dev/lang/rust.html",
+      "lessons": [
+        "00-workspace",
+        "00-terminal"
+      ],
+      "status": 200,
+      "final_url": "https://mise.jdx.dev/lang/rust.html",
+      "last_modified": "Fri, 16 Oct 2026 18:22:23 GMT",
+      "sha256": "b4f2b4b4b7c1d47b2e17b99c95eb262368e510c7f312e14aa40bf9b6aec3b417",
+      "bytes": 258228,
+      "snapshot": "sources/2026-10-17/d6275fea6b6b0a930383.gz"
+    },
+    {
+      "url": "https://nodejs.org/en/blog/release/v26.12.0",
+      "lessons": [],
+      "status": 200,
+      "final_url": "https://nodejs.org/en/blog/release/v26.12.0",
+      "last_modified": null,
+      "sha256": "16d14b0ab4efb024261051463951f7a89514a628f4dc2e474028d748108c02a3",
+      "bytes": 353490,
+      "snapshot": "sources/2026-10-17/5747e9e301332543f86c.gz"
+    },
+    {
+      "url": "https://openid.net/specs/openid-connect-core-1_0.html",
+      "lessons": [
+        "05-http"
+      ],
+      "status": 200,
+      "final_url": "https://openid.net/specs/openid-connect-core-1_0.html",
+      "last_modified": "Sat, 16 Dec 2023 05:56:59 GMT",
+      "sha256": "4d016752a645e8a3c259baa4173b5a90cb6c82898ce868fc8444adde262a5aed",
+      "bytes": 437508,
+      "snapshot": "sources/2026-10-17/cfd2790a544c9e6d5467.gz"
+    },
+    {
+      "url": "https://raft.github.io/raft.pdf",
+      "lessons": [
+        "08-replication",
+        "09-review"
+      ],
+      "status": 200,
+      "final_url": "https://raft.github.io/raft.pdf",
+      "last_modified": "Mon, 06 Jul 2026 06:48:51 GMT",
+      "sha256": "5a5c679b6a7c88007faeff8c3eef19a77e9e5caa8bd7390922584fe8ecf0ce1f",
+      "bytes": 567533,
+      "snapshot": "sources/2026-10-17/3f93a00ea748028b69e0.gz"
+    },
+    {
+      "url": "https://rust-fuzz.github.io/book/cargo-fuzz/setup.html",
+      "lessons": [
+        "03-fuzz"
+      ],
+      "status": 200,
+      "final_url": "https://rust-fuzz.github.io/book/cargo-fuzz/setup.html",
+      "last_modified": "Thu, 04 Jun 2026 18:32:17 GMT",
+      "sha256": "810ed2b17d07092e0dd20c0d00b648c1dffa2906cbf7835cd7292bfad73e59a6",
+      "bytes": 13858,
+      "snapshot": "sources/2026-10-17/3eaef7c2b0fb574f50b4.gz"
+    },
+    {
+      "url": "https://rust-fuzz.github.io/book/cargo-fuzz/tutorial.html",
+      "lessons": [
+        "03-fuzz"
+      ],
+      "status": 200,
+      "final_url": "https://rust-fuzz.github.io/book/cargo-fuzz/tutorial.html",
+      "last_modified": "Thu, 04 Jun 2026 18:32:17 GMT",
+      "sha256": "852dedaf0247ec759baae23c8d25ff691b9af52c840e014f3dac9b5b6769c25f",
+      "bytes": 17700,
+      "snapshot": "sources/2026-10-17/990215da77535549bc8f.gz"
+    },
+    {
+      "url": "https://rust-lang.github.io/api-guidelines/",
+      "lessons": [
+        "09-review"
+      ],
+      "status": 200,
+      "final_url": "https://rust-lang.github.io/api-guidelines/",
+      "last_modified": "Tue, 08 Jul 2025 04:54:22 GMT",
+      "sha256": "232058b56bdaf145f663f9a5f0255effca43b8886383ea8342b5c3fadfdeba3d",
+      "bytes": 12372,
+      "snapshot": "sources/2026-10-17/25975f7ec1a3723d556d.gz"
+    },
+    {
+      "url": "https://rust-lang.github.io/api-guidelines/checklist.html",
+      "lessons": [],
+      "status": 200,
+      "final_url": "https://rust-lang.github.io/api-guidelines/checklist.html",
+      "last_modified": "Tue, 08 Jul 2025 04:54:22 GMT",
+      "sha256": "68aecc050fcda720455a53b820bf623f27392faeacdd00928d396ab5967776fa",
+      "bytes": 21628,
+      "snapshot": "sources/2026-10-17/b3fa9613d020fb747435.gz"
+    },
+    {
+      "url": "https://serde.rs/enum-representations.html",
+      "lessons": [
+        "09-domain"
+      ],
+      "status": 200,
+      "final_url": "https://serde.rs/enum-representations.html",
+      "last_modified": "Sun, 11 Oct 2026 02:18:14 GMT",
+      "sha256": "1bd5946b820f2bed579dc1c81ed3ee7b36384768e57854ce6a0681fd8fe7a1f1",
+      "bytes": 25676,
+      "snapshot": "sources/2026-10-17/cfeccfb350a929dd9adc.gz"
+    },
+    {
+      "url": "https://sre.google/sre-book/service-level-objectives/",
+      "lessons": [
+        "08-operations"
+      ],
+      "status": 200,
+      "final_url": "https://sre.google/sre-book/service-level-objectives/",
+      "last_modified": "Thu, 08 Oct 2026 04:48:00 GMT",
+      "sha256": "60851ff3487eef695bb59143b5123a79af081091ce8bf2909ad83ad924438365",
+      "bytes": 67930,
+      "snapshot": "sources/2026-10-17/7b9a3e66dbb9cd315c62.gz"
+    },
+    {
+      "url": "https://svelte.dev/docs/svelte/overview",
+      "lessons": [
+        "06-boundaries"
+      ],
+      "status": 200,
+      "final_url": "https://svelte.dev/docs/svelte/overview",
+      "last_modified": "Thu, 15 Oct 2026 20:04:57 GMT",
+      "sha256": "ddf28b80f5b0c4070c9564ef633fccde3380a870abe759d1cf25d6a13a52c1ec",
+      "bytes": 83206,
+      "snapshot": "sources/2026-10-17/3f14ed567a73eb1274c1.gz"
+    },
+    {
+      "url": "https://tokio.rs/tokio/topics/shutdown",
+      "lessons": [
+        "05-chat",
+        "08-operations"
+      ],
+      "status": 200,
+      "final_url": "https://tokio.rs/tokio/topics/shutdown",
+      "last_modified": null,
+      "sha256": "1510a67113254138520922d02486fa8f328ed0d39c3126895d6e7a9b67f5fb97",
+      "bytes": 39921,
+      "snapshot": "sources/2026-10-17/081a5be62977c7652d62.gz"
+    },
+    {
+      "url": "https://wasm-bindgen.github.io/wasm-bindgen/",
+      "lessons": [
+        "06-console"
+      ],
+      "status": 200,
+      "final_url": "https://wasm-bindgen.github.io/wasm-bindgen/",
+      "last_modified": "Fri, 16 Oct 2026 16:56:55 GMT",
+      "sha256": "c1844bab5d18a44426bd35e268f2b8db04596e00728ced807d28c36b6582c0ef",
+      "bytes": 21599,
+      "snapshot": "sources/2026-10-17/88dabb590aaf4901850d.gz"
+    },
+    {
+      "url": "https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf",
+      "lessons": [
+        "08-delivery"
+      ],
+      "status": 200,
+      "final_url": "https://web.mit.edu/Saltzer/www/publications/endtoend/endtoend.pdf",
+      "last_modified": "Fri, 10 Oct 1997 18:13:07 GMT",
+      "sha256": "3204a1a562d9d3b72ba112f20caddfd34991d6e1e39939ace6a3e7c016519768",
+      "bytes": 37816,
+      "snapshot": "sources/2026-10-17/80cd7a3df17a0fa9945a.gz"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/explicit-locking.html",
+      "lessons": [
+        "08-scheduler"
+      ],
+      "status": 200,
+      "final_url": "https://www.postgresql.org/docs/18/explicit-locking.html",
+      "last_modified": null,
+      "sha256": "c380ea819aae4ea552be1b8d3ae49caad9139c1d06a1d08ca98d79828c3f7472",
+      "bytes": 46826,
+      "snapshot": "sources/2026-10-17/b975ea12ae8d059adbc5.gz"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/functions-math.html",
+      "lessons": [
+        "08-scheduler"
+      ],
+      "status": 200,
+      "final_url": "https://www.postgresql.org/docs/18/functions-math.html",
+      "last_modified": null,
+      "sha256": "bc283fa73af330235c91a29c235c58e6ea487ca1f2e92a5c813fc595b164a056",
+      "bytes": 72013,
+      "snapshot": "sources/2026-10-17/cf75fb5129bad0ace258.gz"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/indexes.html",
+      "lessons": [
+        "05-tracker"
+      ],
+      "status": 200,
+      "final_url": "https://www.postgresql.org/docs/18/indexes.html",
+      "last_modified": null,
+      "sha256": "133053a3a56f926d9868a9fc508082634be3f8c8c88b60d84508c332cf6fb27e",
+      "bytes": 16270,
+      "snapshot": "sources/2026-10-17/7937a65730bccda4025c.gz"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/monitoring-stats.html",
+      "lessons": [
+        "08-operations"
+      ],
+      "status": 200,
+      "final_url": "https://www.postgresql.org/docs/18/monitoring-stats.html",
+      "last_modified": null,
+      "sha256": "bb9ebc22521557c6ffd32fbcb76c2db74cf08ee1716d2618e9a0313a36528bf7",
+      "bytes": 290994,
+      "snapshot": "sources/2026-10-17/b8fe5834d26560ff0bce.gz"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/sql-select.html",
+      "lessons": [
+        "08-scheduler"
+      ],
+      "status": 200,
+      "final_url": "https://www.postgresql.org/docs/18/sql-select.html",
+      "last_modified": null,
+      "sha256": "0423dc0b809d7a69e7ffaa456975b37f7dbfa374ed5ac8c6e1725004535b798a",
+      "bytes": 118042,
+      "snapshot": "sources/2026-10-17/082eb98f338c32c8f176.gz"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/transaction-iso.html",
+      "lessons": [
+        "05-sql",
+        "09-review"
+      ],
+      "status": 200,
+      "final_url": "https://www.postgresql.org/docs/18/transaction-iso.html",
+      "last_modified": null,
+      "sha256": "0b5013fde5e842c82664f2d9fe599f1c8ef7756e8c3ecc254b589e3be9e0d356",
+      "bytes": 47642,
+      "snapshot": "sources/2026-10-17/dd9531fbac9f7a743d35.gz"
+    },
+    {
+      "url": "https://www.postgresql.org/docs/18/tutorial-transactions.html",
+      "lessons": [
+        "08-delivery"
+      ],
+      "status": 200,
+      "final_url": "https://www.postgresql.org/docs/18/tutorial-transactions.html",
+      "last_modified": null,
+      "sha256": "da145d69374cb03c9875ff09c5ab4a535fc01b2f85a080f963feb933cb14c088",
+      "bytes": 21339,
+      "snapshot": "sources/2026-10-17/e2906621865c0b14245e.gz"
+    },
+    {
+      "url": "https://www.postgresql.org/support/versioning/",
+      "lessons": [],
+      "status": 200,
+      "final_url": "https://www.postgresql.org/support/versioning/",
+      "last_modified": null,
+      "sha256": "c1e471c7576f24353ac2450b14734a4898782a738158b1fb68d3d871496f7dd6",
+      "bytes": 12669,
+      "snapshot": "sources/2026-10-17/544607d71e2f6ec166cc.gz"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "lessons": [
+        "05-http",
+        "08-delivery"
+      ],
+      "status": 200,
+      "final_url": "https://www.rfc-editor.org/rfc/rfc9110.html",
+      "last_modified": null,
+      "sha256": "d431760660ea44e130f6e919dab216df2d0b3a490567a98089267523368fe1e5",
+      "bytes": 1187554,
+      "snapshot": "sources/2026-10-17/b1b13a12aee75c6ecc20.gz"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9293.html",
+      "lessons": [
+        "05-protocols"
+      ],
+      "status": 200,
+      "final_url": "https://www.rfc-editor.org/rfc/rfc9293.html",
+      "last_modified": null,
+      "sha256": "0be501b21b790ae4fa1db0cfe3d3ee935a94f69dc8e0ef7e32a04250eaa30f13",
+      "bytes": 532829,
+      "snapshot": "sources/2026-10-17/cf23f6ee70bf6cfbb2be.gz"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc9700",
+      "lessons": [
+        "06-boundaries"
+      ],
+      "status": 200,
+      "final_url": "https://www.rfc-editor.org/info/rfc9700/",
+      "last_modified": null,
+      "sha256": "d8d605a9f9b9f85bcf3e0dec32d02ecd8c8487bd437dbe4c4d4d516cb491b144",
+      "bytes": 1085006,
+      "snapshot": "sources/2026-10-17/3d02f88bc2befb7e2017.gz"
+    },
+    {
+      "url": "https://www.w3.org/WAI/tutorials/forms/",
+      "lessons": [
+        "06-browser"
+      ],
+      "status": 200,
+      "final_url": "https://www.w3.org/WAI/tutorials/forms/",
+      "last_modified": "Wed, 14 Oct 2026 17:09:16 GMT",
+      "sha256": "5a5885d64c4d08370d634ffafc2f70b521a5a28d8f697f9894ab5a60080cc0e9",
+      "bytes": 43236,
+      "snapshot": "sources/2026-10-17/51189ac5f2965e1bc385.gz"
+    }
+  ]
+}

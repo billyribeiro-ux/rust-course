@@ -1,0 +1,36 @@
+   Compiling core-rust-labs v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p18-core-labs)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.69s
+     Running unittests src/lib.rs (.course-cache/native/debug/deps/core_rust_labs-2309a775428568a2)
+
+running 13 tests
+test collections::tests::arrays_and_vectors_share_a_slice_contract ... ok
+test collections::tests::repeated_labels_are_counted_and_rows_are_deterministic ... ok
+test conversions::tests::conversions_preserve_the_declared_range ... ok
+test conversions::tests::collection_reports_first_failure_instead_of_dropping_it ... ok
+test conversions::tests::parsing_and_display_have_explicit_normalization ... ok
+test collections::tests::result_owns_its_labels_after_input_is_gone ... ok
+test conversions::tests::filter_is_inclusive_and_preserves_order_and_duplicates ... ok
+test interior::tests::reentrant_write_is_an_error_then_guard_release_allows_progress ... ok
+test collections::tests::item_distinct_and_text_boundaries_are_independent ... ok
+test interior::tests::full_or_invalid_input_preserves_messages ... ok
+test interior::tests::handles_share_state_and_disabled_is_distinct_from_invalid ... ok
+test interior::tests::weak_observer_does_not_keep_the_buffer_alive ... ok
+test interior::tests::unwinding_releases_the_observer_guard ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests core_rust_labs
+
+running 1 test
+test reference/p18-core-labs/src/conversions.rs - conversions::Percent (line 6) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 2 tests
+test reference/p18-core-labs/src/interior.rs - interior::SharedAudit (line 34) - compile fail ... ok
+test reference/p18-core-labs/src/conversions.rs - conversions::Percent (line 14) - compile fail ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s
+
+all doctests ran in 0.49s; merged doctests compilation took 0.22s

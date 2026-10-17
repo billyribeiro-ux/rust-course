@@ -1,0 +1,87 @@
+[
+  {
+    "package": "p06-kv",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "test",
+      "--manifest-path",
+      "scaffolds/p06-kv/Cargo.toml",
+      "--target-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+    ],
+    "exit_code": 101,
+    "result": "compiled; acceptance tests intentionally fail at learner TODO",
+    "expected_failure": true
+  },
+  {
+    "package": "p07-indexer",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "test",
+      "--manifest-path",
+      "scaffolds/p07-indexer/Cargo.toml",
+      "--target-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+    ],
+    "exit_code": 101,
+    "result": "compiled; acceptance tests intentionally fail at learner TODO",
+    "expected_failure": true
+  },
+  {
+    "package": "p08-monitor",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "test",
+      "--manifest-path",
+      "scaffolds/p08-monitor/Cargo.toml",
+      "--target-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+    ],
+    "exit_code": 101,
+    "result": "compiled; acceptance tests intentionally fail at learner TODO",
+    "expected_failure": true
+  },
+  {
+    "package": "p12-replay",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "test",
+      "--manifest-path",
+      "scaffolds/p12-replay/Cargo.toml",
+      "--target-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+    ],
+    "exit_code": 101,
+    "result": "compiled; acceptance tests intentionally fail at learner TODO",
+    "expected_failure": true
+  },
+  {
+    "package": "p13-unsafe",
+    "command": [
+      "mise",
+      "exec",
+      "--",
+      "cargo",
+      "test",
+      "--manifest-path",
+      "scaffolds/p13-unsafe/Cargo.toml",
+      "--target-dir",
+      "/var/folders/b0/k9sbqwc90zzb2xvvksttwvc00000gn/T/rust-course-scaffold-check-raw7ys0a"
+    ],
+    "exit_code": 101,
+    "result": "compiled; acceptance tests intentionally fail at learner TODO",
+    "expected_failure": true
+  }
+]

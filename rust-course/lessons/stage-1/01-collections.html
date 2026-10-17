@@ -1,0 +1,182 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Tuples, arrays, vectors, and maps with explicit contracts · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="01-collections" data-lesson="01-collections"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Tuples, arrays, vectors, and maps with explicit contracts</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 01 / Ownership and core Rust</div><h1>Tuples, arrays, vectors, and maps with explicit contracts</h1><p class="lead">Choose a container by ownership, operations, ordering, and bounds; build a deterministic label report and explain scalar versus compound values.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-1/01-modeling.html">Model valid task states and make invalid transitions visible</a></li></ul><ul><li>Distinguish scalar values, tuples, arrays, vectors, slices, and UTF-8 text.</li><li>Use a borrowed slice when a function needs only sequence access.</li><li>Count bounded labels with HashMap and return owned deterministically ordered rows.</li><li>Separate input-size, distinct-key, text, and arithmetic limits.</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#closure">closure</a> · <a href="../../glossary.html#enum">enum</a> · <a href="../../glossary.html#iterator">iterator</a> · <a href="../../glossary.html#lifetime">lifetime</a> · <a href="../../glossary.html#lockfile">lockfile</a> · <a href="../../glossary.html#mise">mise</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p02">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p>
+<h2 id="purpose-choose-a-collection-by-the-question-it-answers">Purpose: choose a collection by the question it answers</h2>
+<p>The journal owns several tasks, and the log analyzer will count repeated categories. Before building those larger operations, learn the containers themselves. A fixed set of four measurements, an expandable sequence of tasks, and counts indexed by a label are different requirements. This lesson gives each a small explicit model, then connects ownership, lookup, ordering, and bounds to that choice. We will also fill in the scalar and compound vocabulary used throughout Rust documentation.</p>
+<p>The runnable lab accepts at most 64 labels with at most eight distinct names. Names contain one through sixteen lowercase ASCII letters. It returns owned count rows in lexical order. Those limits are part of the contract, not assumptions hidden in a test fixture. The function builds a local result and publishes it only on success, so a rejected batch cannot expose a half-finished report.</p>
+<h2 id="model-a-scalar-value-or-a-compound-value">Model: a scalar value or a compound value</h2>
+<p>A scalar represents one value: an integer, a floating-point number, a Boolean, or a <code>char</code>. You have used signed <code>i64</code>, unsigned <code>u32</code>, and <code>bool</code>. Signed integers permit negative values; unsigned ones do not. The number in an integer type is its bit width. <code>usize</code> is an unsigned, target-sized integer used for lengths and indexes. It is not a portable file-format field whose width you can assume. The earlier fractional converter introduces <code>f64</code> and its approximation limits.</p>
+<p>A Rust <code>char</code>, written with single quotes such as <code>'é'</code>, is one Unicode scalar value. A string, written with double quotes, contains UTF-8 encoded text. One scalar can occupy several UTF-8 bytes, and one user-perceived symbol can contain several scalars. Therefore “one char,” “one byte,” and “one visible symbol” are different claims. The example prints two UTF-8 bytes for <code>'é'</code>. Our category grammar deliberately accepts ASCII letters, making its byte limit and accepted-character count coincide. The journal's broader UTF-8 title policy remains a separate contract.</p>
+<p>A compound value groups other values. A <strong>tuple</strong> has a fixed number of positions, and its positions can have different types: <code>(String, u32)</code> pairs an owned label with its count. Access positions with <code>.0</code> and <code>.1</code>, or destructure with <code>let (label, count) = row;</code>. A one-element tuple needs a comma, <code>(value,)</code>; parentheses around <code>value</code> alone merely group an expression. The empty tuple <code>()</code> is the unit value encountered in function returns.</p>
+<h2 id="arrays-vectors-and-slices">Arrays, vectors, and slices</h2>
+<p>An array has a fixed length and one element type. <code>[i32; 4]</code> means four signed 32-bit integers; <code>[12, -8, 15, 9]</code> constructs such an array. Length is part of its type, so an array of three values cannot replace an array of four in a parameter requiring exactly four. A vector, <code>Vec&lt;i32&gt;</code>, owns a growable sequence. <code>vec![12, -8]</code> creates one, and <code>push</code> appends. Its length is the number of initialized elements; its capacity concerns allocated room. They are related but not interchangeable.</p>
+<p>A slice, <code>&amp;[i32]</code>, borrows a sequence without owning it or fixing its length in the function signature. Both an array and a vector can supply that view. Our <code>sample_bounds</code> needs to inspect values, not resize or retain their container, so it accepts a slice. This is a useful API habit: request the capability you need. Do not require <code>&amp;Vec&lt;i32&gt;</code> when an array-backed caller can satisfy the same operation.</p>
+<p>Indexing with <code>values[index]</code> requires a valid index and panics if it is out of bounds. A user-chosen index should normally go through <code>get</code>, returning <code>Option</code>. The lab's extrema function uses <code>split_first</code> to distinguish an empty slice before reading an element. It then compares each remaining value. This avoids inventing a “minimum” of zero, which would be wrong for an all-positive input, and avoids assuming there is always a first element.</p>
+<h2 id="predict-the-observable-result">Predict the observable result</h2>
+<p>Predict the extrema of <code>[12, -8, 15, 9]</code>, the result for an empty slice, and the count rows for <code>["worker", "api", "api"]</code>. Will changing the label input order change the count rows? Will eight distinct names followed by another occurrence of an existing name exceed the distinct-name limit? Write these answers before running. Separate a limit on input items from a limit on distinct keys.</p>
+<pre><code class="language-sh">mise exec -- cargo run -p core-rust-labs --example collections
+mise exec -- cargo test -p core-rust-labs collections::</code></pre>
+<p>Run these reference commands from <code>projects</code>. The array and vector both produce <code>Some((-8, 15))</code>. The rows print <code>api: 2</code> before <code>worker: 1</code>. An empty sample has no extrema and returns <code>None</code>. Repeating an existing key changes its count, not the number of distinct keys.</p>
+<h2 id="read-the-complete-checkpoint">Read the complete checkpoint</h2>
+<div class="code-wrap" data-source="projects/reference/p18-core-labs/src/collections.rs" data-sha256="e6f507f5d09d1e13c48771859b5a53c856fafd54d69c5f26f7594d296dd872f3"><div class="code-label"><a href="../../projects/reference/p18-core-labs/src/collections.rs">projects/reference/p18-core-labs/src/collections.rs</a></div><pre><code>use std::collections::HashMap;
+use std::fmt;
+
+pub const MAX_ITEMS: usize = 64;
+pub const MAX_LABELS: usize = 8;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LabelError {
+    TooManyItems,
+    InvalidLabel,
+    TooManyLabels,
+}
+impl fmt::Display for LabelError {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        f.write_str(match self {
+            Self::TooManyItems =&gt; &quot;at most 64 input items are supported&quot;,
+            Self::InvalidLabel =&gt; &quot;labels must contain 1 to 16 lowercase ASCII letters&quot;,
+            Self::TooManyLabels =&gt; &quot;at most 8 distinct labels are supported&quot;,
+        })
+    }
+}
+impl std::error::Error for LabelError {}
+
+/// The borrowed slice can come from an array or a Vec. Empty input has no extrema.
+pub fn sample_bounds(samples: &amp;[i32]) -&gt; Option&lt;(i32, i32)&gt; {
+    let (&amp;first, rest) = samples.split_first()?;
+    let mut low = first;
+    let mut high = first;
+    for &amp;sample in rest {
+        low = low.min(sample);
+        high = high.max(sample);
+    }
+    Some((low, high))
+}
+
+/// Count a bounded batch and return owned rows in lexical label order.
+/// Input borrows stay local; rejected input exposes no partial result.
+pub fn count_labels(labels: &amp;[&amp;str]) -&gt; Result&lt;Vec&lt;(String, u32)&gt;, LabelError&gt; {
+    if labels.len() &gt; MAX_ITEMS {
+        return Err(LabelError::TooManyItems);
+    }
+    let mut counts: HashMap&lt;&amp;str, u32&gt; = HashMap::new();
+    for &amp;label in labels {
+        if label.is_empty() || label.len() &gt; 16 || !label.bytes().all(|b| b.is_ascii_lowercase()) {
+            return Err(LabelError::InvalidLabel);
+        }
+        if !counts.contains_key(label) &amp;&amp; counts.len() == MAX_LABELS {
+            return Err(LabelError::TooManyLabels);
+        }
+        let count = counts.entry(label).or_insert(0);
+        // Every increment corresponds to one input item, and MAX_ITEMS is 64.
+        *count += 1;
+    }
+    let mut rows = Vec::with_capacity(counts.len());
+    for (label, count) in counts {
+        rows.push((label.to_owned(), count));
+    }
+    rows.sort_unstable_by(|left, right| left.0.cmp(&amp;right.0));
+    Ok(rows)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn arrays_and_vectors_share_a_slice_contract() {
+        let fixed = [12, -8, 15, 9];
+        let variable = vec![12, -8, 15, 9];
+        assert_eq!(sample_bounds(&amp;fixed), Some((-8, 15)));
+        assert_eq!(sample_bounds(&amp;variable), sample_bounds(&amp;fixed));
+        assert_eq!(sample_bounds(&amp;[]), None);
+        assert_eq!(sample_bounds(&amp;[i32::MIN]), Some((i32::MIN, i32::MIN)));
+    }
+
+    #[test]
+    fn repeated_labels_are_counted_and_rows_are_deterministic() {
+        let expected = vec![(&quot;api&quot;.to_owned(), 2), (&quot;worker&quot;.to_owned(), 1)];
+        assert_eq!(
+            count_labels(&amp;[&quot;worker&quot;, &quot;api&quot;, &quot;api&quot;]),
+            Ok(expected.clone())
+        );
+        assert_eq!(count_labels(&amp;[&quot;api&quot;, &quot;worker&quot;, &quot;api&quot;]), Ok(expected));
+        assert_eq!(count_labels(&amp;[]), Ok(vec![]));
+    }
+
+    #[test]
+    fn item_distinct_and_text_boundaries_are_independent() {
+        assert_eq!(
+            count_labels(&amp;[&quot;api&quot;; MAX_ITEMS]),
+            Ok(vec![(&quot;api&quot;.into(), 64)])
+        );
+        assert_eq!(
+            count_labels(&amp;[&quot;api&quot;; MAX_ITEMS + 1]),
+            Err(LabelError::TooManyItems)
+        );
+        let eight = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;];
+        assert_eq!(count_labels(&amp;eight).unwrap().len(), MAX_LABELS);
+        assert_eq!(
+            count_labels(&amp;[&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;, &quot;i&quot;]),
+            Err(LabelError::TooManyLabels)
+        );
+        for bad in [&quot;&quot;, &quot;API&quot;, &quot;a b&quot;, &quot;é&quot;, &quot;abcdefghijklmnopq&quot;] {
+            assert_eq!(count_labels(&amp;[&quot;valid&quot;, bad]), Err(LabelError::InvalidLabel));
+        }
+        assert!(count_labels(&amp;[&quot;abcdefghijklmnop&quot;]).is_ok());
+    }
+
+    #[test]
+    fn result_owns_its_labels_after_input_is_gone() {
+        let rows = {
+            let label = String::from(&quot;api&quot;);
+            count_labels(&amp;[label.as_str()]).unwrap()
+        };
+        assert_eq!(rows, [(&quot;api&quot;.into(), 1)]);
+    }
+}
+</code></pre></div>
+<div class="code-wrap" data-source="projects/reference/p18-core-labs/examples/collections.rs" data-sha256="f0fd6674d4db1f0a48694f91ef607aa842861a18883537109bbc41cfbaffc438"><div class="code-label"><a href="../../projects/reference/p18-core-labs/examples/collections.rs">projects/reference/p18-core-labs/examples/collections.rs</a></div><pre><code>use core_rust_labs::collections::{LabelError, count_labels, sample_bounds};
+
+fn main() -&gt; Result&lt;(), LabelError&gt; {
+    let fixed = [12, -8, 15, 9];
+    let mut variable = vec![12, -8];
+    variable.push(15);
+    variable.push(9);
+    let marker: char = &#x27;é&#x27;;
+    let same_length: bool = fixed.len() == variable.len();
+    println!(
+        &quot;same length: {same_length}; marker UTF-8 bytes: {}&quot;,
+        marker.len_utf8()
+    );
+    println!(&quot;array bounds: {:?}&quot;, sample_bounds(&amp;fixed));
+    println!(&quot;vector bounds: {:?}&quot;, sample_bounds(&amp;variable));
+    for (label, count) in count_labels(&amp;[&quot;worker&quot;, &quot;api&quot;, &quot;api&quot;])? {
+        println!(&quot;{label}: {count}&quot;);
+    }
+    Ok(())
+}
+</code></pre></div>
+<p><code>HashMap</code> associates a key with a value. Here a borrowed label is the key and a count is the value. Lookup asks “what count belongs to this label?” rather than “what sits at sequence position three?” The map's iteration order is not a stable presentation contract. We explicitly sort the final rows before returning them. That makes report order independent of the map's internal arrangement and of the input order for this counting task.</p>
+<p><code>entry(label).or_insert(0)</code> finds the existing count or inserts zero and returns access to that count. The dereference <code>*count</code> updates the number, not the local reference itself. The increment cannot overflow here: at most 64 input items can contribute. That local proof justifies ordinary addition. It would need revisiting if the API became an unbounded stream with a retained counter. A checked operation is necessary when the declared bounds do not establish the arithmetic range.</p>
+<p>The map borrows labels only while the input remains available. Building the returned rows uses <code>to_owned</code> once per distinct label because callers should retain the report after the original strings disappear. This allocation serves a stated ownership requirement. The final comparison is a closure: <code>|left, right| ...</code> names two arguments to a small function supplied to sorting. It compares the first field of each tuple. We will study closure capture and iterator pipelines more deeply in the conversion lesson.</p>
+<h2 id="guided-construction-with-a-reproducible-source-checkpoint">Guided construction with a reproducible source checkpoint</h2>
+<p>From the course root, make a complete standalone copy with the command below. The helper copies only this module and example, writes a standalone manifest with no dependencies, and refuses an existing destination. It does not copy build caches or silently replace earlier learner work. This gives you a known runnable checkpoint to compare against while you investigate.</p>
+<pre><code class="language-sh">python3 projects/reference/p18-core-labs/reconstruct.py collections --name collections-lab
+cd learner-work/collections-lab
+mise exec -- cargo run --example collections
+mise exec -- cargo test</code></pre>
+<p>Now trace construction in three steps. First inspect <code>sample_bounds</code> and write the empty and single-element expectations before reading its loop. Second trace the count map after each of the three fixture labels; identify which insertion creates a new key. Third trace conversion to owned rows and sorting. In your copy, add one test where all values are positive and one where eight existing keys receive duplicates. Run those named tests, then the full package. Keep the first generated lockfile under version control.</p>
+<h2 id="intentional-mistake-use-container-order-as-business-order">Intentional mistake: use container order as business order</h2>
+<p>In a disposable learner edit, remove the explicit sorting step. This is deliberately outside the recommended contract. Your count totals may still be correct, and one run may even happen to print the expected order. Do not try to prove the problem by repeatedly running until luck produces a failure. The code now relies on an order the HashMap API does not promise. Review the documented iteration contract, restore sorting, and test equality after permuting input. A passing observation cannot strengthen an unspecified guarantee.</p>
+<h2 id="playbook-investigation-nine-items-exceed-an-eight-key-limit">Playbook investigation: nine items exceed an eight-key limit</h2>
+<p>A report says nine labels were rejected even though “only eight are allowed.” That statement omits whether the limit concerns items or distinct names. Hypothesis A says the ninth item always fails. Hypothesis B says the ninth <em>new key</em> fails. Use eight different names plus a duplicate for one experiment, and the same prefix plus a new ninth name for another. The accepted duplicate disproves A. Preserve the input-item limit at 64 in both cases so it cannot explain the result.</p>
+<p>Use the <a href="../../playbook.html">central playbook</a> to record exact inputs, predicted result categories, and observed results. The repair may be a clearer error message or correcting a caller's expectation, rather than changing the bound. If a product now needs nine distinct categories, increasing the cap is a requirement change that needs memory and acceptance review. Your experiment distinguishes two policies for these inputs; it does not prove all possible text is valid.</p>
+<h2 id="independent-practice-and-separately-revealed-help">Independent practice and separately revealed help</h2>
+<p>Add a query that returns the count for one requested label without changing the report. Specify whether an absent label returns zero or <code>None</code>, and whether an invalid query follows the same grammar as input labels. Then build a journal-status summary using a small vector of statuses and two counters. Explain why a two-variant enum may need no HashMap at all. Submit boundary cases, an ownership sketch, and one rejected alternative.</p>
+<details><summary>Hint 1: write the return contract first</summary><p>Zero can be a useful display value, but <code>None</code> preserves the distinction between absent and explicitly stored zero. Choose one meaning before selecting a standard-library method.</p></details>
+<details><summary>Hint 2: separate observation from mutation</summary><p>A query should not use an insertion path merely to obtain a default. For the fixed status enum, an exhaustive match can update the corresponding counter without allocating keys.</p></details>
+<details><summary>Reference approach after your attempt</summary><p>A borrowed-map helper can use <code>get</code> and copy the small count, returning <code>Option&lt;u32&gt;</code>. For returned sorted rows, a simple bounded search is also appropriate; replacing the representation solely to optimize eight rows needs evidence. The two-status summary can use a pair of named counters and exhaustive matching. These are proposed extensions, not claims that the current reference already exposes those APIs.</p></details>
+<h2 id="engineering-decisions-evidence-and-mastery">Engineering decisions, evidence, and mastery</h2>
+<p>The slice parameter avoids unnecessary ownership requirements, local construction prevents partial-result publication, borrowed keys avoid repeated intermediate string allocation, and owned sorted output establishes lifetime and order guarantees. A <code>BTreeMap</code> is a reasonable alternative when ordered iteration is itself useful; it changes lookup and traversal costs. A small linear vector can also be appropriate at this bounded size. No timing comparison is asserted. The choice should follow required operations and measured scale, not a rule that hash maps are always faster.</p>
+<p>Four focused tests cover slice sources, empty input, deterministic counts, independent resource limits, invalid text, and output ownership. Actual author checks are in the <a href="../../verification/core-labs-tests.log">lab test log</a>; independent review remains pending. To demonstrate mastery, choose a container for a changed requirement, explain the resulting ownership and ordering promises, and debug one failing boundary without reading the reference. A clean compile does not establish the business meaning of a count.</p>
+<aside><h3>When you get stuck</h3><p>Write the concrete element, key, and value types. Run only <code>mise exec -- cargo test collections::tests::item_distinct_and_text_boundaries_are_independent</code> in your learner package for a limit disagreement. Read the pinned HashMap entry and iteration documentation. Ask for review with the input list, distinct-key count, expected order, and one hypothesis your experiment disproved.</p></aside>
+<h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/book/ch03-02-data-types.html">Rust 1.99 Book: scalar and compound types</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.char.html">Rust 1.99: char and Unicode scalar values</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/vec/struct.Vec.html">Rust 1.99: Vec</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.slice.html">Rust 1.99: slice methods</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/collections/struct.HashMap.html">Rust 1.99: HashMap contracts</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/collections/hash_map/enum.Entry.html">Rust 1.99: HashMap Entry</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-1/01-modeling.html">Previous: Model valid task states and make invalid transitions visible</a><a href="../../lessons/stage-1/01-journal.html">Next: A versioned text format that rejects corruption</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-choose-a-collection-by-the-question-it-answers">Purpose: choose a collection by the question it answers</a><a href="#model-a-scalar-value-or-a-compound-value">Model: a scalar value or a compound value</a><a href="#arrays-vectors-and-slices">Arrays, vectors, and slices</a><a href="#predict-the-observable-result">Predict the observable result</a><a href="#read-the-complete-checkpoint">Read the complete checkpoint</a><a href="#guided-construction-with-a-reproducible-source-checkpoint">Guided construction with a reproducible source checkpoint</a><a href="#intentional-mistake-use-container-order-as-business-order">Intentional mistake: use container order as business order</a><a href="#playbook-investigation-nine-items-exceed-an-eight-key-limit">Playbook investigation: nine items exceed an eight-key limit</a><a href="#independent-practice-and-separately-revealed-help">Independent practice and separately revealed help</a><a href="#engineering-decisions-evidence-and-mastery">Engineering decisions, evidence, and mastery</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,50 @@
+$ ['mise', 'exec', 'cargo:cargo-fuzz@0.13.2', '--', 'rustup', 'run', 'nightly-2026-10-08', 'cargo', 'fuzz', 'run', '--fuzz-dir', '/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz', '--target-dir', '/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz/target', 'bad-oracle', '/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz/crab-only', '--', '-runs=1', '-timeout=2', '-rss_limit_mb=512', '-artifact_prefix=/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz/artifacts/']
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.05s
+    Finished `release` profile [optimized + debuginfo] target(s) in 0.01s
+     Running `.course-cache/expression-fuzz/target/aarch64-apple-darwin/release/bad-oracle -artifact_prefix=/Users/billyribeiro/Desktop/rust-course/rust-course/experiments/expression-fuzz/artifacts/bad-oracle/ -runs=1 -timeout=2 -rss_limit_mb=512 -artifact_prefix=/Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz/artifacts/ /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz/crab-only`
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 2836809973
+INFO: Loaded 1 modules   (872 inline 8-bit counters): 872 [0x10031a2a0, 0x10031a608), 
+INFO: Loaded 1 PC tables (872 PCs): 872 [0x10031a608,0x10031dc88), 
+.course-cache/expression-fuzz/target/aarch64-apple-darwin/release/bad-oracle: Running 1 inputs 1 time(s) each.
+Running: /Users/billyribeiro/Desktop/rust-course/.course-cache/expression-fuzz/crab-only
+
+thread '<unnamed>' (943968) panicked at fuzz_targets/bad_oracle.rs:11:13:
+assertion `left == right` failed: INTENTIONALLY WRONG: each character occupies one byte
+  left: 4
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+==66591== ERROR: libFuzzer: deadly signal
+    #0 0x000100b8f654 in __sanitizer_print_stack_trace+0x28 (librustc-nightly_rt.asan.dylib:arm64+0x87654)
+    #1 0x00010029c7a0 in fuzzer::PrintStackTrace()+0x30 (bad-oracle:arm64+0x1000187a0)
+    #2 0x0001002900e0 in fuzzer::Fuzzer::CrashCallback()+0x54 (bad-oracle:arm64+0x10000c0e0)
+    #3 0x000186421740 in _sigtramp+0x34 (libsystem_platform.dylib:arm64e+0x3740)
+    #4 0x0001864178d4 in pthread_kill+0x124 (libsystem_pthread.dylib:arm64e+0x68d4)
+    #5 0x00018631d974 in abort+0x90 (libsystem_c.dylib:arm64e+0x78974)
+    #6 0x0001002f8858 in _RNvNtNtNtCs4ZSqIJKOQLa_3std3sys3pal4unix14abort_internal+0x8 (bad-oracle:arm64+0x100074858)
+    #7 0x0001002f85f0 in _RNvNtCs4ZSqIJKOQLa_3std7process5abort+0x8 (bad-oracle:arm64+0x1000745f0)
+    #8 0x0001002f3a0c in _RNCNvCs1WnTIrOL4Pq_13libfuzzer_sys10initialize0B3_+0xb8 (bad-oracle:arm64+0x10006fa0c)
+    #9 0x0001002dc5f0 in _RNvNtCs4ZSqIJKOQLa_3std9panicking15panic_with_hook+0x26c (bad-oracle:arm64+0x1000585f0)
+    #10 0x0001002ce8f4 in _RNCNvNtCs4ZSqIJKOQLa_3std9panicking13panic_handler0B5_+0x40 (bad-oracle:arm64+0x10004a8f4)
+    #11 0x0001002c75dc in _RINvNtNtCs4ZSqIJKOQLa_3std3sys9backtrace26___rust_end_short_backtraceNCNvNtB6_9panicking13panic_handler0zEB6_+0x8 (bad-oracle:arm64+0x1000435dc)
+    #12 0x0001002ceef8 in _RNvCs1S7AYQswry7_7___rustc17rust_begin_unwind+0x1c (bad-oracle:arm64+0x10004aef8)
+    #13 0x0001002f902c in _RNvNtCs8ky83SScw0Q_4core9panicking9panic_fmt+0x24 (bad-oracle:arm64+0x10007502c)
+    #14 0x0001002f8f50 in _RNvNtCs8ky83SScw0Q_4core9panicking19assert_failed_inner+0xb8 (bad-oracle:arm64+0x100074f50)
+    #15 0x0001002f8c4c in _RINvNtCs8ky83SScw0Q_4core9panicking13assert_failedjjEB4_+0x24 (bad-oracle:arm64+0x100074c4c)
+    #16 0x000100285cd8 in _RNvNvCslaM0NZ3ohh9_10bad_oracle1__19___libfuzzer_sys_run bad_oracle.rs:11
+    #17 0x000100287a60 in rust_fuzzer_test_input lib.rs:276
+    #18 0x00010028e6f8 in _RINvNvNtCs4ZSqIJKOQLa_3std9panicking12catch_unwind7do_callNCNvCs1WnTIrOL4Pq_13libfuzzer_sys15test_input_wrap0lEBY_+0xc4 (bad-oracle:arm64+0x10000a6f8)
+    #19 0x00010028f330 in __rust_try+0x18 (bad-oracle:arm64+0x10000b330)
+    #20 0x00010028dfc8 in LLVMFuzzerTestOneInput+0x16c (bad-oracle:arm64+0x100009fc8)
+    #21 0x00010029195c in fuzzer::Fuzzer::ExecuteCallback(unsigned char const*, unsigned long)+0x158 (bad-oracle:arm64+0x10000d95c)
+    #22 0x0001002ae43c in fuzzer::RunOneTest(fuzzer::Fuzzer*, char const*, unsigned long)+0xdc (bad-oracle:arm64+0x10002a43c)
+    #23 0x0001002b3010 in fuzzer::FuzzerDriver(int*, char***, int (*)(unsigned char const*, unsigned long))+0x1b24 (bad-oracle:arm64+0x10002f010)
+    #24 0x0001002c0acc in main+0x24 (bad-oracle:arm64+0x10003cacc)
+    #25 0x00018604c4e0 in start+0x1b4c (dyld:arm64e+0x204e0)
+
+NOTE: libFuzzer has rudimentary signal handlers.
+      Combine libFuzzer with AddressSanitizer or similar for better crash reports.
+SUMMARY: libFuzzer: deadly signal
+────────────────────────────────────────────────────────────────────────────────
+
+Error: Fuzz target exited with exit status: 77

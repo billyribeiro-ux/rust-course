@@ -1,0 +1,280 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Profile data layout and distinguish memory from locality · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="07-layout" data-lesson="07-layout"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Profile data layout and distinguish memory from locality</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 07 / Performance and unsafe Rust</div><h1>Profile data layout and distinguish memory from locality</h1><p class="lead">Compare complete AoS and SoA records with bounded release profiling, separate phase costs, and measured process memory.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-6/06-boundaries.html">Rendering, security and alternative clients</a></li><li><a href="../../lessons/stage-2/02-traits.html">Traits as required capabilities, not decoration</a></li></ul><ul><li>Explain hot-field locality without claiming a universal cache result.</li><li>Preserve complete records while changing layout.</li><li>Interpret phase timings, payload capacity, allocation requests and peak RSS separately.</li><li>Design a controlled experiment that can disprove a favored explanation.</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#capacity">capacity</a> · <a href="../../glossary.html#checksum">checksum</a> · <a href="../../glossary.html#lockfile">lockfile</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#ownership">ownership</a> · <a href="../../glossary.html#replay">replay</a> · <a href="../../glossary.html#stack">stack</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p12">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><section><h2 id="purpose-locate-a-cost-before-changing-the-representation">Purpose: locate a cost before changing the representation</h2>
+<p>A snapshot service repeatedly totals price times quantity across many records. Its records also contain timestamps, account identifiers, symbols, and audit tags. Those fields remain required, but this query does not read them. The question is precise: does grouping the queried fields into separate contiguous arrays reduce the time for this read-mostly operation while preserving every logical record? This lab investigates that question without changing P12's replay engine or claiming to model an exchange.</p>
+<p>The earlier projects taught bounded processing and correct state transitions. Those constraints still apply. A representation change must preserve data, respect memory limits, and produce the same result. Performance is an additional requirement with a named workload, not permission to remove validation or silently discard fields.</p>
+<h2 id="plain-model-useful-bytes-and-neighboring-bytes">Plain model: useful bytes and neighboring bytes</h2>
+<p>An array of structures, abbreviated AoS, stores complete records consecutively. Here each record occupies 64 bytes on the measured target. A structure of arrays, SoA, stores prices together, quantities together, and cold metadata together. The price and quantity columns together occupy 16 bytes per logical record; all metadata is still retained in another vector. Both layouts hold the same 48,000,000 bytes of reserved element storage for 750,000 records.</p>
+<p>Processors transfer memory in blocks and exploit nearby accesses. A scan that needs only two fields may fetch less irrelevant data when those fields are grouped. That is a reason to investigate locality, not a guaranteed speedup. Compiler vectorization, prefetching, cache capacities, alignment, and access order also matter. A query that consumes complete records or frequently inserts and removes rows may favor a different organization.</p>
+<p>The example uses <code>repr(C)</code> to make its illustrative field order explicit and prints <code>size_of::&lt;Row&gt;()</code>. Ordinary Rust struct field order is not a wire-format promise. Even a known in-memory layout is not permission to serialize raw padding or reinterpret arbitrary bytes as a valid value. This safe example accesses fields through Rust values throughout.</p>
+<h2 id="predict-before-measuring">Predict before measuring</h2>
+<p>Predict whether SoA must use less total memory, whether it must allocate fewer buffers, and whether its construction phase must be faster. Then identify exactly what the scan timer includes. A useful prediction separates three quantities: retained payload, bytes relevant to a query, and elapsed time. They are related but are not interchangeable.</p>
+<pre><code># Working directory: rust-course/projects
+mise exec -- cargo test -p p12-replay --examples
+mise exec -- cargo build --release -p p12-replay --examples
+mise exec -- cargo run --release -p p12-replay --example layout_profile -- aos 750000 80
+mise exec -- cargo run --release -p p12-replay --example layout_profile -- soa 750000 80</code></pre>
+<p>The retained payload is equal because SoA preserves the cold fields. AoS makes one vector reservation; SoA makes three. The measured SoA construction median was higher, even though its repeated scan was faster. Thus neither “more allocations always means slower overall” nor “a faster scan means less resident memory” explains the complete observation.</p>
+<h2 id="runnable-example-and-its-boundaries">Runnable example and its boundaries</h2>
+<div class="code-wrap" data-source="projects/reference/p12-replay/examples/layout_profile.rs" data-sha256="11131b3ae4a5b109acb0f6213e9eab29f83f2679d3e7d643f7aa30f96c8ce6c3"><div class="code-label"><a href="../../projects/reference/p12-replay/examples/layout_profile.rs">projects/reference/p12-replay/examples/layout_profile.rs</a></div><pre><code>//! Bounded synthetic snapshot analytics: identical records, different layouts.
+//! Run in release mode; stdout is one machine-readable measurement row.
+use std::{hint::black_box, mem::size_of, process::ExitCode, time::Instant};
+
+const MAX_ROWS: usize = 1_000_000;
+const MAX_PASSES: usize = 200;
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct Cold {
+    timestamp: u64,
+    account: u64,
+    symbol: [u8; 16],
+    audit_tag: [u8; 16],
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct Row {
+    price: u64,
+    quantity: u64,
+    cold: Cold,
+}
+
+fn fixture(index: usize) -&gt; Row {
+    let i = index as u64;
+    Row {
+        price: 10_000 + i % 90_000,
+        quantity: 1 + i % 100,
+        cold: Cold {
+            timestamp: 1_000_000 + i,
+            account: i % 997,
+            symbol: [(i % 26) as u8 + b&#x27;A&#x27;; 16],
+            audit_tag: [(i % 251) as u8; 16],
+        },
+    }
+}
+
+fn reserved&lt;T&gt;(rows: usize) -&gt; Result&lt;Vec&lt;T&gt;, std::collections::TryReserveError&gt; {
+    let mut values = Vec::new();
+    values.try_reserve_exact(rows)?;
+    Ok(values)
+}
+
+enum Data {
+    Aos(Vec&lt;Row&gt;),
+    Soa {
+        prices: Vec&lt;u64&gt;,
+        quantities: Vec&lt;u64&gt;,
+        cold: Vec&lt;Cold&gt;,
+    },
+}
+
+impl Data {
+    fn new(mode: &amp;str, rows: usize) -&gt; Result&lt;Self, Box&lt;dyn std::error::Error&gt;&gt; {
+        match mode {
+            &quot;aos&quot; =&gt; {
+                let mut values = reserved(rows)?;
+                values.extend((0..rows).map(fixture));
+                Ok(Self::Aos(values))
+            }
+            &quot;soa&quot; =&gt; {
+                let mut prices = reserved(rows)?;
+                let mut quantities = reserved(rows)?;
+                let mut cold = reserved(rows)?;
+                for i in 0..rows {
+                    let row = fixture(i);
+                    prices.push(row.price);
+                    quantities.push(row.quantity);
+                    cold.push(row.cold);
+                }
+                Ok(Self::Soa {
+                    prices,
+                    quantities,
+                    cold,
+                })
+            }
+            _ =&gt; Err(&quot;layout must be aos or soa&quot;.into()),
+        }
+    }
+
+    fn row(&amp;self, index: usize) -&gt; Row {
+        match self {
+            Self::Aos(values) =&gt; values[index],
+            Self::Soa {
+                prices,
+                quantities,
+                cold,
+            } =&gt; Row {
+                price: prices[index],
+                quantity: quantities[index],
+                cold: cold[index],
+            },
+        }
+    }
+
+    fn capacity_bytes(&amp;self) -&gt; usize {
+        match self {
+            Self::Aos(values) =&gt; values.capacity() * size_of::&lt;Row&gt;(),
+            Self::Soa {
+                prices,
+                quantities,
+                cold,
+            } =&gt; {
+                (prices.capacity() + quantities.capacity()) * size_of::&lt;u64&gt;()
+                    + cold.capacity() * size_of::&lt;Cold&gt;()
+            }
+        }
+    }
+
+    fn allocation_requests(&amp;self) -&gt; usize {
+        match self {
+            Self::Aos(_) =&gt; 1,
+            Self::Soa { .. } =&gt; 3,
+        }
+    }
+
+    // Generator bounds prove this sum &lt;= 1_000_000 * 99_999 * 100, below u64::MAX.
+    // No unchecked external records enter this private fixture representation.
+    fn notional(&amp;self) -&gt; u64 {
+        match self {
+            Self::Aos(values) =&gt; black_box(values.as_slice())
+                .iter()
+                .map(|row| row.price * row.quantity)
+                .sum(),
+            Self::Soa {
+                prices, quantities, ..
+            } =&gt; black_box(prices.as_slice())
+                .iter()
+                .zip(black_box(quantities.as_slice()))
+                .map(|(price, quantity)| price * quantity)
+                .sum(),
+        }
+    }
+}
+
+fn bounded_count(input: &amp;str, maximum: usize) -&gt; Result&lt;usize, &amp;&#x27;static str&gt; {
+    if input.len() &gt; 20 {
+        return Err(&quot;count text is too long&quot;);
+    }
+    match input.parse::&lt;usize&gt;() {
+        Ok(value) if (1..=maximum).contains(&amp;value) =&gt; Ok(value),
+        _ =&gt; Err(&quot;count is invalid or outside the documented bound&quot;),
+    }
+}
+
+fn run() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    let args = std::env::args_os()
+        .skip(1)
+        .map(|value| value.into_string().map_err(|_| &quot;arguments must be UTF-8&quot;))
+        .collect::&lt;Result&lt;Vec&lt;_&gt;, _&gt;&gt;()?;
+    let [mode, rows, passes] = args.as_slice() else {
+        return Err(&quot;usage: layout_profile &lt;aos|soa&gt; &lt;rows:1..1000000&gt; &lt;passes:1..200&gt;&quot;.into());
+    };
+    let rows = bounded_count(rows, MAX_ROWS)?;
+    let passes = bounded_count(passes, MAX_PASSES)?;
+    if cfg!(debug_assertions) {
+        return Err(&quot;comparative measurements require --release&quot;.into());
+    }
+    let begin = Instant::now();
+    let data = Data::new(mode, rows)?;
+    let generation_ns = begin.elapsed().as_nanos();
+    let begin = Instant::now();
+    for index in 0..rows {
+        if data.row(index) != fixture(index) {
+            return Err(&quot;full fixture comparison failed&quot;.into());
+        }
+    }
+    let expected: u64 = (0..rows)
+        .map(|i| {
+            let row = fixture(i);
+            row.price * row.quantity
+        })
+        .sum();
+    let validation_ns = begin.elapsed().as_nanos();
+    for _ in 0..2 {
+        if black_box(data.notional()) != expected {
+            return Err(&quot;warm-up result differs from fixture oracle&quot;.into());
+        }
+    }
+    let begin = Instant::now();
+    let mut checksum = 0u64;
+    for _ in 0..passes {
+        checksum += black_box(data.notional());
+    }
+    let scan_ns = begin.elapsed().as_nanos();
+    if checksum != expected * passes as u64 {
+        return Err(&quot;measured result differs from fixture oracle&quot;.into());
+    }
+    println!(
+        &quot;layout={mode}\trows={rows}\tpasses={passes}\trow_bytes={}\tcapacity_bytes={}\tallocation_requests={}\tgeneration_ns={generation_ns}\tvalidation_ns={validation_ns}\tscan_ns={scan_ns}\tchecksum={checksum}&quot;,
+        size_of::&lt;Row&gt;(),
+        data.capacity_bytes(),
+        data.allocation_requests()
+    );
+    Ok(())
+}
+
+fn main() -&gt; ExitCode {
+    match run() {
+        Ok(()) =&gt; ExitCode::SUCCESS,
+        Err(error) =&gt; {
+            eprintln!(&quot;layout profile: {error}&quot;);
+            ExitCode::FAILURE
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn layouts_preserve_every_field_and_analytics_for_boundary_sizes() {
+        for count in [0, 1, 17, 99, 100, 101, 997, 1025] {
+            let aos = Data::new(&quot;aos&quot;, count).unwrap();
+            let soa = Data::new(&quot;soa&quot;, count).unwrap();
+            for index in 0..count {
+                assert_eq!(aos.row(index), soa.row(index));
+            }
+            assert_eq!(aos.notional(), soa.notional());
+        }
+        assert_eq!(Data::new(&quot;aos&quot;, 2).unwrap().notional(), 30_002);
+        assert_eq!(fixture(0).cold.symbol, [b&#x27;A&#x27;; 16]);
+        assert_eq!(fixture(26).cold.symbol, [b&#x27;A&#x27;; 16]);
+    }
+    #[test]
+    fn limits_fail_before_allocating_and_modes_are_explicit() {
+        for bad in [&quot;0&quot;, &quot;-1&quot;, &quot;1000001&quot;, &quot;NaN&quot;, &quot;999999999999999999999&quot;] {
+            assert!(bounded_count(bad, MAX_ROWS).is_err());
+        }
+        assert_eq!(bounded_count(&quot;1000000&quot;, MAX_ROWS), Ok(MAX_ROWS));
+        assert!(Data::new(&quot;typo&quot;, 10).is_err());
+    }
+}
+</code></pre></div>
+<p>The command validates a maximum of one million rows and 200 passes before allocation. Count text is bounded, non-Unicode arguments are rejected explicitly, and allocation reservation failures return errors. The fixture generates positive bounded integer prices and quantities. Those closed bounds keep the sum and repeated checksum inside <code>u64</code>; this is not a summation API for arbitrary external numbers.</p>
+<p>Construction starts before reserving and filling the vectors. Validation reconstructs every complete record and compares it with the deterministic fixture, including metadata unused by the query. It also obtains an expected numeric result. Two warm-up scans precede the measured scans. The scan timer includes the repeated reductions and their accumulated checksum; it excludes construction, full-record validation, warm-ups, output, and final destruction. <code>black_box</code> discourages optimization based on visible inputs and outputs but is a best-effort tool, not a guarantee about generated instructions.</p>
+<h2 id="guided-checkpoint-profile-one-complete-process">Guided checkpoint: profile one complete process</h2>
+<p>On macOS, build once and use the included resource-counter driver. Run from the course root; choose a new output directory for every investigation. The driver refuses an existing directory, alternates variant order across seven pairs, and invokes each sample in a separate process.</p>
+<pre><code>python3 projects/reference/p12-replay/profile-layout.py \
+  --binary .local/native-target/release/examples/layout_profile \
+  --output .local/layout-profile-first</code></pre>
+<p>This command assumes the course's mise configuration supplied the build target. If you selected a different target directory, pass the corresponding executable path. The Rust example is portable; this driver specifically uses macOS <code>/usr/bin/time -l</code>. On another operating system, choose its documented profiler and record its units instead of copying macOS counter interpretations.</p>
+<p>The outer process timer includes startup, construction, validation, warm-ups, measured scans, output, destruction, and profiler overhead. Maximum resident set size is a process-wide peak. It includes more than vector elements and says nothing about how many allocation requests occurred. The installed macOS <code>getrusage(2)</code> manual identifies this counter's unit as bytes; GNU time commonly reports a different unit. Verify the actual tool rather than trusting a familiar-looking label.</p>
+<h2 id="observed-evidence-and-what-it-means">Observed evidence and what it means</h2>
+<p>The historical recorded release run used Rust 1.99.0 on an Apple M3 Ultra with 28 logical CPUs and 96 GiB of memory. Every sample contained 750,000 records and 80 measured passes, with two warm-ups. All complete-record comparisons passed, and all 14 samples produced checksum <code>163062480000000</code>. Background load, affinity, power, and thermal state were not controlled.</p>
+<table><thead><tr><th>Measured quantity</th><th>AoS median</th><th>SoA median</th></tr></thead><tbody><tr><td>Construction</td><td>4.204 ms</td><td>5.166 ms</td></tr><tr><td>80 scans</td><td>44.108 ms</td><td>17.000 ms</td></tr><tr><td>Whole observed process</td><td>58.530 ms</td><td>31.150 ms</td></tr><tr><td>Maximum RSS</td><td>49,872,896 bytes</td><td>49,938,432 bytes</td></tr></tbody></table>
+<p>The SoA scan median is about 0.385 times the AoS scan median in this experiment. The scan ranges were 42.926–46.589 ms and 15.864–17.429 ms respectively. These are observations of a synthetic hot-field query. They do not establish a universal speedup, a service latency guarantee, or a lower memory requirement. Medians from separate phases should not be added as though they came from one representative execution.</p>
+<p>This is resource profiling, not a call-stack or hardware cache-miss profile. Locality is a plausible explanation consistent with the access pattern, while code generation and vectorization are competing explanations. The measurements do not isolate their contributions. Use a suitable CPU profiler or inspect generated code if a decision requires that attribution. Raw process counters and all sample commands are preserved in the linked evidence.</p>
+<h2 id="intentional-mistake-time-unequal-work">Intentional mistake: time unequal work</h2>
+<p>In a disposable learner copy, remove the cold metadata vector from SoA and compare it with the original AoS. The full-record validation should prevent this reduced representation from being accepted as equivalent. Treat that failure as expected until you actually run the mutation. A faster program that forgot required data answers a different question. Another misleading comparison would include construction for AoS but time only the reduction for SoA; write both timer boundaries before accepting such a report.</p>
+<h2 id="apply-the-problem-solving-playbook">Apply the problem-solving playbook</h2>
+<p>Observation: the actual SoA scan was faster, but its RSS was slightly higher. Hypothesis A says the improvement occurred because SoA discarded metadata and retained less memory. Hypothesis B says the same data was reorganized so the query accesses a smaller hot subset. Distinguish them by inspecting reserved capacities and comparing every reconstructed field. The actual run retained 48 MB of element storage in both representations and passed full-record comparisons, disproving A for this implementation.</p>
+<p>B remains compatible with the evidence, but it is not a complete causal proof: the two loops also give the optimizer different opportunities. A next experiment could add a query that reads every field, holding row count and build profile fixed, or use cache-miss and instruction profiles. State the expected discriminator first. Capture the workload, raw samples, equality evidence, rejected hypothesis, and residual uncertainty in the <a href="../../playbook.html">problem-solving playbook</a>. An AI review should explain those controls before recommending a representation rewrite.</p>
+<h2 id="independent-practice-hints-and-worked-direction">Independent practice, hints, and worked direction</h2>
+<p>Measure 10,000 rows, then 750,000 rows with the same number of passes. Separately design a whole-record checksum query. Keep all logical fields and compare complete output before timing. Decide whether your application performs enough repeated scans to recover SoA's observed construction cost; do not infer that crossover from this one workload alone.</p>
+<details><summary>Hint 1: preserve the experimental cases</summary><p>Keep samples of different row counts in different directories.</p></details><details><summary>Hint 2: define equivalent work</summary><p>A whole-record query must read metadata in both variants, not merely return the original notional sum.</p></details><details><summary>Hint 3: choose the request boundary</summary><p>Report per-sample construction-plus-query totals if that is the real request boundary.</p></details><details><summary>Worked direction</summary><p>First establish matching results, then repeat each controlled case, and finally choose a representation for the measured workload. A result showing no worthwhile improvement is a useful outcome.</p></details>
+<h2 id="reconstruct-a-working-checkpoint">Reconstruct a working checkpoint</h2><p>From the course root, create a fresh final P12 study copy. The helper preserves originals, copies the exact lockfile, and refuses to overwrite an existing destination. Reuse your prior copy or choose another name when repeating the exercise.</p><pre><code>python3 scripts/start-checkpoint.py p12 final --destination learner-work/layout-investigation
+mise exec -- cargo test --locked --all-targets --manifest-path learner-work/layout-investigation/Cargo.toml
+mise exec -- cargo run --release --locked --manifest-path learner-work/layout-investigation/Cargo.toml --example layout_profile -- aos 750000 80</code></pre><p>The <a href="../../projects/checkpoints/p12-replay/index.html">P12 checkpoint guide</a> also provides the earlier exact-price milestone. Mise keeps build output in the shared native target.</p><h2 id="when-you-get-stuck">When you get stuck</h2>
+<p>Run <code>mise exec -- cargo test -p p12-replay --example layout_profile</code> before examining timing. Confirm <code>--release</code>, the printed row count, and the payload capacity. If memory figures appear absurd, inspect the profiler's units and raw output. If a result differs, reduce to one or 17 records and compare reconstructed fields. Request review with both commands, all samples, equality checks, timer boundaries, and your two competing explanations.</p>
+<h2 id="engineering-decisions-evidence-limits-and-mastery">Engineering decisions, evidence limits, and mastery</h2>
+<p>A bounded immutable fixture and separate phases make this experiment reviewable. Safe vectors and typed records suffice; unsafe pointer traversal or a custom allocator would add obligations without answering the current question. Three buffer reservations are a visible tradeoff for narrower query arrays. Evolve the design only when an actual workload requires different update, ownership, or latency behavior.</p>
+<p>The two layout tests passed, strict Clippy passed, and the release example produced 14 successful profiled samples. See <a href="../../verification/performance-bridge-profile.json">commands, source hashes, results and limitations</a> and <a href="../../verification/performance-layout-resources.log">raw resource counters</a>. Independent review remains pending. Mastery means explaining why equal total memory can coexist with different scan times, identifying an unmeasured causal factor, and proposing the next experiment without claiming the result in advance.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/std/vec/struct.Vec.html">Rust standard library: Vec guarantees and capacity</a></li><li><a href="https://doc.rust-lang.org/std/hint/fn.black_box.html">Rust standard library: black_box limitations</a></li><li><a href="https://doc.rust-lang.org/reference/type-layout.html">Rust Reference: type layout and representations</a></li><li><a href="https://developer.apple.com/documentation/kernel/rusage/1577554-ru_maxrss">Apple: maximum resident set size resource field</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-6/06-boundaries.html">Previous: Rendering, security and alternative clients</a><a href="../../lessons/stage-7/07-allocation-dispatch.html">Next: Choose ownership and dispatch without hidden cost claims</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-locate-a-cost-before-changing-the-representation">Purpose: locate a cost before changing the representation</a><a href="#plain-model-useful-bytes-and-neighboring-bytes">Plain model: useful bytes and neighboring bytes</a><a href="#predict-before-measuring">Predict before measuring</a><a href="#runnable-example-and-its-boundaries">Runnable example and its boundaries</a><a href="#guided-checkpoint-profile-one-complete-process">Guided checkpoint: profile one complete process</a><a href="#observed-evidence-and-what-it-means">Observed evidence and what it means</a><a href="#intentional-mistake-time-unequal-work">Intentional mistake: time unequal work</a><a href="#apply-the-problem-solving-playbook">Apply the problem-solving playbook</a><a href="#independent-practice-hints-and-worked-direction">Independent practice, hints, and worked direction</a><a href="#reconstruct-a-working-checkpoint">Reconstruct a working checkpoint</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#engineering-decisions-evidence-limits-and-mastery">Engineering decisions, evidence limits, and mastery</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

@@ -1,0 +1,13 @@
+projects/target/
+**/target/
+**/node_modules/
+**/dist/
+learner-work/
+.local/
+*.db
+*.sqlite*
+.env
+.env.*
+workbench-events*
+projects/ui-console/pkg/
+__pycache__/

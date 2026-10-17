@@ -1,0 +1,30 @@
+    Finished `release` profile [optimized] target(s) in 0.01s
+   Doc-tests expression_language
+
+running 1 test
+test reference/p05-expressions/src/lib.rs - (line 2) ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.36s; merged doctests compilation took 0.15s
+   Doc-tests p12_replay
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests p13_unsafe
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests workshop_calculator
+
+running 2 tests
+test reference/p01-calculator/src/conversion.rs - conversion (line 3) ... ok
+test reference/p01-calculator/src/lib.rs - (line 2) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+all doctests ran in 0.34s; merged doctests compilation took 0.14s

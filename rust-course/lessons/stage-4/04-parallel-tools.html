@@ -1,0 +1,224 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Compare serial, scoped threads and bounded Rayon work · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="04-parallel-tools" data-lesson="04-parallel-tools"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Compare serial, scoped threads and bounded Rayon work</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 04 / Concurrency and async</div><h1>Compare serial, scoped threads and bounded Rayon work</h1><p class="lead">Apply Rayon to an explicitly bounded CPU batch, preserve ordered outputs, and distinguish that choice from blocking file I/O.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-4/04-indexer.html">Bound memory and make concurrent results reproducible</a></li></ul><ul><li>Compare three scheduling models against the same complete output contract.</li><li>Configure an explicit Rayon pool and bound retained input.</li><li>Distinguish CPU parallelism from blocking I/O policy.</li><li>Explain why correctness evidence does not establish a speedup.</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#cancellation">cancellation</a> · <a href="../../glossary.html#crate">crate</a> · <a href="../../glossary.html#iterator">iterator</a> · <a href="../../glossary.html#lifetime">lifetime</a> · <a href="../../glossary.html#lockfile">lockfile</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#ownership">ownership</a> · <a href="../../glossary.html#slice">slice</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p07">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><section><h2 id="purpose-choose-parallel-tools-for-the-work-being-scheduled">Purpose: choose parallel tools for the work being scheduled</h2>
+<p>P07 combines blocking file reads with per-byte counting and fingerprinting. Its bounded worker pool is one reasonable design, but learning Rust concurrency also requires knowing when a parallel iterator is a better fit. This focused experiment compares serial iteration, explicitly scoped threads, and Rayon over the same already-read bounded batch. It adds a maintained parallel tool without replacing the file indexer's I/O and cancellation policy.</p>
+<p>The distinction matters. CPU work keeps a worker busy computing. Blocking I/O occupies a worker while it waits for an external event. Increasing worker count may help one workload, saturate a device in another, or add overhead to a small calculation. Start by identifying which resource limits the actual task.</p>
+<h2 id="plain-model-the-same-function-three-scheduling-choices">Plain model: the same function, three scheduling choices</h2>
+<p>Each input buffer represents one file already read into memory. All three strategies apply the same deterministic noncryptographic fingerprint function and return one result per input in input order. Serial iteration processes the batch on the calling thread. Scoped threads divide it into a bounded number of chunks and join every started worker. Rayon splits independent iterator work inside an explicitly constructed local thread pool.</p>
+<p>The experiment limits the batch to 128 buffers, each at most 64 KiB: at most 8 MiB of input payload. It limits requested worker counts to one through eight. This payload bound excludes vector metadata, worker stacks, and runtime allocations. Unlike the streaming reference, it retains the complete input batch. That memory tradeoff is part of the design, not an invisible convenience.</p>
+<table><thead><tr><th>Choice</th><th>Useful property</th><th>Cost or obligation</th></tr></thead><tbody><tr><td>Serial iterator</td><td>Simple ordered baseline, no worker scheduling</td><td>Independent CPU work stays on one caller</td></tr><tr><td>Scoped threads</td><td>Explicit partition and lifetime boundary</td><td>Thread creation, joining, load balance, and failures are application responsibilities</td></tr><tr><td>Rayon parallel iterator</td><td>Composable CPU parallelism and runtime work distribution</td><td>Pool budget, task granularity, input ownership, and blocking behavior still need decisions</td></tr></tbody></table>
+<h2 id="predict-before-running">Predict before running</h2>
+<p>Predict whether 17 inputs processed by four workers should lose a partial chunk, whether completion order must become result order, and whether specifying four Rayon workers necessarily uses the machine's full logical CPU count. Then run the isolated experiment from <code>rust-course/projects</code>:</p>
+<pre><code>mise exec -- cargo test --locked --manifest-path experiments/p07-rayon/Cargo.toml
+mise exec -- cargo run --release --locked --manifest-path experiments/p07-rayon/Cargo.toml</code></pre>
+<p>The executed demo reported <code>files=32 input_bytes=1048576 workers=4 equal_ordered_outputs=true</code> and printed all 32 fingerprints. Tests compared the entire result vectors for empty, single, uneven, and maximum-file-count batches at worker counts 1, 2, 4, and 8. No timing was collected for this comparison, so the evidence establishes behavior for those cases rather than a speed ranking.</p>
+<h2 id="runnable-implementation-and-dependency-choice">Runnable implementation and dependency choice</h2>
+<div class="code-wrap" data-source="projects/experiments/p07-rayon/src/lib.rs" data-sha256="570125be102c844bc579d998cfc69312309cdc6ef1b11caa3b79e6309679d42e"><div class="code-label"><a href="../../projects/experiments/p07-rayon/src/lib.rs">projects/experiments/p07-rayon/src/lib.rs</a></div><pre><code>//! CPU-only fingerprints over an explicitly bounded, already-read batch.
+//! This experiment does not perform file I/O or replace the streaming indexer.
+use rayon::prelude::*;
+use std::{fmt, io, thread};
+
+pub const MAX_FILES: usize = 128;
+pub const MAX_FILE_BYTES: usize = 64 * 1024;
+pub const MAX_WORKERS: usize = 8;
+
+#[derive(Debug)]
+pub enum Error {
+    InvalidBounds,
+    ThreadSpawn(io::Error),
+    ThreadPanicked,
+    PoolBuild(rayon::ThreadPoolBuildError),
+}
+impl fmt::Display for Error {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        match self {
+            Self::InvalidBounds =&gt; f.write_str(
+                &quot;batch exceeds 128 files or 64 KiB per file, or workers are outside 1..=8&quot;,
+            ),
+            Self::ThreadSpawn(error) =&gt; write!(f, &quot;could not start scoped worker: {error}&quot;),
+            Self::ThreadPanicked =&gt; f.write_str(&quot;a scoped CPU worker panicked&quot;),
+            Self::PoolBuild(error) =&gt; write!(f, &quot;could not construct Rayon pool: {error}&quot;),
+        }
+    }
+}
+impl std::error::Error for Error {
+    fn source(&amp;self) -&gt; Option&lt;&amp;(dyn std::error::Error + &#x27;static)&gt; {
+        match self {
+            Self::ThreadSpawn(error) =&gt; Some(error),
+            Self::PoolBuild(error) =&gt; Some(error),
+            _ =&gt; None,
+        }
+    }
+}
+
+fn validate(inputs: &amp;[Vec&lt;u8&gt;]) -&gt; Result&lt;(), Error&gt; {
+    if inputs.len() &gt; MAX_FILES || inputs.iter().any(|bytes| bytes.len() &gt; MAX_FILE_BYTES) {
+        Err(Error::InvalidBounds)
+    } else {
+        Ok(())
+    }
+}
+fn validate_workers(workers: usize) -&gt; Result&lt;(), Error&gt; {
+    if (1..=MAX_WORKERS).contains(&amp;workers) {
+        Ok(())
+    } else {
+        Err(Error::InvalidBounds)
+    }
+}
+
+pub fn fixture(files: usize, bytes_per_file: usize) -&gt; Result&lt;Vec&lt;Vec&lt;u8&gt;&gt;, Error&gt; {
+    if files &gt; MAX_FILES || bytes_per_file &gt; MAX_FILE_BYTES {
+        return Err(Error::InvalidBounds);
+    }
+    Ok((0..files)
+        .map(|file| {
+            (0..bytes_per_file)
+                .map(|index| ((file * 17 + index * 31) % 251) as u8)
+                .collect()
+        })
+        .collect())
+}
+
+/// Same noncryptographic FNV-1a fingerprint convention as the reference indexer.
+/// A fingerprint can collide; it is not evidence that unknown files are identical.
+pub fn fingerprint(bytes: &amp;[u8]) -&gt; u64 {
+    bytes.iter().fold(0xcbf2_9ce4_8422_2325, |hash, byte| {
+        (hash ^ u64::from(*byte)).wrapping_mul(0x100_0000_01b3)
+    })
+}
+
+pub fn serial(inputs: &amp;[Vec&lt;u8&gt;]) -&gt; Result&lt;Vec&lt;u64&gt;, Error&gt; {
+    validate(inputs)?;
+    Ok(inputs.iter().map(|bytes| fingerprint(bytes)).collect())
+}
+
+pub fn scoped_threads(inputs: &amp;[Vec&lt;u8&gt;], workers: usize) -&gt; Result&lt;Vec&lt;u64&gt;, Error&gt; {
+    validate(inputs)?;
+    validate_workers(workers)?;
+    if inputs.is_empty() {
+        return Ok(Vec::new());
+    }
+    let chunk_size = inputs.len().div_ceil(workers);
+    thread::scope(|scope| {
+        let mut handles = Vec::with_capacity(workers);
+        let mut error = None;
+        for (index, chunk) in inputs.chunks(chunk_size).enumerate() {
+            let task = thread::Builder::new()
+                .name(format!(&quot;fingerprint-{index}&quot;))
+                .spawn_scoped(scope, move || {
+                    chunk
+                        .iter()
+                        .map(|bytes| fingerprint(bytes))
+                        .collect::&lt;Vec&lt;_&gt;&gt;()
+                });
+            match task {
+                Ok(handle) =&gt; handles.push(handle),
+                Err(cause) =&gt; {
+                    error = Some(Error::ThreadSpawn(cause));
+                    break;
+                }
+            }
+        }
+        let mut output = Vec::with_capacity(inputs.len());
+        // Join every started worker, even if startup or another worker failed.
+        // Joining in chunk order preserves the input order in the output.
+        for handle in handles {
+            match handle.join() {
+                Ok(values) =&gt; output.extend(values),
+                Err(_) =&gt; {
+                    if error.is_none() {
+                        error = Some(Error::ThreadPanicked);
+                    }
+                }
+            }
+        }
+        match error {
+            Some(error) =&gt; Err(error),
+            None =&gt; Ok(output),
+        }
+    })
+}
+
+pub struct ParallelResult {
+    pub fingerprints: Vec&lt;u64&gt;,
+    pub pool_threads: usize,
+}
+pub fn rayon_pool(inputs: &amp;[Vec&lt;u8&gt;], workers: usize) -&gt; Result&lt;ParallelResult, Error&gt; {
+    validate(inputs)?;
+    validate_workers(workers)?;
+    let pool = rayon::ThreadPoolBuilder::new()
+        .num_threads(workers)
+        .build()
+        .map_err(Error::PoolBuild)?;
+    let fingerprints = pool.install(|| inputs.par_iter().map(|bytes| fingerprint(bytes)).collect());
+    Ok(ParallelResult {
+        fingerprints,
+        pool_threads: pool.current_num_threads(),
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn every_strategy_returns_the_same_ordered_output() {
+        for (files, bytes) in [(0, 0), (1, 1), (3, 37), (17, 1025), (128, 3)] {
+            let inputs = fixture(files, bytes).unwrap();
+            let expected = serial(&amp;inputs).unwrap();
+            for workers in [1, 2, 4, 8] {
+                assert_eq!(scoped_threads(&amp;inputs, workers).unwrap(), expected);
+                let actual = rayon_pool(&amp;inputs, workers).unwrap();
+                assert_eq!(actual.fingerprints, expected);
+                assert_eq!(actual.pool_threads, workers);
+            }
+        }
+    }
+    #[test]
+    fn bounds_are_enforced_before_scheduling() {
+        for workers in [0, 9, usize::MAX] {
+            assert!(matches!(
+                scoped_threads(&amp;[], workers),
+                Err(Error::InvalidBounds)
+            ));
+            assert!(matches!(
+                rayon_pool(&amp;[], workers),
+                Err(Error::InvalidBounds)
+            ));
+        }
+        assert!(fixture(129, 0).is_err());
+        assert!(fixture(0, MAX_FILE_BYTES + 1).is_err());
+        assert!(serial(&amp;vec![vec![]; 129]).is_err());
+        assert!(serial(&amp;[vec![0; MAX_FILE_BYTES + 1]]).is_err());
+    }
+    #[test]
+    fn fingerprint_convention_has_fixed_oracles() {
+        assert_eq!(fingerprint(b&quot;&quot;), 0xcbf2_9ce4_8422_2325);
+        assert_eq!(fingerprint(b&quot;a&quot;), 0xaf63_dc4c_8601_ec8c);
+    }
+}
+</code></pre></div>
+<p>This is a separate Cargo workspace with an exact <code>rayon = "=1.12.0"</code> dependency and its own lockfile. The published crate page dates that stable release to April 14, 2026, before the course's October 8 cutoff; its release notes are dated April 13. The declared minimum compiler is 1.80, and the actual course checks used Rust 1.99.1. The separate workspace keeps this optional experiment from changing the native reference workspace's dependency graph.</p>
+<p>The scoped version uses <code>Builder::spawn_scoped</code> so an operating-system thread-start failure can return an error. If startup or a worker fails, it still joins every worker already started before returning. Joining chunk results in input order preserves the requested output order. Chunk size uses ceiling division, so the number of chunks respects the worker budget and an uneven final chunk is retained.</p>
+<p>The Rayon version constructs a local pool with a nonzero explicit thread budget and runs <code>par_iter().map(...).collect()</code> inside <code>pool.install</code>. The input is an indexed slice iterator; the collection preserves its logical order even though task execution can be scheduled differently. This is not a claim that arbitrary side effects from parallel closures occur in input order. Pool construction failure is propagated, and no global pool configuration is changed.</p>
+<h2 id="guided-checkpoint-compare-complete-outputs">Guided checkpoint: compare complete outputs</h2>
+<p>Read <code>fingerprint</code>, then trace the three callers. Confirm that they share the same borrowed input and do not mutate it. The binary rejects a mismatch before printing success. Comparing only the sum of fingerprints would be weaker because it could hide reordered or compensating results. The test compares the complete vector, and fixed empty-string and one-byte oracles check the fingerprint convention itself.</p>
+<p>A fingerprint can collide; equality of fingerprints is not a proof that two unknown files contain identical bytes. Here the strategies receive the same immutable buffers by construction, and the required output is the ordered fingerprint vector. Keep that evidence boundary clear when reusing this pattern for a synchronization or integrity tool.</p>
+<p>For the earlier streaming milestone, reconstruct a separate study copy from the course root:</p>
+<pre><code>python3 scripts/start-checkpoint.py p07 01-streaming
+mise exec -- cargo test --locked --manifest-path learner-work/checkpoints/p07-indexer/01-streaming/Cargo.toml</code></pre>
+<p>The <a href="../../projects/checkpoints/p07-indexer/index.html">checkpoint guide</a> also reconstructs the full threaded indexer. Compare its fixed read buffer and bounded path queue with this experiment's retained batch. Both can be professionally appropriate for their stated requirements.</p>
+<h2 id="why-the-blocking-file-pipeline-keeps-its-own-workers">Why the blocking file pipeline keeps its own workers</h2>
+<p>The reference must stream files of bounded size, report I/O failures, observe cancellation between reads, and cap queued paths and concurrent open work. Putting the complete read-and-count operation directly into a CPU-oriented parallel iterator would make those blocking reads occupy that pool's workers. It would not automatically provide the reference's queue policy, byte limits, or cancellation contract.</p>
+<p>For this application, retain the explicit bounded I/O worker design. Rayon becomes a useful alternative when a substantial independent CPU stage can operate on already-bounded input. If the real task benefits from both, define a bounded handoff between I/O and CPU processing and budget the total threads and retained buffers across both pools. Avoid starting a fresh CPU pool per file. The example builds a pool per finite comparison call to make ownership clear; a long-lived service can own and reuse one pool when its lifecycle requires that.</p>
+<h2 id="intentional-mistake-silently-omit-the-final-chunk">Intentional mistake: silently omit the final chunk</h2>
+<p>In a disposable learner copy, modify the scoped implementation to process only a floor-divided number of complete chunks. Predict a failure for a batch not divisible by its chunk size, then run the equality test. The expected failure demonstrates lost work. This mutation was not part of the recorded verification run; label its outcome as expected until you execute it. Restore complete chunk iteration and preserve the regression.</p>
+<p>Another deliberate mistake is to call the global parallel iterator outside the configured pool and assume the local builder still controls it. A pool object does not redirect unrelated work merely by existing. The <code>install</code> boundary is the relevant mechanism.</p>
+<h2 id="apply-the-problem-solving-playbook">Apply the problem-solving playbook</h2>
+<p>Observation: the actual tests requested pools of 1, 2, 4, and 8 workers and reported the matching pool sizes while preserving output. Hypothesis A says every Rayon call must use one global pool sized to all logical CPUs. Hypothesis B says an explicitly constructed local pool governs the work installed in it. Holding the fixture fixed and changing only the configured count distinguishes them; the observed pool reports disprove A for this implementation.</p>
+<p>This result does not prove all configured workers were simultaneously active or that more workers improved throughput. A next experiment, if speed matters, would hold the fixture and release profile fixed and compare repeated serial and parallel runs, accounting for pool construction separately or including it in both request boundaries as appropriate. Use the <a href="../../playbook.html">investigation template</a> to record the question before collecting times. Ask an AI reviewer to identify the actual pool and memory bounds rather than accepting “parallel means faster.”</p>
+<h2 id="independent-work-tiered-hints-and-solution">Independent work, tiered hints, and solution</h2>
+<p>Add a bounded batch with uneven buffer lengths and compare all three complete outputs. Then propose a CPU transform expensive enough to justify profiling, while preserving a serial oracle. Finally write a short design decision for a workload dominated by slow file reads versus one dominated by repeated in-memory parsing. Include a total thread and payload budget.</p>
+<details><summary>Hint 1: separate input equality from execution order</summary><p>Keep one immutable batch and pass references to every strategy. Give files different contents as well as different lengths so ordering mistakes are visible.</p></details><details><summary>Hint 2: keep the bounds at the boundary</summary><p>Validate the entire batch and requested worker count before creating threads. A task count is not a byte budget.</p></details><details><summary>Hint 3: choose a representative timing boundary</summary><p>Decide whether a real request reuses an existing pool. Do not exclude pool construction from one strategy while quietly including its equivalent setup in another.</p></details><details><summary>Worked direction</summary><p>Build several distinct buffers below 64 KiB, including an empty file and a larger file, and assert complete vector equality at worker counts 1 and 4. Retain serial processing as the correctness baseline. Prefer the reference's bounded workers when blocking reads dominate; investigate Rayon when an independent CPU stage dominates and a bounded in-memory batch is acceptable. If measurements show no useful improvement, keep the simpler serial stage.</p></details>
+<h2 id="when-you-get-stuck">When you get stuck</h2>
+<p>Run the isolated test command and inspect the first differing vector index. Check the chunk count, pool <code>install</code> boundary, and exact Rayon version. Read the pinned <code>ThreadPoolBuilder</code> and indexed parallel iterator documentation. A review request should include the batch dimensions, worker budget, expected ordered results, observed mismatch, and whether the operation blocks on external I/O.</p>
+<h2 id="engineering-decisions-evidence-limits-and-mastery">Engineering decisions, evidence limits, and mastery</h2>
+<p>The first working implementation already bounds resources, propagates ordinary startup failures, joins scoped workers, and keeps reference input immutable. The optional dependency is exact-pinned and locked. Three tests passed, all targets passed strict Clippy, the release demonstration ran successfully, and the cached advisory scan reported no known vulnerabilities or warnings for this graph. See <a href="../../verification/rayon-comparison.json">the command and source record</a>. An advisory snapshot is not a security proof, and equal results on a finite fixture family do not establish every possible input.</p>
+<p>Mastery means choosing a scheduling tool from a workload's CPU, I/O, ownership, ordering, and cancellation requirements. Explain why the course can correctly retain threads for its file pipeline while also teaching Rayon for a bounded CPU stage. Support any later speed claim with measurements rather than the presence of a parallel iterator.</p></section><h2 id="primary-references">Primary references</h2><ul><li><a href="https://docs.rs/crate/rayon/1.12.0">Rayon 1.12.0 published crate metadata</a></li><li><a href="https://github.com/rayon-rs/rayon/blob/v1.12.0/RELEASES.md">Rayon 1.12.0 release notes</a></li><li><a href="https://docs.rs/rayon/1.12.0/rayon/struct.ThreadPoolBuilder.html">Rayon 1.12.0 ThreadPoolBuilder</a></li><li><a href="https://docs.rs/rayon/1.12.0/rayon/iter/trait.IndexedParallelIterator.html">Rayon 1.12.0 indexed parallel iterators</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-4/04-indexer.html">Previous: Bound memory and make concurrent results reproducible</a><a href="../../lessons/stage-4/04-futures.html">Next: Futures, waiting and cancellation</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-choose-parallel-tools-for-the-work-being-scheduled">Purpose: choose parallel tools for the work being scheduled</a><a href="#plain-model-the-same-function-three-scheduling-choices">Plain model: the same function, three scheduling choices</a><a href="#predict-before-running">Predict before running</a><a href="#runnable-implementation-and-dependency-choice">Runnable implementation and dependency choice</a><a href="#guided-checkpoint-compare-complete-outputs">Guided checkpoint: compare complete outputs</a><a href="#why-the-blocking-file-pipeline-keeps-its-own-workers">Why the blocking file pipeline keeps its own workers</a><a href="#intentional-mistake-silently-omit-the-final-chunk">Intentional mistake: silently omit the final chunk</a><a href="#apply-the-problem-solving-playbook">Apply the problem-solving playbook</a><a href="#independent-work-tiered-hints-and-solution">Independent work, tiered hints, and solution</a><a href="#when-you-get-stuck">When you get stuck</a><a href="#engineering-decisions-evidence-limits-and-mastery">Engineering decisions, evidence limits, and mastery</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

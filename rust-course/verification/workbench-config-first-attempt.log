@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/billyribeiro/Desktop/rust-course/rust-course/verification/workbench-config-check.py", line 33, in <module>
+    line=child.stdout.readline().strip();assert line.startswith('LISTEN_ADDR=127.0.0.1:')
+                                                ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

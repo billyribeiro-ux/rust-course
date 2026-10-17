@@ -1,0 +1,4 @@
+$ python3 verification/svelte-http-audit.py --binary /Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native/debug/p16-workbench
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+FAIL {'type': 'AssertionError', 'message': 'vite exited during startup with1'}
+{"overall": "failed", "checks": 0, "http_requests": 1}

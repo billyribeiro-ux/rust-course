@@ -1,0 +1,410 @@
+$ mise exec -- rustc --version
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+rustc 1.99.0 (b940084d7 2026-09-28)
+
+$ mise exec -- python3 -c import os; print(os.environ["CARGO_TARGET_DIR"])
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target
+
+$ mise exec -- cargo metadata --manifest-path projects/Cargo.toml --no-deps --locked --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+{
+  "package_count": 18,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p01-calculator/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p02-journal/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p03-logs/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p04-config/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p05-expressions/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p06-kv/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p07-indexer/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p08-monitor/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p09-chat/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p10-issues/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p11-ui-model/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p12-replay/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p13-unsafe/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p14-scheduler/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p15-replication/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p16-workbench/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p17-derive/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p17-specializations/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ mise exec -- cargo metadata --manifest-path projects/ui-console/Cargo.toml --no-deps --locked --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/ui-console",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/ui-console/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p01-calculator
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p02-journal
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p02-journal. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p02-journal
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p02-journal",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p02-journal/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p03-logs
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p03-logs. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p03-logs
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p03-logs",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p03-logs/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p04-config
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p04-config. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p04-config
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p04-config",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p04-config/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p05-expressions
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p05-expressions. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p05-expressions
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p05-expressions",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p05-expressions/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p06-kv
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p06-kv. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p06-kv
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p06-kv",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p06-kv/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p07-indexer
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p07-indexer. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p07-indexer
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p07-indexer",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p07-indexer/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p08-monitor
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p08-monitor. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p08-monitor
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p08-monitor",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p08-monitor/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p09-chat
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p09-chat. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p09-chat
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p09-chat",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p09-chat/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p10-issues
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p10-issues. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p10-issues
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p10-issues",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p10-issues/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p11-console
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p11-console. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p11-console
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p11-console",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p11-console/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p12-replay
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p12-replay. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p12-replay
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p12-replay",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p12-replay/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p13-unsafe
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p13-unsafe. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p13-unsafe
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p13-unsafe",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p13-unsafe/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p14-scheduler
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p14-scheduler. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p14-scheduler
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p14-scheduler",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p14-scheduler/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p15-replication
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p15-replication. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p15-replication
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p15-replication",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p15-replication/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/start-project.py p16-workbench
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+Created /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p16-workbench. The reference and original scaffold remain unchanged.
+
+$ mise exec -- cargo metadata --no-deps --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p16-workbench
+exit=0
+{
+  "package_count": 1,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p16-workbench",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p16-workbench/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ mise exec -- python3 -c import os; print(os.environ["CARGO_TARGET_DIR"])
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator
+exit=0
+/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target
+
+$ python3 scripts/start-project.py p01
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=1
+Refusing to overwrite /Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/learner-work/p01-calculator. Choose --name another-name.
+
+$ python3 scripts/start-project.py p01 --name ../escape
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=1
+Name must be a simple directory name
+
+$ mise exec -- cargo metadata --manifest-path projects/Cargo.toml --locked --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+{
+  "package_count": 179,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p17-derive/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p11-ui-model/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p05-expressions/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p03-logs/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p06-kv/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p07-indexer/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p08-monitor/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p09-chat/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p10-issues/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p12-replay/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p13-unsafe/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p14-scheduler/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p15-replication/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p16-workbench/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p17-specializations/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p02-journal/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p04-config/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p01-calculator/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ mise exec -- cargo metadata --manifest-path projects/ui-console/Cargo.toml --locked --offline --format-version 1
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+{
+  "package_count": 184,
+  "workspace_root": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/ui-console",
+  "target_directory": "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/.local/native-target",
+  "local_manifest_paths": [
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/reference/p11-ui-model/Cargo.toml",
+    "/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course/projects/ui-console/Cargo.toml"
+  ]
+}
+[Full metadata retained in temporary audit directory; SHA-256 recorded.]
+
+$ python3 scripts/pack.py
+cwd=/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course
+exit=0
+/Users/billyribeiro/Desktop/rust-course/.course-cache/final-portability-9oodesa0/extracted/rust-course-review.zip (1,059,338 bytes); caches, generated UI, databases and learner work excluded.
+
+Rust MCP actual response:
+tool call error: tool call failed for `rust/workspace-info`
+
+Caused by:
+    Unexpected response type

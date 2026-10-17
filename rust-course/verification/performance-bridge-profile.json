@@ -1,0 +1,556 @@
+{
+  "date_utc": "2026-10-09T06:26:59.574508+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "hardware": {
+    "machdep.cpu.brand_string": {
+      "exit_code": 0,
+      "value": "Apple M3 Ultra",
+      "stderr": ""
+    },
+    "hw.logicalcpu": {
+      "exit_code": 0,
+      "value": "28",
+      "stderr": ""
+    },
+    "hw.memsize": {
+      "exit_code": 0,
+      "value": "103079215104",
+      "stderr": ""
+    }
+  },
+  "profile": "release; executable refuses debug_assertions",
+  "binary": "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+  "binary_sha256": "b9b56d275b0042b8c3ef61b7dbea1cd90ca9b3b29b89b7055d2366a3e776ab0c",
+  "rows": 750000,
+  "passes": 80,
+  "samples_per_variant": 7,
+  "within_process_warmups": 2,
+  "method": "Separate process per sample; interleaved variant order. Full-record comparison and analytic oracle before two warm-ups. Scan timer excludes construction, validation, warm-ups and destruction. Process timer/RSS includes all of those plus startup/profiler overhead. RSS units verified in the installed macOS getrusage(2) manual; not GNU time units.",
+  "records": [
+    {
+      "sample": 1,
+      "position": 1,
+      "layout": "aos",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/01-1-aos.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "aos",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 58530459,
+      "max_rss_bytes": 49872896,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 1,
+      "generation_ns": 4173542,
+      "validation_ns": 2149166,
+      "scan_ns": 43749333,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 1,
+      "position": 2,
+      "layout": "soa",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/01-2-soa.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "soa",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 30812584,
+      "max_rss_bytes": 49938432,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 3,
+      "generation_ns": 5429250,
+      "validation_ns": 2337541,
+      "scan_ns": 15995791,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 2,
+      "position": 1,
+      "layout": "soa",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/02-1-soa.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "soa",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 29628792,
+      "max_rss_bytes": 49938432,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 3,
+      "generation_ns": 4745000,
+      "validation_ns": 2073791,
+      "scan_ns": 16055666,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 2,
+      "position": 2,
+      "layout": "aos",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/02-2-aos.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "aos",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 57855625,
+      "max_rss_bytes": 49872896,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 1,
+      "generation_ns": 4119458,
+      "validation_ns": 2158000,
+      "scan_ns": 43850250,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 3,
+      "position": 1,
+      "layout": "aos",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/03-1-aos.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "aos",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 57180959,
+      "max_rss_bytes": 49872896,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 1,
+      "generation_ns": 4152583,
+      "validation_ns": 1979833,
+      "scan_ns": 42926125,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 3,
+      "position": 2,
+      "layout": "soa",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/03-2-soa.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "soa",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 32429084,
+      "max_rss_bytes": 49938432,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 3,
+      "generation_ns": 5339500,
+      "validation_ns": 2261208,
+      "scan_ns": 17263292,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 4,
+      "position": 1,
+      "layout": "soa",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/04-1-soa.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "soa",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 31524625,
+      "max_rss_bytes": 49938432,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 3,
+      "generation_ns": 5504667,
+      "validation_ns": 2111625,
+      "scan_ns": 17014625,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 4,
+      "position": 2,
+      "layout": "aos",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/04-2-aos.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "aos",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 60814583,
+      "max_rss_bytes": 49872896,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 1,
+      "generation_ns": 4298791,
+      "validation_ns": 2097083,
+      "scan_ns": 46588917,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 5,
+      "position": 1,
+      "layout": "aos",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/05-1-aos.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "aos",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 58530125,
+      "max_rss_bytes": 49872896,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 1,
+      "generation_ns": 4204292,
+      "validation_ns": 2052375,
+      "scan_ns": 44108417,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 5,
+      "position": 2,
+      "layout": "soa",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/05-2-soa.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "soa",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 31765584,
+      "max_rss_bytes": 49938432,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 3,
+      "generation_ns": 5042708,
+      "validation_ns": 2334792,
+      "scan_ns": 17429291,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 6,
+      "position": 1,
+      "layout": "soa",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/06-1-soa.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "soa",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 31149584,
+      "max_rss_bytes": 49938432,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 3,
+      "generation_ns": 5166042,
+      "validation_ns": 2285917,
+      "scan_ns": 17000417,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 6,
+      "position": 2,
+      "layout": "aos",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/06-2-aos.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "aos",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 59105959,
+      "max_rss_bytes": 49872896,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 1,
+      "generation_ns": 4304250,
+      "validation_ns": 1995584,
+      "scan_ns": 45064292,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 7,
+      "position": 1,
+      "layout": "aos",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/07-1-aos.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "aos",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 60881042,
+      "max_rss_bytes": 49872896,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 1,
+      "generation_ns": 4712791,
+      "validation_ns": 2159458,
+      "scan_ns": 45486458,
+      "checksum": 163062480000000
+    },
+    {
+      "sample": 7,
+      "position": 2,
+      "layout": "soa",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-p",
+        "-o",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/layout-profile-20261009/07-2-soa.resources.txt",
+        "/Users/billyribeiro/Desktop/rust-course/.course-cache/native/release/examples/layout_profile",
+        "soa",
+        "750000",
+        "80"
+      ],
+      "exit_code": 0,
+      "process_elapsed_ns": 29950667,
+      "max_rss_bytes": 49938432,
+      "rows": 750000,
+      "passes": 80,
+      "row_bytes": 64,
+      "capacity_bytes": 48000000,
+      "allocation_requests": 3,
+      "generation_ns": 5111500,
+      "validation_ns": 2118458,
+      "scan_ns": 15864000,
+      "checksum": 163062480000000
+    }
+  ],
+  "summaries": {
+    "aos": {
+      "generation_ns": {
+        "minimum": 4119458,
+        "median": 4204292,
+        "maximum": 4712791
+      },
+      "validation_ns": {
+        "minimum": 1979833,
+        "median": 2097083,
+        "maximum": 2159458
+      },
+      "scan_ns": {
+        "minimum": 42926125,
+        "median": 44108417,
+        "maximum": 46588917
+      },
+      "process_elapsed_ns": {
+        "minimum": 57180959,
+        "median": 58530459,
+        "maximum": 60881042
+      },
+      "max_rss_bytes": {
+        "minimum": 49872896,
+        "median": 49872896,
+        "maximum": 49872896
+      }
+    },
+    "soa": {
+      "generation_ns": {
+        "minimum": 4745000,
+        "median": 5166042,
+        "maximum": 5504667
+      },
+      "validation_ns": {
+        "minimum": 2073791,
+        "median": 2261208,
+        "maximum": 2337541
+      },
+      "scan_ns": {
+        "minimum": 15864000,
+        "median": 17000417,
+        "maximum": 17429291
+      },
+      "process_elapsed_ns": {
+        "minimum": 29628792,
+        "median": 31149584,
+        "maximum": 32429084
+      },
+      "max_rss_bytes": {
+        "minimum": 49938432,
+        "median": 49938432,
+        "maximum": 49938432
+      }
+    }
+  },
+  "limitations": [
+    "Synthetic read-mostly analytics, not full replay, I/O or mutation workload.",
+    "No hardware cache-miss counter or call-stack sample was collected; cache locality is a supported interpretation, not measured attribution.",
+    "Shared development host; CPU affinity, background load, power and thermals were not controlled.",
+    "Capacity payload bytes exclude allocator metadata and code; RSS is a process peak, not allocation counts.",
+    "Counter driver is macOS-specific; Rust example is portable."
+  ],
+  "independent_review": "pending",
+  "checks": [
+    {
+      "command": "mise exec -- cargo test --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p12-replay --examples",
+      "exit_code": 0,
+      "tests_passed": 4,
+      "log": "verification/performance-bridge-tests.log"
+    },
+    {
+      "command": "mise exec -- cargo clippy --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p12-replay --all-targets -- -D warnings",
+      "exit_code": 0,
+      "log": "verification/performance-bridge-clippy.log"
+    },
+    {
+      "command": "mise exec -- cargo build --release --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p12-replay --examples",
+      "exit_code": 0,
+      "log": "verification/performance-bridge-build.log"
+    },
+    {
+      "command": "python3 rust-course/projects/reference/p12-replay/profile-layout.py --binary .course-cache/native/release/examples/layout_profile --output .course-cache/layout-profile-20261009",
+      "exit_code": 0,
+      "log": "verification/performance-layout-profile.log"
+    },
+    {
+      "command": ".course-cache/native/release/examples/dispatch_allocation",
+      "exit_code": 0,
+      "log": "verification/performance-dispatch-example.log"
+    },
+    {
+      "command": "mise exec -- cargo run --manifest-path rust-course/projects/Cargo.toml --target-dir .course-cache/native -p p12-replay --example layout_profile -- aos 750000 80",
+      "exit_code": 1,
+      "expected": "debug build refused before allocating measured fixture",
+      "log": "verification/performance-debug-refusal.log"
+    }
+  ],
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "source_sha256": {
+    "projects/reference/p12-replay/examples/layout_profile.rs": "11131b3ae4a5b109acb0f6213e9eab29f83f2679d3e7d643f7aa30f96c8ce6c3",
+    "projects/reference/p12-replay/examples/dispatch_allocation.rs": "cd4f7b73095f99c7b3a182a09ee7f3cae62032d54c505f4393527c4c923112da",
+    "projects/reference/p12-replay/profile-layout.py": "1fe21873ca0a8802a2bc591cba57b98102530d25ba9a0ae7ae38edb87a370cc7"
+  },
+  "resource_units_evidence": {
+    "file": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/share/man/man2/getrusage.2",
+    "lines": "94-95",
+    "quote": "the maximum resident set size utilized (in bytes)."
+  },
+  "initial_profiler_attempt": {
+    "status": "incomplete, excluded from samples",
+    "stdout": "layout=aos\trows=750000\tpasses=80\trow_bytes=64\tcapacity_bytes=48000000\tallocation_requests=1\tgeneration_ns=5606083\tvalidation_ns=3186792\tscan_ns=41887542\tchecksum=163062480000000\n",
+    "stderr": "        0.29 real         0.05 user         0.00 sys\ntime: sysctl kern.clockrate: Operation not permitted\n",
+    "resolution": "Approved retry of bounded profiler driver outside sandbox; all fourteen recorded runs succeeded. No source or OS configuration changed."
+  },
+  "static_dyn_measurement": "Behavior and ownership examples executed/tested. No static-versus-dynamic runtime timing was performed or speed claim made.",
+  "construction_audit": {
+    "gap": "Previous performance material taught harness design but did not provide a substantive cache/layout/allocation/zero-copy/dispatch-cost investigation.",
+    "fix": "Two focused lessons and executable examples added; original replay benchmark remains separate.",
+    "status": "authored and author-reviewed; native examples verified; independent acceptance pending"
+  },
+  "lesson_files": [
+    {
+      "id": "07-layout",
+      "file": "authoring/completion-performance.json",
+      "words": 1726
+    },
+    {
+      "id": "07-allocation-dispatch",
+      "file": "authoring/completion-performance.json",
+      "words": 1869
+    }
+  ]
+}

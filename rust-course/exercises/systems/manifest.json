@@ -1,0 +1,6 @@
+[
+  {"id":"borrow-after-pop","file":"borrow_after_pop.rs","expected_codes":["E0502"],"lesson":"03-raii"},
+  {"id":"rc-thread","file":"rc_thread.rs","expected_codes":["E0277"],"lesson":"04-threads"},
+  {"id":"thread-borrow","file":"thread_borrow.rs","expected_codes":["E0373"],"lesson":"04-threads"},
+  {"id":"uninit-read","file":"uninit_read.rs","expected_codes":["E0133"],"lesson":"07-unsafe"}
+]

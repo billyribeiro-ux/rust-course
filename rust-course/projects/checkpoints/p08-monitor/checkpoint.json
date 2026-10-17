@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "project": "p08-monitor",
+  "checkpoints": [
+    {
+      "id": "01-budget",
+      "title": "Establish retry and deadline policy without clocks",
+      "source": "projects/checkpoints/p08-monitor/01-budget",
+      "contract": "A retry requires an available attempt, nonzero per-attempt cap, and positive time after elapsed time and backoff; arithmetic cannot wrap.",
+      "commands": [
+        "cargo test --locked",
+        "cargo run --locked"
+      ],
+      "lockfile": "projects/checkpoints/p08-monitor/locks/01-budget.Cargo.lock"
+    },
+    {
+      "id": "final",
+      "title": "Complete verified reference",
+      "source": "projects/reference/p08-monitor",
+      "contract": "Final reference behavior and limits are documented in its course lesson and engineering decisions. This materializes a new standalone copy; immutable reference source stays untouched.",
+      "commands": [
+        "cargo test --locked --all-targets"
+      ],
+      "lockfile": "projects/checkpoints/p08-monitor/locks/final.Cargo.lock"
+    }
+  ]
+}

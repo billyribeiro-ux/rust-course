@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-09",
+  "rust": "1.99.0",
+  "primary_local_docs": [
+    {
+      "path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/pin/index.html",
+      "exists": true,
+      "sha256": "b0e1087c9c950c1a317d432a354179c11a17d06b6a57b6e523052b75ad67045d",
+      "bytes": 96335
+    },
+    {
+      "path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/sync/atomic/enum.Ordering.html",
+      "exists": true,
+      "sha256": "96715854025aa72775638f6f4ef3ce76991c9ee0c94a220731a1d06c22bb25fd",
+      "bytes": 39688
+    },
+    {
+      "path": "/Users/billyribeiro/.rustup/toolchains/1.99.0-aarch64-apple-darwin/share/doc/rust/html/std/future/trait.Future.html",
+      "exists": true,
+      "sha256": "e9946081963d9566bc3b0b2fafaec6a7b2901d84f78bd1fc3ba5df3ae253627d",
+      "bytes": 23396
+    }
+  ],
+  "online_docs": [
+    "https://docs.rs/tokio/1.53.2/tokio/macro.select.html"
+  ],
+  "note": "Versioned rust-lang web URL was inaccessible through web tool; inspected installed official rust-docs for pinned compiler instead."
+}

@@ -1,0 +1,359 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>Borrowed views: describe the owner instead of fighting annotations · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="02-lifetimes" data-lesson="02-lifetimes"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / Borrowed views: describe the owner instead of fighting annotations</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 02 / Libraries and language design</div><h1>Borrowed views: describe the owner instead of fighting annotations</h1><p class="lead">Explain Record lifetimes and choose when a view must become owned data.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-2/02-config.html">Layer configuration, then validate the effective state</a></li></ul><ul><li>Connect returned slices to the input that owns their bytes</li><li>Distinguish lifetime relationships from extending storage</li><li>Design streaming aggregation that does not retain stale line views</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#allocation">allocation</a> · <a href="../../glossary.html#borrow">borrow</a> · <a href="../../glossary.html#edition">edition</a> · <a href="../../glossary.html#enum">enum</a> · <a href="../../glossary.html#lifetime">lifetime</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#ownership">ownership</a> · <a href="../../glossary.html#slice">slice</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p03">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-parse-text-without-copying-every-field">Purpose: parse text without copying every field</h2>
+<p>The log parser returns a Record containing a numeric timestamp, a copied Level, and borrowed service and message slices. Those slices point into the input line. This is efficient and easy to reason about while the analyzer uses the record immediately, updates counters, and then reuses its line buffer. The lifetime question becomes concrete: how long may a Record view remain valid relative to the String or byte buffer that owns its text?</p>
+<p>A lifetime annotation describes a relationship between references. It does not allocate memory, delay destruction, or extend the life of a local variable. Record&lt;&#x27;a&gt; says that its borrowed fields remain valid for an appropriate lifetime &#x27;a. parse_record(input: &amp;str) -&gt; Result&lt;Record&lt;&#x27;_&gt;, ...&gt; connects the returned view to the borrowed input through elision. The compiler checks that callers do not keep using the view after its backing text can change or disappear.</p>
+<h2 id="prediction-which-value-must-survive">Prediction: which value must survive?</h2>
+<p>Predict whether a function can create a local String, parse a borrowed Record from it, and return that Record. Expected: no, because the String is dropped at the function&#x27;s end while the returned fields would refer to its former allocation. Adding &#x27;static to the return type cannot repair the ownership problem. A static string literal can support a static view; a String constructed inside the function does not become static by declaration.</p>
+<pre><code>mise exec -- cargo test -p log-detective</code></pre>
+<p>From rust-course/exercises/foundations, also run the deliberately failing local-reference example. Expected result: a nonzero exit with E0515. Write down the owner that disappears and the reference that would escape before reading the hint. The simplified function in that fixture returns &amp;str rather than Record, but the underlying relationship is the same.</p>
+<pre><code>mise exec -- rustc --edition=2024 --emit=metadata --out-dir /tmp/rust-course-diagnostics 03-local-reference.rs</code></pre>
+<h2 id="guided-checkpoint-follow-one-borrowed-record">Guided checkpoint: follow one borrowed record</h2>
+<p>Read parse_record and mark where splitn returns slices of its input. Parsing timestamp produces an owned u64 value. Matching level produces a small owned enum. service and message remain slices into the original line. No collection of newly allocated strings is required for these fields. Then read analyze: the record is consumed for counting within the current loop iteration, and no borrowed field is stored in Report. The next read may clear and reuse the line buffer only after those views are no longer needed.</p>
+<div class="code-wrap" data-source="projects/reference/p03-logs/src/lib.rs" data-sha256="933837c39abd6c99c3686313a6fb24fc46589fc07b059792596d839ccf8712d3"><div class="code-label"><a href="../../projects/reference/p03-logs/src/lib.rs">projects/reference/p03-logs/src/lib.rs</a></div><pre><code>//! Bounded-memory, line-oriented log analysis with borrowed record fields.
+//! ```
+//! use log_detective::{analyze, Limits};
+//! let report = analyze(&amp;b&quot;10 INFO api ready\n11 ERROR api unavailable\n&quot;[..], Limits::default())?;
+//! assert_eq!(report.errors, 1);
+//! assert_eq!(report.valid, 2);
+//! # Ok::&lt;(), std::io::Error&gt;(())
+//! ```
+use std::io::{self, BufRead, Write};
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Level {
+    Info,
+    Warn,
+    Error,
+}
+#[derive(Debug, PartialEq, Eq)]
+pub struct Record&lt;&#x27;a&gt; {
+    pub timestamp: u64,
+    pub level: Level,
+    pub service: &amp;&#x27;a str,
+    pub message: &amp;&#x27;a str,
+}
+pub fn parse_record(input: &amp;str) -&gt; Result&lt;Record&lt;&#x27;_&gt;, &amp;&#x27;static str&gt; {
+    let mut fields = input.splitn(4, &#x27; &#x27;);
+    let timestamp = fields
+        .next()
+        .ok_or(&quot;timestamp missing&quot;)?
+        .parse()
+        .map_err(|_| &quot;invalid timestamp&quot;)?;
+    let level = match fields.next() {
+        Some(&quot;INFO&quot;) =&gt; Level::Info,
+        Some(&quot;WARN&quot;) =&gt; Level::Warn,
+        Some(&quot;ERROR&quot;) =&gt; Level::Error,
+        _ =&gt; return Err(&quot;invalid level&quot;),
+    };
+    let service = fields.next().ok_or(&quot;service missing&quot;)?;
+    if service.is_empty()
+        || !service
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b == b&#x27;-&#x27; || b == b&#x27;_&#x27;)
+    {
+        return Err(&quot;invalid service&quot;);
+    }
+    let message = fields.next().ok_or(&quot;message missing&quot;)?;
+    if message.trim().is_empty() || message.chars().any(char::is_control) {
+        return Err(&quot;invalid message&quot;);
+    }
+    Ok(Record {
+        timestamp,
+        level,
+        service,
+        message,
+    })
+}
+#[derive(Clone, Copy, Debug)]
+pub struct Limits {
+    pub max_line_bytes: usize,
+    pub max_total_bytes: u64,
+}
+impl Default for Limits {
+    fn default() -&gt; Self {
+        Self {
+            max_line_bytes: 4096,
+            max_total_bytes: 64 * 1024 * 1024,
+        }
+    }
+}
+#[derive(Default, Debug, PartialEq, Eq)]
+pub struct Report {
+    pub lines: u64,
+    pub valid: u64,
+    pub malformed: u64,
+    pub oversized: u64,
+    pub info: u64,
+    pub warnings: u64,
+    pub errors: u64,
+}
+enum Line {
+    End,
+    Data,
+    Oversized,
+}
+fn read_bounded&lt;R: BufRead&gt;(
+    reader: &amp;mut R,
+    output: &amp;mut Vec&lt;u8&gt;,
+    limit: usize,
+    total: &amp;mut u64,
+    total_limit: u64,
+) -&gt; io::Result&lt;Line&gt; {
+    output.clear();
+    let mut seen = false;
+    let mut oversized = false;
+    loop {
+        let available = match reader.fill_buf() {
+            Ok(bytes) =&gt; bytes,
+            Err(error) if error.kind() == io::ErrorKind::Interrupted =&gt; continue,
+            Err(error) =&gt; return Err(error),
+        };
+        if available.is_empty() {
+            return Ok(if !seen {
+                Line::End
+            } else if oversized {
+                Line::Oversized
+            } else {
+                Line::Data
+            });
+        }
+        let newline = available.iter().position(|&amp;b| b == b&#x27;\n&#x27;);
+        let take = newline.map_or(available.len(), |n| n + 1);
+        *total = total
+            .checked_add(take as u64)
+            .filter(|&amp;n| n &lt;= total_limit)
+            .ok_or_else(|| {
+                io::Error::new(io::ErrorKind::InvalidData, &quot;input byte limit exceeded&quot;)
+            })?;
+        let payload = if newline.is_some() { take - 1 } else { take };
+        if !oversized {
+            if payload &gt; limit.saturating_sub(output.len()) {
+                oversized = true;
+                output.clear();
+            } else {
+                output.extend_from_slice(&amp;available[..payload]);
+            }
+        }
+        reader.consume(take);
+        seen = true;
+        if newline.is_some() {
+            if oversized {
+                return Ok(Line::Oversized);
+            }
+            if output.last() == Some(&amp;b&#x27;\r&#x27;) {
+                output.pop();
+            }
+            return Ok(Line::Data);
+        }
+    }
+}
+/// At most `max_line_bytes` retained per line; an oversized line is drained.
+/// Reader buffering is additional memory controlled by the caller.
+pub fn analyze&lt;R: BufRead&gt;(reader: R, limits: Limits) -&gt; io::Result&lt;Report&gt; {
+    scan(reader, limits, None, &amp;mut io::sink()).map(|result| result.summary)
+}
+
+/// Search valid records with a case-sensitive literal UTF-8 substring.
+///
+/// The query covers the complete normalized record (including its fields).
+/// There is no case folding or Unicode normalization. Matching lines are written
+/// immediately, with one LF terminator; CRLF input is normalized to LF.
+/// Malformed and oversized lines are counted but never emitted. All valid
+/// records contribute to the summary, whether or not they match.
+///
+/// Input/output errors abort the scan: the destination may already contain a
+/// prefix, but no successful report is returned. The caller owns flushing.
+/// ```
+/// use log_detective::{search, Limits};
+/// let mut output = Vec::new();
+/// let result = search(&amp;b&quot;1 INFO api ready\n2 ERROR api retry\n&quot;[..],
+///     Limits::default(), &quot;retry&quot;, &amp;mut output)?;
+/// assert_eq!(result.matched, 1);
+/// assert_eq!(result.summary.valid, 2);
+/// assert_eq!(output, b&quot;2 ERROR api retry\n&quot;);
+/// # Ok::&lt;(), std::io::Error&gt;(())
+/// ```
+pub fn search&lt;R: BufRead, W: Write&gt;(
+    reader: R,
+    limits: Limits,
+    query: &amp;str,
+    output: &amp;mut W,
+) -&gt; io::Result&lt;SearchReport&gt; {
+    if query.is_empty() || query.len() &gt; 4096 || query.chars().any(char::is_control) {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;query must be 1..=4096 UTF-8 bytes without control characters&quot;,
+        ));
+    }
+    scan(reader, limits, Some(query), output)
+}
+
+/// Fixed-cardinality counters: no collection grows with services or matches.
+#[derive(Debug, PartialEq, Eq)]
+pub struct SearchReport {
+    pub summary: Report,
+    pub matched: u64,
+}
+
+fn scan&lt;R: BufRead, W: Write&gt;(
+    mut reader: R,
+    limits: Limits,
+    query: Option&lt;&amp;str&gt;,
+    output: &amp;mut W,
+) -&gt; io::Result&lt;SearchReport&gt; {
+    if limits.max_line_bytes == 0
+        || limits.max_line_bytes &gt; 1024 * 1024
+        || limits.max_total_bytes == 0
+    {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            &quot;line limit must be 1..=1048576 and total limit positive&quot;,
+        ));
+    }
+    let mut report = Report::default();
+    let mut matched = 0;
+    let mut line = Vec::new();
+    let mut total = 0;
+    loop {
+        match read_bounded(
+            &amp;mut reader,
+            &amp;mut line,
+            limits.max_line_bytes,
+            &amp;mut total,
+            limits.max_total_bytes,
+        )? {
+            Line::End =&gt; {
+                return Ok(SearchReport {
+                    summary: report,
+                    matched,
+                });
+            }
+            Line::Oversized =&gt; {
+                report.lines += 1;
+                report.oversized += 1;
+            }
+            Line::Data =&gt; {
+                report.lines += 1;
+                let text = std::str::from_utf8(&amp;line).map_err(|_| &quot;invalid UTF-8&quot;);
+                match text.and_then(parse_record) {
+                    Err(_) =&gt; report.malformed += 1,
+                    Ok(record) =&gt; {
+                        report.valid += 1;
+                        match record.level {
+                            Level::Info =&gt; report.info += 1,
+                            Level::Warn =&gt; report.warnings += 1,
+                            Level::Error =&gt; report.errors += 1,
+                        }
+                        // A valid record was parsed from this same UTF-8 line.
+                        // Searching its full text never indexes into a character.
+                        if let (Some(query), Ok(text)) = (query, text)
+                            &amp;&amp; text.contains(query)
+                        {
+                            output.write_all(text.as_bytes())?;
+                            output.write_all(b&quot;\n&quot;)?;
+                            matched += 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::{BufReader, Cursor};
+    #[test]
+    fn tiny_buffers_and_final_line() {
+        let input = b&quot;1 INFO api ready\r\n2 WARN db slow\n3 ERROR api failed&quot;;
+        let report = analyze(
+            BufReader::with_capacity(1, Cursor::new(input)),
+            Limits::default(),
+        )
+        .unwrap();
+        assert_eq!(
+            report,
+            Report {
+                lines: 3,
+                valid: 3,
+                info: 1,
+                warnings: 1,
+                errors: 1,
+                ..Report::default()
+            }
+        );
+    }
+    #[test]
+    fn drain_oversized_then_recover() {
+        let bytes = b&quot;aaaaaaaaaaaaaaaaaaaaaa\n1 INFO x ok\n\xff\n&quot;;
+        let report = analyze(
+            BufReader::with_capacity(3, Cursor::new(bytes)),
+            Limits {
+                max_line_bytes: 12,
+                max_total_bytes: 100,
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            (
+                report.lines,
+                report.oversized,
+                report.valid,
+                report.malformed
+            ),
+            (3, 1, 1, 1)
+        );
+    }
+    #[test]
+    fn rejects_total_exhaustion_and_invalid_limits() {
+        assert!(
+            analyze(
+                &amp;b&quot;12345&quot;[..],
+                Limits {
+                    max_line_bytes: 2,
+                    max_total_bytes: 4
+                }
+            )
+            .is_err()
+        );
+        assert!(
+            analyze(
+                &amp;b&quot;&quot;[..],
+                Limits {
+                    max_line_bytes: 0,
+                    max_total_bytes: 4
+                }
+            )
+            .is_err()
+        );
+    }
+    #[test]
+    fn accounting_property_across_buffer_sizes() {
+        let input = b&quot;1 INFO x ok\nbad\n2 ERROR y no\n\n&quot;;
+        for capacity in 1..=32 {
+            let r = analyze(
+                BufReader::with_capacity(capacity, Cursor::new(input)),
+                Limits::default(),
+            )
+            .unwrap();
+            assert_eq!(r.lines, r.valid + r.malformed + r.oversized);
+            assert_eq!(r.valid, r.info + r.warnings + r.errors);
+            assert_eq!((r.lines, r.valid), (4, 2));
+        }
+    }
+}
+</code></pre></div>
+<p>This local-use pattern is a common way to make borrowing simple. Do not retain references merely to avoid all allocations. If the feature requires a list of error messages after the file has been read, those selected messages need storage that survives the reused buffer. One reasonable design allocates owned Strings only for retained errors. Another stores offsets into an immutable whole-file buffer, but that changes the memory contract. The correct ownership model follows the feature&#x27;s retention requirements.</p>
+<h2 id="an-explicit-two-input-relationship">An explicit two-input relationship</h2>
+<p>Consider a helper that returns the longer of two borrowed service names. If it can return either argument, both inputs and the output need a common lifetime relationship, often written fn longer&lt;&#x27;a&gt;(left: &amp;&#x27;a str, right: &amp;&#x27;a str) -&gt; &amp;&#x27;a str. This does not force the original Strings to live equally long. It requires the returned view to be used within a period for which the selected inputs can support the relationship. The caller may use a shorter overlap even if one owner lives much longer.</p>
+<p>If the function always returns left, a second independent lifetime or an elided right input can express that weaker relationship. This distinction matters: annotations should state the actual source of returned references, not tie everything together by habit. A compiler suggestion can make code compile while imposing a unnecessarily restrictive API. Read the function body and the caller&#x27;s need before accepting a proposed lifetime signature.</p>
+<h2 id="intentional-mistake-collect-views-from-a-reusable-buffer">Intentional mistake: collect views from a reusable buffer</h2>
+<p>In a learner analyzer, try pushing record.message into Vec&lt;&amp;str&gt; while repeatedly clearing and refilling the same String. The desired Vec claims that all messages remain available, while the storage strategy keeps only one mutable line. The borrow checker exposes that contradiction. The fix is not a longer annotation or an unsafe pointer. Either own each retained message, retain the original backing storage, or change the output to aggregate information that does not need old text.</p>
+<p>Cloning the entire file would technically provide durable storage but violate the streaming project&#x27;s resource goal. Allocating every message may also violate the intended bounded report unless you impose a retention limit. A safe design must satisfy both ownership and resource requirements. Memory safety alone does not imply acceptable memory growth. State a maximum number or total bytes of retained examples if your report gains sample messages.</p>
+<h2 id="playbook-the-compiler-rejects-collected-messages">Playbook: the compiler rejects collected messages</h2>
+<p>Observation: the analyzer compiles when it counts errors but fails when it stores borrowed messages across iterations. Hypothesis A: Record&lt;&#x27;_&gt; needs a different spelling of its lifetime. Hypothesis B: retained views outlive the reusable line buffer&#x27;s stable contents. Distinguishing experiment: replace the stored &amp;str with an owned String for one selected message while leaving parsing unchanged. Expected result: the ownership conflict disappears. This supports B and disproves a missing-annotation explanation for this design.</p>
+<p>That experiment does not automatically justify unbounded retention. Follow it with a second design question: what is the maximum retained data? Record both conclusions separately. Ask AI to draw owner/view lifetimes for the original and revised design, then ask for a counterexample to its memory-bound claim. A useful answer should mention the number of errors, not merely say that cloning is safe.</p>
+<h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Extend Report with at most three owned example messages from malformed UTF-8-valid lines, truncating each example at a safe UTF-8 boundary under a documented byte limit. Decide how invalid UTF-8 input is represented without inventing text that was not present. Test a multibyte character at the truncation boundary. Your extension changes retention deliberately while keeping a bounded amount of additional memory. The supplied reference remains counters-only, so keep this experiment in your learner workspace.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>identify the owner of every returned slice and its last mutation.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>ask whether the caller needs a view or an independent snapshot.</p></details><details><summary>Worked solution for selected valid text</summary><p>use message.to_owned() only when retaining it, enforce a maximum retained count, and discard the temporary borrowed Record before reading again. For truncation, retreat to a char boundary rather than slicing at an arbitrary byte. A review request should include the ownership diagram and the proposed bound, not just the lifetime error text.</p></details>
+<h2 id="review-and-mastery">Review and mastery</h2>
+<p>The recommended approach chooses storage according to retention requirements, then describes the resulting reference relationships. Borrowed records are appropriate for immediate aggregation; bounded owned samples are appropriate when selected messages must survive buffer reuse. Elided lifetimes keep an unambiguous single-input relationship concise, while explicit annotations communicate relationships involving multiple possible input owners. Neither representation replaces the need to account for retained memory.</p>
+<p>Mastery means explaining why parse_record can return borrowed fields, why a local-owner function cannot, and how to retain a small bounded sample without stale references. Compilation is evidence for safe-reference validity, while tests verify field parsing and retention policy. Neither establishes a benchmark advantage over owned strings. If you claim a performance benefit, measure realistic workloads separately rather than inferring speed from the absence of one visible clone.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/book/ch10-03-lifetime-syntax.html">Lifetime syntax</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.str.html#method.is_char_boundary">str char boundaries</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/string/struct.String.html">String ownership</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-2/02-conversions.html">Previous: Validated conversions, standard traits, closures, and iterators</a><a href="../../lessons/stage-2/02-parser.html">Next: Parse expressions with precedence, byte spans, and limits</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-parse-text-without-copying-every-field">Purpose: parse text without copying every field</a><a href="#prediction-which-value-must-survive">Prediction: which value must survive?</a><a href="#guided-checkpoint-follow-one-borrowed-record">Guided checkpoint: follow one borrowed record</a><a href="#an-explicit-two-input-relationship">An explicit two-input relationship</a><a href="#intentional-mistake-collect-views-from-a-reusable-buffer">Intentional mistake: collect views from a reusable buffer</a><a href="#playbook-the-compiler-rejects-collected-messages">Playbook: the compiler rejects collected messages</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#review-and-mastery">Review and mastery</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

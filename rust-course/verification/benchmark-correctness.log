@@ -1,0 +1,9 @@
+   Compiling p12-replay v0.1.0 (/Users/billyribeiro/Desktop/rust-course/rust-course/projects/reference/p12-replay)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.18s
+     Running unittests src/bin/benchmark.rs (.course-cache/native/debug/deps/benchmark-2967bb5c9403ea48)
+
+running 1 test
+test tests::batch_boundaries_preserve_complete_state ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+

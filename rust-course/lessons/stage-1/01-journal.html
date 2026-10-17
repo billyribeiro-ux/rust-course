@@ -1,0 +1,279 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="A local, project-driven Rust workshop with runnable sources and evidence."><title>A versioned text format that rejects corruption · Rust Workshop</title><link rel="stylesheet" href="../../assets/course.css"><script defer src="../../assets/search-index.js"></script><script defer src="../../assets/progress-data.js"></script><script defer src="../../assets/course.js"></script></head><body data-root="../../" data-page="01-journal" data-lesson="01-journal"><a class="skip" href="#main">Skip to content</a><aside class="sidebar" id="course-navigation"><a class="brand" href="../../index.html"><span class="brand-mark">Rs</span>Rust Workshop</a><p class="side-caption">Read. Predict. Build. Investigate.</p><a class="nav-link" href="../../index.html">Learning map</a><a class="nav-link" href="../../playbook.html">Problem-solving playbook</a><a class="nav-link" href="../../projects.html">Project workbench</a><div class="side-label">Your learning path</div><a class="nav-link" href="../../index.html#stage-0"><span class="stage-number">00</span>Tool foundations</a><a class="nav-link" href="../../index.html#stage-1"><span class="stage-number">01</span>Ownership and core Rust</a><a class="nav-link" href="../../index.html#stage-2"><span class="stage-number">02</span>Libraries and language design</a><a class="nav-link" href="../../index.html#stage-3"><span class="stage-number">03</span>Testing and durable storage</a><a class="nav-link" href="../../index.html#stage-4"><span class="stage-number">04</span>Concurrency and async</a><a class="nav-link" href="../../index.html#stage-5"><span class="stage-number">05</span>Networks and databases</a><a class="nav-link" href="../../index.html#stage-6"><span class="stage-number">06</span>Rust in the browser</a><a class="nav-link" href="../../index.html#stage-7"><span class="stage-number">07</span>Performance and unsafe Rust</a><a class="nav-link" href="../../index.html#stage-8"><span class="stage-number">08</span>Distributed behavior</a><a class="nav-link" href="../../index.html#stage-9"><span class="stage-number">09</span>The independent capstone</a><div class="side-label">Reference & evidence</div><a class="nav-link" href="../../assessments/index.html">Independent assessments</a><a class="nav-link" href="../../glossary.html">Glossary</a><a class="nav-link" href="../../sources.html">Sources & versions</a><a class="nav-link" href="../../review.html">Review checklist</a><a class="nav-link" href="../../verification/index.html">Verification evidence</a><a class="nav-link" href="../../coverage.html">Coverage matrix</a><div class="side-label">Your progress</div><p class="side-caption" data-progress-text></p><div class="progress-track"><div class="progress-fill"></div></div><p class="side-caption">Self-report, not proof of mastery.</p></aside><header class="topbar"><button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false" aria-controls="course-navigation">Menu</button><div class="search-wrap"><label class="visually-hidden" for="search">Search lessons and projects</label><input id="search" type="search" placeholder="Search concepts, lessons, projects…" autocomplete="off"><div id="search-results" class="search-results" aria-live="polite"></div></div><div class="topbar-actions"><button id="theme">Dark theme</button><button class="desktop-only" id="export">Export</button><button class="desktop-only" id="import-open" type="button">Import<span class="visually-hidden"> progress JSON</span></button><input hidden id="import" type="file" accept="application/json" aria-label="Choose progress JSON"></div></header><main class="layout" id="main"><div class="breadcrumbs"><a href="../../index.html">Workshop</a> / A versioned text format that rejects corruption</div><div class="lesson-grid"><article class="lesson"><div class="eyebrow">Stage 01 / Ownership and core Rust</div><h1>A versioned text format that rejects corruption</h1><p class="lead">Persist task meaning without quietly accepting duplicate identifiers or unknown file versions.</p><p class="meta">Read with a terminal open. Predict before revealing. Verified source versions: <a href="../../sources.html">version ledger</a>.</p><details><summary>Prerequisites and learning objectives</summary><ul><li><a href="../../lessons/stage-1/01-modeling.html">Model valid task states and make invalid transitions visible</a></li></ul><ul><li>Specify a file grammar and version policy</li><li>Separate parsing from file access</li><li>Test round trips and corrupt inputs independently</li></ul></details><p class="meta">Key terms: <a href="../../glossary.html#durability">durability</a> · <a href="../../glossary.html#future">future</a> · <a href="../../glossary.html#invariant">invariant</a> · <a href="../../glossary.html#mise">mise</a> · <a href="../../glossary.html#schema">schema</a> · <a href="../../glossary.html#utf-8">UTF-8</a></p><p class="callout">Keep the <a href="../../playbook.html">problem-solving playbook</a> open. Record observations before explanations, and save the experiment that changed your mind.</p><p class="meta"><a href="../../projects/checkpoints/index.html#p02">Reconstruct this project’s runnable checkpoints</a>. Each milestone states its own scope; learner scaffolds are separate assignments.</p><h2 id="purpose-yesterday-x27-s-bytes-become-today-x27-s-input">Purpose: yesterday&#x27;s bytes become today&#x27;s input</h2>
+<p>A journal becomes useful when tasks survive process exit. Persistence introduces a new trust boundary: bytes on disk may be missing, truncated, edited by hand, or written by an older program. Treat loading as validation of external input, even if your program originally produced the file. Reusing in-memory assumptions without checking them can turn corrupted data into plausible task state. The goal is a format small enough to inspect and strict enough to reject ambiguity.</p>
+<p>Our format starts with TASKS, a tab, and version 1. Each following row contains an unsigned identifier, a status word, and a title, separated by tabs. Titles cannot contain control characters, so tabs and newlines cannot escape into new fields or rows. UTF-8 text is allowed, and the title limit counts bytes. The decoder accepts the supported header and known status strings only. A future format version must have a deliberate migration; it must not be guessed from data that happens to look familiar.</p>
+<h2 id="prediction-a-round-trip-is-not-the-whole-contract">Prediction: a round trip is not the whole contract</h2>
+<p>Predict what happens for each fixture: the valid tasks-v1.txt file, the duplicate-identifier fixture, an empty file, and a file with TASKS version 2. Expected: the valid file decodes; the other three fail. An empty file is different from a missing path. Missing can mean “new journal”; present but empty indicates a malformed stored journal. This distinction protects users from a damaged file silently appearing to erase all their tasks.</p>
+<pre><code>mise exec -- cargo test -p task-journal checked_in_fixture_roundtrips
+mise exec -- cargo run -p task-journal -- reference/p02-journal/fixtures/tasks-v1.txt list
+mise exec -- cargo run -p task-journal -- reference/p02-journal/fixtures/corrupt-duplicate.txt list</code></pre>
+<p>A round-trip assertion decode(encode(journal)) == journal verifies that the two functions agree for that journal. It does not prove that the format is unambiguous or that malformed input is rejected. Two functions can share the same bug and round-trip perfectly. Keep explicit fixtures with independently understood contents and separate rejection tests for missing fields, extra fields, duplicate IDs, invalid status, and unsupported versions.</p>
+<h2 id="guided-checkpoint-build-a-decoder-that-commits-at-the-end">Guided checkpoint: build a decoder that commits at the end</h2>
+<p>Start with a pure decode(&amp;str) function so parsing tests need no filesystem. Check the byte limit and header before reading rows. For each row, require exactly three columns. Parse the identifier, reject zero, track previously seen IDs in a HashSet, decode status, and validate the title. Build a local Journal and return it only after all rows succeed. If row 40 fails, the caller receives an error instead of a partly loaded collection of 39 tasks.</p>
+<p>The HashSet is not merely an optimization. It records a collection-wide invariant during decoding. Task alone cannot know whether its identifier duplicates another task. Keep that check at the journal boundary. Likewise, row numbers belong to the decoder because they describe source structure, while title validity belongs to the title-validation helper because both user input and persisted rows need the same rule.</p>
+<div class="code-wrap" data-source="projects/reference/p02-journal/src/lib.rs" data-sha256="cde61b40ff54acfc7db0217c9996e9b2745f8312a4307a8d6fb00e17dd1cf706"><div class="code-label"><a href="../../projects/reference/p02-journal/src/lib.rs">projects/reference/p02-journal/src/lib.rs</a></div><pre><code>//! A small versioned task journal. Titles are UTF-8, single-line, 1–200 bytes.
+//! The storage format is `TASKS\t1` followed by tab-separated id/status/title rows.
+//! ```
+//! use task_journal::Journal;
+//! let mut journal = Journal::default();
+//! let id = journal.add(&quot;Learn borrowing&quot;)?;
+//! journal.complete(id)?;
+//! let restored = Journal::decode(&amp;journal.encode())?;
+//! assert_eq!(restored.tasks(), journal.tasks());
+//! # Ok::&lt;(), task_journal::Error&gt;(())
+//! ```
+use std::{
+    collections::HashSet,
+    fmt,
+    fs::{self, File, OpenOptions},
+    io::{self, Read, Write},
+    path::Path,
+};
+const MAX_FILE_BYTES: u64 = 1_048_576;
+const MAX_TASKS: usize = 10_000;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Status {
+    Open,
+    Done,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Task {
+    id: u64,
+    title: String,
+    status: Status,
+}
+impl Task {
+    pub fn id(&amp;self) -&gt; u64 {
+        self.id
+    }
+    pub fn title(&amp;self) -&gt; &amp;str {
+        &amp;self.title
+    }
+    pub fn status(&amp;self) -&gt; Status {
+        self.status
+    }
+}
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Journal {
+    tasks: Vec&lt;Task&gt;,
+}
+#[derive(Debug)]
+pub enum Error {
+    Invalid(String),
+    NotFound(u64),
+    Io(io::Error),
+}
+impl fmt::Display for Error {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;&#x27;_&gt;) -&gt; fmt::Result {
+        match self {
+            Self::Invalid(s) =&gt; write!(f, &quot;invalid journal: {s}&quot;),
+            Self::NotFound(id) =&gt; write!(f, &quot;task {id} does not exist&quot;),
+            Self::Io(e) =&gt; write!(f, &quot;storage: {e}&quot;),
+        }
+    }
+}
+impl std::error::Error for Error {
+    fn source(&amp;self) -&gt; Option&lt;&amp;(dyn std::error::Error + &#x27;static)&gt; {
+        if let Self::Io(e) = self {
+            Some(e)
+        } else {
+            None
+        }
+    }
+}
+impl From&lt;io::Error&gt; for Error {
+    fn from(e: io::Error) -&gt; Self {
+        Self::Io(e)
+    }
+}
+fn validate_title(title: &amp;str) -&gt; Result&lt;(), Error&gt; {
+    if title.trim().is_empty() || title.len() &gt; 200 || title.chars().any(char::is_control) {
+        return Err(Error::Invalid(
+            &quot;title must contain 1–200 bytes and no control characters&quot;.into(),
+        ));
+    }
+    Ok(())
+}
+impl Journal {
+    pub fn tasks(&amp;self) -&gt; &amp;[Task] {
+        &amp;self.tasks
+    }
+    pub fn add(&amp;mut self, title: &amp;str) -&gt; Result&lt;u64, Error&gt; {
+        validate_title(title)?;
+        if self.tasks.len() &gt;= MAX_TASKS {
+            return Err(Error::Invalid(&quot;task limit reached&quot;.into()));
+        }
+        let id = self
+            .tasks
+            .iter()
+            .map(|t| t.id)
+            .max()
+            .unwrap_or(0)
+            .checked_add(1)
+            .ok_or_else(|| Error::Invalid(&quot;identifier space exhausted&quot;.into()))?;
+        self.tasks.push(Task {
+            id,
+            title: title.to_owned(),
+            status: Status::Open,
+        });
+        Ok(id)
+    }
+    pub fn complete(&amp;mut self, id: u64) -&gt; Result&lt;(), Error&gt; {
+        let task = self
+            .tasks
+            .iter_mut()
+            .find(|t| t.id == id)
+            .ok_or(Error::NotFound(id))?;
+        task.status = Status::Done;
+        Ok(())
+    }
+    pub fn remove(&amp;mut self, id: u64) -&gt; Result&lt;(), Error&gt; {
+        let position = self
+            .tasks
+            .iter()
+            .position(|t| t.id == id)
+            .ok_or(Error::NotFound(id))?;
+        self.tasks.remove(position);
+        Ok(())
+    }
+    pub fn encode(&amp;self) -&gt; String {
+        let mut output = String::from(&quot;TASKS\t1\n&quot;);
+        for task in &amp;self.tasks {
+            let status = match task.status {
+                Status::Open =&gt; &quot;open&quot;,
+                Status::Done =&gt; &quot;done&quot;,
+            };
+            use std::fmt::Write;
+            writeln!(output, &quot;{}\t{status}\t{}&quot;, task.id, task.title)
+                .expect(&quot;writing String cannot fail&quot;);
+        }
+        output
+    }
+    pub fn decode(input: &amp;str) -&gt; Result&lt;Self, Error&gt; {
+        if input.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let mut lines = input.lines();
+        if lines.next() != Some(&quot;TASKS\t1&quot;) {
+            return Err(Error::Invalid(
+                &quot;unsupported or missing format header&quot;.into(),
+            ));
+        }
+        let mut journal = Self::default();
+        let mut seen = HashSet::new();
+        for (offset, row) in lines.enumerate() {
+            let fail = || Error::Invalid(format!(&quot;malformed row {}&quot;, offset + 2));
+            let columns: Vec&lt;&amp;str&gt; = row.split(&#x27;\t&#x27;).collect();
+            let [id, status, title] = columns.as_slice() else {
+                return Err(fail());
+            };
+            let id: u64 = id.parse().map_err(|_| fail())?;
+            if id == 0 || !seen.insert(id) || journal.tasks.len() &gt;= MAX_TASKS {
+                return Err(fail());
+            }
+            let status = match *status {
+                &quot;open&quot; =&gt; Status::Open,
+                &quot;done&quot; =&gt; Status::Done,
+                _ =&gt; return Err(fail()),
+            };
+            validate_title(title)?;
+            journal.tasks.push(Task {
+                id,
+                title: (*title).to_owned(),
+                status,
+            });
+        }
+        Ok(journal)
+    }
+    /// A missing path starts a new journal. Other read errors are preserved.
+    pub fn load(path: &amp;Path) -&gt; Result&lt;Self, Error&gt; {
+        let file = match File::open(path) {
+            Ok(file) =&gt; file,
+            Err(e) if e.kind() == io::ErrorKind::NotFound =&gt; return Ok(Self::default()),
+            Err(e) =&gt; return Err(e.into()),
+        };
+        let mut bytes = Vec::new();
+        file.take(MAX_FILE_BYTES + 1).read_to_end(&amp;mut bytes)?;
+        if bytes.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let text =
+            std::str::from_utf8(&amp;bytes).map_err(|_| Error::Invalid(&quot;file is not UTF-8&quot;.into()))?;
+        Self::decode(text)
+    }
+    /// Writes a sibling temporary file then renames it. Designed for one writer.
+    /// No locking or parent-directory fsync: not a database durability guarantee.
+    pub fn save(&amp;self, path: &amp;Path) -&gt; Result&lt;(), Error&gt; {
+        let bytes = self.encode();
+        if bytes.len() as u64 &gt; MAX_FILE_BYTES {
+            return Err(Error::Invalid(&quot;file exceeds 1 MiB&quot;.into()));
+        }
+        let mut temporary_name = path.as_os_str().to_os_string();
+        temporary_name.push(format!(&quot;.{}.tmp&quot;, std::process::id()));
+        let temporary = std::path::PathBuf::from(temporary_name);
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&amp;temporary)?;
+        let result = (|| -&gt; io::Result&lt;()&gt; {
+            file.write_all(bytes.as_bytes())?;
+            file.sync_all()?;
+            drop(file);
+            fs::rename(&amp;temporary, path)
+        })();
+        if result.is_err() {
+            let _ = fs::remove_file(&amp;temporary);
+        }
+        result.map_err(Error::from)
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn round_trip_and_transitions() {
+        let mut j = Journal::default();
+        let a = j.add(&quot;read 🦀&quot;).unwrap();
+        let b = j.add(&quot;write tests&quot;).unwrap();
+        j.complete(a).unwrap();
+        j.complete(a).unwrap();
+        j.remove(b).unwrap();
+        assert_eq!(Journal::decode(&amp;j.encode()).unwrap(), j);
+        assert_eq!(j.tasks()[0].status(), Status::Done);
+        assert!(matches!(j.complete(99), Err(Error::NotFound(99))));
+    }
+    #[test]
+    fn rejects_corruption_without_partial_success() {
+        for input in [
+            &quot;TASKS\t2\n&quot;,
+            &quot;TASKS\t1\n1\topen\tx\n1\tdone\ty\n&quot;,
+            &quot;TASKS\t1\n0\topen\tx\n&quot;,
+            &quot;TASKS\t1\n1\tmaybe\tx\n&quot;,
+            &quot;TASKS\t1\n1\topen\t\n&quot;,
+        ] {
+            assert!(Journal::decode(input).is_err(), &quot;{input}&quot;);
+        }
+        let mut j = Journal::default();
+        assert!(j.add(&quot; &quot;).is_err());
+        assert!(j.add(&quot;one\ntwo&quot;).is_err());
+        assert!(j.tasks().is_empty());
+    }
+    #[test]
+    fn id_overflow_is_an_error() {
+        let mut j = Journal::decode(&quot;TASKS\t1\n18446744073709551615\topen\tx\n&quot;).unwrap();
+        assert!(j.add(&quot;next&quot;).is_err());
+    }
+}
+</code></pre></div>
+<p>Read encode after decode. It emits a stable header, a known status spelling, and the original title. Writing into a String is an in-memory formatting operation; its expect call documents an invariant of that destination rather than dismissing ordinary disk failure. Actual File writes return IO errors elsewhere. Two operations both named “write” can have different failure models, which is why you should inspect the destination type before judging error handling.</p>
+<h2 id="intentional-mistake-silently-skip-malformed-rows">Intentional mistake: silently skip malformed rows</h2>
+<p>In a scratch decoder, replace a malformed-row error with continue. The program may appear more resilient because it loads the remaining rows. But its success result now conceals data loss. If the user saves the loaded journal, the skipped task disappears permanently from the new file. Tolerant ingestion is sometimes appropriate for an analytics pipeline; it needs explicit rejected-row accounting and recovery policy. A personal task store should not silently reinterpret corruption as successful loading.</p>
+<p>Another mistake is regenerating every identifier while loading. Titles and statuses may still look correct, while commands referring to saved IDs target different tasks. Identifiers are part of this file&#x27;s meaning. Preserve and validate them. Our add operation chooses one more than the current maximum, so removing the highest ID permits reuse; that is documented as a current-collection identity model rather than a globally permanent event identity.</p>
+<h2 id="playbook-tasks-disappear-after-reopening">Playbook: tasks disappear after reopening</h2>
+<p>Observation: a learner decoder returns fewer tasks than the fixture contains. Hypothesis A: the file reader truncated the bytes. Hypothesis B: the decoder silently skips a malformed row. Distinguishing experiment: call decode directly on a small inline string containing one valid row and one invalid row. Expected result for the reference: an error, with no partial Journal returned. If the learner implementation returns one task from the inline string, filesystem truncation is disproven for that reproduction.</p>
+<p>Capture the smallest input that demonstrates the behavior and the exact row rule it violates. Do not begin by rewriting save. The boundary under investigation is bytes-to-domain-state, and the direct test bypasses unrelated file access. Ask an AI assistant to list what an observed row count can and cannot establish. A good answer should distinguish bytes read, rows recognized, and tasks accepted, and propose a measurement at the first uncertain boundary.</p>
+<h2 id="when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</h2>
+<p>Design a version-2 format adding an optional priority. You do not need to replace the reference. Write a migration function from a valid version-1 Journal to a version-2 model, choose the default priority, and specify whether unknown versions are rejected. Include a fixture with a title containing non-ASCII text. Then write one test proving that a bad second row does not produce a partly loaded result. The exercise is about compatibility policy as much as string splitting.</p>
+<details><summary>Hint 1: choose the next observation</summary><p>write the grammar in words and identify forbidden delimiter characters.</p></details><details><summary>Hint 2: narrow the experiment</summary><p>separate parse_row from decode only if the helper gets a coherent contract.</p></details><details><summary>Worked solution for the current checkpoint</summary><p>decode into a local Vec, maintain a set of IDs, return Err immediately on any invalid field, and construct the final Journal after the loop. When requesting review, provide the format rules, one valid fixture, and two adversarial fixtures. Ask which ambiguity remains, not only whether the code is shorter.</p></details>
+<h2 id="review-and-mastery-evidence">Review and mastery evidence</h2>
+<p>The recommended parser treats persisted bytes as fallible input and returns a reason while leaving the original file intact. The hand-readable tab format is appropriate because titles exclude delimiters and the schema has three fields. A structured serialization library becomes worthwhile for nested data or external interoperability; it still would not choose duplicate-ID policy, migration behavior, or title rules. Those are domain requirements under either syntax.</p>
+<p>Mastery means explaining how a file becomes a fully valid Journal, including what happens when the last row is corrupt. Demonstrate a round trip, an independently specified fixture, and an intentional rejection. State that these tests support the format contract but do not prove crash durability or safe concurrent access. Those are IO and coordination properties, addressed separately in the next checkpoint.</p><h2 id="primary-references">Primary references</h2><ul><li><a href="https://doc.rust-lang.org/1.99.1/book/ch09-02-recoverable-errors-with-result.html">Recoverable errors</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/collections/struct.HashSet.html">HashSet</a></li><li><a href="https://doc.rust-lang.org/1.99.1/std/primitive.str.html#method.lines">str lines</a></li></ul><section class="notes"><h2 id="your-evidence-and-notes">Your evidence and notes</h2><label class="progress-line"><input type="checkbox" id="complete">I have completed this lesson’s independent work</label><p class="meta">This is a self-report. Record evidence; checking the box does not demonstrate competence.</p><label for="lesson-notes">Prediction, experiment, result, remaining uncertainty</label><textarea id="lesson-notes" placeholder="Expected… Observed… Hypothesis… Experiment… Result… Next question…"></textarea></section><nav class="pager" aria-label="Lesson navigation"><a href="../../lessons/stage-1/01-collections.html">Previous: Tuples, arrays, vectors, and maps with explicit contracts</a><a href="../../lessons/stage-1/01-io.html">Next: File IO: preserve errors and replace data carefully</a></nav></article><aside class="toc" aria-label="On this page"><strong>In this lesson</strong><a href="#purpose-yesterday-x27-s-bytes-become-today-x27-s-input">Purpose: yesterday&#x27;s bytes become today&#x27;s input</a><a href="#prediction-a-round-trip-is-not-the-whole-contract">Prediction: a round trip is not the whole contract</a><a href="#guided-checkpoint-build-a-decoder-that-commits-at-the-end">Guided checkpoint: build a decoder that commits at the end</a><a href="#intentional-mistake-silently-skip-malformed-rows">Intentional mistake: silently skip malformed rows</a><a href="#playbook-tasks-disappear-after-reopening">Playbook: tasks disappear after reopening</a><a href="#when-you-get-stuck-independent-work-and-tiered-help">When you get stuck: independent work and tiered help</a><a href="#review-and-mastery-evidence">Review and mastery evidence</a><a href="#primary-references">Primary references</a><a href="#your-evidence-and-notes">Your evidence and notes</a></aside></div><p id="global-status" class="status" role="status"></p><footer>Rust Workshop · Local review draft · Independent review pending. <a href="../../playbook.html">Investigate with evidence</a> · <a href="../../review.html">Review this course</a>. Progress and notes stay in this browser unless you export them.</footer></main></body></html>

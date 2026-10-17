@@ -1,0 +1,2 @@
+{"version":1,"event":{"kind":"tick","data":{"event_id":"legacy-tick","symbol":"RUST","price_cents":125,"sequence":1}}}
+{"version":1,"event":{"kind":"order","data":{"order_id":"legacy-order","symbol":"RUST","side":"buy","quantity":2}}}

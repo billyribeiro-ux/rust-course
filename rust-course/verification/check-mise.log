@@ -1,0 +1,4 @@
+$ mise --version
+working_directory=/Users/billyribeiro/Desktop/rust-course/rust-course
+CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/oct17-native
+2026.10.12 macos-arm64 (2026-10-16)

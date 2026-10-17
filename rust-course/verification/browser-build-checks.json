@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-09T20:49:18.363099+00:00",
+  "checks": [
+    {
+      "command": [
+        "mise",
+        "exec",
+        "node@24.21.0",
+        "--",
+        "node",
+        "--check",
+        "assets/course.js"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "node@24.21.0",
+        "--",
+        "node",
+        "--test",
+        "verification/progress-data.test.cjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "projects/ui-console/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/build-ui.py",
+        "--target-dir",
+        "../.course-cache/wasm",
+        "--wasm-bindgen",
+        "../.course-cache/tools/wasm-bindgen-0.2.129-aarch64-apple-darwin/wasm-bindgen"
+      ],
+      "exit_code": 0,
+      "observed_output": "Compiled operations-console; Finished dev profile in 2.79s; built pkg. Output observed in tool execution before browser reload."
+    },
+    {
+      "command": [
+        "mise",
+        "exec",
+        "--",
+        "env",
+        "CARGO_BUILD_BUILD_DIR=/Users/billyribeiro/Desktop/rust-course/.course-cache/wasm",
+        "cargo",
+        "clippy",
+        "--locked",
+        "--manifest-path",
+        "projects/ui-console/Cargo.toml",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--target-dir",
+        "../.course-cache/wasm",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "observed_output": "Checking operations-console; Finished dev profile in 1.23s. Output observed in tool execution."
+    }
+  ],
+  "passed": true,
+  "limits": "Native domain code unchanged; earlier 218-entry native baseline retained. Reader syntax/progress tests and changed WASM client compiled and linted; live UI regression checks in browser-status.json."
+}
