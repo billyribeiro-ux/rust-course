@@ -1,6 +1,6 @@
 [tools]
 rust = "1.99.1"
-node = "26.12.0"
+node = "24.22.0"
 
 [env]
 CARGO_TARGET_DIR = "{{config_root}}/.local/native-target"
